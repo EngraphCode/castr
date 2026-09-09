@@ -49,17 +49,18 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-Follow the bounded [Q-09 PR #28 preservation disposition](../../plans/delivery-ledger.md#q-09-pr-28-preservation-disposition--9-september-2026):
-land its repository record if absent; if that record is on main and #28 remains
-open, refresh PR #27/#28 heads and close #28 without merge or recovery-branch
-deletion; once both are done, proceed to PR #14's dependency-ownership extraction.
-Q-09 remains pending for PR #10. PR #89 has delivered the Error-oracle prerequisite;
+PR #90 merged the bounded
+[Q-09 PR #28 preservation disposition](../../plans/delivery-ledger.md#q-09-pr-28-preservation-disposition--9-september-2026)
+as `cb73c4de`; PR #28 then closed without merge while its recovery branch remained
+intact. Q-09 remains pending for PR #10. PR #89 delivered the Error-oracle prerequisite;
 the [correction plan](../../plans/active/castr-documentation-and-fidelity-correction.md#9-september-q-22-prerequisite-sequence)
 retains Q-22's integer-contract and paired generator/output prerequisites. C03b/c
 and other prepared drafts retain their bounded carriers. Kite hunts Eyrie delivered
 PR #88; the coordinating agent accepted the dependent native Cricket
-installation at `codex/cricket-installation` commit `2af22e0f`. Open its PR only
-after the PR #28 transition completes. Earlier continuation
+installation at `codex/cricket-installation` commit `2af22e0f` and Bora integrated
+current main as `7967ff92`. [PR #91](https://github.com/EngraphCode/castr/pull/91)
+is open for that installation; settle its current-head review and checks, then merge
+it before beginning PR #14's dependency-ownership extraction. Earlier continuation
 instructions are [preserved verbatim](../../plans/archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
 
 ## Deep consolidation status

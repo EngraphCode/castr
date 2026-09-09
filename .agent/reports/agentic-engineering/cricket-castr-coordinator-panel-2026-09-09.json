@@ -1,0 +1,95 @@
+{
+  "evidence_kind": "Delegated coordinator direction panel; not C05 release approval",
+  "date": "2026-09-09",
+  "requesting_owner": "Bora seeks Turbulence",
+  "panel_owner": "Kite hunts Eyrie",
+  "configured_bindings_reference": "cricket-castr-native-2026-09-09.json",
+  "frame": "Exact six-field PR86/Q22 direction frame supplied by the coordinator in this task; only stance changed for second wave. Same three native agents reused.",
+  "evidence_limits": [
+    "Same agents retain prior C05 panel context; this is a different frame and not independent empirical replication.",
+    "Persisted message arguments are encrypted; no byte-equality readback claim.",
+    "Coordinator owns adjudication; raw verdicts below are evidence, not an approval gate."
+  ],
+  "dispatches": [
+    {
+      "timestamp": "2026-09-09T09:48:39.290Z",
+      "tool": "followup_task",
+      "call_id": "call_x8D4FzGURIX4pjGaPx7ZCWXg",
+      "arguments_without_encrypted_message": {
+        "target": "cricket_low"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T09:48:53.483Z",
+      "tool": "followup_task",
+      "call_id": "call_ehL3ZuLctQZtWaS7svGfZwxl",
+      "arguments_without_encrypted_message": {
+        "target": "cricket_medium"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T09:49:09.666Z",
+      "tool": "followup_task",
+      "call_id": "call_Kc9jdLRdWncLFn3EIH9hbikl",
+      "arguments_without_encrypted_message": {
+        "target": "cricket_procedure"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T09:50:27.641Z",
+      "tool": "followup_task",
+      "call_id": "call_CPZ6PAUzAbeVxrYSyCVWGubc",
+      "arguments_without_encrypted_message": {
+        "target": "cricket_low"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T09:50:41.368Z",
+      "tool": "followup_task",
+      "call_id": "call_ZLk6zzIbvEaMPHw34Q1MOxnn",
+      "arguments_without_encrypted_message": {
+        "target": "cricket_medium"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T09:50:56.666Z",
+      "tool": "followup_task",
+      "call_id": "call_HXP2ICtZIjphrPHKaRApB8uq",
+      "arguments_without_encrypted_message": {
+        "target": "cricket_procedure"
+      }
+    }
+  ],
+  "returns": [
+    {
+      "timestamp": "2026-09-09T09:48:53.670Z",
+      "agent": "/root/cricket_low",
+      "text": "Name: cricket-judgement-low\nPurpose: Fast contextual priority check\nSummary: I assess whether the planned work remains on the stated critical path.\nSTANCE: normal\nVERDICT: ON-TRACK\nEVIDENCE:\n- PR86 has sixteen green checks but three current review threads identify duplicated volatile records; curing that single corroborated class directly serves merge eligibility.\n- Q22\u2019s negative tests can pass through unrelated `TypeError`, so strengthening the oracle is a necessary semantic prerequisite before regenerated fixtures become acceptable evidence.\n- Ownership and displacement are bounded: Bora drives integrated delivery, Kite retains C05, PR87 remains owner-held, and no aggregate currently competes for the shared window.\nREDIRECTION: Close and merge eligible PR86 before beginning Q22 repair; preserve the stated one-integrating/one-prepared limit.\nUNGROUNDED: Owner steering lacks event IDs; branch/check/thread counts, saved Q22 results, reviewer conclusions, hook evidence, ownership state, and absence of an aggregate are supplied without directly inspectable methods."
+    },
+    {
+      "timestamp": "2026-09-09T09:49:09.821Z",
+      "agent": "/root/cricket_medium",
+      "text": "Name: cricket-judgement-medium  \nPurpose: contextual priority check  \nSummary: I assess whether Bora\u2019s sequence serves the live documentation-and-fidelity delivery path.\n\nSTANCE: normal  \nVERDICT: ON-TRACK  \nEVIDENCE:\n- Bora is the named integrated-delivery owner; C05 and PR87 retain distinct carriers, so the proposed PR86 work does not displace their critical paths.\n- Three live Copilot threads identify stale records while code and checks are green; correcting that class directly serves PR86 merge eligibility.\n- Q22\u2019s invalid negative-test evidence is appropriately deferred from PR86 closure into a separate semantic-prerequisite slice.\nREDIRECTION: Cure the three current PR86 record threads immediately after the live-state harvest, before commissioning paired reviews or broader tally reflection.\nUNGROUNDED: Fresh branch/check/thread counts, Sonar availability, the exact scope of the three threads, and the asserted Q22 reproduction results are supplied claims; no rule file or ruleset identifier is cited for the proposed paired-review or gate sequence."
+    },
+    {
+      "timestamp": "2026-09-09T09:50:07.960Z",
+      "agent": "/root/cricket_procedure",
+      "text": "Name: cricket-procedure-xhigh  \nPurpose: Compiled priority and gate conscience check  \nSummary: Applies the deterministic Cricket procedure.\n\nSTANCE: normal  \nSTAKES: \u201cHarvest complete current86 threads/reviews/comments/checks/rulesets and newly available Sonar results.\u201d  \nVERDICT: DRIFTING  \nEVIDENCE:\n- CONSUMER PASS \u2014 \u201cpaired docs/onboarding review\u201d and \u201csmall reviewed PRs and condition-based merges\u201d directly serve the commission.\n- DISPLACEMENT PASS; GATES PASS \u2014 \u201cFinish one independently proven compiler repair\u201d is owner-aligned; \u201crun appropriate gates with hooks\u201d and \u201cmerge only at eligible head\u201d are required by the stated acceptance.\n- PROPORTION FAIL \u2014 \u201cFresh census: 18 open PRs\u201d and \u201cPR86 all16 checks green\u201d are boundary-crossing status claims without first-hand evidence in the supplied context.\nREDIRECTION: Supply first-hand evidence for live PR, review, and check claims before PR86 eligibility.\nUNGROUNDED: \u201cFresh origin/main 6c3b18f0 (PR85 merge); clean PR86 branch 1fc65234\u201d; \u201cCurrent schema at Bora lacks native Cricket roles\u201d; \u201cFresh census: 18 open PRs, source81 frozen, PR86 all16 checks green\u201d; \u201cAssumptions specialist corroborates duplicated remaining lists\u201d; \u201cSaved Q22 evidence audited by test specialist: baseline91/91\u201d; \u201cSeven negative Error tests falsely pass on unrelated TypeError\u201d; \u201ca separate Scenario3 helper silently returns\u201d; \u201cPR87 is new separate research/roadmap work with four unresolved comments\u201d; \u201crepeated live status causes actual review churn\u201d."
+    },
+    {
+      "timestamp": "2026-09-09T09:50:41.493Z",
+      "agent": "/root/cricket_low",
+      "text": "Name: cricket-judgement-low\nPurpose: Fast contextual priority check\nSummary: I assess whether the planned work remains on the stated critical path.\nSTANCE: adversarial\nVERDICT: ON-TRACK\nEVIDENCE:\n- Counterfactual: abandon PR86 record repair and move directly to Q22\u2019s compiler defects. That fails because three current review threads prevent PR86 integration, while the proposed repair is one bounded documentation class over already-proven code.\n- Q22\u2019s evidence is currently unsound: unrelated `TypeError` satisfies seven negative tests and one helper suppresses five missing payload cases. Oracle repair therefore precedes fixture acceptance.\n- C05, C07, and PR87 retain named owners or carriers; the sequence does not absorb those adjacent scopes.\nREDIRECTION: Time-box the structural step-back to one durable status model, close PR86 at an eligible head, then start Q22 without another documentation-analysis cycle.\nUNGROUNDED: Owner steering lacks event IDs; live PR state, Sonar availability, Q22 reproduction, specialist findings, hook evidence, ownership, and aggregate-window state are supplied assertions."
+    },
+    {
+      "timestamp": "2026-09-09T09:50:56.827Z",
+      "agent": "/root/cricket_medium",
+      "text": "Name: cricket-judgement-medium  \nPurpose: contextual priority check  \nSummary: I attempt to refute Bora\u2019s proposed sequence against the live merge path.\n\nSTANCE: adversarial  \nVERDICT: ON-TRACK  \nEVIDENCE:\n- Counterfactual tested: bypass PR86 record repair and move straight to Q22. It fails because three live review threads delay a green, independently proven repair, while Q22 needs separate semantic contracts.\n- The plan preserves the one-integrating/one-prepared-candidate limit and keeps C05, C07, and PR87 with their named carriers.\n- The refutation only lands against ungrounded review ceremony: paired docs/onboarding review and Sonar harvest must not become unstated merge prerequisites.\nREDIRECTION: Treat current PR86-thread cures as the only immediate merge blocker; run paired reviews or Sonar only where their governing rule or newly found issue requires them.\nUNGROUNDED: Live PR86/PR87 status, check results, review-thread content, Q22 evidence, and Sonar availability are supplied claims; no directive/ruleset is named for paired docs/onboarding review or Sonar as a PR86 gate."
+    },
+    {
+      "timestamp": "2026-09-09T09:51:48.815Z",
+      "agent": "/root/cricket_procedure",
+      "text": "Name: cricket-procedure-xhigh  \nPurpose: Compiled priority and gate conscience check  \nSummary: Deterministic frame audit.\n\nSTANCE: adversarial  \nSTAKES: \u201cHarvest complete current86 threads/reviews/comments/checks/rulesets and newly available Sonar results.\u201d  \nVERDICT: DRIFTING  \nEVIDENCE:\n- CONSUMER PASS \u2014 \u201cpaired docs/onboarding review\u201d serves the commission. COUNTER-EVIDENCE: \u201cDo not accumulate further unintegrated drafts.\u201d NO-FLIP: review remains named.\n- DISPLACEMENT PASS \u2014 \u201cFix the three corroborated record defects as one class\u201d serves \u201cBora seeks Turbulence drives integrated delivery.\u201d COUNTER-EVIDENCE: \u201creduce duplicated volatile status that is delaying it.\u201d NO-FLIP: status reduction supports repair.\n- GATES PASS \u2014 \u201crun appropriate gates with hooks\u201d and \u201cmerge only at eligible head.\u201d COUNTER-EVIDENCE: \u201creview/merge still pending.\u201d NO-FLIP: pending review is the stated condition. PROPORTION FAIL \u2014 \u201cPR86 all16 checks green\u201d lacks first-hand support.\nREDIRECTION: Supply first-hand evidence for live PR, review, and check claims.\nUNGROUNDED: \u201cFresh origin/main 6c3b18f0 (PR85 merge); clean PR86 branch 1fc65234\u201d; \u201cCurrent schema at Bora lacks native Cricket roles\u201d; \u201cFresh census: 18 open PRs, source81 frozen, PR86 all16 checks green\u201d; \u201cAssumptions specialist corroborates duplicated remaining lists\u201d; \u201cSaved Q22 evidence audited by test specialist: baseline91/91\u201d; \u201cSeven negative Error tests falsely pass on unrelated TypeError\u201d; \u201cPR87 is new separate research/roadmap work with four unresolved comments\u201d; \u201crepeated live status causes actual review churn\u201d."
+    }
+  ]
+}

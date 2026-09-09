@@ -1,0 +1,154 @@
+{
+  "evidence_kind": "native registered invocation and semantic spot check",
+  "date": "2026-09-09",
+  "parent_session": "01a07706-7939-7553-b935-fb1061a7b4e9",
+  "head_before_changes": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+  "candidate_status": "uncommitted tooling and installation",
+  "runtime_surface": "Resumed Castr task; current live collaboration schema exposes installed roles. No new CLI process was launched.",
+  "schema_evidence": "Parent-observed live tool schema plus successful typed dispatch; not a machine-exported complete schema.",
+  "frame_provenance": "The parent authored the same six-field frame in all three live spawn calls and changed only STANCE for follow-ups. Stored message arguments are encrypted at rest, so no byte-equality readback proof is claimed. Visible return text and nonsensitive dispatch metadata below are extracted verbatim from the parent session record.",
+  "configured_roles": {
+    "cricket-judgement-low": "name = \"cricket-judgement-low\"\ndescription = \"Fast low-effort conscience check using contextual judgement. Call directly for a second opinion, rubber duck, or design partnership when priority, proportion, or a wait/gate may be drifting; returns ON-TRACK, DRIFTING, or WRONG-PRIORITY with evidence and one redirection.\"\nmodel = \"gpt-5.6-sol\"\nmodel_reasoning_effort = \"low\"\nsandbox_mode = \"read-only\"\napproval_policy = \"never\"\n\ndeveloper_instructions = \"\"\"\nRead and follow `.agent/sub-agents/templates/cricket-judgement.md`.\n\nThis file is a thin Codex adapter. The canonical role definition lives in the\ntemplate referenced above; each dispatch supplies the objective frame,\ncritical-path owner, intent, recent actions, next planned action, and STANCE\n(normal or adversarial, defined in the template).\n\nMode: a single fast pass \u2014 judge from the supplied context, honour the\ntemplate's speed contract, and report only. Do not modify anything.\n\"\"\"\n",
+    "cricket-judgement-medium": "name = \"cricket-judgement-medium\"\ndescription = \"Fast medium-effort conscience check using contextual judgement. Call directly for a second opinion, rubber duck, or design partnership when priority, proportion, or a wait/gate may be drifting; returns ON-TRACK, DRIFTING, or WRONG-PRIORITY with evidence and one redirection.\"\nmodel = \"gpt-5.6-terra\"\nmodel_reasoning_effort = \"medium\"\nsandbox_mode = \"read-only\"\napproval_policy = \"never\"\n\ndeveloper_instructions = \"\"\"\nRead and follow `.agent/sub-agents/templates/cricket-judgement.md`.\n\nThis file is a thin Codex adapter. The canonical role definition lives in the\ntemplate referenced above; each dispatch supplies the objective frame,\ncritical-path owner, intent, recent actions, next planned action, and STANCE\n(normal or adversarial, defined in the template).\n\nMode: a single fast pass \u2014 judge from the supplied context, honour the\ntemplate's speed contract, and report only. Do not modify anything.\n\"\"\"\n",
+    "cricket-procedure-xhigh": "name = \"cricket-procedure-xhigh\"\ndescription = \"Fast xhigh-effort conscience check using a compiled decision procedure with quote-anchored evidence and a mechanical verdict table. Call directly for a reproducible second opinion when priority, proportion, or a wait/gate may be drifting; returns ON-TRACK, DRIFTING, or WRONG-PRIORITY with one redirection.\"\nmodel = \"gpt-5.6-luna\"\nmodel_reasoning_effort = \"xhigh\"\nsandbox_mode = \"read-only\"\napproval_policy = \"never\"\n\ndeveloper_instructions = \"\"\"\nRead and follow `.agent/sub-agents/templates/cricket-procedure.md`.\n\nThis file is a thin Codex adapter. The canonical role definition lives in the\ntemplate referenced above; each dispatch supplies the objective frame,\ncritical-path owner, intent, recent actions, next planned action, and STANCE\n(normal or adversarial, defined in the template).\n\nMode: execute the template's compiled decision procedure exactly in a single\nfast pass, using at most its two targeted verification Reads when the speed\ncontract permits them. Never explore; report only. Do not modify anything.\n\"\"\"\n"
+  },
+  "dispatches": [
+    {
+      "timestamp": "2026-09-09T09:40:46.699Z",
+      "tool": "spawn_agent",
+      "call_id": "call_w6PA4vcn84MqQlwdl6TDVKnz",
+      "arguments_without_encrypted_message": {
+        "task_name": "cricket_low",
+        "agent_type": "cricket-judgement-low",
+        "fork_turns": "none"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T09:40:57.548Z",
+      "tool": "spawn_agent",
+      "call_id": "call_VcpSQLV4soCC6d0gYk4o4wPD",
+      "arguments_without_encrypted_message": {
+        "task_name": "cricket_medium",
+        "agent_type": "cricket-judgement-medium",
+        "fork_turns": "none"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T09:41:09.409Z",
+      "tool": "spawn_agent",
+      "call_id": "call_m8WrIQCWFEsPGOrFUqlXPWry",
+      "arguments_without_encrypted_message": {
+        "task_name": "cricket_procedure",
+        "agent_type": "cricket-procedure-xhigh",
+        "fork_turns": "none"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T09:43:57.384Z",
+      "tool": "followup_task",
+      "call_id": "call_wB2laHIygjjelzxF7Cbvr4Gr",
+      "arguments_without_encrypted_message": {
+        "target": "cricket_low"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T09:44:10.084Z",
+      "tool": "followup_task",
+      "call_id": "call_wErsT3QqrUBxgoIWfFa4qYoX",
+      "arguments_without_encrypted_message": {
+        "target": "cricket_medium"
+      }
+    },
+    {
+      "timestamp": "2026-09-09T09:44:23.241Z",
+      "tool": "followup_task",
+      "call_id": "call_v20v0H8qGn8DJCuNmtql87dU",
+      "arguments_without_encrypted_message": {
+        "target": "cricket_procedure"
+      }
+    }
+  ],
+  "dispatch_results": [
+    {
+      "timestamp": "2026-09-09T09:40:46.801Z",
+      "call_id": "call_w6PA4vcn84MqQlwdl6TDVKnz",
+      "output": "{\"task_name\":\"/root/cricket_low\"}"
+    },
+    {
+      "timestamp": "2026-09-09T09:40:57.779Z",
+      "call_id": "call_VcpSQLV4soCC6d0gYk4o4wPD",
+      "output": "{\"task_name\":\"/root/cricket_medium\"}"
+    },
+    {
+      "timestamp": "2026-09-09T09:41:09.525Z",
+      "call_id": "call_m8WrIQCWFEsPGOrFUqlXPWry",
+      "output": "{\"task_name\":\"/root/cricket_procedure\"}"
+    },
+    {
+      "timestamp": "2026-09-09T09:43:57.541Z",
+      "call_id": "call_wB2laHIygjjelzxF7Cbvr4Gr",
+      "output": ""
+    },
+    {
+      "timestamp": "2026-09-09T09:44:10.210Z",
+      "call_id": "call_wErsT3QqrUBxgoIWfFa4qYoX",
+      "output": ""
+    },
+    {
+      "timestamp": "2026-09-09T09:44:23.603Z",
+      "call_id": "call_v20v0H8qGn8DJCuNmtql87dU",
+      "output": ""
+    }
+  ],
+  "returns": [
+    {
+      "timestamp": "2026-09-09T09:41:16.973Z",
+      "agent": "/root/cricket_low",
+      "role": "cricket-judgement-low",
+      "text": "Name: cricket-judgement-low\nPurpose: Fast contextual priority check\nSummary: I assess whether the planned work remains on the stated critical path.\nSTANCE: normal\nVERDICT: ON-TRACK\nEVIDENCE:\n- The native normal/adversarial trio directly serves the documented acceptance condition: six substantive returns or acceptance remains UNDELIVERED.\n- Ownership is explicit: Kite owns C05 tooling; Bora retains broader correction, security, and records, so this read-only panel does not displace a critical-path owner.\n- The aggregate/push coordination gate names `check-singleton-per-window`; useful local documentation work continues during coordination.\nREDIRECTION: Record invocation method and available provenance with the six returns; keep unavailable event IDs explicitly marked unavailable.\nUNGROUNDED: Jim\u2019s approval and 6 September directive lack event IDs; prior reviewer closures, test results, inventory counts, peer status, and the saved E2E log are supplied without directly inspectable evidence."
+    },
+    {
+      "timestamp": "2026-09-09T09:41:28.038Z",
+      "agent": "/root/cricket_medium",
+      "role": "cricket-judgement-medium",
+      "text": "Name: cricket-judgement-medium  \nPurpose: contextual priority check  \nSummary: I assess whether the supplied next action serves the active critical path.\n\nSTANCE: normal  \nVERDICT: ON-TRACK  \nEVIDENCE:\n- Kite owns the stated C05 critical path; native panel evidence directly supports the documented parity-restoration objective.\n- The requested panel is bounded: six substantive returns verify invocation/conformance and a semantic spot check, not reliability benchmarking.\n- The frame confines peer refresh to aggregate/push sequencing while allowing local work, avoiding an invented coordination hold.\nREDIRECTION: Run the native normal panel now; keep peer-state refresh out of the local documentation and panel-evidence path.\nUNGROUNDED: Jim\u2019s request/approval lacks event IDs; prior focused/E2E pass and saved log are asserted without current method/output; `check-singleton-per-window` is named without a file or directive id."
+    },
+    {
+      "timestamp": "2026-09-09T09:43:39.034Z",
+      "agent": "/root/cricket_procedure",
+      "role": "cricket-procedure-xhigh",
+      "text": "Name: cricket-procedure-xhigh  \nPurpose: Compiled priority and gate conscience check  \nSummary: Applies Cricket\u2019s deterministic frame audit and verdict table.\n\nSTANCE: normal  \nSTAKES: \u201cKite collects this full native panel while fixing the two known doc findings\u201d  \nVERDICT: DRIFTING  \nEVIDENCE:\n- CONSUMER PASS; DISPLACEMENT PASS \u2014 \u201cKite collects this full native panel\u201d and \u201cdelivers reviewable tooling and installation changesets\u201d serve the stated objective.\n- GATES PASS \u2014 \u201cNo further user permission wait: Jim approved\u201d; \u201cAggregate/push sequencing follows check-singleton-per-window,\u201d verified by `.agent/rules/check-singleton-per-window.md`.\n- PROPORTION FAIL \u2014 \u201cGateway independently closed all three code defects\u201d and \u201csecurity found no extra blocker\u201d lack first-hand support here.\nREDIRECTION: Supply first-hand grounding for external review and gate claims.\nUNGROUNDED: \u201cCurrent resumed collaboration schema exposes all three registered Cricket roles, including exact Sol/low, Terra/medium and Luna/xhigh bindings; adapter files were read directly\u201d; \u201cGateway independently closed all three code defects on 6 September; test reviewer closed weak-fixture findings; security found no extra blocker\u201d; \u201cFocused and E2E tests passed then\u201d; \u201cInstalled inventory was directly counted:17 templates,21 Codex,22 Claude and22 Cursor\u201d; \u201call work remains uncommitted at6c3b18f0\u201d; \u201cBora's task is active by a current app status read\u201d."
+    },
+    {
+      "timestamp": "2026-09-09T09:44:10.212Z",
+      "agent": "/root/cricket_low",
+      "role": "cricket-judgement-low",
+      "text": "Name: cricket-judgement-low\nPurpose: Fast contextual priority check\nSummary: I assess whether the planned work remains on the stated critical path.\nSTANCE: adversarial\nVERDICT: ON-TRACK\nEVIDENCE:\n- Counterfactual: Kite should fix the two documentation findings and run the canonical gate immediately, while Bora receives coordination before aggregate/push. That refutation fails because the native six-return panel is itself an explicit acceptance condition and runs read-only without displacing either owner.\n- The panel has a concrete consumer: green delivery of `.agent/plans/current/cricket-platform-parity.md`, with explicit failure conditions for missing roles, admission errors, incorrect methods, failed follow-ups, and non-substantive returns.\n- The only stated hold names `check-singleton-per-window`, and local documentation work continues during coordination.\nREDIRECTION: Keep the panel bounded to invocation/conformance and semantic spot-check evidence; immediately return to the two documentation findings and canonical `pnpm check`.\nUNGROUNDED: Approval/directive event IDs are unavailable; historical reviews, test outcomes, inventory counts, current peer activity, and adapter-binding claims remain supplied assertions."
+    },
+    {
+      "timestamp": "2026-09-09T09:44:23.605Z",
+      "agent": "/root/cricket_medium",
+      "role": "cricket-judgement-medium",
+      "text": "Name: cricket-judgement-medium  \nPurpose: contextual priority check  \nSummary: I test whether the supplied next action is displaced by a more valuable critical-path action.\n\nSTANCE: adversarial  \nVERDICT: ON-TRACK  \nEVIDENCE:\n- Counterfactual tested: defer the panel for broader correction/security. It fails because Bora owns that work, while Kite\u2019s C05 delivery specifically requires runnable native-role evidence.\n- The two documentation findings are included in Kite\u2019s next action, so panel collection does not leave the declared restoration boundary behind.\n- Native normal/adversarial returns are a direct acceptance condition; the bounded six-return method avoids treating role reliability as a deliverable.\nREDIRECTION: Collect the trio evidence and repair the two documentation findings in the same local delivery slice before the aggregate gate.\nUNGROUNDED: User request/approval lack event IDs; role bindings, prior tests, inventory count, and Bora\u2019s current status are supplied claims; `check-singleton-per-window` has no cited file or directive id."
+    },
+    {
+      "timestamp": "2026-09-09T09:45:08.326Z",
+      "agent": "/root/cricket_procedure",
+      "role": "cricket-procedure-xhigh",
+      "text": "Name: cricket-procedure-xhigh  \nPurpose: Compiled priority and gate conscience check  \nSummary: Applies the deterministic Cricket procedure.\n\nSTANCE: adversarial  \nSTAKES: \u201cKite collects this full native panel while fixing the two known doc findings\u201d  \nVERDICT: DRIFTING  \nEVIDENCE:\n- CONSUMER PASS \u2014 \u201cKite collects this full native panel\u201d serves the objective. COUNTER-EVIDENCE: \u201cuseful local work continues during coordination.\u201d NO-FLIP: panel collection remains explicit. DISPLACEMENT PASS \u2014 \u201cdelivers reviewable tooling and installation changesets.\u201d COUNTER-EVIDENCE: \u201cAggregate/push sequencing follows check-singleton-per-window.\u201d NO-FLIP: sequencing does not displace delivery.\n- GATES PASS \u2014 \u201cNo further user permission wait: Jim approved\u201d; \u201cAggregate/push sequencing follows check-singleton-per-window,\u201d verified by the named rule. COUNTER-EVIDENCE: \u201crefreshed coordination requested before aggregate/push.\u201d NO-FLIP: owner coordination is the required sequence.\n- PROPORTION FAIL \u2014 \u201cGateway independently closed all three code defects\u201d and \u201csecurity found no extra blocker\u201d lack first-hand support here.\nREDIRECTION: Supply first-hand grounding for external claims.\nUNGROUNDED: \u201cMessage event IDs unavailable\u201d; \u201cCurrent resumed collaboration schema exposes all three registered Cricket roles, including exact Sol/low, Terra/medium and Luna/xhigh bindings\u201d; \u201cGateway independently closed all three code defects on 6 September\u201d; \u201ctest reviewer closed weak-fixture findings\u201d; \u201csecurity found no extra blocker\u201d; \u201cFocused and E2E tests passed then\u201d; \u201cInstalled inventory was directly counted:17 templates,21 Codex,22 Claude and22 Cursor\u201d; \u201call work remains uncommitted at6c3b18f0\u201d; \u201cBora's task is active by a current app status read\u201d."
+    }
+  ],
+  "evidence_limits": [
+    "Configured bindings and admitted role types do not independently measure the serving model.",
+    "These six responses are not a judgement-quality or reliability benchmark.",
+    "Normal then adversarial on the same agents confounds stance with order and history.",
+    "Unavailable user-message event IDs remain unavailable."
+  ],
+  "adjudication": {
+    "judgement": "ON-TRACK in both stances for low and medium",
+    "procedure": "DRIFTING in both stances for absent directly inspectable historical evidence",
+    "accepted": "Retain exact invocation metadata and reviewer return provenance; refresh the canonical gate before release.",
+    "not_adopted": "No repeated review merely to turn the panel green; existing returned expert reviews are primary review evidence and the independently required canonical gate supplies fresh execution proof.",
+    "semantic_spot_check": "All six returns identify their role and stance and assess the supplied ownership, native acceptance, coordination and evidence. The procedure provides question assessments and quote-anchored reasoning. This establishes task performance on this frame, not perfect procedural adherence or quality."
+  }
+}

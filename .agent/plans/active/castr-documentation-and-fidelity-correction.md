@@ -103,7 +103,9 @@ surviving delta has a verified destination or evidenced supersession. Preserve i
 source and the full acceptance; reducing the count by unverified closure is not
 progress. The ledger owns the live census and closure evidence. PR #88 delivered
 the C05 tooling contract; the coordinating agent now owns its dependent native
-installation and will open its PR only after the PR #28 transition completes.
+installation. PR #90 delivered the preservation record and PR #28 then closed
+without merge, satisfying the installation's opening condition. Land that prepared
+installation before beginning another repair PR; PR #14 follows.
 
 Owner-directed Cricket cadence (6 September 2026): run the full registered Codex
 panel in normal and adversarial stances at substantive delivery and architectural
@@ -125,21 +127,35 @@ tooling and validation as PR #88, then transferred the remaining installation at
 `codex/cricket-installation` commit `2af22e0f` to the coordinating agent. That
 boundary owns the Cricket templates, registrations, generated adapters and native
 panel proof. OCE is a read-only source reference; further full panels execute from
-Castr. The coordinating agent retains this delivery plan, the parent queue, ledger
-and coverage manifests.
+Castr. Bora merged current main `cb73c4de` into the installation branch as
+`7967ff92`, after PR #90 merged and PR #28 closed. Its current delta also carries
+the narrow generator-source correction that makes Cursor's unpinned reasoning
+effort explicit; PR #88's platform-contract tooling remains delivered separately.
+[PR #91](https://github.com/EngraphCode/castr/pull/91) is the open installation
+delivery. Its review waves repair the compiled-procedure intake, decision-table and
+output contracts, the incomplete routing descriptions across all Cricket roles and all
+stale pre-opening routes together before exact-head re-review and merge. The final
+decision-contract corrections reject an invalid stance before either method produces a
+verdict, require a complete five-field context before the compiled procedure can take an
+ON-TRACK row, define `REDIRECTION: none` for both ON-TRACK rows, and prevent the brevity
+target from forcing silent evidence loss. Replay requires the prior return, its prior
+six-field frame, exact field-by-field equality with the current invocation and a prior
+return that satisfies the current output contract.
+The coordinating agent retains this delivery plan, the parent queue, ledger and
+coverage manifests.
 
-| Outcome family     | Reviewable outcome and dependencies                                                                                                                                                             |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| C01                | Split custody, this acceptance contract, owner corrections and paused execution authority.                                                                                                      |
-| C02                | Q-19: durable REVIEW-TALLY, structural step-back and observational drive-attempt counters; demonstrate all three on its own PR.                                                                 |
-| C03                | Public local checkout/build/CLI/API instructions, publication state and actual product surface.                                                                                                 |
-| C04a / C04b        | Duplicate ADR-044/045/046 unique substance into originals and exact referrers; then remaining index/status/number/navigation defects. Q-08 completes only after both.                           |
-| C05                | Plan authority, commands, installed skill/reviewer names, Q-16 PDR-018/template authority, canonical generated adapters.                                                                        |
-| C06                | Coupled umbrella/Castr and Practice visions with PDR-135, indexes, adoption records and fired graduation.                                                                                       |
-| C07a / C07b / C07c | Compiler doctrine by proposition: artifact/admission boundaries; object/processing semantics; target profiles/proof claims. Each fixes every contradictory current surface for its proposition. |
-| C08                | Fidelity families below, one concrete defect and behavioural proof per repair PR. Independently green repairs merge promptly.                                                                   |
-| C09                | Plan-family reconciliation, references, historical framing, remaining graduations and entry routes, in separate documentation PRs.                                                              |
-| C10                | Both walkthroughs, bounded autonomy retrospective and final coverage/lifecycle reconciliation on main.                                                                                          |
+| Outcome family     | Reviewable outcome and dependencies                                                                                                                                                                                                                                                                                        |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| C01                | Split custody, this acceptance contract, owner corrections and paused execution authority.                                                                                                                                                                                                                                 |
+| C02                | Q-19: durable REVIEW-TALLY, structural step-back and observational drive-attempt counters; demonstrate all three on its own PR.                                                                                                                                                                                            |
+| C03                | Public local checkout/build/CLI/API instructions, publication state and actual product surface.                                                                                                                                                                                                                            |
+| C04a / C04b        | Duplicate ADR-044/045/046 unique substance into originals and exact referrers; then remaining index/status/number/navigation defects. Q-08 completes only after both.                                                                                                                                                      |
+| C05                | Plan authority, commands, installed skill/reviewer names, Q-16 PDR-018/template authority, canonical generated adapters.                                                                                                                                                                                                   |
+| C06                | Coupled umbrella/Castr and Practice visions with PDR-135, indexes, adoption records and fired graduation.                                                                                                                                                                                                                  |
+| C07a / C07b / C07c | Compiler doctrine by proposition: artifact/admission boundaries; object/processing semantics; target profiles/proof claims. Each fixes every contradictory current surface for its proposition.                                                                                                                            |
+| C08                | Fidelity families below, one concrete defect and behavioural proof per repair PR. Independently green repairs merge promptly.                                                                                                                                                                                              |
+| C09                | Plan-family reconciliation, references, historical framing, remaining graduations and entry routes, plus agentic-surface validator strictness in separate PRs. The validator slice enforces the existing 1,024-character description bound; semantic routing quality remains review-owned until trigger evaluations exist. |
+| C10                | Both walkthroughs, bounded autonomy retrospective and final coverage/lifecycle reconciliation on main.                                                                                                                                                                                                                     |
 
 C08 repairs follow their actual prerequisites under the
 [parent's refined sequencing](../proof-programme/parent-plan.md#current-execution-state).
