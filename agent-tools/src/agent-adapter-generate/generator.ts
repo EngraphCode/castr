@@ -126,7 +126,7 @@ export function buildAgentRoster(
         `${CODEX_ADAPTER_DIR}/${name}.toml: must reference exactly one canonical template under ${TEMPLATE_DIR}`,
       );
     }
-    const [personaPath] = validation.canonicalPaths.filter((path) =>
+    const personaPath = validation.canonicalPaths.find((path) =>
       isCanonicalAgentReferenceInside(path, PERSONA_DIR),
     );
 
