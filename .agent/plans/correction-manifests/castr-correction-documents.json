@@ -220,17 +220,17 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-final-native-proof",
-      "reviewed_git_blob_hash": "daa0fe3779c455ee0bb078a6b10ff729d5e0e586",
-      "base_revision": "519490123029d68d3865b4061cf3d7726c174c66",
+      "reviewed_git_blob_hash": "bf9af88cb5ff2a7170f5a9c186627ec2414799b9",
+      "base_revision": "1f29d21fa78bd6bbc0297e66b488b78a3640fc1b",
       "review_date": "2026-09-09",
-      "scope": "Current C05 Cricket disposition and census only: PR91 repository delivery, PR92 truth correction and continuity deviation, the 16-PR durable estate plus self-referential PR92 while open, and final I2 before PR14.",
+      "scope": "Current C05 Cricket disposition and census only: PR91 repository delivery, PR92 truth correction and continuity deviation, the 16-PR durable estate plus self-referential PR92 while open, explicit PR88-row residual acceptance, and final I2 before PR14.",
       "evidence": [
         "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
         "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
         "T1/T2, I1 and the documented installation are delivered. The retained six-return native record proves invocation at its dated template revision, which predates material final-template changes. The later full-panel attempt is UNDELIVERED, so final I2 and atomic lifecycle completion remain outstanding."
       ],
       "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes.",
-      "prior_reviewed_git_blob_hash": "2951b57d7748834b1c32eb200d0768c99fc0d175",
+      "prior_reviewed_git_blob_hash": "daa0fe3779c455ee0bb078a6b10ff729d5e0e586",
       "review_history": [
         {
           "reviewed_git_blob_hash": "5c5be6c63b1527fe55a4a4ebec612bf8bdb514f6",
@@ -309,6 +309,12 @@
           "base_revision": "79cb1fcd28c42c37e4c265292d5a585be7fd5db3",
           "review_date": "2026-09-09",
           "scope": "Current C05 Cricket disposition and census only: PR91 exact-head delivery evidence, completed atomic-plan acceptance, the 16-PR durable estate plus self-referential PR92 while open, and PR14 as the next substantive delivery."
+        },
+        {
+          "reviewed_git_blob_hash": "daa0fe3779c455ee0bb078a6b10ff729d5e0e586",
+          "base_revision": "519490123029d68d3865b4061cf3d7726c174c66",
+          "review_date": "2026-09-09",
+          "scope": "Current C05 Cricket disposition and census only: PR91 repository delivery, PR92 truth correction and continuity deviation, the 16-PR durable estate plus self-referential PR92 while open, and final I2 before PR14."
         }
       ]
     },
