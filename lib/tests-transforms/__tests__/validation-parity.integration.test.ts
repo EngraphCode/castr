@@ -1,16 +1,8 @@
 /**
- * Validation Parity Integration Tests
- *
- * PROVES that generated Zod schemas validate data correctly according to IR
- * constraints. This is the ultimate test of Zod output correctness.
- *
- * The IR is the source of truth. We test that:
- * 1. Valid data (per IR constraints) passes Zod validation
- * 2. Invalid data (per IR constraints) throws on Zod validation
- *
- * Uses `.parse()` (throws on failure) rather than `.safeParse()` to align with
- * our strict, fail-fast principle. If data is valid, parse succeeds. If data
- * is invalid, parse throws—and we expect that.
+ * Exercises checked-in Petstore Zod validators against the listed payloads.
+ * Error cases assert the intended validation issues and exact parsed values.
+ * Other cases observe acceptance or rejection only. This suite does not run
+ * regeneration or establish complete object, int64 or transformation fidelity.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -103,45 +95,73 @@ describe('Error Schema Validation', () => {
     it('accepts object with all required fields', () => {
       const validError = { code: 404, message: 'Not found' };
 
-      expect(() => ErrorSchema.parse(validError)).not.toThrow();
+      expect(ErrorSchema.parse(validError)).toStrictEqual(validError);
     });
 
     it('accepts integer code values', () => {
       const validError = { code: 500, message: 'Internal server error' };
 
-      expect(() => ErrorSchema.parse(validError)).not.toThrow();
+      expect(ErrorSchema.parse(validError)).toStrictEqual(validError);
     });
   });
 
-  describe('invalid data throws', () => {
-    it('throws for object missing required field: code', () => {
+  describe('invalid data produces validation issues', () => {
+    it('rejects object missing required field: code', () => {
       const invalidError = { message: 'error' };
 
-      expect(() => ErrorSchema.parse(invalidError)).toThrow();
+      expect(ErrorSchema.safeParse(invalidError)).toMatchObject({
+        success: false,
+        error: {
+          issues: [{ code: 'invalid_type', expected: 'number', path: ['code'] }],
+        },
+      });
     });
 
-    it('throws for object missing required field: message', () => {
+    it('rejects object missing required field: message', () => {
       const invalidError = { code: 1 };
 
-      expect(() => ErrorSchema.parse(invalidError)).toThrow();
+      expect(ErrorSchema.safeParse(invalidError)).toMatchObject({
+        success: false,
+        error: {
+          issues: [{ code: 'invalid_type', expected: 'string', path: ['message'] }],
+        },
+      });
     });
 
-    it('throws for empty object (missing both required fields)', () => {
+    it('rejects empty object (missing both required fields)', () => {
       const invalidError = {};
 
-      expect(() => ErrorSchema.parse(invalidError)).toThrow();
+      expect(ErrorSchema.safeParse(invalidError)).toMatchObject({
+        success: false,
+        error: {
+          issues: [
+            { code: 'invalid_type', expected: 'number', path: ['code'] },
+            { code: 'invalid_type', expected: 'string', path: ['message'] },
+          ],
+        },
+      });
     });
 
-    it('throws for object with wrong type for code (string instead of integer)', () => {
+    it('rejects object with wrong type for code (string instead of integer)', () => {
       const invalidError = { code: 'x', message: 'error' };
 
-      expect(() => ErrorSchema.parse(invalidError)).toThrow();
+      expect(ErrorSchema.safeParse(invalidError)).toMatchObject({
+        success: false,
+        error: {
+          issues: [{ code: 'invalid_type', expected: 'number', path: ['code'] }],
+        },
+      });
     });
 
-    it('throws for object with non-integer code (float)', () => {
+    it('rejects object with non-integer code (float)', () => {
       const invalidError = { code: 1.5, message: 'error' };
 
-      expect(() => ErrorSchema.parse(invalidError)).toThrow();
+      expect(ErrorSchema.safeParse(invalidError)).toMatchObject({
+        success: false,
+        error: {
+          issues: [{ code: 'invalid_type', expected: 'int', path: ['code'] }],
+        },
+      });
     });
   });
 });

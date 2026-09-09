@@ -166,16 +166,16 @@ it does not resume the experiment or scheduled execution. The [delivery ledger](
 owns PR dispositions. Q-30's acceptance checkpoints live in the delivery plan;
 this frontmatter remains the sole execution queue.
 
-The commission's interactive sequencing is refined after the 6 September
-step-back: C03a is delivered through PR #85; now deliver the independently
-proven C08 operation-security-empty repair. Investigate Q-22's canonical generator
-and fixture integrity next, retaining its paired generator-fix/regenerated-output
-landing and repairing semantic prerequisites before accepting goldens. Continue remaining
-C03–C07 documentation and other independent C08 repairs by their actual technical
-prerequisites; outcome-family numbers do not impose a blanket documentation
-barrier on an existing-contract repair. The [delivery plan](../active/castr-documentation-and-fidelity-correction.md#6-september-delivery-step-back)
-records the reasoning and work-in-progress limit; the [former ordering](../archive/correction-sequencing-2026-09-06.md)
-is conserved as historical evidence.
+The commission's interactive sequencing follows the [9 September prerequisite
+sequence](../active/castr-documentation-and-fidelity-correction.md#9-september-q-22-prerequisite-sequence).
+C03a and the bounded operation-security repair are delivered. Strengthen Q-22's
+Error validation oracles first, then migrate the integer contract coherently across
+its live consumers and doctrine. Q-22 subsequently lands the generator fix and all
+regenerated outputs together, including the fixed-fixture export imports. Its full
+original acceptance remains mandatory. Other independent C03–C08 outcomes can
+integrate when their actual technical prerequisites hold; the delivery plan owns
+the reasoning and work-in-progress limit. Displaced instructions are
+[conserved verbatim](../archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
 
 C01, C02, C01R and C03a are delivered at their bounded acceptance. Remaining
 C03b/c and C04–C10 outcomes retain their full acceptance. Repairs requiring changed roots, facets, object/processing doctrine or

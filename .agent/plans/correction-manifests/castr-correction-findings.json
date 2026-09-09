@@ -13,7 +13,7 @@
     "reproduction": "current_reproduction is pending until the actual behavioural counterexample or applicable non-code check is executed on a named revision.",
     "dependencies": "original_dependencies records inherited queue ordering; technical_dependencies contains separately justified repair dependencies. Absence of an entry is not a claim that the entire implementation has no dependencies.",
     "proofs": "closing_proof_ids resolves in shared_closing_proofs. A proof description is proposed acceptance, never executed evidence.",
-    "closure": "No finding is closed by this inventory. Historical bounded landings, exclusions, reproductions, repairs and merged delivery remain separate facts."
+    "closure": "Inventory membership never closes a finding. Closure requires explicit bounded acceptance and merged evidence; historical landings, exclusions, reproductions and prepared repairs remain separate facts."
   },
   "scope": {
     "included": [
@@ -126,9 +126,9 @@
     "original_rejected_or_downgraded_candidates": 9,
     "later_findings_and_carry_forwards": 16,
     "queue_carriers": 30,
-    "total_finding_records": 98,
+    "total_finding_records": 99,
     "baseline_finding_records": 96,
-    "post_baseline_discoveries": 2
+    "post_baseline_discoveries": 3
   },
   "queue_carriers": [
     {
@@ -818,9 +818,9 @@
       "queue_carriers": ["Q-12"],
       "closing_proof_ids": ["identity"],
       "related_ids": ["F-08"],
-      "current_reproduction": "pending",
-      "reproduction_note": "No behavioural reproduction was executed for this inventory. Source inspection and dated reports are not a current green/red result.",
-      "disposition": "pending_reverification",
+      "current_reproduction": "reproduced-red",
+      "reproduction_note": "9 September inline runtime probes against unchanged product sources at 6c3b18f0 reproduced duplicate User identities and collapsed references from User/UserSchema; duplicate ErrorSchema declarations from Error/ErrorSchema; UseError type/value mismatch; and disappearance of class/Basic.Thing during public generation.",
+      "disposition": "in_scope_repair_outstanding",
       "scope_reason": "Retain the full source finding; reproduce against the implementation base and repair or record an evidence-backed disposition within the approved strict/fail-fast correction scope.",
       "original_dependencies": [
         {
@@ -829,7 +829,14 @@
         }
       ],
       "technical_dependencies": [],
-      "bounded_historical_evidence": []
+      "bounded_historical_evidence": [],
+      "observation": {
+        "date": "2026-09-09",
+        "base_revision": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+        "method": "Direct public parseZodSource/writeOpenApi/generation probes via node --import tsx; tool output inspected by the coordinator. No executable probe artifact was retained; reconstruct red-first behavioural cases at the owning seam before repair.",
+        "limits": "This is runtime observation, not retained regression proof, compiler success or full original-finding closure. Bare alias omission also remains under Zod admission; no fallback symbol reconstruction is authorised."
+      },
+      "delivery_carrier": "C08/identity-references; paired with C07 identity doctrine where needed"
     },
     {
       "id": "C4",
@@ -2596,9 +2603,9 @@
       "queue_carriers": ["Q-12"],
       "closing_proof_ids": ["identity"],
       "related_ids": ["C3"],
-      "current_reproduction": "pending",
-      "reproduction_note": "No behavioural reproduction was executed for this inventory. Source inspection and dated reports are not a current green/red result.",
-      "disposition": "pending_reverification",
+      "current_reproduction": "reproduced-red",
+      "reproduction_note": "9 September inline runtime probes against unchanged product sources at 6c3b18f0 reproduced duplicate User identities and collapsed references from User/UserSchema; duplicate ErrorSchema declarations from Error/ErrorSchema; UseError type/value mismatch; and disappearance of class/Basic.Thing during public generation.",
+      "disposition": "in_scope_repair_outstanding",
       "scope_reason": "Retain the full source finding; reproduce against the implementation base and repair or record an evidence-backed disposition within the approved strict/fail-fast correction scope.",
       "original_dependencies": [
         {
@@ -2607,7 +2614,14 @@
         }
       ],
       "technical_dependencies": [],
-      "bounded_historical_evidence": []
+      "bounded_historical_evidence": [],
+      "observation": {
+        "date": "2026-09-09",
+        "base_revision": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+        "method": "Direct public parseZodSource/writeOpenApi/generation probes via node --import tsx; tool output inspected by the coordinator. No executable probe artifact was retained; reconstruct red-first behavioural cases at the owning seam before repair.",
+        "limits": "This is runtime observation, not retained regression proof, compiler success or full original-finding closure. Bare alias omission also remains under Zod admission; no fallback symbol reconstruction is authorised."
+      },
+      "delivery_carrier": "C08/identity-references; paired with C07 identity doctrine where needed"
     },
     {
       "id": "F-09",
@@ -3128,9 +3142,9 @@
       "queue_carriers": ["Q-12"],
       "closing_proof_ids": ["security"],
       "related_ids": ["C2", "F-01"],
-      "current_reproduction": "reproduced-red",
+      "current_reproduction": "verified-green",
       "reproduction_note": "On the named main base, the parser and canonical persistence preserve an explicit operation security array, while the writer drops [] and wrongly restores inherited authentication. One unit and one integration counterexample fail; absent and [{}] controls pass.",
-      "disposition": "repair_prepared_delivery_pending",
+      "disposition": "bounded_repair_delivered",
       "scope_reason": "Retain the full source finding; reproduce against the implementation base and repair or record an evidence-backed disposition within the approved strict/fail-fast correction scope.",
       "original_dependencies": [
         {
@@ -3161,7 +3175,7 @@
       },
       "repair_evidence": {
         "carrier": "Q-30/C08/security-empty",
-        "state": "Bounded repair and integration proof recorded on 6 September 2026; current delivery disposition belongs to .agent/plans/delivery-ledger.md.",
+        "state": "Bounded acceptance delivered in PR86; exact merge/check/review proof is in .agent/plans/delivery-ledger.md.",
         "change": "Emit every defined operation security array, including an empty array.",
         "scope": "Canonical 3.2.0 in-memory parse -> serialize/deserialize -> write -> reparse; authored property presence and anonymous-access meaning. Excludes async loading, rebuilt package entrypoints and HTTP enforcement.",
         "tests": [
@@ -3188,14 +3202,21 @@
           "observed_head": "9c93ccaaa888fb07f77a2b16a8d245f355e936fd",
           "origin_commit": "89035ac2ca0bb96d27d39505657533c6a2c92669",
           "path": "lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.fields.ts",
-          "value": "The same defined-array writer condition survives in PR18. This prepared successor independently implements that value with persistence and a distinguishing required-global-authentication witness.",
-          "limits": "This is overlap evidence, not merged extraction or full PR disposition. PR18 loader/MCP coverage and remaining identity, document-security, description/reference/own-key deltas retain their owners; do not copy its obsolete sorting or anonymous-access expectations."
+          "value": "The same defined-array writer condition survives in PR18. PR86 independently delivered that value with canonical persistence and a distinguishing required-global-authentication witness.",
+          "limits": "This is bounded merged overlap evidence, not full PR18 disposition. Loader/MCP coverage and remaining identity, document-security, description/reference/own-key deltas retain their owners; do not copy obsolete sorting or anonymous-access expectations."
         },
         "integration_recheck": {
           "base_revision": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
           "date": "2026-09-06",
           "results": "19 unit and 8 integration cases passed on the fresh integration worktree; all three behavioural blobs equal the reviewed source candidate.",
           "review": "Independent OpenAPI integration recheck passed at the unchanged three blobs; prior test/gateway proof remains at that same code scope."
+        },
+        "delivery": {
+          "pull_request": "https://github.com/EngraphCode/castr/pull/86",
+          "date": "2026-09-09",
+          "reviewed_head": "812c2850b3013d0d18be8c77bcbdc06e4f644dc8",
+          "merge_commit": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+          "proof": "Merge tree equals reviewed head and retains all three exact behavioural blobs below. Scope exclusions and wider findings remain unchanged."
         }
       }
     },
@@ -3520,10 +3541,10 @@
       "original_acceptance": "Acceptance (`integration`): a clean-tree regeneration run reproduces the checked-in estate exactly, the 11 previously-breaking validation-parity tests pass against the regenerated outputs, and `pnpm check` is green.",
       "queue_carriers": ["Q-22"],
       "closing_proof_ids": ["fixture-generator"],
-      "related_ids": ["F-15"],
-      "current_reproduction": "pending",
-      "reproduction_note": "No behavioural reproduction was executed for this inventory. Source inspection and dated reports are not a current green/red result.",
-      "disposition": "pending_reverification",
+      "related_ids": ["F-15", "Q-22/error-negative-oracles"],
+      "current_reproduction": "reproduced-red",
+      "reproduction_note": "Unchanged four-file parity suite passed 91/91 before canonical regeneration at 6c3b18f0; generator exited zero, changed 30 generated files, then parity passed 80/91. Eight failures concern number/bigint input and three a missing Error export. The original historical eleven failure titles were not recorded; equal counts do not establish identity.",
+      "disposition": "in_scope_repair_outstanding",
       "scope_reason": "Explicitly included in the approved C08 proof-integrity family: implement and execute the original bounded correctness proof or fixture repair. The autonomous scheduling pause is not an exclusion.",
       "original_dependencies": [
         {
@@ -3531,8 +3552,18 @@
           "depends_on": []
         }
       ],
-      "technical_dependencies": [],
-      "bounded_historical_evidence": []
+      "technical_dependencies": [
+        "C08/Q22-oracles establishes discriminating Error rejection and parsed-value assertions first.",
+        "C07/C08 integer contract separates JSON-number acceptance from native bigint through canonical IR and all live consumers.",
+        "Fix fixed-fixture ErrorSchema imports with the paired Q22 generator/output landing; preserve the full original acceptance."
+      ],
+      "bounded_historical_evidence": [],
+      "observation": {
+        "date": "2026-09-09",
+        "reproduction_revision": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+        "method": "Inspected preserved 6 September baseline/generator/parity logs and 37-entry generated hash/symlink inventory; reran original test copies against both fixture estates. Strengthened Error oracles produce 73 passes/18 failures against the same regenerated outputs, exposing seven false passes. Both estates remain unchanged.",
+        "limits": "The saved generator output is uncommitted reproduction evidence. No generator fix or new golden acceptance is claimed."
+      }
     },
     {
       "id": "Q-24",
@@ -3884,6 +3915,52 @@
       "proposed_closing_proof": "Separate red-first behavioural case for absent versus explicit [] through parse, persistence, writing and reparse, asserting declaration presence independently of equivalent anonymous-access outcomes; intact aggregate/review/merge proof.",
       "bounded_historical_evidence": [],
       "id_note": "Locally assigned finding key for freshly reproduced surviving PR18 declaration-preservation value; no original numbered finding ID was supplied."
+    },
+    {
+      "id": "Q-22/error-negative-oracles",
+      "original_id": null,
+      "kind": "post_baseline_proof_finding",
+      "title": "Error validation negatives accept missing exports and unrelated exceptions as successful rejection",
+      "source": {
+        "register": "q22_oracle_observation",
+        "path": "lib/tests-transforms/__tests__/validation-parity.integration.test.ts",
+        "line": 120,
+        "commit": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
+        "url": "https://github.com/EngraphCode/castr/blob/6c3b18f0e97d4d93eca14ab67c2b0c79bc304119/lib/tests-transforms/__tests__/validation-parity.integration.test.ts#L120"
+      },
+      "original_acceptance": "The seven existing Error negatives require the intended validation issue paths/codes; the three positives compare parsed values. Missing exports, unrelated exceptions and representative semantic/output mutants must fail while unchanged checked-in fixtures pass. This is a bounded prerequisite and does not close Q22.",
+      "original_dependencies": [],
+      "technical_dependencies": [],
+      "queue_carriers": ["Q-22", "Q-30"],
+      "delivery_carrier": "C08/Q22-oracles",
+      "closing_proof_ids": ["oracle", "fixture-generator"],
+      "related_ids": ["Q-22"],
+      "current_reproduction": "reproduced-red",
+      "disposition": "repair_prepared_delivery_pending",
+      "reproduction_note": "Against the preserved regenerated estate, old tests pass seven negative Error cases on TypeError; strengthened tests reject those false passes (73/91 versus 80/91).",
+      "bounded_historical_evidence": [],
+      "repair_evidence": {
+        "date": "2026-09-09",
+        "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+        "method": "Existing four-file validation-parity suite and configuration; unchanged fixture imports and case membership. Mutants run in isolated temporary copies of the two generated Error modules, without modifying either retained fixture estate.",
+        "results": {
+          "original_checked_in": "91 passed",
+          "original_regenerated": "80 passed, 11 failed",
+          "strengthened_regenerated_RED": "73 passed, 18 failed",
+          "strengthened_checked_in_GREEN": "91 passed; direct worktree run also 91 passed",
+          "missing_export_or_unrelated_exception": "Each causes all 10 Error cases to fail; old suite missed seven negatives.",
+          "integer_constraint_removed_or_message_optional": "Each mutant causes two failures.",
+          "wrong_issue_code_or_path": "Each mutant causes seven failures.",
+          "successful_output_corruption": "Three positives fail; old suite missed all three."
+        },
+        "working_git_blobs": {
+          "lib/tests-transforms/__tests__/validation-parity.integration.test.ts": "aee0d95c1a96a1292877f6b154ffb6e12c79ecd4",
+          "lib/tests-transforms/__tests__/validation-parity-petstore-expanded.integration.test.ts": "4f740a1a0cd823508b08ba499a0e8cd63a7c78d5"
+        },
+        "preservation": "All 37 hashes/symlink entries in each fixture estate unchanged; reproduced estate matches its saved 6 September inventory and retains exactly 30 modified files.",
+        "review": "Independent test and gateway reviewers inspected exact blobs, probe construction/results and preservation evidence; bounded PASS.",
+        "remaining": "Current delivery actions and gate evidence belong to .agent/plans/delivery-ledger.md. Q22 regeneration, integer/export repair and untouched Pet/Pets/NewPet rejection oracles remain outstanding with their named families."
+      }
     }
   ],
   "scope_audit": {
@@ -3918,6 +3995,6 @@
       "New formats/new runtime products and optional lossy expansion",
       "Autonomous scheduling/resumption and recreation of retired arming/probe/scorer machinery"
     ],
-    "preserved": "The original 96 finding records retain their source IDs, immutable baseline locations, original acceptance/dependencies and current-reproduction states. The added Q-016 record carries its own architectural observation and outstanding closure; 46 original findings, 25 programme findings/risks, nine rejected/downgraded candidates and 16 later baseline records remain the baseline counts. A second post-baseline record captures freshly reproduced PR18 document-security declaration loss; it is distinct from operation-level authorization change and remains outstanding."
+    "preserved": "The original 96 finding records retain source IDs, immutable baseline locations, original acceptance and dependencies. Later dated evidence can update reproduction/disposition without replacing history. Baseline counts remain 46 original, 25 programme, nine rejected/downgraded and 16 later records. Three post-baseline records own Q-016 enforcement, PR18 document-security presence and Q22 Error oracles; each retains its separate acceptance."
   }
 }
