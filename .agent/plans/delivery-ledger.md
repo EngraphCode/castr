@@ -150,9 +150,9 @@ unrelated compiler repairs after its own surviving substance is accounted for.
   incomplete routing descriptions across all Cricket roles and stale pre-opening
   instructions across current routes. The active candidate repairs the complete classes
   at their canonical sources, including fail-fast invalid-stance handling across both
-  methods, an explicit complete-frame guard and a satisfiable brevity contract that
-  cannot silently truncate required evidence. Exact-head re-review, checks, ruleset
-  and merge evidence remain
+  methods, an explicit complete-frame guard, a deterministic no-change redirection for
+  both ON-TRACK rows and a satisfiable brevity contract that cannot silently truncate
+  required evidence. Exact-head re-review, checks, ruleset and merge evidence remain
   required. The retained native record proves six substantive returns at its
   stated scope and does not claim judgement reliability.
 

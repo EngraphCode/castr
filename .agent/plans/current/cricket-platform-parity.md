@@ -48,7 +48,8 @@ decision-table and output-contract contradictions, incomplete routing descriptio
 across all Cricket roles, and stale pre-opening instructions across the current routes.
 The active candidate repairs the complete classes at their canonical sources, including
 fail-fast invalid-stance handling across both methods, an explicit complete-frame guard,
-and a satisfiable brevity contract that cannot silently truncate required evidence.
+an explicit no-change redirection for both ON-TRACK rows, and a satisfiable brevity
+contract that cannot silently truncate required evidence.
 Exact-head re-review, checks and merge remain required.
 
 The retained native record establishes I2 at its stated boundary: three exact

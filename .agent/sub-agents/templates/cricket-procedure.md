@@ -133,7 +133,8 @@ priority order, row 7 takes the clean pass, and row 8 is the explicit catch-all 
 every input lands on exactly one row (first match wins).
 
 **Step 5 — REDIRECTION.** The single highest-value change implied by the FIRST matching
-row above — or "none" when row 7 (the clean all-PASS row) fired.
+row above — or "none" when either ON-TRACK row (row 6 or the clean all-PASS row 7)
+fired.
 
 ## Banned Moves
 

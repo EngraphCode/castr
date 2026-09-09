@@ -137,7 +137,8 @@ output contracts, the incomplete routing descriptions across all Cricket roles a
 stale pre-opening routes together before exact-head re-review and merge. The final
 decision-contract corrections reject an invalid stance before either method produces a
 verdict, require a complete five-field context before the compiled procedure can take an
-ON-TRACK row, and prevent the brevity target from forcing silent evidence loss.
+ON-TRACK row, define `REDIRECTION: none` for both ON-TRACK rows, and prevent the brevity
+target from forcing silent evidence loss.
 The coordinating agent retains this delivery plan, the parent queue, ledger and
 coverage manifests.
 
