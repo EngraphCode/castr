@@ -101,8 +101,9 @@ Select subsequent slices to deliver their acceptance on main and discharge the
 corresponding inherited-PR obligations. Close a source PR promptly once every
 surviving delta has a verified destination or evidenced supersession. Preserve its
 source and the full acceptance; reducing the count by unverified closure is not
-progress. The ledger owns the live census and closure evidence. The separate C05
-shepherd continues its already-authorised delivery with coordinated gate windows.
+progress. The ledger owns the live census and closure evidence. PR #88 delivered
+the C05 tooling contract; the coordinating agent now owns its dependent native
+installation and will publish that PR only after the current Q-09 closure slice.
 
 Owner-directed Cricket cadence (6 September 2026): run the full registered Codex
 panel in normal and adversarial stances at substantive delivery and architectural
@@ -110,18 +111,22 @@ boundaries, and before final closeout. Preserve verdicts and the coordinator’s
 accepted/rejected findings in the delivery evidence; never infer merge readiness
 from a panel verdict or reopen settled usefulness. Do not re-adjudicate an unchanged
 frame. The first full panel used the exact installed upstream roles through an
-ephemeral read-only dispatcher; C05 owns Castr’s missing templates/registrations
-and the coupled generator/validator repair. Future frames name exact governing
-rules and evidence paths; unavailable event identifiers remain explicitly missing.
+ephemeral read-only dispatcher. PR #88 delivered C05's coupled
+generator/validator/runtime contract; the dependent installation retains Castr's
+templates, registrations, generated adapters and native rerun. Future frames name
+exact governing rules and evidence paths; unavailable event identifiers remain
+explicitly missing.
 
 The owner subsequently commissioned a separate C05 Cricket repair task,
 initially “Repair Castr Cricket to OCE parity”, owned by Moon turns Apogee.
 The owner stopped that task and transferred the same preserved worktree to
-“Kite hunts Eyrie - Castr Cricket parity”; Kite hunts Eyrie now owns
-`codex/cricket-platform-parity`. The separate task owns the Cricket templates, registrations,
-generated adapters and coupled tooling/validation. OCE is a read-only source
-reference; further full panels execute from Castr. The coordinating agent retains
-this delivery plan, the parent queue, ledger and coverage manifests.
+“Kite hunts Eyrie - Castr Cricket parity”. Kite hunts Eyrie delivered the coupled
+tooling and validation as PR #88, then transferred the remaining installation at
+`codex/cricket-installation` commit `2af22e0f` to the coordinating agent. That
+boundary owns the Cricket templates, registrations, generated adapters and native
+panel proof. OCE is a read-only source reference; further full panels execute from
+Castr. The coordinating agent retains this delivery plan, the parent queue, ledger
+and coverage manifests.
 
 | Outcome family     | Reviewable outcome and dependencies                                                                                                                                                             |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -185,8 +190,9 @@ fitness score.
 
 PR #86 delivered the operation-security repair on main
 `92ada69892c42a69a3ae5431c1793bbee61b46c1`; the ledger owns its merge evidence.
-The next bounded outcome is **C08/Q22-oracles**, shepherded by Bora seeks Turbulence
-with PDR-132's two-round review budget. The 6 September reproduction at
+PR #89 then delivered the bounded **C08/Q22-oracles** repair as
+`d18e5b406d468218e0bf5d32f478725f9eef8399`; the [ledger](../delivery-ledger.md#correction-successors)
+owns its exact-head review and merge evidence. The 6 September reproduction at
 `6c3b18f0e97d4d93eca14ab67c2b0c79bc304119` used unchanged inputs and tests:
 91 baseline passes; canonical generator exit zero; then 80 passes and 11 failures.
 Eight failures concern number/bigint input; three concern the missing `Error`
@@ -194,16 +200,17 @@ export. Seven negative Error tests still passed on the unrelated `TypeError`.
 The original eleven historical failure titles were not recorded, so numerical
 agreement does not prove historical identity.
 
-The oracle slice keeps the existing fixtures, imports and case membership. Its
-acceptance is that the seven existing Error negatives require the intended
-validation issue paths/codes, the three Error positives compare parsed values,
-and missing-schema, unrelated-error and representative constraint mutants fail.
-Retain RED observations against the reproduced failure and GREEN against the
-unchanged checked-in fixtures. Scope the adjacent proof commentary accurately:
-checked-in validator tests do not execute regeneration or certify all fidelity.
-No generator or generated output changes belong to this slice; Q-22 remains open.
+The merged oracle slice keeps the existing fixtures, imports and case membership.
+Its seven existing Error negatives require the intended validation issue paths
+and codes, its three positives compare parsed values, and missing-schema,
+unrelated-error and representative semantic/output mutants fail. The finding
+register retains RED observations against the reproduced failure and GREEN against
+the unchanged checked-in fixtures. These validator tests do not execute
+regeneration or certify all fidelity. No generator or generated output changed;
+Q-22 remains open.
 
-Next, migrate the integer contract as one coherent semantic outcome: distinguish
+When Q-22 resumes after the current PR-risk reductions, migrate the integer
+contract as one coherent semantic outcome: distinguish
 numeric signed64 from native bigint signed64/unbounded through parser authors,
 canonical validation/versioned persistence, all active writers/projections and
 coupled doctrine. The bounded primitive facet describes identity processing;
