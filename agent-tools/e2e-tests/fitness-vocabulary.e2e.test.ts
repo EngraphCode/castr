@@ -37,8 +37,12 @@ function track(repository: string, relativePath: string, content: string): void 
   execFileSync(resolveTrustedGit(), ['add', '--', relativePath], { cwd: repository });
 }
 
-function runValidator(repository: string, environment: Readonly<NodeJS.ProcessEnv> = {}) {
-  return spawnSync(execPath, [...validatorArguments, '--root', repository], {
+function runValidator(
+  repository: string | undefined,
+  environment: Readonly<NodeJS.ProcessEnv> = {},
+) {
+  const rootArguments = repository === undefined ? [] : ['--root', repository];
+  return spawnSync(execPath, [...validatorArguments, ...rootArguments], {
     cwd: agentToolsRoot,
     encoding: 'utf8',
     env: { ...environment },
@@ -46,6 +50,18 @@ function runValidator(repository: string, environment: Readonly<NodeJS.ProcessEn
 }
 
 describe('fitness-vocabulary validator CLI', () => {
+  it('anchors its default root to the installed module despite a hostile project directory', async () => {
+    await withRepository((repository) => {
+      track(repository, 'pnpm-workspace.yaml', 'packages: []');
+      track(repository, 'redirected.md', 'This is a blocking violation.');
+
+      const result = runValidator(undefined, { CLAUDE_PROJECT_DIR: repository });
+
+      expect(result.status).toBe(0);
+      expect(result.stdout).toContain('All surfaces use the three-zone vocabulary.');
+    });
+  });
+
   it('ignores forbidden vocabulary outside the tracked live-document set', async () => {
     await withRepository((repository) => {
       track(repository, 'README.md', 'Current vocabulary only.');

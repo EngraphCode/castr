@@ -37,7 +37,7 @@ import { resolveRepoRoot } from '../../core/repo-root.js';
 import { writeLine } from '../../core/terminal-output.js';
 import { resolveTrustedGit } from '../../core/trusted-git.js';
 
-const repoRoot = resolveRepoRoot(import.meta.url);
+const repoRoot = resolveRepoRoot(import.meta.url, { projectDir: undefined });
 
 const FORBIDDEN_PHRASES = [
   'two-threshold',
