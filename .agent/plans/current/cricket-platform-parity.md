@@ -43,11 +43,12 @@ candidate. The canonical `pnpm check` then completed with exit 0: 1,718 Castr
 tests, 1,875 agent-tools tests, ten Castr E2E tests and 159 agent-tools E2E tests
 passed, including the 158-case adapter checker. Commit and full pre-push hooks
 passed at `3b568416`, and [PR #91](https://github.com/EngraphCode/castr/pull/91)
-opened from that head. Its opening review wave found compiled-procedure
-output-contract contradictions, incomplete routing descriptions across all Cricket
-roles, and stale pre-opening instructions across the current routes; the active
-candidate repairs all three classes at their canonical sources. Exact-head re-review,
-checks and merge remain required.
+opened from that head. Its opening review wave found compiled-procedure intake,
+decision-table and output-contract contradictions, incomplete routing descriptions
+across all Cricket roles, and stale pre-opening instructions across the current routes;
+the active candidate repairs all three classes at their canonical sources, including
+fail-fast invalid-stance handling across both methods and an explicit complete-frame
+guard. Exact-head re-review, checks and merge remain required.
 
 The retained native record establishes I2 at its stated boundary: three exact
 registered roles were dispatched with `fork_turns: "none"`, and the same three

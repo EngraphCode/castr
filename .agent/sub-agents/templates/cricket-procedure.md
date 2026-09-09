@@ -27,6 +27,8 @@ procedure's domain — invokers dispatch those to a judgement role only.
    Step 3 adds the mandatory counter-evidence sweep defined there — the only
    stance-dependent step in the procedure.
 
+The first five items are critical context. STANCE is a mandatory control input.
+
 ---
 
 # Cricket: Conscience Check by Compiled Decision Procedure
@@ -54,13 +56,19 @@ zero. Never explore the repository.
 
 ## The Procedure (execute in order)
 
+**Frame preflight (before Step 1).** If STANCE is absent or is not exactly `normal` or
+`adversarial`, return the identity component's three-line declaration followed only by
+`INVALID FRAME — STANCE must be exactly normal or adversarial`, then stop. Do not run the
+counter-evidence sweep or emit STAKES, VERDICT, EVIDENCE, REDIRECTION, or UNGROUNDED.
+
 **Step 1 — Stakes.** Write one line: what the OBJECTIVE FRAME says must happen next,
 quoting its exact words. If the OBJECTIVE FRAME is missing or carries no quotable
 next-step, write `STAKES: UNGROUNDED — objective frame missing` and continue; Step 2
 records the gap and the verdict table's owner/meta and UNVERIFIABLE rows absorb it.
 
-**Step 2 — Intake audit.** For each of the six supplied items, mark SUPPLIED or
-MISSING. Every MISSING or vague item goes to UNGROUNDED verbatim. Do not reconstruct a
+**Step 2 — Intake audit.** For each of the five critical context items, mark SUPPLIED or
+MISSING; treat a vague value as MISSING. Record an absent item in UNGROUNDED as
+`<FIELD>: MISSING`; for a vague item also quote its exact supplied text. Do not reconstruct a
 missing item from context. Then audit the CLAIMS WITHIN the supplied items: a field
 being present does not make its content grounded — any factual claim inside a supplied
 item that the supplied context cannot itself substantiate is marked on-trust and goes
@@ -111,11 +119,14 @@ this sweep is skipped.
    the critical path) → DRIFTING.
 5. CONSUMER or DISPLACEMENT UNVERIFIABLE → DRIFTING (the verdict genuinely turns on an
    unanchorable critical-path claim; the redirection is "supply the missing grounding").
-6. GATES or PROPORTION UNVERIFIABLE (no earlier row fired) → ON-TRACK, with every
-   UNVERIFIABLE line in UNGROUNDED.
-7. All four PASS and no critical MISSING items → ON-TRACK.
-8. Any remaining combination (e.g. all four PASS but a critical required item marked
-   MISSING at Step 2) → DRIFTING; the redirection is "supply the missing item".
+6. GATES or PROPORTION UNVERIFIABLE (no earlier row fired), with none of the five
+   critical context items MISSING or vague → ON-TRACK, with every UNVERIFIABLE line in
+   UNGROUNDED.
+7. All four PASS and none of OBJECTIVE FRAME, CRITICAL-PATH OWNER, INTENT, RECENT
+   ACTIONS, or NEXT is MISSING or vague → ON-TRACK.
+8. Any remaining combination, including all four PASS with any of those five items
+   MISSING or vague → DRIFTING; the redirection is "supply the first missing item" in
+   the Step-2 intake order.
 
 The table is TOTAL by construction: rows 1–6 take their specific combinations in
 priority order, row 7 takes the clean pass, and row 8 is the explicit catch-all —
@@ -144,6 +155,8 @@ row above — or "none" when row 7 (the clean all-PASS row) fired.
 
 ## Output Contract (your entire return, under 200 words)
 
+For a valid frame:
+
 - The return OPENS with the identity component's three-line declaration
   (`Name` / `Purpose` / `Summary`, per `subagent-identity.md`), then:
 - `STANCE:` normal | adversarial (as supplied)
@@ -158,5 +171,8 @@ row above — or "none" when row 7 (the clean all-PASS row) fired.
   `NO COUNTER-EVIDENCE IN SUPPLIED CONTEXT`) and the required explanation of why
   that counter-evidence does not flip the answer
 - `REDIRECTION:` from Step 5 — or "none"
-- `UNGROUNDED:` the Step-2 MISSING items, the Step-2 on-trust claims inside supplied
+- `UNGROUNDED:` the Step-2 MISSING or vague context items, the Step-2 on-trust claims inside supplied
   fields, and the Step-3 UNVERIFIABLE questions, verbatim
+
+For the invalid-STANCE preflight, return only the identity declaration and exact diagnostic
+defined there. It is not a verdict.

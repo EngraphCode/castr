@@ -24,9 +24,11 @@ E2E tests and 159 agent-tools E2E tests, including the 158-case adapter checker.
 Paired documentation/onboarding review also passed on the opening candidate.
 [PR #91](https://github.com/EngraphCode/castr/pull/91) opened at `3b568416` after
 commit and pre-push hooks passed. Its opening review wave found compiled-procedure
-output-contract contradictions, incomplete routing descriptions across all Cricket
-roles, and stale pre-opening instructions across the current routes; the active
-candidate repairs all three classes at their canonical sources. Require exact-head
+intake, decision-table and output-contract contradictions, incomplete routing
+descriptions across all Cricket roles, and stale pre-opening instructions across the
+current routes; the active candidate repairs all three classes at their canonical
+sources, including fail-fast invalid-stance handling and an explicit complete-frame
+guard. Require exact-head
 checks and a fresh PR harvest after every push. Preserve the inherited review
 history in the installation REVIEW-TALLY; resumption and a new head never reset
 its ordinal.

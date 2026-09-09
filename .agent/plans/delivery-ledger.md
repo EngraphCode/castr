@@ -146,10 +146,12 @@ unrelated compiler repairs after its own surviving substance is accounted for.
   tests, ten Castr E2E tests and 159 agent-tools E2E tests. Commit and full pre-push
   hooks passed at `3b568416`, which opened
   [PR #91](https://github.com/EngraphCode/castr/pull/91). Its opening review wave
-  found compiled-procedure output-contract contradictions, incomplete routing
-  descriptions across all Cricket roles and stale pre-opening instructions across
-  current routes; the active candidate repairs all three classes at their canonical
-  sources. Exact-head re-review, checks, ruleset and merge evidence remain
+  found compiled-procedure intake, decision-table and output-contract contradictions,
+  incomplete routing descriptions across all Cricket roles and stale pre-opening
+  instructions across current routes; the active candidate repairs all three classes
+  at their canonical sources, including fail-fast invalid-stance handling across both
+  methods and an explicit complete-frame guard. Exact-head re-review, checks, ruleset
+  and merge evidence remain
   required. The retained native record proves six substantive returns at its
   stated scope and does not claim judgement reliability.
 

@@ -111,9 +111,9 @@
       "review_date": "2026-09-09",
       "scope": "Current next-safe-step route only: drive open PR91 through current-head review/check harvest and merge before PR14 while retaining Q09/Q22 obligations.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening-head Copilot review found the compiled-procedure output contract could not represent four mandatory answers; Codex review found both that the generated high-role description could not route the role reliably and that quote-mandatory evidence made partial-frame UNVERIFIABLE answers impossible; paired documentation/onboarding review found current routes still instructed a fresh seat to open the already-open PR.",
-        "The active candidate repairs all three complete classes: the procedure now requires four named answers, the full adversarial no-flip explanation and one explicit quote-free UNVERIFIABLE form for missing anchors; every Cricket role description now carries use, route-away and good/bad calibration from its canonical source; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
-        "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening and subsequent exact-head review found one procedure-output completeness defect, one generated-role routing defect, one partial-frame quote contradiction, undefined critical-field handling in the verdict table, and no conforming missing-STANCE result; paired documentation/onboarding review also found stale pre-opening current routes.",
+        "The active candidate repairs the three complete classes at their canonical boundaries: both Cricket methods now reject a missing or invalid STANCE before verdict generation; the compiled procedure names all five context fields as critical, guards its permissive UNVERIFIABLE row and resolves multiple gaps by intake order; its four-answer, adversarial no-flip and quote-free UNVERIFIABLE contracts remain coherent; every role description and current route retains its earlier complete repair.",
+        "All 16 checks passed on 0b62fc93, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the two final decision-contract findings. Independent gateway and onboarding reviewers accepted the fail-fast class repair. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the repair is committed."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
       "prior_reviewed_git_blob_hash": "9b79f5d4e0e5e792fa04f25ceea72f4fbf350689",
@@ -159,9 +159,9 @@
       "review_date": "2026-09-09",
       "scope": "Current correction continuation route only: open PR91, exact remaining landing action, PR14 successor and retained broader correction obligations.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening-head Copilot review found the compiled-procedure output contract could not represent four mandatory answers; Codex review found both that the generated high-role description could not route the role reliably and that quote-mandatory evidence made partial-frame UNVERIFIABLE answers impossible; paired documentation/onboarding review found current routes still instructed a fresh seat to open the already-open PR.",
-        "The active candidate repairs all three complete classes: the procedure now requires four named answers, the full adversarial no-flip explanation and one explicit quote-free UNVERIFIABLE form for missing anchors; every Cricket role description now carries use, route-away and good/bad calibration from its canonical source; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
-        "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening and subsequent exact-head review found one procedure-output completeness defect, one generated-role routing defect, one partial-frame quote contradiction, undefined critical-field handling in the verdict table, and no conforming missing-STANCE result; paired documentation/onboarding review also found stale pre-opening current routes.",
+        "The active candidate repairs the three complete classes at their canonical boundaries: both Cricket methods now reject a missing or invalid STANCE before verdict generation; the compiled procedure names all five context fields as critical, guards its permissive UNVERIFIABLE row and resolves multiple gaps by intake order; its four-answer, adversarial no-flip and quote-free UNVERIFIABLE contracts remain coherent; every role description and current route retains its earlier complete repair.",
+        "All 16 checks passed on 0b62fc93, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the two final decision-contract findings. Independent gateway and onboarding reviewers accepted the fail-fast class repair. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the repair is committed."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
       "prior_reviewed_git_blob_hash": "1b771d779b8377fe35b87ca96a13e3634f3bb08b",
@@ -196,17 +196,17 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "87d05b2da738791ecf0bad5456f5e804cc88be58",
-      "base_revision": "93657b757b8c142c90471850ba8cd220f8495c83",
+      "reviewed_git_blob_hash": "6fdba9e6fca9007a2aff883d0fb466e870cb52b5",
+      "base_revision": "0b62fc93645afc03ad3bc8c8f90600d94abf603e",
       "review_date": "2026-09-09",
       "scope": "Current C05 PR disposition and live census only: PR91 opened at 3b568416 after hooks and pre-push gates, the complete opening review-wave classes and exact remaining delivery conditions, and 17 open PRs.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening-head Copilot review found the compiled-procedure output contract could not represent four mandatory answers; Codex review found both that the generated high-role description could not route the role reliably and that quote-mandatory evidence made partial-frame UNVERIFIABLE answers impossible; paired documentation/onboarding review found current routes still instructed a fresh seat to open the already-open PR.",
-        "The active candidate repairs all three complete classes: the procedure now requires four named answers, the full adversarial no-flip explanation and one explicit quote-free UNVERIFIABLE form for missing anchors; every Cricket role description now carries use, route-away and good/bad calibration from its canonical source; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
-        "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening and subsequent exact-head review found one procedure-output completeness defect, one generated-role routing defect, one partial-frame quote contradiction, undefined critical-field handling in the verdict table, and no conforming missing-STANCE result; paired documentation/onboarding review also found stale pre-opening current routes.",
+        "The active candidate repairs the three complete classes at their canonical boundaries: both Cricket methods now reject a missing or invalid STANCE before verdict generation; the compiled procedure names all five context fields as critical, guards its permissive UNVERIFIABLE row and resolves multiple gaps by intake order; its four-answer, adversarial no-flip and quote-free UNVERIFIABLE contracts remain coherent; every role description and current route retains its earlier complete repair.",
+        "All 16 checks passed on 0b62fc93, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the two final decision-contract findings. Independent gateway and onboarding reviewers accepted the fail-fast class repair. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the repair is committed."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
-      "prior_reviewed_git_blob_hash": "90aeae7ae7c517fa7b87ec3cde42bdc57ee85caa",
+      "prior_reviewed_git_blob_hash": "87d05b2da738791ecf0bad5456f5e804cc88be58",
       "review_history": [
         {
           "reviewed_git_blob_hash": "5c5be6c63b1527fe55a4a4ebec612bf8bdb514f6",
@@ -237,6 +237,12 @@
           "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
           "review_date": "2026-09-09",
           "scope": "Current C05 delivery record, exact PR88/PR90/PR28 state, live 16-open-PR census, integrated branch boundary, narrow generator-source disclosure correction and remaining merge evidence."
+        },
+        {
+          "reviewed_git_blob_hash": "87d05b2da738791ecf0bad5456f5e804cc88be58",
+          "base_revision": "93657b757b8c142c90471850ba8cd220f8495c83",
+          "review_date": "2026-09-09",
+          "scope": "Current C05 PR disposition and live census only: PR91 opened at 3b568416 after hooks and pre-push gates, the complete opening review-wave classes and exact remaining delivery conditions, and 17 open PRs."
         }
       ]
     },
@@ -249,9 +255,9 @@
       "review_date": "2026-09-09",
       "scope": "Current interactive execution sequence only: PR91 is the open C05 installation delivery; exact-head review/check harvest and merge precede PR14; Q09/Q22 acceptance and sole queue authority remain unchanged.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening-head Copilot review found the compiled-procedure output contract could not represent four mandatory answers; Codex review found both that the generated high-role description could not route the role reliably and that quote-mandatory evidence made partial-frame UNVERIFIABLE answers impossible; paired documentation/onboarding review found current routes still instructed a fresh seat to open the already-open PR.",
-        "The active candidate repairs all three complete classes: the procedure now requires four named answers, the full adversarial no-flip explanation and one explicit quote-free UNVERIFIABLE form for missing anchors; every Cricket role description now carries use, route-away and good/bad calibration from its canonical source; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
-        "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening and subsequent exact-head review found one procedure-output completeness defect, one generated-role routing defect, one partial-frame quote contradiction, undefined critical-field handling in the verdict table, and no conforming missing-STANCE result; paired documentation/onboarding review also found stale pre-opening current routes.",
+        "The active candidate repairs the three complete classes at their canonical boundaries: both Cricket methods now reject a missing or invalid STANCE before verdict generation; the compiled procedure names all five context fields as critical, guards its permissive UNVERIFIABLE row and resolves multiple gaps by intake order; its four-answer, adversarial no-flip and quote-free UNVERIFIABLE contracts remain coherent; every role description and current route retains its earlier complete repair.",
+        "All 16 checks passed on 0b62fc93, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the two final decision-contract findings. Independent gateway and onboarding reviewers accepted the fail-fast class repair. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the repair is committed."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
       "prior_reviewed_git_blob_hash": "aace8acfc08eb3aa1a4f6064f3ffd488c2d5191c",
@@ -328,17 +334,17 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "a9cb092946074c7424cac0ef9655d247e376299a",
-      "base_revision": "93657b757b8c142c90471850ba8cd220f8495c83",
+      "reviewed_git_blob_hash": "18165b3c668fd6e595be295ade8f4784be1a08b0",
+      "base_revision": "0b62fc93645afc03ad3bc8c8f90600d94abf603e",
       "review_date": "2026-09-09",
       "scope": "Current owner-corrected delivery sequence only: PR91 is open for the independently green C05 installation, its complete opening review-wave classes are repaired together, and PR14 remains the successor.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening-head Copilot review found the compiled-procedure output contract could not represent four mandatory answers; Codex review found both that the generated high-role description could not route the role reliably and that quote-mandatory evidence made partial-frame UNVERIFIABLE answers impossible; paired documentation/onboarding review found current routes still instructed a fresh seat to open the already-open PR.",
-        "The active candidate repairs all three complete classes: the procedure now requires four named answers, the full adversarial no-flip explanation and one explicit quote-free UNVERIFIABLE form for missing anchors; every Cricket role description now carries use, route-away and good/bad calibration from its canonical source; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
-        "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening and subsequent exact-head review found one procedure-output completeness defect, one generated-role routing defect, one partial-frame quote contradiction, undefined critical-field handling in the verdict table, and no conforming missing-STANCE result; paired documentation/onboarding review also found stale pre-opening current routes.",
+        "The active candidate repairs the three complete classes at their canonical boundaries: both Cricket methods now reject a missing or invalid STANCE before verdict generation; the compiled procedure names all five context fields as critical, guards its permissive UNVERIFIABLE row and resolves multiple gaps by intake order; its four-answer, adversarial no-flip and quote-free UNVERIFIABLE contracts remain coherent; every role description and current route retains its earlier complete repair.",
+        "All 16 checks passed on 0b62fc93, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the two final decision-contract findings. Independent gateway and onboarding reviewers accepted the fail-fast class repair. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the repair is committed."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
-      "prior_reviewed_git_blob_hash": "45da9c6d05e2d04c94aa82bbc87166664b4ec8e4",
+      "prior_reviewed_git_blob_hash": "a9cb092946074c7424cac0ef9655d247e376299a",
       "review_history": [
         {
           "reviewed_git_blob_hash": "8c14b62e02166f3c9c07c37021e60cb7f0010886",
@@ -387,6 +393,12 @@
           "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
           "review_date": "2026-09-09",
           "scope": "Current owner-corrected delivery sequence only: merge-first discipline, C05 tooling delivered separately, installation custody and integrated boundary, narrow generator-source disclosure correction and PR14 successor."
+        },
+        {
+          "reviewed_git_blob_hash": "a9cb092946074c7424cac0ef9655d247e376299a",
+          "base_revision": "93657b757b8c142c90471850ba8cd220f8495c83",
+          "review_date": "2026-09-09",
+          "scope": "Current owner-corrected delivery sequence only: PR91 is open for the independently green C05 installation, its complete opening review-wave classes are repaired together, and PR14 remains the successor."
         }
       ]
     },
@@ -708,14 +720,14 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "b8365128151ac7a55165578cc0c4d3b937b29bb8",
-      "base_revision": "93657b757b8c142c90471850ba8cd220f8495c83",
+      "reviewed_git_blob_hash": "6688a640b36885951538f2999f2fb3434c8866a4",
+      "base_revision": "0b62fc93645afc03ad3bc8c8f90600d94abf603e",
       "review_date": "2026-09-09",
       "scope": "Complete current-authority section plus installation acceptance: PR91 opened at 3b568416, its complete opening review findings and current repair, exact remaining merge conditions, and bounded native evidence. Earlier dated execution sections remain historical.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening-head Copilot review found the compiled-procedure output contract could not represent four mandatory answers; Codex review found both that the generated high-role description could not route the role reliably and that quote-mandatory evidence made partial-frame UNVERIFIABLE answers impossible; paired documentation/onboarding review found current routes still instructed a fresh seat to open the already-open PR.",
-        "The active candidate repairs all three complete classes: the procedure now requires four named answers, the full adversarial no-flip explanation and one explicit quote-free UNVERIFIABLE form for missing anchors; every Cricket role description now carries use, route-away and good/bad calibration from its canonical source; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
-        "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening and subsequent exact-head review found one procedure-output completeness defect, one generated-role routing defect, one partial-frame quote contradiction, undefined critical-field handling in the verdict table, and no conforming missing-STANCE result; paired documentation/onboarding review also found stale pre-opening current routes.",
+        "The active candidate repairs the three complete classes at their canonical boundaries: both Cricket methods now reject a missing or invalid STANCE before verdict generation; the compiled procedure names all five context fields as critical, guards its permissive UNVERIFIABLE row and resolves multiple gaps by intake order; its four-answer, adversarial no-flip and quote-free UNVERIFIABLE contracts remain coherent; every role description and current route retains its earlier complete repair.",
+        "All 16 checks passed on 0b62fc93, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the two final decision-contract findings. Independent gateway and onboarding reviewers accepted the fail-fast class repair. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the repair is committed."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
       "review_history": [
@@ -724,22 +736,28 @@
           "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
           "review_date": "2026-09-09",
           "scope": "Complete current-authority section plus the installation acceptance, historical boundary and evidence links. Earlier dated execution sections remain historical evidence rather than current instructions."
+        },
+        {
+          "reviewed_git_blob_hash": "b8365128151ac7a55165578cc0c4d3b937b29bb8",
+          "base_revision": "93657b757b8c142c90471850ba8cd220f8495c83",
+          "review_date": "2026-09-09",
+          "scope": "Complete current-authority section plus installation acceptance: PR91 opened at 3b568416, its complete opening review findings and current repair, exact remaining merge conditions, and bounded native evidence. Earlier dated execution sections remain historical."
         }
       ],
-      "prior_reviewed_git_blob_hash": "d4dbb085b39a15c17fc8bcde1fed8baeb5d7df6b"
+      "prior_reviewed_git_blob_hash": "b8365128151ac7a55165578cc0c4d3b937b29bb8"
     },
     ".agent/prompts/cricket-platform-parity-continuation.md": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "1a0e549754a9f7eadffabb78d1095156aeee7b39",
-      "base_revision": "93657b757b8c142c90471850ba8cd220f8495c83",
+      "reviewed_git_blob_hash": "4c5a9bd3a1113d2ae43e123fd372f520c1071728",
+      "base_revision": "0b62fc93645afc03ad3bc8c8f90600d94abf603e",
       "review_date": "2026-09-09",
       "scope": "Complete current continuation route: drive open PR91 through current-head harvest, fixes and merge, then lifecycle closeout; retain exact native and UNDELIVERED evidence boundaries.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening-head Copilot review found the compiled-procedure output contract could not represent four mandatory answers; Codex review found both that the generated high-role description could not route the role reliably and that quote-mandatory evidence made partial-frame UNVERIFIABLE answers impossible; paired documentation/onboarding review found current routes still instructed a fresh seat to open the already-open PR.",
-        "The active candidate repairs all three complete classes: the procedure now requires four named answers, the full adversarial no-flip explanation and one explicit quote-free UNVERIFIABLE form for missing anchors; every Cricket role description now carries use, route-away and good/bad calibration from its canonical source; every current entry route identifies PR #91 and routes directly to exact-head review/check harvest and merge.",
-        "The opening-head gateway review approved the generator-first and strict-validation boundaries. Sonar's PR quality gate passed with A ratings, 0.0 percent new duplication, all hotspots reviewed and zero open or confirmed issues; GitHub code and secret scanning reported no open alert."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening and subsequent exact-head review found one procedure-output completeness defect, one generated-role routing defect, one partial-frame quote contradiction, undefined critical-field handling in the verdict table, and no conforming missing-STANCE result; paired documentation/onboarding review also found stale pre-opening current routes.",
+        "The active candidate repairs the three complete classes at their canonical boundaries: both Cricket methods now reject a missing or invalid STANCE before verdict generation; the compiled procedure names all five context fields as critical, guards its permissive UNVERIFIABLE row and resolves multiple gaps by intake order; its four-answer, adversarial no-flip and quote-free UNVERIFIABLE contracts remain coherent; every role description and current route retains its earlier complete repair.",
+        "All 16 checks passed on 0b62fc93, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the two final decision-contract findings. Independent gateway and onboarding reviewers accepted the fail-fast class repair. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the repair is committed."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain; replace this continuation route during closeout.",
       "review_history": [
@@ -748,9 +766,15 @@
           "base_revision": "cb73c4deaae9eecdbe406f28304314c71e339e02",
           "review_date": "2026-09-09",
           "scope": "Complete current continuation route: integrated base, custody, exact retained and UNDELIVERED proof boundaries, final gate/review/merge sequence and lifecycle closeout."
+        },
+        {
+          "reviewed_git_blob_hash": "1a0e549754a9f7eadffabb78d1095156aeee7b39",
+          "base_revision": "93657b757b8c142c90471850ba8cd220f8495c83",
+          "review_date": "2026-09-09",
+          "scope": "Complete current continuation route: drive open PR91 through current-head harvest, fixes and merge, then lifecycle closeout; retain exact native and UNDELIVERED evidence boundaries."
         }
       ],
-      "prior_reviewed_git_blob_hash": "0cf2b453ce5667fcc622d4e69decaf6642ae5e58"
+      "prior_reviewed_git_blob_hash": "1a0e549754a9f7eadffabb78d1095156aeee7b39"
     },
     ".agent/reports/agentic-engineering/cricket-castr-integrated-boundary-undelivered-2026-09-09.json": {
       "review_state": "partially-reviewed",
@@ -767,6 +791,21 @@
         "The canonical `pnpm check` completed with exit 0 on the integrated working candidate: 1,718 Castr tests, 1,875 agent-tools tests, ten Castr E2E tests and 159 agent-tools E2E tests passed, including the 158-case adapter checker."
       ],
       "remaining": "Historical evidence after C05 delivery; it neither replaces the earlier six-return record nor establishes an internal runtime cause."
+    },
+    ".agent/skills/cognition/cricket/SKILL-CANONICAL.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "C05/cricket-installation",
+      "reviewed_git_blob_hash": "0eeac5709410516ed7b9128e1c533c1e1dadf113",
+      "base_revision": "0b62fc93645afc03ad3bc8c8f90600d94abf603e",
+      "review_date": "2026-09-09",
+      "scope": "Current Cricket frame contract only: five required context fields, mandatory STANCE control, fail-fast invalid-frame response and panel-count treatment.",
+      "evidence": [
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Opening and subsequent exact-head review found one procedure-output completeness defect, one generated-role routing defect, one partial-frame quote contradiction, undefined critical-field handling in the verdict table, and no conforming missing-STANCE result; paired documentation/onboarding review also found stale pre-opening current routes.",
+        "The active candidate repairs the three complete classes at their canonical boundaries: both Cricket methods now reject a missing or invalid STANCE before verdict generation; the compiled procedure names all five context fields as critical, guards its permissive UNVERIFIABLE row and resolves multiple gaps by intake order; its four-answer, adversarial no-flip and quote-free UNVERIFIABLE contracts remain coherent; every role description and current route retains its earlier complete repair.",
+        "All 16 checks passed on 0b62fc93, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the two final decision-contract findings. Independent gateway and onboarding reviewers accepted the fail-fast class repair. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the repair is committed."
+      ],
+      "remaining": "PR #91 exact-candidate source review, checks, ruleset harvest, merge and C05 lifecycle closeout remain."
     }
   },
   "post_baseline_reconciliations": [
@@ -783,14 +822,14 @@
           "classification": "document-like",
           "disposition": "current-acceptance",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "b8365128151ac7a55165578cc0c4d3b937b29bb8"
+          "reviewed_git_blob_hash": "6688a640b36885951538f2999f2fb3434c8866a4"
         },
         {
           "path": ".agent/prompts/cricket-platform-parity-continuation.md",
           "classification": "document-like",
           "disposition": "current-continuation",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "1a0e549754a9f7eadffabb78d1095156aeee7b39"
+          "reviewed_git_blob_hash": "4c5a9bd3a1113d2ae43e123fd372f520c1071728"
         },
         {
           "path": ".agent/reports/agentic-engineering/cricket-castr-coordinator-panel-2026-09-09.json",
@@ -832,15 +871,16 @@
           "classification": "document-like",
           "disposition": "current-source",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "c57de364ad6bc64b048f46223d6b2f7fab967ef5"
+          "reviewed_git_blob_hash": "477929a2f13270d895499bae888d35dc9fe458fa",
+          "prior_reviewed_git_blob_hash": "c57de364ad6bc64b048f46223d6b2f7fab967ef5"
         },
         {
           "path": ".agent/sub-agents/templates/cricket-procedure.md",
           "classification": "document-like",
           "disposition": "current-source",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "e9174ce223776f187c282da02653f94bdec99fd2",
-          "prior_reviewed_git_blob_hash": "56487683ba427857a09c8a1f503fa047577b9dfc"
+          "reviewed_git_blob_hash": "2b4b50a6d4d18b2839d6fd94a4efaac80a50f05c",
+          "prior_reviewed_git_blob_hash": "e9174ce223776f187c282da02653f94bdec99fd2"
         },
         {
           "path": ".claude/agents/cricket-judgement-high.md",

@@ -32,6 +32,8 @@ lands. Never block on a cricket.
 5. NEXT — your next planned action(s).
 6. STANCE — `normal` or `adversarial` (see above).
 
+The first five items are critical context. STANCE is a mandatory control input.
+
 ### Frame disciplines (graduated from the pair-era tally; standing for every invoker)
 
 - **Provenance**: every condition or ruling the frame states carries who ruled it, when,
@@ -78,6 +80,11 @@ lands. Never block on a cricket.
 You judge whether the PRIMARY agent (your invoker) is doing the right work right now. You
 are the counterweight to ceremony, invented gates, deference-as-safety, and drift — and
 equally to busyness that never lands on the critical path.
+
+**Frame preflight (before judgement).** If STANCE is absent or is not exactly `normal` or
+`adversarial`, return the identity component's three-line declaration followed only by
+`INVALID FRAME — STANCE must be exactly normal or adversarial`, then stop. Do not emit a
+STANCE, VERDICT, EVIDENCE, REDIRECTION, or UNGROUNDED field.
 
 **Mode**: a single fast pass. Judge from the supplied context. Report only. Honour the
 supplied STANCE. Under `normal`, judge as this template directs. Under `adversarial`,
@@ -127,6 +134,8 @@ instead of reading to resolve them.
 
 ## Output Contract (your entire return, under 200 words)
 
+For a valid frame:
+
 - The return OPENS with the identity component's three-line declaration
   (`Name` / `Purpose` / `Summary`, per `subagent-identity.md`), then:
 - `STANCE:` normal | adversarial (as supplied)
@@ -134,8 +143,11 @@ instead of reading to resolve them.
 - `EVIDENCE:` up to 3 bullets, each citing the supplied context (or the one thing you
   Read)
 - `REDIRECTION:` the single highest-value change to the invoker's next action — or "none"
-- `UNGROUNDED:` load-bearing claims you had to take on trust, including any of the six
-  supplied items that were missing
+- `UNGROUNDED:` load-bearing claims you had to take on trust, including any of the five
+  critical context items that were missing or vague
+
+For the invalid-STANCE preflight, return only the identity declaration and exact diagnostic
+defined there. It is not a verdict.
 
 ## Discipline
 
