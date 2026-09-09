@@ -436,7 +436,7 @@ it.each([
   const validation = spawnSync(execPath, validatorCliArguments, {
     cwd: root,
     encoding: 'utf8',
-    env: { ...process.env, CLAUDE_PROJECT_DIR: root },
+    env: { CLAUDE_PROJECT_DIR: root },
   });
   expect(validation.status).toBe(1);
   expect(validation.stderr).toContain(source);
