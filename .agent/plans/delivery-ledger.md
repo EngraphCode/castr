@@ -97,23 +97,39 @@ unrelated compiler repairs after its own surviving substance is accounted for.
   validator inventory/reference correction. Source worktrees are preserved and
   the delivery claim is closed. Wider C2/F-01, PR #18, document-security presence,
   loader and MCP obligations remain with their existing owners.
-- **C08/Q22-oracles in progress:** `codex/castr-validation-oracles`, based on
+- **C08/Q22-oracles in progress:** [PR #89](https://github.com/EngraphCode/castr/pull/89),
+  branch `codex/castr-validation-oracles`, based on
   `92ada69892c42a69a3ae5431c1793bbee61b46c1`; shepherd Bora seeks Turbulence,
-  PDR-132 budget two rounds. Seven Error negatives now require intended diagnostic
+  PDR-132 budget two rounds. Seven Error negatives require intended diagnostic
   paths/codes; three positives compare parsed values. The [delivery plan](active/castr-documentation-and-fidelity-correction.md#9-september-q-22-prerequisite-sequence)
   owns acceptance; the [finding register](correction-manifests/castr-correction-findings.json)
-  records the red/green/mutation evidence and exact test blobs. Test, gateway and
-  paired documentation/onboarding reviews passed on 9 September. Canonical
-  `pnpm check` passed, including 10 E2E cases; normal cache reuse is retained. The
-  by-file link report lists 177 entries across 794 files; the added archive link
-  resolves independently but is omitted by the existing validator inventory (C09).
-  PR publication and current-head conditions remain outstanding at this checkpoint.
-  This repairs proof quality against unchanged fixtures; Q-22 remains open.
+  retains red/green/mutation evidence and exact test blobs. Test, gateway and paired
+  documentation/onboarding reviews passed at the initial candidate. Canonical
+  `pnpm check`, both commits and full pre-push `check:ci` passed with intact hooks.
+  The 9 September 14:28 UTC harvest at
+  `3b8abb1530520ebe9323546cf45bd177fad42153` found 15 successful checks, completed
+  Copilot/Codex reviews, no review threads or pending requests, and one failing
+  Sonar condition: 39 of 65 new lines duplicated (60%, required at most 3%).
+  Consolidate repeated Error assertions while preserving every witness and its
+  mutation strength. The [actual tally](https://github.com/EngraphCode/castr/pull/89#issuecomment-5600446743)
+  owns round 1's disposition and subsequent current-head actions. The by-file link
+  report lists 177 entries across 794 files; changed archive links resolve but are
+  omitted by the validator inventory (C09). This repairs proof quality against
+  unchanged fixtures; Q-22 remains open and no merge readiness is claimed.
 
 No Q-08/Q-14/Q-16/Q-20 completion is claimed by these custody/review slices.
 Those rows retain their original acceptance.
 
 ## Open PR dispositions
+
+The 9 September 2026 14:41 UTC live census contains 19 open PRs: the fifteen
+inherited PRs below, frozen source #81 and current #87/#88/#89. Their heads match
+the dated records in this ledger. This is unfinished work and integration risk,
+not delivered value. The coordinating task finishes #89 before opening another
+repair PR; Kite separately shepherds #88. The remaining source PRs close only when
+their recorded extraction or supersession conditions are verified. The following
+6 September checks and review states are historical observations, not fresh merge
+readiness.
 
 Observed 2026-09-06T10:15:18.139331+00:00; 16 open PRs (the 15 inherited rows below plus
 #81 above), against main `e025d23316e4b175551711a32a09c0f4d492fd1a`.

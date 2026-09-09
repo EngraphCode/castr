@@ -92,75 +92,48 @@ describe('Pet Schema Validation', () => {
 
 describe('Error Schema Validation', () => {
   describe('valid data passes', () => {
-    it('accepts object with all required fields', () => {
-      const validError = { code: 404, message: 'Not found' };
-
-      expect(ErrorSchema.parse(validError)).toStrictEqual(validError);
-    });
-
-    it('accepts integer code values', () => {
-      const validError = { code: 500, message: 'Internal server error' };
-
-      expect(ErrorSchema.parse(validError)).toStrictEqual(validError);
+    it.each([
+      ['accepts object with all required fields', { code: 404, message: 'Not found' }],
+      ['accepts integer code values', { code: 500, message: 'Internal server error' }],
+    ])('%s', (name, value) => {
+      expect(ErrorSchema.parse(value), name).toStrictEqual(value);
     });
   });
 
   describe('invalid data produces validation issues', () => {
-    it('rejects object missing required field: code', () => {
-      const invalidError = { message: 'error' };
-
-      expect(ErrorSchema.safeParse(invalidError)).toMatchObject({
+    it.each([
+      [
+        'rejects object missing required field: code',
+        { message: 'error' },
+        [{ code: 'invalid_type', expected: 'number', path: ['code'] }],
+      ],
+      [
+        'rejects object missing required field: message',
+        { code: 1 },
+        [{ code: 'invalid_type', expected: 'string', path: ['message'] }],
+      ],
+      [
+        'rejects empty object (missing both required fields)',
+        {},
+        [
+          { code: 'invalid_type', expected: 'number', path: ['code'] },
+          { code: 'invalid_type', expected: 'string', path: ['message'] },
+        ],
+      ],
+      [
+        'rejects object with wrong type for code (string instead of integer)',
+        { code: 'x', message: 'error' },
+        [{ code: 'invalid_type', expected: 'number', path: ['code'] }],
+      ],
+      [
+        'rejects object with non-integer code (float)',
+        { code: 1.5, message: 'error' },
+        [{ code: 'invalid_type', expected: 'int', path: ['code'] }],
+      ],
+    ])('%s', (name, value, issues) => {
+      expect(ErrorSchema.safeParse(value), name).toMatchObject({
         success: false,
-        error: {
-          issues: [{ code: 'invalid_type', expected: 'number', path: ['code'] }],
-        },
-      });
-    });
-
-    it('rejects object missing required field: message', () => {
-      const invalidError = { code: 1 };
-
-      expect(ErrorSchema.safeParse(invalidError)).toMatchObject({
-        success: false,
-        error: {
-          issues: [{ code: 'invalid_type', expected: 'string', path: ['message'] }],
-        },
-      });
-    });
-
-    it('rejects empty object (missing both required fields)', () => {
-      const invalidError = {};
-
-      expect(ErrorSchema.safeParse(invalidError)).toMatchObject({
-        success: false,
-        error: {
-          issues: [
-            { code: 'invalid_type', expected: 'number', path: ['code'] },
-            { code: 'invalid_type', expected: 'string', path: ['message'] },
-          ],
-        },
-      });
-    });
-
-    it('rejects object with wrong type for code (string instead of integer)', () => {
-      const invalidError = { code: 'x', message: 'error' };
-
-      expect(ErrorSchema.safeParse(invalidError)).toMatchObject({
-        success: false,
-        error: {
-          issues: [{ code: 'invalid_type', expected: 'number', path: ['code'] }],
-        },
-      });
-    });
-
-    it('rejects object with non-integer code (float)', () => {
-      const invalidError = { code: 1.5, message: 'error' };
-
-      expect(ErrorSchema.safeParse(invalidError)).toMatchObject({
-        success: false,
-        error: {
-          issues: [{ code: 'invalid_type', expected: 'int', path: ['code'] }],
-        },
+        error: { issues },
       });
     });
   });

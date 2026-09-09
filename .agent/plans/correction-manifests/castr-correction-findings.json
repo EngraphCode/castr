@@ -3959,7 +3959,30 @@
         },
         "preservation": "All 37 hashes/symlink entries in each fixture estate unchanged; reproduced estate matches its saved 6 September inventory and retains exactly 30 modified files.",
         "review": "Independent test and gateway reviewers inspected exact blobs, probe construction/results and preservation evidence; bounded PASS.",
-        "remaining": "Current delivery actions and gate evidence belong to .agent/plans/delivery-ledger.md. Q22 regeneration, integer/export repair and untouched Pet/Pets/NewPet rejection oracles remain outstanding with their named families."
+        "remaining": "Current delivery actions and gate evidence belong to .agent/plans/delivery-ledger.md. Q22 regeneration, integer/export repair and untouched Pet/Pets/NewPet rejection oracles remain outstanding with their named families.",
+        "refactor_evidence": {
+          "date": "2026-09-09",
+          "reason": "PR89 Sonar reports repeated assertion bodies; use literal case tables without changing case membership or expected observations.",
+          "method": "Fresh focused suite and isolated mutants against the table refactor. The final name-to-assertion-message delta receives a fresh focused run and explicit source comparison; earlier mutants remain tied to the table-refactor blobs below.",
+          "results": {
+            "checked_in": "91 passed, all 91 full test names preserved",
+            "regenerated": "73 passed, 18 failed",
+            "missing_export_or_unrelated_exception": "Each causes 10 failures",
+            "removed_integer_or_optional_message": "Each causes two failures",
+            "corrupted_output": "Three failures",
+            "wrong_issue_path_or_code_or_extra_issue": "Each causes seven failures"
+          },
+          "mutation_git_blobs": {
+            "lib/tests-transforms/__tests__/validation-parity.integration.test.ts": "9d639b1889f8a89fbd20ca65db5bcf78c592ebdf",
+            "lib/tests-transforms/__tests__/validation-parity-petstore-expanded.integration.test.ts": "743278c4b06181f58123df89e5372b575418c5be"
+          },
+          "final_git_blobs": {
+            "lib/tests-transforms/__tests__/validation-parity.integration.test.ts": "0a79da2cd06bebf2b0964bfa64608e4c5810711f",
+            "lib/tests-transforms/__tests__/validation-parity-petstore-expanded.integration.test.ts": "a97ba65adf9333c7d254fe6f254fa13f003a2061"
+          },
+          "preservation": "Both 37-entry fixture estates and all 145 original evidence files unchanged; everything outside the two Error describe groups is byte-identical to the pushed head.",
+          "review": "Independent test review verified literal expectations, mutation construction, all names and extra-issue cardinality. Gateway review approved the final assertion-message delta at the recorded final blobs. Sonar success and merge remain pending in the delivery ledger."
+        }
       }
     }
   ],

@@ -129,15 +129,16 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C08/Q22-oracles",
-      "reviewed_git_blob_hash": "c4596dfaff19e8c59ee75b22c2e78402aa0dfeb4",
+      "reviewed_git_blob_hash": "9c994cbbffa3e5cfadc55d2c73b917bba909fe95",
       "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
       "review_date": "2026-09-09",
-      "scope": "9 September prerequisite reasoning, oracle acceptance and named custody of adjacent observations; corrected current delivery routes and conserved displaced instructions. Original A1-A6 unchanged.",
+      "scope": "9 September prerequisite reasoning, oracle acceptance and named custody of adjacent observations; corrected current delivery routes and conserved displaced instructions. Original A1-A6 unchanged. Owner merge-first amendment: finish current PR before opening another, verify source dispositions before closure; original A1-A6 unchanged.",
       "evidence": [
         "Paired docs/onboarding review of the complete controlling sequence; Q22 pairing finding accepted and corrected before both bounded rechecks passed.",
         "Paired documentation/onboarding follow-up passed at blob 5ff2e7b53b1adc6d06ba070243d5dc2190b531ba: explicit owner-authorised separate Cricket task, native Castr execution direction, unchanged root queue/ledger/manifest ownership and bounded parallel exception.",
         "Paired integrated documentation/onboarding review passed: current C03a merge, security next action, Kite Cricket custody, Q22 paired generator/output acceptance and five verbatim archive blocks. Both reviewers caught the parent stale C03a instruction; corrected current route passed both rechecks.",
-        "On 9 September paired documentation/onboarding review passed: changed continuation routes and links, all prior finding acceptance, queue frontmatter, six verbatim historical blocks and the original archive prefix were verified. No whole-estate or merge-readiness claim follows."
+        "On 9 September paired documentation/onboarding review passed: changed continuation routes and links, all prior finding acceptance, queue frontmatter, six verbatim historical blocks and the original archive prefix were verified. No whole-estate or merge-readiness claim follows.",
+        "Paired documentation/onboarding review passed on 9 September: owner merge-first amendment, current ledger/tally routes, all 20 scoped hashes, conserved acceptance and mutation/final-source evidence distinction. No whole-document or merge-readiness claim follows."
       ],
       "remaining": "Complete-document acceptance stays with the correction plan; current PR delivery actions belong to the ledger and linked tally.",
       "prior_reviewed_git_blob_hash": "5ff2e7b53b1adc6d06ba070243d5dc2190b531ba",
@@ -147,6 +148,12 @@
           "base_revision": "6c3b18f0e97d4d93eca14ab67c2b0c79bc304119",
           "review_date": "2026-09-06",
           "scope": "Recorded reflection and dependency-based sequencing, bounded work in progress and explicit C05/C07 doctrine describing surfaces; original A1-A6 unchanged. Subsequent owner-directed separate C05 Cricket task custody and its explicit parallel-work exception passed bounded recheck."
+        },
+        {
+          "reviewed_git_blob_hash": "c4596dfaff19e8c59ee75b22c2e78402aa0dfeb4",
+          "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+          "review_date": "2026-09-09",
+          "scope": "9 September prerequisite reasoning, oracle acceptance and named custody of adjacent observations; corrected current delivery routes and conserved displaced instructions. Original A1-A6 unchanged."
         }
       ]
     },
@@ -392,29 +399,47 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C08/Q22-oracles",
-      "reviewed_git_blob_hash": "aee0d95c1a96a1292877f6b154ffb6e12c79ecd4",
+      "reviewed_git_blob_hash": "0a79da2cd06bebf2b0964bfa64608e4c5810711f",
       "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
       "review_date": "2026-09-09",
       "scope": "Header and Error proof commentary only: checked-in validators, intended structured rejection and exact parsed values; no regeneration or comprehensive fidelity claim.",
       "evidence": [
         "Test/gateway reviewers inspected exact test bytes and red/green/mutation evidence with unchanged fixtures. Paired documentation/onboarding reviewers verified the describing scope and exact blobs.",
-        "On 9 September paired documentation/onboarding review passed: changed continuation routes and links, all prior finding acceptance, queue frontmatter, six verbatim historical blocks and the original archive prefix were verified. No whole-estate or merge-readiness claim follows."
+        "On 9 September paired documentation/onboarding review passed: changed continuation routes and links, all prior finding acceptance, queue frontmatter, six verbatim historical blocks and the original archive prefix were verified. No whole-estate or merge-readiness claim follows.",
+        "Table-refactor and final assertion-message blobs received independent test/gateway review. Header and Error proof commentary are unchanged from the prior paired review; all 91 names/payloads retained. Fresh focused suite passes; earlier mutation observations retain their own exact hashes in the findings manifest."
       ],
-      "remaining": "Unrelated Pet/Pets/NewPet assertions and full-file doctrine/semantic claims remain with C08 proof integrity and C07. Current delivery actions belong to the ledger and linked tally."
+      "remaining": "Unrelated Pet/Pets/NewPet assertions and full-file doctrine/semantic claims remain with C08 proof integrity and C07. Current delivery actions belong to the ledger and linked tally.",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "aee0d95c1a96a1292877f6b154ffb6e12c79ecd4",
+          "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+          "review_date": "2026-09-09",
+          "scope": "Header and Error proof commentary only: checked-in validators, intended structured rejection and exact parsed values; no regeneration or comprehensive fidelity claim."
+        }
+      ]
     },
     "lib/tests-transforms/__tests__/validation-parity-petstore-expanded.integration.test.ts": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C08/Q22-oracles",
-      "reviewed_git_blob_hash": "4f740a1a0cd823508b08ba499a0e8cd63a7c78d5",
+      "reviewed_git_blob_hash": "a97ba65adf9333c7d254fe6f254fa13f003a2061",
       "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
       "review_date": "2026-09-09",
       "scope": "Header and Error proof commentary only: checked-in validators, intended structured rejection and exact parsed values; no regeneration or comprehensive fidelity claim.",
       "evidence": [
         "Test/gateway reviewers inspected exact test bytes and red/green/mutation evidence with unchanged fixtures. Paired documentation/onboarding reviewers verified the describing scope and exact blobs.",
-        "On 9 September paired documentation/onboarding review passed: changed continuation routes and links, all prior finding acceptance, queue frontmatter, six verbatim historical blocks and the original archive prefix were verified. No whole-estate or merge-readiness claim follows."
+        "On 9 September paired documentation/onboarding review passed: changed continuation routes and links, all prior finding acceptance, queue frontmatter, six verbatim historical blocks and the original archive prefix were verified. No whole-estate or merge-readiness claim follows.",
+        "Table-refactor and final assertion-message blobs received independent test/gateway review. Header and Error proof commentary are unchanged from the prior paired review; all 91 names/payloads retained. Fresh focused suite passes; earlier mutation observations retain their own exact hashes in the findings manifest."
       ],
-      "remaining": "Unrelated Pet/Pets/NewPet assertions and full-file doctrine/semantic claims remain with C08 proof integrity and C07. Current delivery actions belong to the ledger and linked tally."
+      "remaining": "Unrelated Pet/Pets/NewPet assertions and full-file doctrine/semantic claims remain with C08 proof integrity and C07. Current delivery actions belong to the ledger and linked tally.",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "4f740a1a0cd823508b08ba499a0e8cd63a7c78d5",
+          "base_revision": "92ada69892c42a69a3ae5431c1793bbee61b46c1",
+          "review_date": "2026-09-09",
+          "scope": "Header and Error proof commentary only: checked-in validators, intended structured rejection and exact parsed values; no regeneration or comprehensive fidelity claim."
+        }
+      ]
     }
   }
 }

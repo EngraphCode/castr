@@ -3,7 +3,7 @@ title: Castr documentation correction and fidelity repair
 status: active
 lane: active
 created: 2026-09-06
-last_updated: 2026-09-06
+last_updated: 2026-09-09
 owner_directive: >-
   Implement the owner-approved comprehensive documentation correction and fidelity
   repair: split PR #81, correct all documents, repair all known in-scope fidelity
@@ -92,6 +92,17 @@ foundational doctrine and integration; delegated workers own explicit files.
 Every PR has a named shepherd, the PDR-132 default budget of at most two expected
 review rounds, and its actual tally from first triage. Dataset volume is a size
 warning requiring review of the inventory method, never a correctness exemption.
+
+Owner correction, 9 September 2026: work is not delivered until its PR is merged.
+Open PRs accumulate integration and review risk. Complete the coordinating task's
+current PR before opening another repair PR; use waits for review, extraction
+comparison and evidence gathering that do not create another integration branch.
+Select subsequent slices to deliver their acceptance on main and discharge the
+corresponding inherited-PR obligations. Close a source PR promptly once every
+surviving delta has a verified destination or evidenced supersession. Preserve its
+source and the full acceptance; reducing the count by unverified closure is not
+progress. The ledger owns the live census and closure evidence. The separate C05
+shepherd continues its already-authorised delivery with coordinated gate windows.
 
 Owner-directed Cricket cadence (6 September 2026): run the full registered Codex
 panel in normal and adversarial stances at substantive delivery and architectural
