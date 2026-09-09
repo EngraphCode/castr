@@ -263,14 +263,24 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C08/Q22-oracles",
-      "reviewed_git_blob_hash": "ae7b00c90757dadce02cabc720e2d3b434ea1343",
+      "reviewed_git_blob_hash": "9fb355d777bd628c349563296362906f01359649",
       "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
       "review_date": "2026-09-09",
-      "scope": "Finding Q-22/error-negative-oracles delivery state only: PR89's bounded Error-oracle merge evidence, final exact source hashes, mutation proof and retained Q22 residuals.",
+      "scope": "Finding Q-22/error-negative-oracles delivery state only: PR89's bounded Error-oracle merge evidence, final exact source hashes, mutation proof, oracle-only closing proof and retained Q22 residuals.",
       "evidence": [
-        "Paired documentation/onboarding review verified that Q-22/error-negative-oracles moved from reproduced RED to bounded delivered GREEN only, with PR89 exact head/merge/tree evidence and the remaining generator, integer/export and Pet/Pets/NewPet obligations retained."
+        "Paired documentation/onboarding review verified that Q-22/error-negative-oracles moved from reproduced RED to bounded delivered GREEN only, with PR89 exact head/merge/tree evidence and the remaining generator, integer/export and Pet/Pets/NewPet obligations retained.",
+        "Copilot's exact-head PR90 review found that the delivered bounded oracle row still named the future fixture-generator proof. The finding was accepted; closing proof now names only oracle while the separate generator/regeneration acceptance remains outstanding in the row and Q22 carrier."
       ],
-      "remaining": "All other finding rows retain their existing state and carrier; Q22 remains open at its full original acceptance."
+      "remaining": "All other finding rows retain their existing state and carrier; Q22 remains open at its full original acceptance.",
+      "prior_reviewed_git_blob_hash": "ae7b00c90757dadce02cabc720e2d3b434ea1343",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "ae7b00c90757dadce02cabc720e2d3b434ea1343",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Finding Q-22/error-negative-oracles delivery state before PR90 review: PR89's bounded Error-oracle merge evidence, final exact source hashes, mutation proof and retained Q22 residuals; superseded because its closing-proof list still included the future fixture generator."
+        }
+      ]
     },
     ".agent/plans/archive/correction-sequencing-2026-09-06.md": {
       "review_state": "partially-reviewed",

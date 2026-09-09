@@ -3933,7 +3933,7 @@
       "technical_dependencies": [],
       "queue_carriers": ["Q-22", "Q-30"],
       "delivery_carrier": "C08/Q22-oracles",
-      "closing_proof_ids": ["oracle", "fixture-generator"],
+      "closing_proof_ids": ["oracle"],
       "related_ids": ["Q-22"],
       "current_reproduction": "verified-green",
       "disposition": "bounded_repair_delivered",
