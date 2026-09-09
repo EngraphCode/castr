@@ -132,16 +132,19 @@ unrelated compiler repairs after its own surviving substance is accounted for.
   and health checks share strict platform and canonical-source contracts. The
   coordinating agent accepted full custody of the dependent native Cricket
   installation after this merge.
-- **C05 Cricket delivery complete:** PR #88 delivered the strict platform contract as
+- **C05 Cricket repository delivery complete; final native proof outstanding:** PR #88
+  delivered the strict platform contract as
   `bd115294`; PR #91 delivered the installation from reviewed head `48e2194d` as merge
   commit `af840d9b`. All 17 exact-head check runs passed: 16 repository, security and
   quality runs plus the successful Copilot review run. All eight review threads were
   resolved, Codex completed without a further finding and Copilot reported no additional
   change. Gateway, documentation and onboarding reviewers approved. The merge commit's
-  second parent and tree exactly match the reviewed head. T1/T2, I1, bounded I2 and D1 are
-  evidenced in the [completed plan](current/complete/cricket-platform-parity.md).
-  The later `UNDELIVERED` attempt remains a truthful task-runtime boundary and does not
-  extend or erase the dated native proof.
+  second parent and tree exactly match the reviewed head. T1/T2 and I1 are delivered;
+  documentation evidence is retained in the [active plan](current/cricket-platform-parity.md).
+  Its earlier six-return panel predates material changes to the final templates, so it is
+  dated invocation evidence rather than final I2 proof. The later attempt produced no
+  observable registered-role dispatch or return. Final I2 and atomic
+  lifecycle completion remain outstanding.
 
 No Q-08/Q-14/Q-16/Q-20 completion is claimed by these custody/review slices.
 Those rows retain their original acceptance.
@@ -154,10 +157,17 @@ below, frozen source #81 and current #87. This self-referential lifecycle delive
 it remains open, GitHub's live total is 17. PR #91 merged as `af840d9b`; PR #90
 previously merged the bounded Q-09/#28 disposition as `cb73c4de`, after which PR #28
 closed without merge and retained its recovery branch. The other 16 open PRs remain
-integration risk, not delivered value. PR #14 is the next substantive delivery under
-the parent plan's sequence. The remaining source PRs close only when their recorded
-extraction or supersession conditions are verified. The following 6 September checks
-and review states are historical observations, not fresh merge readiness.
+integration risk, not delivered value. PR #92 now corrects its premature closeout and
+records final I2 as outstanding. The final-template native panel and lifecycle
+reconciliation precede PR #14 under the parent plan's sequence. The remaining source PRs
+close only when their recorded extraction or supersession conditions are verified. The
+following 6 September checks and review states are historical observations, not fresh
+merge readiness.
+
+PR #92's published opening commit bundled `repo-continuity.md` and the correction thread
+record with lifecycle documents, contrary to the continuity-surface orphan-commit rule.
+The published history remains intact; the corrected current observations receive their
+own `chore(continuity)` commit before merge.
 
 Observed 2026-09-06T10:15:18.139331+00:00; 16 open PRs (the 15 inherited rows below plus
 #81 above), against main `e025d23316e4b175551711a32a09c0f4d492fd1a`.

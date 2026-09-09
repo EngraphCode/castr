@@ -5,20 +5,20 @@ todos:
     status: completed
   - id: cricket-install
     content: Install Cricket definitions, correct installation docs and prove the native panel.
-    status: completed
+    status: in_progress
 ---
 
 # C05 Cricket platform parity
 
 Owner-requested bounded execution under the
-[correction commission](../../active/castr-documentation-and-fidelity-correction.md).
+[correction commission](../active/castr-documentation-and-fidelity-correction.md).
 Original shepherd: Moon turns Apogee, Codex gpt-6-astra, session prefix 01a076,
 identity a9c4176b-2675-5890-bf98-420f545b146e; started 6 September 2026.
 Parent plans, ledger, manifests and shared continuity remain coordinator-owned.
 
-## Completion evidence — 9 September 2026
+## Current delivery state — 9 September 2026
 
-Bora seeks Turbulence completed the remaining installation and repository delivery.
+Bora seeks Turbulence completed the installation's repository delivery.
 PR #88 delivered the platform contract as
 `bd115294cd545db6d6e64f6c4629a5a583e5ded3`. PR #91 then delivered the two
 canonical templates, three registered Codex roles, generated Claude/Cursor quartets,
@@ -35,31 +35,33 @@ change. Gateway, documentation and onboarding reviewers approved the final candi
 The merge commit's second parent is the reviewed head and their trees are identical.
 The PR's durable review tally preserves all nine rounds and the structural step-backs.
 
-Acceptance is complete at the bounded scopes stated by this plan:
+Acceptance is complete for the delivered implementation and documentation scopes:
 
 - T1 and T2 were delivered by PR #88 with strict generation, validation and ordinary
   reviewer restrictions.
 - I1 is delivered on `main`: generator comparison, strict roster validation, portability
   and adapter checks pass for 17 templates, 21 Codex roles and 22 Claude/22 Cursor
   wrappers.
-- I2 is established by the retained six-return native record at its dated invocation
-  boundary: three registered roles were dispatched with `fork_turns: "none"`, and the
-  same agents returned adversarial follow-ups. Later output-contract corrections are
-  established by exact-source review and generated-surface validation rather than
-  retroactively attributed to that run.
+- I2 is partial. The retained six-return native record proves registered invocation,
+  `fork_turns: "none"` and same-agent adversarial follow-ups at its dated template
+  revision. PR #91 subsequently changed intake, verdict, replay, redirection and output
+  semantics. The plan requires a fresh full panel at that material delivery boundary;
+  source review and generated-surface validation cannot supply its native semantic proof.
 - D1 is delivered by the executable installed invocation guidance, paired
   documentation/onboarding review, exact limitations and the merged current-head gates.
 
-The current task's later full-panel attempt remains `UNDELIVERED`: no registered-role
+The current task's later full-panel attempt is `UNDELIVERED`: no registered-role
 dispatch, follow-up or return was observable, and the internal runtime cause is not
 established. The
-[dated attempt record](../../../reports/agentic-engineering/cricket-castr-integrated-boundary-undelivered-2026-09-09.json)
-preserves that boundary without substituting generic agents or weakening the completed
-native admission proof.
+[dated attempt record](../../reports/agentic-engineering/cricket-castr-integrated-boundary-undelivered-2026-09-09.json)
+preserves that boundary without substituting generic agents.
 
-The C05 Cricket atomic plan is complete and moves to completion staging. The broader
-C05 family, correction commission and compiler programme remain unfinished. PR #14's
-dependency-ownership extraction is the next delivery; Q-09 remains pending for PR #10.
+The C05 Cricket atomic plan remains open only for six substantive returns from the final
+installed templates: three registered-role dispatches in a freshly loaded Castr task,
+then adversarial follow-ups to those same agents. PR #92 corrects the premature lifecycle
+closeout. This bounded proof and its lifecycle reconciliation precede PR #14's
+dependency-ownership extraction. The broader C05 family, correction commission and
+compiler programme remain unfinished; Q-09 remains pending for PR #10.
 
 The execution record below is historical evidence. Status statements in it describe
 the observed boundary at the time and do not override this section.
@@ -90,7 +92,7 @@ resumption the task's live collaboration schema already exposed all three exact
 Cricket roles, so direct native dispatch became available. No external CLI process
 was launched. Three normal returns and adversarial follow-ups from those same
 three agents are retained in the
-[native invocation record](../../../reports/agentic-engineering/cricket-castr-native-2026-09-09.json).
+[native invocation record](../../reports/agentic-engineering/cricket-castr-native-2026-09-09.json).
 This observed role-loading boundary replaces the earlier unproven requirement to
 start a separate process; no claim is made that this was a new task identifier.
 I2's native invocation and semantic spot check are now established for this candidate.
@@ -108,7 +110,7 @@ Both judgement roles returned ON-TRACK in both stances. The procedure returned
 DRIFTING in both, asking for first-hand support for historical review/test claims.
 Accepted: retain source evidence and obtain fresh required gate results. Not adopted:
 repeating settled reviews simply to obtain agreement. The
-[historical reviewer/worker record](../../../reports/agentic-engineering/cricket-castr-review-evidence-2026-09-06.json)
+[historical reviewer/worker record](../../reports/agentic-engineering/cricket-castr-review-evidence-2026-09-06.json)
 preserves the actual returned reports. Encrypted message bodies in the session log
 prevent automated byte-equality readback of the supplied frames; the dispatch
 record explicitly states that limit rather than treating ciphertext as a frame.
@@ -116,7 +118,7 @@ record explicitly states that limit rather than treating ciphertext as a frame.
 The two remaining documentation concerns were closed and rechecked by docs-adr-expert:
 direct source attribution and accurate public API contracts, including real resolver
 examples and role-dependent settings defaults. The
-[final review record](../../../reports/agentic-engineering/cricket-castr-final-review-evidence-2026-09-09.json)
+[final review record](../../reports/agentic-engineering/cricket-castr-final-review-evidence-2026-09-09.json)
 retains returned reports and the release review's remaining conditions. The
 6 September canonical-check log reaches successful final E2E results, but its
 process exit handle expired; the observed 9 September exit 0 supplies current
@@ -257,7 +259,7 @@ distillation; it does not justify a global skill or memory change now.
    Establish this candidate proof before the relevant merge, alongside tooling review.
    Missing native returns remain UNDELIVERED; no fourth Codex seat or fallback.
 
-Both slices follow [PDR-132](../../../practice-core/decision-records/PDR-132-changeset-health-round-budgets-bind-at-authoring-time.md).
+Both slices follow [PDR-132](../../practice-core/decision-records/PDR-132-changeset-health-round-budgets-bind-at-authoring-time.md).
 Review tally begins at first triage and is carried into the PR comment. Gateway,
 configuration, testing and paired documentation/onboarding reviews apply to their
 surfaces. Re-ground at each PR boundary. Preserve hooks and merge by merge commit
@@ -288,7 +290,7 @@ HEAD is still `3ad2ab5dbff006786394dd7689e892be412c1687` on
 `codex/cricket-platform-parity`, originally created from fetched main.
 **All work is uncommitted, including untracked files. No push, PR or merge exists.**
 Preserve this worktree. The
-[continuation prompt](../../../prompts/cricket-platform-parity-continuation.md)
+[continuation prompt](../../prompts/cricket-platform-parity-continuation.md)
 is the fresh-session entrypoint. Reconcile this bounded plan's lifecycle placement
 at resumption without competing with the primary correction plan.
 
