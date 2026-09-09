@@ -123,3 +123,121 @@ The correction thread identifies the current branch and next action.
 ```text
 - Next safe step: validate the integrated repair, finish specialist review, then deliver through current-head PR conditions. Investigate Q-22's paired generator/output repair next, respecting semantic prerequisites.
 ```
+
+## 9 September PR86 merge and Q22 continuation
+
+The following blocks are conserved verbatim from main `92ada69892c42a69a3ae5431c1793bbee61b46c1`.
+They record earlier checkpoints; the [ledger](../delivery-ledger.md) and
+[delivery plan](../active/castr-documentation-and-fidelity-correction.md) own current work.
+
+### Parent interactive sequencing
+
+<!-- prettier-ignore -->
+``````text
+The commission's interactive sequencing is refined after the 6 September
+step-back: C03a is delivered through PR #85; now deliver the independently
+proven C08 operation-security-empty repair. Investigate Q-22's canonical generator
+and fixture integrity next, retaining its paired generator-fix/regenerated-output
+landing and repairing semantic prerequisites before accepting goldens. Continue remaining
+C03–C07 documentation and other independent C08 repairs by their actual technical
+prerequisites; outcome-family numbers do not impose a blanket documentation
+barrier on an existing-contract repair. The [delivery plan](../active/castr-documentation-and-fidelity-correction.md#6-september-delivery-step-back)
+records the reasoning and work-in-progress limit; the [former ordering](../archive/correction-sequencing-2026-09-06.md)
+is conserved as historical evidence.
+``````
+
+### Ledger PR86 pre-merge checkpoint
+
+<!-- prettier-ignore -->
+``````text
+- **C08 operation-security-empty in progress:** branch
+  `codex/castr-security-empty-delivery`, based on the C03a merge, integrates the
+  reviewed three-file repair. Emit every defined operation security array. The
+  red-first unit and integration witnesses distinguish absence, `[]` and `[{}]`
+  under required document authentication through parse, canonical persistence,
+  writing and reparse. The prior five Q-03 AND/OR cases remain unchanged.
+  Canonical `pnpm check` passed on 6 September, including the integrated 19 unit
+  and eight security-transform cases and the existing E2E suites. OpenAPI and paired
+  documentation/onboarding reviews passed; the latter corrected the parent's stale
+  C03a continuation. The 6 September Markdown-link by-file report listed 174 entries across
+  794 files, including existing archive targets omitted by its inventory; C09 owns
+  that outstanding validator/reference repair. Both 6 September commits
+  (`f4661eb555acf4dfbd2e4345af9967566dce6579` and
+  `1fc652343c99b597216e5de98edcf188b36367aa`) and their push passed with intact
+  hooks, including pre-push `check:ci`. These are dated observations, not proof
+  for a later head. [PR #86](https://github.com/EngraphCode/castr/pull/86) is the
+  delivery carrier; its [actual tally](https://github.com/EngraphCode/castr/pull/86#issuecomment-5559978100)
+  owns review rounds and current-head actions. The 9 September harvest at
+  `1fc652343c99b597216e5de98edcf188b36367aa` found all 16 checks successful,
+  completed Copilot/Codex review and three unresolved stale-record findings.
+  Those findings, subsequent head verification and merge remain open at that
+  observation; no merge readiness is claimed. The [finding record](correction-manifests/castr-correction-findings.json)
+  carries exact candidate blobs and bounded proof. This does not close wider security,
+  identity, loader or MCP obligations.
+``````
+
+### Repo continuity next safe steps
+
+<!-- prettier-ignore -->
+``````text
+Continue PR #86 delivery from the [ledger](../../plans/delivery-ledger.md) and
+its linked tally; they retain completed integration/review proof and identify
+outstanding findings and current-head conditions before merge. Then investigate
+Q-22's paired generator/output repair and its actual semantic prerequisites under
+the [correction plan](../../plans/active/castr-documentation-and-fidelity-correction.md).
+C03b/c and other prepared drafts retain their bounded carriers. Kite hunts Eyrie
+owns the separate Cricket tooling task; coordinate aggregate runs. The displaced
+6 September instructions are [preserved verbatim](../../plans/archive/correction-sequencing-2026-09-06.md#9-september-pr86-continuation-correction).
+``````
+
+### Correction thread continuation
+
+<!-- prettier-ignore -->
+``````text
+## Current continuation
+
+- Branch: `codex/castr-security-empty-delivery`, based on main merge `SHA:6c3b18f0`.
+- Controlling queue: [parent plan](../../../plans/proof-programme/parent-plan.md#current-execution-state).
+- Acceptance: [correction delivery plan](../../../plans/active/castr-documentation-and-fidelity-correction.md).
+- PR custody: [delivery ledger](../../../plans/delivery-ledger.md).
+- Landing target: preserve explicit operation `security: []` through writing and canonical persistence, with absent/empty/anonymous-alternative witnesses under required global authentication.
+- Next safe step: continue PR #86 delivery from the ledger and linked tally for outstanding findings and current-head conditions; completed integration/review proof remains recorded there. Investigate Q-22's paired generator/output repair next, respecting semantic prerequisites. The prior instruction is [conserved verbatim](../../../plans/archive/correction-sequencing-2026-09-06.md#9-september-pr86-continuation-correction).
+- Team: root owns compiler/foundational documentation and integration; Kite hunts Eyrie owns the separate Cricket tooling worktree. Coordinate expensive aggregate runs and re-read actual claims before edits.
+- Source: PR #81 at `SHA:33be633862864ce8efb22e70abbbe9bce863c510`, never rewritten.
+
+C01R, Q-19 and C03a are delivered at their bounded acceptance; the ledger owns
+exact proof. C03a's five actual review rounds and class-level navigation cures
+remain in its tally. C05 retains the PR skill attribution and rule/reference
+cleanup; C10 retains observed review/continuity-authoring failures. C03b/c source
+drafts remain preserved for their separate API/options and guide outcomes.
+The operation repair does not close PR #18; newly reproduced document-level empty
+security declaration loss has its own finding and repair carrier.
+``````
+
+### Active plan initial next-action paragraph
+
+<!-- prettier-ignore -->
+``````text
+Finish C03a, then the three-file operation-security-empty repair. Its behavioural
+proof distinguishes absent security, `[]` and `[{}]` through parse, canonical
+persistence, writing and reparse. It needs neither new public roots nor unfinished
+doctrine. Investigate Q-22's generator and fixture integrity next; preserve the
+paired fix/output landing and repair reproduced semantic failures before accepting
+changed goldens. If that candidate has blocking prerequisites, another independent
+documentation or repair outcome can integrate. A newly demonstrated technical
+dependency changes this order with recorded reasoning. No acceptance, gate,
+review condition or autonomous pause is weakened.
+``````
+
+### Active plan integration checkpoint
+
+<!-- prettier-ignore -->
+``````text
+Q-19's original non-code acceptance is proven on integrated main through PR #83;
+the [ledger](../delivery-ledger.md) owns the dated head, checks and review evidence.
+C01R is merged and the eight late C01 findings are individually settled. C03a
+is delivered through PR #85 at its bounded local-checkout acceptance; the ledger
+records exact merge/review proof. The operation-security-empty repair now
+integrates on that main. C03b/c retain detailed API/options and
+response/transport/MCP documentation; C10 retains final isolated-pack acceptance.
+``````

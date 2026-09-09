@@ -1,16 +1,8 @@
 /**
- * Validation Parity Integration Tests
- *
- * PROVES that generated Zod schemas validate data correctly according to IR
- * constraints. This is the ultimate test of Zod output correctness.
- *
- * The IR is the source of truth. We test that:
- * 1. Valid data (per IR constraints) passes Zod validation
- * 2. Invalid data (per IR constraints) throws on Zod validation
- *
- * Uses `.parse()` (throws on failure) rather than `.safeParse()` to align with
- * our strict, fail-fast principle. If data is valid, parse succeeds. If data
- * is invalid, parse throws—and we expect that.
+ * Exercises checked-in Petstore Zod validators against the listed payloads.
+ * Error cases assert the intended validation issues and exact parsed values.
+ * Other cases observe acceptance or rejection only. This suite does not run
+ * regeneration or establish complete object, int64 or transformation fidelity.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -100,48 +92,49 @@ describe('Pet Schema Validation', () => {
 
 describe('Error Schema Validation', () => {
   describe('valid data passes', () => {
-    it('accepts object with all required fields', () => {
-      const validError = { code: 404, message: 'Not found' };
-
-      expect(() => ErrorSchema.parse(validError)).not.toThrow();
-    });
-
-    it('accepts integer code values', () => {
-      const validError = { code: 500, message: 'Internal server error' };
-
-      expect(() => ErrorSchema.parse(validError)).not.toThrow();
+    it.each([
+      ['accepts object with all required fields', { code: 404, message: 'Not found' }],
+      ['accepts integer code values', { code: 500, message: 'Internal server error' }],
+    ])('%s', (name, value) => {
+      expect(ErrorSchema.parse(value), name).toStrictEqual(value);
     });
   });
 
-  describe('invalid data throws', () => {
-    it('throws for object missing required field: code', () => {
-      const invalidError = { message: 'error' };
-
-      expect(() => ErrorSchema.parse(invalidError)).toThrow();
-    });
-
-    it('throws for object missing required field: message', () => {
-      const invalidError = { code: 1 };
-
-      expect(() => ErrorSchema.parse(invalidError)).toThrow();
-    });
-
-    it('throws for empty object (missing both required fields)', () => {
-      const invalidError = {};
-
-      expect(() => ErrorSchema.parse(invalidError)).toThrow();
-    });
-
-    it('throws for object with wrong type for code (string instead of integer)', () => {
-      const invalidError = { code: 'x', message: 'error' };
-
-      expect(() => ErrorSchema.parse(invalidError)).toThrow();
-    });
-
-    it('throws for object with non-integer code (float)', () => {
-      const invalidError = { code: 1.5, message: 'error' };
-
-      expect(() => ErrorSchema.parse(invalidError)).toThrow();
+  describe('invalid data produces validation issues', () => {
+    it.each([
+      [
+        'rejects object missing required field: code',
+        { message: 'error' },
+        [{ code: 'invalid_type', expected: 'number', path: ['code'] }],
+      ],
+      [
+        'rejects object missing required field: message',
+        { code: 1 },
+        [{ code: 'invalid_type', expected: 'string', path: ['message'] }],
+      ],
+      [
+        'rejects empty object (missing both required fields)',
+        {},
+        [
+          { code: 'invalid_type', expected: 'number', path: ['code'] },
+          { code: 'invalid_type', expected: 'string', path: ['message'] },
+        ],
+      ],
+      [
+        'rejects object with wrong type for code (string instead of integer)',
+        { code: 'x', message: 'error' },
+        [{ code: 'invalid_type', expected: 'number', path: ['code'] }],
+      ],
+      [
+        'rejects object with non-integer code (float)',
+        { code: 1.5, message: 'error' },
+        [{ code: 'invalid_type', expected: 'int', path: ['code'] }],
+      ],
+    ])('%s', (name, value, issues) => {
+      expect(ErrorSchema.safeParse(value), name).toMatchObject({
+        success: false,
+        error: { issues },
+      });
     });
   });
 });
