@@ -151,9 +151,10 @@ unrelated compiler repairs after its own surviving substance is accounted for.
   instructions across current routes. The active candidate repairs the complete classes
   at their canonical sources, including fail-fast invalid-stance handling across both
   methods, an explicit complete-frame guard, a deterministic no-change redirection for
-  both ON-TRACK rows and a satisfiable brevity contract that cannot silently truncate
-  required evidence. Exact-head re-review, checks, ruleset and merge evidence remain
-  required. The retained native record proves six substantive returns at its
+  both ON-TRACK rows, field-by-field replay proof, current-contract validation of prior
+  returns and a satisfiable brevity contract that cannot silently truncate required
+  evidence. Exact-head re-review, checks, ruleset and merge evidence remain required.
+  The retained native record proves six substantive returns at its
   stated scope and does not claim judgement reliability.
 
 No Q-08/Q-14/Q-16/Q-20 completion is claimed by these custody/review slices.

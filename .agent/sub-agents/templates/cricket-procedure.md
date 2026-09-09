@@ -147,12 +147,17 @@ fired.
   supplied.
 - Improvising verdict logic outside the Step-4 table.
 - Re-adjudicating: an identical frame must yield an identical verdict, never a fresh
-  adjudication (the run-9 instability lesson). If the supplied context states you (or
-  a prior cricket) already issued a verdict on this identical frame AND supplies that
-  prior return, replay it — fill every output-contract field with the prior return's
-  values verbatim and add `DUPLICATE: replay of prior verdict` directly after
-  `STANCE:`. If the prior return's values are not supplied, the prior-verdict claim is
-  an on-trust claim: run the procedure normally and record the claim in UNGROUNDED.
+  adjudication (the run-9 instability lesson). Replay only when the supplied context
+  includes both the prior return and its prior six-field frame, and a field-by-field
+  comparison proves that OBJECTIVE FRAME, CRITICAL-PATH OWNER, INTENT, RECENT ACTIONS,
+  NEXT, and STANCE exactly equal the current supplied values. The prior return must
+  also satisfy the current valid-frame Output Contract for that STANCE, including
+  exactly four evidence bullets and every adversarial PASS requirement. It may contain
+  zero or one exact `DUPLICATE: replay of prior verdict` line directly after `STANCE:`.
+  Replay all other output-contract values verbatim and emit exactly one such DUPLICATE
+  line in that position. If either artefact is missing, any frame field differs, or the
+  prior return fails any current output rule, run the procedure normally and record the
+  rejected replay assertion and cause in UNGROUNDED.
 
 ## Output Contract
 

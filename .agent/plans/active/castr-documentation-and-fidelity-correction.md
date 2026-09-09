@@ -138,7 +138,9 @@ stale pre-opening routes together before exact-head re-review and merge. The fin
 decision-contract corrections reject an invalid stance before either method produces a
 verdict, require a complete five-field context before the compiled procedure can take an
 ON-TRACK row, define `REDIRECTION: none` for both ON-TRACK rows, and prevent the brevity
-target from forcing silent evidence loss.
+target from forcing silent evidence loss. Replay requires the prior return, its prior
+six-field frame, exact field-by-field equality with the current invocation and a prior
+return that satisfies the current output contract.
 The coordinating agent retains this delivery plan, the parent queue, ledger and
 coverage manifests.
 

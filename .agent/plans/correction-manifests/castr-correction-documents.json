@@ -111,9 +111,9 @@
       "review_date": "2026-09-09",
       "scope": "Current next-safe-step route only: drive open PR91 through current-head review/check harvest and merge before PR14 while retaining Q09/Q22 obligations.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget and ON-TRACK redirection contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
-        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
-        "All 16 checks passed on 040852d7, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the row-6 redirection ambiguity. Independent gateway, onboarding and documentation reviewers accepted the preceding output-budget repair. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after this class repair is committed."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget, ON-TRACK redirection and replay-provenance and prior-return-contract contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
+        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; replay requires the prior return, its prior six-field frame, exact field-by-field equality and a prior return that satisfies the current output contract; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
+        "All 16 checks passed on 41f29888, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the replay-provenance ambiguity. Gateway review of the first correction then exposed admission of stale prior returns that violate the current output contract. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the complete class repair is committed."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
       "prior_reviewed_git_blob_hash": "9b79f5d4e0e5e792fa04f25ceea72f4fbf350689",
@@ -159,9 +159,9 @@
       "review_date": "2026-09-09",
       "scope": "Current correction continuation route only: open PR91, exact remaining landing action, PR14 successor and retained broader correction obligations.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget and ON-TRACK redirection contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
-        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
-        "All 16 checks passed on 040852d7, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the row-6 redirection ambiguity. Independent gateway, onboarding and documentation reviewers accepted the preceding output-budget repair. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after this class repair is committed."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget, ON-TRACK redirection and replay-provenance and prior-return-contract contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
+        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; replay requires the prior return, its prior six-field frame, exact field-by-field equality and a prior return that satisfies the current output contract; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
+        "All 16 checks passed on 41f29888, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the replay-provenance ambiguity. Gateway review of the first correction then exposed admission of stale prior returns that violate the current output contract. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the complete class repair is committed."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
       "prior_reviewed_git_blob_hash": "1b771d779b8377fe35b87ca96a13e3634f3bb08b",
@@ -196,17 +196,17 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "045b9a6689457bd35efa016c6437a9d501735b7c",
-      "base_revision": "040852d7f962416f579ff3ea192b7f50a4beb518",
+      "reviewed_git_blob_hash": "87851a953573fff47e614fae2879e9e618c3c098",
+      "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
       "review_date": "2026-09-09",
       "scope": "Current C05 PR disposition and live census only: PR91 opened at 3b568416 after hooks and pre-push gates, the complete review-wave classes and exact remaining delivery conditions, and 17 open PRs.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget and ON-TRACK redirection contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
-        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
-        "All 16 checks passed on 040852d7, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the row-6 redirection ambiguity. Independent gateway, onboarding and documentation reviewers accepted the preceding output-budget repair. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after this class repair is committed."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget, ON-TRACK redirection and replay-provenance and prior-return-contract contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
+        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; replay requires the prior return, its prior six-field frame, exact field-by-field equality and a prior return that satisfies the current output contract; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
+        "All 16 checks passed on 41f29888, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the replay-provenance ambiguity. Gateway review of the first correction then exposed admission of stale prior returns that violate the current output contract. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the complete class repair is committed."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
-      "prior_reviewed_git_blob_hash": "9a8fe6fca81f78babcb22c199cee657cc075c50b",
+      "prior_reviewed_git_blob_hash": "8a66dccaaf5a4e02320eecd7ff873a3f0feb8b5f",
       "review_history": [
         {
           "reviewed_git_blob_hash": "5c5be6c63b1527fe55a4a4ebec612bf8bdb514f6",
@@ -255,6 +255,18 @@
           "base_revision": "eb6e3cbad0d57bbad0fa5bc2d1c74bed3110f406",
           "review_date": "2026-09-09",
           "scope": "Current C05 PR disposition and live census only: PR91 opened at 3b568416 after hooks and pre-push gates, the complete review-wave classes and exact remaining delivery conditions, and 17 open PRs."
+        },
+        {
+          "reviewed_git_blob_hash": "045b9a6689457bd35efa016c6437a9d501735b7c",
+          "base_revision": "040852d7f962416f579ff3ea192b7f50a4beb518",
+          "review_date": "2026-09-09",
+          "scope": "Current C05 PR disposition and live census only: PR91 opened at 3b568416 after hooks and pre-push gates, the complete review-wave classes and exact remaining delivery conditions, and 17 open PRs."
+        },
+        {
+          "reviewed_git_blob_hash": "8a66dccaaf5a4e02320eecd7ff873a3f0feb8b5f",
+          "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
+          "review_date": "2026-09-09",
+          "scope": "Current C05 PR disposition and live census only: PR91 opened at 3b568416 after hooks and pre-push gates, the complete review-wave classes and exact remaining delivery conditions, and 17 open PRs."
         }
       ]
     },
@@ -267,9 +279,9 @@
       "review_date": "2026-09-09",
       "scope": "Current interactive execution sequence only: PR91 is the open C05 installation delivery; exact-head review/check harvest and merge precede PR14; Q09/Q22 acceptance and sole queue authority remain unchanged.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget and ON-TRACK redirection contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
-        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
-        "All 16 checks passed on 040852d7, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the row-6 redirection ambiguity. Independent gateway, onboarding and documentation reviewers accepted the preceding output-budget repair. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after this class repair is committed."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget, ON-TRACK redirection and replay-provenance and prior-return-contract contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
+        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; replay requires the prior return, its prior six-field frame, exact field-by-field equality and a prior return that satisfies the current output contract; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
+        "All 16 checks passed on 41f29888, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the replay-provenance ambiguity. Gateway review of the first correction then exposed admission of stale prior returns that violate the current output contract. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the complete class repair is committed."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
       "prior_reviewed_git_blob_hash": "aace8acfc08eb3aa1a4f6064f3ffd488c2d5191c",
@@ -346,17 +358,17 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "80b14ef8a298d49d22b30c726e3a0c36e57512a7",
-      "base_revision": "040852d7f962416f579ff3ea192b7f50a4beb518",
+      "reviewed_git_blob_hash": "3ff5db6dce657b52a39cfabd6e288aec8fe043ed",
+      "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
       "review_date": "2026-09-09",
       "scope": "Current owner-corrected delivery sequence only: PR91 is open for the independently green C05 installation, its complete review-wave classes are repaired together, and PR14 remains the successor.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget and ON-TRACK redirection contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
-        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
-        "All 16 checks passed on 040852d7, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the row-6 redirection ambiguity. Independent gateway, onboarding and documentation reviewers accepted the preceding output-budget repair. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after this class repair is committed."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget, ON-TRACK redirection and replay-provenance and prior-return-contract contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
+        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; replay requires the prior return, its prior six-field frame, exact field-by-field equality and a prior return that satisfies the current output contract; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
+        "All 16 checks passed on 41f29888, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the replay-provenance ambiguity. Gateway review of the first correction then exposed admission of stale prior returns that violate the current output contract. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the complete class repair is committed."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
-      "prior_reviewed_git_blob_hash": "68dd547fddbd7feea191a28d0c357ee0100c59be",
+      "prior_reviewed_git_blob_hash": "25b3a964eb92b9b22b45b04daba93c40175a18dd",
       "review_history": [
         {
           "reviewed_git_blob_hash": "8c14b62e02166f3c9c07c37021e60cb7f0010886",
@@ -421,6 +433,18 @@
         {
           "reviewed_git_blob_hash": "68dd547fddbd7feea191a28d0c357ee0100c59be",
           "base_revision": "eb6e3cbad0d57bbad0fa5bc2d1c74bed3110f406",
+          "review_date": "2026-09-09",
+          "scope": "Current owner-corrected delivery sequence only: PR91 is open for the independently green C05 installation, its complete review-wave classes are repaired together, and PR14 remains the successor."
+        },
+        {
+          "reviewed_git_blob_hash": "80b14ef8a298d49d22b30c726e3a0c36e57512a7",
+          "base_revision": "040852d7f962416f579ff3ea192b7f50a4beb518",
+          "review_date": "2026-09-09",
+          "scope": "Current owner-corrected delivery sequence only: PR91 is open for the independently green C05 installation, its complete review-wave classes are repaired together, and PR14 remains the successor."
+        },
+        {
+          "reviewed_git_blob_hash": "25b3a964eb92b9b22b45b04daba93c40175a18dd",
+          "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
           "review_date": "2026-09-09",
           "scope": "Current owner-corrected delivery sequence only: PR91 is open for the independently green C05 installation, its complete review-wave classes are repaired together, and PR14 remains the successor."
         }
@@ -744,14 +768,14 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-installation",
-      "reviewed_git_blob_hash": "cd01de5beadfbca745411e7de1f8c19a45b804ca",
-      "base_revision": "040852d7f962416f579ff3ea192b7f50a4beb518",
+      "reviewed_git_blob_hash": "5239ee60be0c2fb7ee343eb9683440b542b391c1",
+      "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
       "review_date": "2026-09-09",
       "scope": "Complete current-authority section plus installation acceptance: PR91 opened at 3b568416, its complete review findings and current class repair, exact remaining merge conditions, and bounded native evidence. Earlier dated execution sections remain historical.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget and ON-TRACK redirection contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
-        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
-        "All 16 checks passed on 040852d7, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the row-6 redirection ambiguity. Independent gateway, onboarding and documentation reviewers accepted the preceding output-budget repair. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after this class repair is committed."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget, ON-TRACK redirection and replay-provenance and prior-return-contract contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
+        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; replay requires the prior return, its prior six-field frame, exact field-by-field equality and a prior return that satisfies the current output contract; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
+        "All 16 checks passed on 41f29888, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the replay-provenance ambiguity. Gateway review of the first correction then exposed admission of stale prior returns that violate the current output contract. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the complete class repair is committed."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain. Complete-document and whole-estate reconciliation remains with C09/C10.",
       "review_history": [
@@ -778,9 +802,21 @@
           "base_revision": "eb6e3cbad0d57bbad0fa5bc2d1c74bed3110f406",
           "review_date": "2026-09-09",
           "scope": "Complete current-authority section plus installation acceptance: PR91 opened at 3b568416, its complete review findings and current class repair, exact remaining merge conditions, and bounded native evidence. Earlier dated execution sections remain historical."
+        },
+        {
+          "reviewed_git_blob_hash": "cd01de5beadfbca745411e7de1f8c19a45b804ca",
+          "base_revision": "040852d7f962416f579ff3ea192b7f50a4beb518",
+          "review_date": "2026-09-09",
+          "scope": "Complete current-authority section plus installation acceptance: PR91 opened at 3b568416, its complete review findings and current class repair, exact remaining merge conditions, and bounded native evidence. Earlier dated execution sections remain historical."
+        },
+        {
+          "reviewed_git_blob_hash": "0513d232115010bd8d8ef0bbc3b285669c53c6af",
+          "base_revision": "41f298880326c8ca8fa850dc30d9e7b7e325fd8a",
+          "review_date": "2026-09-09",
+          "scope": "Complete current-authority section plus installation acceptance: PR91 opened at 3b568416, its complete review findings and current class repair, exact remaining merge conditions, and bounded native evidence. Earlier dated execution sections remain historical."
         }
       ],
-      "prior_reviewed_git_blob_hash": "785bf5f221c57b752143aa10e1a988a99957ee5d"
+      "prior_reviewed_git_blob_hash": "0513d232115010bd8d8ef0bbc3b285669c53c6af"
     },
     ".agent/prompts/cricket-platform-parity-continuation.md": {
       "review_state": "partially-reviewed",
@@ -791,9 +827,9 @@
       "review_date": "2026-09-09",
       "scope": "Complete current continuation route: drive open PR91 through current-head harvest, fixes and merge, then lifecycle closeout; retain exact native and UNDELIVERED evidence boundaries.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget and ON-TRACK redirection contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
-        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
-        "All 16 checks passed on 040852d7, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the row-6 redirection ambiguity. Independent gateway, onboarding and documentation reviewers accepted the preceding output-budget repair. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after this class repair is committed."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget, ON-TRACK redirection and replay-provenance and prior-return-contract contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
+        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; replay requires the prior return, its prior six-field frame, exact field-by-field equality and a prior return that satisfies the current output contract; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
+        "All 16 checks passed on 41f29888, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the replay-provenance ambiguity. Gateway review of the first correction then exposed admission of stale prior returns that violate the current output contract. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the complete class repair is committed."
       ],
       "remaining": "PR #91 current-head re-review, checks, ruleset harvest, merge and C05 lifecycle closeout remain; replace this continuation route during closeout.",
       "review_history": [
@@ -837,9 +873,9 @@
       "review_date": "2026-09-09",
       "scope": "Current Cricket frame contract only: five required context fields, mandatory STANCE control, fail-fast invalid-frame response and panel-count treatment.",
       "evidence": [
-        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget and ON-TRACK redirection contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
-        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
-        "All 16 checks passed on 040852d7, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the row-6 redirection ambiguity. Independent gateway, onboarding and documentation reviewers accepted the preceding output-budget repair. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after this class repair is committed."
+        "PR #91 opened at 3b568416 after commit and full pre-push hooks passed. Its review waves found procedure-output completeness, role-routing, partial-frame quotation, critical-field, missing-STANCE, global output-budget, ON-TRACK redirection and replay-provenance and prior-return-contract contradictions; paired documentation/onboarding review also found stale pre-opening current routes.",
+        "The active candidate repairs the complete classes at their canonical boundaries: both Cricket methods reject a missing or invalid STANCE before verdict generation; the compiled procedure requires complete critical context for ON-TRACK and retains its four-answer and adversarial contracts; both ON-TRACK rows have a deterministic no-change redirection; replay requires the prior return, its prior six-field frame, exact field-by-field equality and a prior return that satisfies the current output contract; both methods make the 200-word brevity target subordinate to complete attributable evidence so no required content is silently lost; every role description and current route retains its earlier complete repair.",
+        "All 16 checks passed on 41f29888, with CodeQL, secret scanning and SonarCloud clear, before its exact-head Codex review exposed the replay-provenance ambiguity. Gateway review of the first correction then exposed admission of stale prior returns that violate the current output contract. Fresh exact-candidate source review, checks, thread resolution and merge evidence remain required after the complete class repair is committed."
       ],
       "remaining": "PR #91 exact-candidate source review, checks, ruleset harvest, merge and C05 lifecycle closeout remain."
     }
@@ -858,8 +894,8 @@
           "classification": "document-like",
           "disposition": "current-acceptance",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "cd01de5beadfbca745411e7de1f8c19a45b804ca",
-          "prior_reviewed_git_blob_hash": "785bf5f221c57b752143aa10e1a988a99957ee5d"
+          "reviewed_git_blob_hash": "5239ee60be0c2fb7ee343eb9683440b542b391c1",
+          "prior_reviewed_git_blob_hash": "0513d232115010bd8d8ef0bbc3b285669c53c6af"
         },
         {
           "path": ".agent/prompts/cricket-platform-parity-continuation.md",
@@ -916,8 +952,8 @@
           "classification": "document-like",
           "disposition": "current-source",
           "carrier": "C05/cricket-installation",
-          "reviewed_git_blob_hash": "3b481a902e28c3903db5c5fefaa4b36af8f969d2",
-          "prior_reviewed_git_blob_hash": "b0c77eaaee7addd2dc060d5421b01baf8c811944"
+          "reviewed_git_blob_hash": "d37e89a6b9ae076ac697ac446e6afff241651f36",
+          "prior_reviewed_git_blob_hash": "06fb904ba9e1604a77baf0cd1348958c8256b42e"
         },
         {
           "path": ".claude/agents/cricket-judgement-high.md",
