@@ -2,8 +2,8 @@
  * Basic logging utility for `@engraph/castr`.
  *
  * The logger writes level-prefixed messages to an injected {@link LoggerSink}.
- * The default sink is the global `console`; tests inject an in-memory fake so
- * no global state is observed or mutated.
+ * In-process tests inject an in-memory fake, while the default logger resolves
+ * the current global `console` whenever a log call runs.
  *
  * @example
  * ```typescript
@@ -34,19 +34,22 @@ export interface LoggerSink {
  * Create a logger that writes level-prefixed messages (`[INFO]`, `[WARN]`,
  * `[ERROR]`) to the given sink.
  *
- * @param sink - Destination for log output; defaults to the global `console`.
+ * @param sink - Destination for log output. When omitted, each call resolves
+ * the current global `console`, so adapters installed after import receive
+ * subsequent output.
  * @returns A logger whose methods forward to the sink with a level prefix.
  */
-export function createLogger(sink: LoggerSink = console): LoggerSink {
+export function createLogger(sink?: LoggerSink): LoggerSink {
+  const resolveSink = (): LoggerSink => sink ?? console;
   return {
     info: (...args: unknown[]): void => {
-      sink.info('[INFO]', ...args);
+      resolveSink().info('[INFO]', ...args);
     },
     warn: (...args: unknown[]): void => {
-      sink.warn('[WARN]', ...args);
+      resolveSink().warn('[WARN]', ...args);
     },
     error: (...args: unknown[]): void => {
-      sink.error('[ERROR]', ...args);
+      resolveSink().error('[ERROR]', ...args);
     },
   };
 }
