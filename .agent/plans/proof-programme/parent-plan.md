@@ -175,8 +175,8 @@ delivered the dependent installation as
 commit's second parent and the trees are identical; all 17 exact-head check runs passed,
 including the successful Copilot review run, and all eight review threads were resolved.
 The C05 Cricket [atomic plan](../current/complete/cricket-platform-parity.md) is now
-in completion staging: the final-main native record contains all three normal and
-same-agent adversarial registered-role returns. Earlier dated and UNDELIVERED records
+in completion staging: the final-main native record contains three normal and three
+same-agent adversarial registered-role returns (six total). Earlier dated and UNDELIVERED records
 remain preserved. PR #92 corrected the premature closeout; the final evidence/lifecycle
 PR must merge before PR #14's dependency-ownership extraction.
 The broader C05 family retains its other documented obligations. Q-09 remains pending

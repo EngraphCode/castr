@@ -358,7 +358,7 @@
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
       "carrier": "C05/cricket-final-native-proof",
-      "reviewed_git_blob_hash": "7f07039f81dbb9682eb02f9127f08119dd81bee3",
+      "reviewed_git_blob_hash": "db44a9b285635b17674f8a341b9c717c5e2191ee",
       "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
       "review_date": "2026-09-10",
       "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged.",
@@ -1331,7 +1331,7 @@
           "classification": "embedded-documentation",
           "disposition": "applied",
           "carrier": "C05/cricket-final-native-proof",
-          "reviewed_git_blob_hash": "3a3ed6ce41ce3836fc9a2802950b08109fb552f8"
+          "reviewed_git_blob_hash": "e843ddca2ccc875d000423aa34a5c5a4e722544a"
         }
       ]
     }
