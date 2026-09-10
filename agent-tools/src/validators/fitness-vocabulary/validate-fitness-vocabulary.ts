@@ -29,11 +29,12 @@
  */
 
 import { execFileSync } from 'node:child_process';
-import { lstat, readFile } from 'node:fs/promises';
+import { realpath } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { resolveRepoRoot } from '../../core/repo-root.js';
+import { readRequiredRepositorySource } from '../../core/required-repository-source.js';
 import { writeLine } from '../../core/terminal-output.js';
 import { resolveTrustedGit } from '../../core/trusted-git.js';
 
@@ -275,6 +276,30 @@ function listScanCandidates(
   return candidates;
 }
 
+async function assertRepositoryRoot(
+  root: string,
+  environment: Readonly<NodeJS.ProcessEnv>,
+): Promise<void> {
+  const topLevel = runGit(
+    root,
+    ['rev-parse', '--show-toplevel'],
+    'resolve the repository top level',
+    environment,
+  ).trim();
+  if (topLevel.length === 0 || topLevel.includes('\n')) {
+    throw new Error(`Cannot resolve the repository top level for the fitness-vocabulary scan.`);
+  }
+  const [requestedRoot, repositoryTopLevel] = await Promise.all([
+    realpath(root),
+    realpath(topLevel),
+  ]);
+  if (requestedRoot !== repositoryTopLevel) {
+    throw new Error(
+      `Cannot scan '${root}': the requested path must be the repository top level '${topLevel}'.`,
+    );
+  }
+}
+
 function readIndexFiles(
   root: string,
   files: readonly TrackedFile[],
@@ -343,12 +368,7 @@ type FileFindings = {
 
 async function readWorktreeFile(root: string, file: TrackedFile): Promise<string> {
   try {
-    const filePath = path.join(root, file.path);
-    const status = await lstat(filePath);
-    if (!status.isFile() || status.isSymbolicLink()) {
-      throw new Error('the working-tree entry is not a regular file');
-    }
-    return await readFile(filePath, 'utf8');
+    return await readRequiredRepositorySource(root, file.path);
   } catch (error) {
     throw new Error(
       `Cannot read tracked file '${file.path}' for the fitness-vocabulary scan. ` +
@@ -430,6 +450,7 @@ export async function validateFitnessVocabulary(
   output: (line: string) => void = writeLine,
   environment: Readonly<NodeJS.ProcessEnv> = process.env,
 ): Promise<number> {
+  await assertRepositoryRoot(root, environment);
   const files = listScanCandidates(root, environment);
   const indexContents = readIndexFiles(root, files, environment);
   const allFindings: FileFindings[] = [];

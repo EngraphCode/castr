@@ -86,6 +86,18 @@ describe('fitness-vocabulary validator CLI', () => {
     });
   });
 
+  it('rejects a repository subdirectory instead of omitting tracked siblings', async () => {
+    await withRepository((repository) => {
+      track(repository, 'outside.md', 'This is a blocking violation.');
+      track(repository, 'nested/inside.md', 'Current vocabulary only.');
+
+      const result = runValidator(path.join(repository, 'nested'));
+
+      expect(result.status).toBe(1);
+      expect(result.stderr).toContain('the requested path must be the repository top level');
+    });
+  });
+
   it('reports indexed content hidden by assume-unchanged and a clean working-tree rewrite', async () => {
     await withRepository((repository) => {
       track(repository, 'staged.md', 'This is a blocking violation.');
@@ -165,6 +177,20 @@ describe('fitness-vocabulary validator CLI', () => {
     });
   });
 
+  it('rejects a symlinked ancestor instead of following redirected working-tree content', async () => {
+    await withRepository((repository) => {
+      track(repository, 'docs/tracked.md', 'Current vocabulary only.');
+      rmSync(path.join(repository, 'docs'), { recursive: true });
+      write(repository, 'redirected/tracked.md', 'Current vocabulary only.');
+      symlinkSync('redirected', path.join(repository, 'docs'));
+
+      const result = runValidator(repository);
+
+      expect(result.status).toBe(1);
+      expect(result.stderr).toMatch(/must not traverse symbolic link docs/u);
+    });
+  });
+
   it('fails when Git cannot enumerate the requested repository', () => {
     const directory = mkdtempSync(path.join(tmpdir(), 'fitness-vocabulary-not-git-'));
     try {
@@ -172,7 +198,7 @@ describe('fitness-vocabulary validator CLI', () => {
 
       expect(result.status).toBe(1);
       expect(result.stderr).toContain(
-        'Cannot read the tracked-file index for the fitness-vocabulary scan',
+        'Cannot resolve the repository top level for the fitness-vocabulary scan',
       );
     } finally {
       rmSync(directory, { force: true, recursive: true });
