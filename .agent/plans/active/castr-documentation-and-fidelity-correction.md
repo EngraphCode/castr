@@ -104,9 +104,9 @@ source and the full acceptance; reducing the count by unverified closure is not
 progress. The ledger owns the live census and closure evidence. PR #88 delivered
 the C05 tooling contract; PR #91 delivered its dependent installation. PR #90
 delivered the preservation record and PR #28 then closed without merge. The C05 Cricket
-implementation and installation are delivered, but final-template I2 proof remains
-outstanding. PR #92 corrects the premature lifecycle closeout. Its six-return native
-proof and reconciliation precede PR #14; the broader C05 family retains its other
+atomic plan is in completion staging after all six final-template native returns on
+10 September. PR #92 corrected the premature closeout; the final evidence/lifecycle
+PR must merge before PR #14 extraction. The broader C05 family retains its other
 obligations.
 
 Owner-directed Cricket cadence (6 September 2026): run the full registered Codex
@@ -127,12 +127,11 @@ Bora seeks Turbulence delivered the dependent installation as PR #91. Its review
 `48e2194d` merged as `af840d9b`; all 17 exact-head check runs passed, including the
 successful Copilot review run, all eight review threads were resolved, and exact-head
 Codex/Copilot plus gateway, documentation and onboarding review found no remaining
-blocker. The active C05 plan preserves the dated native proof and the later
-`UNDELIVERED` task-runtime attempt. Because the retained six-return run predates material
-changes to the final templates, it cannot close final I2. The atomic plan remains open for
-a fresh final-template panel and lifecycle reconciliation; PR #14
-follows that merge. The broader C05 family remains open, and the coordinating agent
-retains this commission, parent queue, ledger and coverage manifests.
+blocker. The completed atomic C05 plan preserves the dated native proof, the later
+`UNDELIVERED` attempt and the six substantive final-template returns from 10 September.
+The final I2 evidence and lifecycle reconciliation await PR delivery; PR #14 follows
+that merge. The broader C05 family remains open, and the coordinating agent retains
+this commission, parent queue, ledger and coverage manifests.
 
 | Outcome family     | Reviewable outcome and dependencies                                                                                                                                                                                                                                                                                        |
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
