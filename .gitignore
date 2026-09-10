@@ -46,3 +46,6 @@ tmp/
 .logs/
 
 */worktrees/*
+
+# Harness-written local settings are machine state, never repository content.
+.claude/settings.local.json
