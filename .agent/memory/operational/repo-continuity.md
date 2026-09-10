@@ -49,20 +49,24 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-PR #90 merged the bounded
-[Q-09 PR #28 preservation disposition](../../plans/delivery-ledger.md#q-09-pr-28-preservation-disposition--9-september-2026)
+Q-09 is complete. PR #90 merged the bounded
+[PR #28 preservation disposition](../../plans/delivery-ledger.md#q-09-pr-28-preservation-disposition--9-september-2026)
 as `cb73c4de`; PR #28 then closed without merge while its recovery branch remained
-intact. Q-09 remains pending for PR #10. PR #89 delivered the Error-oracle prerequisite;
+intact. PRs #94 and #95 delivered PR #10's surviving validator and machine-state
+boundary; #10 then closed and retained its recovery branch. Its
+[durable audit](../../plans/correction-manifests/q09-pr10-disposition.json)
+dispositions all 35 unique commits, all 24 final paths, all 17 late-review items
+and the displaced enum/nullability decision. PR #89 delivered the Error-oracle prerequisite;
 the [correction plan](../../plans/active/castr-documentation-and-fidelity-correction.md#9-september-q-22-prerequisite-sequence)
 retains Q-22's integer-contract and paired generator/output prerequisites. C03b/c
 and other prepared drafts retain their bounded carriers. Kite hunts Eyrie delivered PR #88; Bora seeks Turbulence delivered the dependent
 Cricket installation in PR #91 as `af840d9b`. PR #92 corrected the premature C05 Cricket
-lifecycle closeout. The [final native record](../../reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json)
+lifecycle closeout, and PR #93 delivered the final evidence/lifecycle record as
+`07ebdb23`. The [final native record](../../reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json)
 now retains all six substantive final-template returns from the fresh trusted Castr
 task, with normal and same-agent adversarial stances. The atomic plan is in completion
-staging. The coordinator owns the bounded evidence/lifecycle PR merge after current-head
-checks and reviews; the commissioned proof task reports merge-ready and must not merge.
-The coordinator then begins PR #14's dependency-ownership extraction from current `origin/main`.
+staging. The next recorded source-PR transition is PR #14's dependency-ownership
+extraction from current `origin/main`.
 The broader C05
 family retains its other obligations. Earlier
 continuation instructions are [preserved verbatim](../../plans/archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).

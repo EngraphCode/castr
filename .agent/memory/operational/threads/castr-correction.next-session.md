@@ -3,20 +3,27 @@
 ## Continuation route
 
 - Controlling queue: [parent plan](../../../plans/proof-programme/parent-plan.md#current-execution-state).
-- Acceptance: [Q-09 brief](../../../plans/proof-programme/parent-plan.md#slice-briefs)
-  and [PR #28 disposition](../../../plans/delivery-ledger.md#q-09-pr-28-preservation-disposition--9-september-2026).
+- Next acceptance: the [Q-06 brief](../../../plans/proof-programme/parent-plan.md#slice-briefs)
+  for PR #14's dependency-only extraction and verified closure.
+- Completed transition evidence: the Q-09 brief plus the
+  [PR #28](../../../plans/delivery-ledger.md#q-09-pr-28-preservation-disposition--9-september-2026)
+  and [PR #10](../../../plans/delivery-ledger.md#q-09-pr-10-disposition--10-september-2026)
+  dispositions, plus the PR #10
+  [commit/file/finding audit](../../../plans/correction-manifests/q09-pr10-disposition.json).
 - PR custody and next delivery action: [delivery ledger](../../../plans/delivery-ledger.md).
-- Transition: PR #90 merged the complete PR #28 preservation record as
-  `cb73c4de`; PR #28 then closed without merge and retained its recovery branch.
-  Q-09 remains pending for PR #10.
+- Transition: Q-09 is complete. PR #90 merged the complete PR #28 preservation
+  record as `cb73c4de`; PR #28 then closed without merge and retained its recovery
+  branch. PRs #94/#95 delivered PR #10's surviving validator and machine-state
+  boundary; #10 then closed and retained its recovery branch. The audit dispositions
+  all 35 unique commits, 24 final paths, 17 late-review items and the displaced
+  enum/nullability decision; its semantic carriers remain open.
 - Team: root owns compiler/foundational documentation and integration. Kite hunts
   Eyrie delivered C05 Cricket tooling in PR #88; Bora seeks Turbulence delivered its
-  installation in PR #91 as `af840d9b`. PR #92 corrects the premature atomic closeout.
+  installation in PR #91 as `af840d9b`. PR #92 corrected the premature atomic closeout.
   Final I2 is now complete: the fresh trusted task retained all six final-template
   native returns with `fork_turns: "none"` and same-agent adversarial follow-ups.
-  The coordinator owns the evidence/lifecycle PR merge after current-head checks and
-  reviews. The commissioned proof task reports merge-ready and must not merge. The
-  coordinator then begins PR #14's dependency-ownership extraction from current `origin/main`.
+  PR #93 delivered the evidence/lifecycle record as `07ebdb23`. The coordinator now
+  begins PR #14's dependency-ownership extraction from current `origin/main`.
   The broader C05 family retains the obligations
   named below. Coordinate expensive aggregate runs and re-read actual claims before edits.
 - Source: PR #81 at `SHA:33be633862864ce8efb22e70abbbe9bce863c510`, never rewritten.
@@ -24,7 +31,7 @@
 The ledger records delivered C01R, Q-19, C03a, operation-security, Error-oracle
 and C05 platform-tooling repairs. Q-22 remains open for its integer,
 generator/output and remaining oracle
-obligations. Q-09 remains open for PR #10. C05 retains
+obligations. Q-09 is complete. C05 retains
 PR skill attribution and rule/reference cleanup; C10 retains
 observed review/continuity-authoring failures and final isolated-pack acceptance.
 C03b/c source drafts remain preserved. PR #18's document-security presence and
@@ -52,5 +59,5 @@ this discovery for the architectural repair; no implementation is claimed here.
 
 | Agent                 | Platform | Model       | Session prefix | Agent UUID                           | Role                        | First session | Last session |
 | --------------------- | -------- | ----------- | -------------- | ------------------------------------ | --------------------------- | ------------- | ------------ |
-| Bora seeks Turbulence | codex    | gpt-6-astra | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd | 2026-09-06    | 2026-09-09   |
+| Bora seeks Turbulence | codex    | gpt-6-astra | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd | 2026-09-06    | 2026-09-10   |
 | Foxglove weaves Acorn | codex    | gpt-6-astra | 01a088         | a6955478-7b8e-59e9-870e-dcef0d6e81cd | final Cricket I2 proof      | 2026-09-10    | 2026-09-10   |

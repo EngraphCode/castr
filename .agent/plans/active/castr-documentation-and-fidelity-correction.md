@@ -3,7 +3,7 @@ title: Castr documentation correction and fidelity repair
 status: active
 lane: active
 created: 2026-09-06
-last_updated: 2026-09-09
+last_updated: 2026-09-10
 owner_directive: >-
   Implement the owner-approved comprehensive documentation correction and fidelity
   repair: split PR #81, correct all documents, repair all known in-scope fidelity
@@ -105,9 +105,15 @@ progress. The ledger owns the live census and closure evidence. PR #88 delivered
 the C05 tooling contract; PR #91 delivered its dependent installation. PR #90
 delivered the preservation record and PR #28 then closed without merge. The C05 Cricket
 atomic plan is in completion staging after all six final-template native returns on
-10 September. PR #92 corrected the premature closeout; the final evidence/lifecycle
-PR must merge before PR #14 extraction. The broader C05 family retains its other
-obligations.
+10 September. PR #92 corrected the premature closeout; PR #93 delivered the final
+evidence/lifecycle record as `07ebdb2322ae52bd0627c2f6d36bf42970260a4e`. PR #14
+dependency ownership is the next recorded source-PR transition. The broader C05
+family retains its other obligations. Q-09 is complete: PR #90 delivered the #28
+preservation record before #28 closed, PRs #94/#95 delivered PR #10's surviving
+validator and exact machine-state boundary, and #10 closed while its recovery branch
+remained intact. The [PR #10 audit](../correction-manifests/q09-pr10-disposition.json)
+dispositions all 35 unique commits, all 24 final paths, all 17 late-review items and
+the displaced enum/nullability decision without claiming the semantic carriers complete.
 
 Owner-directed Cricket cadence (6 September 2026): run the full registered Codex
 panel in normal and adversarial stances at substantive delivery and architectural
@@ -129,9 +135,9 @@ successful Copilot review run, all eight review threads were resolved, and exact
 Codex/Copilot plus gateway, documentation and onboarding review found no remaining
 blocker. The completed atomic C05 plan preserves the dated native proof, the later
 `UNDELIVERED` attempt and the six substantive final-template returns from 10 September.
-The final I2 evidence and lifecycle reconciliation await PR delivery; PR #14 follows
-that merge. The broader C05 family remains open, and the coordinating agent retains
-this commission, parent queue, ledger and coverage manifests.
+PR #93 delivered the final I2 evidence and lifecycle reconciliation. PR #14 follows
+from current main. The broader C05 family remains open, and the coordinating agent
+retains this commission, parent queue, ledger and coverage manifests.
 
 | Outcome family     | Reviewable outcome and dependencies                                                                                                                                                                                                                                                                                        |
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

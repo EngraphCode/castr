@@ -1,0 +1,629 @@
+{
+  "schema_version": 1,
+  "purpose": "Durable Q-09 commit/file-level custody for closed-without-merge PR #10. This manifest records disposition and current carriers; it does not claim that outstanding semantic findings are repaired.",
+  "source": {
+    "pull_request": "https://github.com/EngraphCode/castr/pull/10",
+    "head": "2baa1ba50c97a0740c8a3d055bd8a8ca491363d5",
+    "recovery_branch": "docs/remediation-program-record",
+    "current_main_at_audit": "5243e816e2c6622cdec8479422120496d7e22db2",
+    "merge_base_with_current_main": "35efaa45f54c0e7f02eaae42dadb46ad9e4451c2",
+    "closed_at": "2026-09-10T00:46:24Z",
+    "closure_comment": "https://github.com/EngraphCode/castr/pull/10#issuecomment-5610934618"
+  },
+  "method": {
+    "commit_inventory": "git rev-list --reverse 2baa1ba50c97a0740c8a3d055bd8a8ca491363d5 ^5243e816e2c6622cdec8479422120496d7e22db2",
+    "non_merge_check": "git rev-list --reverse --no-merges 2baa1ba50c97a0740c8a3d055bd8a8ca491363d5 ^5243e816e2c6622cdec8479422120496d7e22db2",
+    "file_inventory": "git diff --name-only 5243e816e2c6622cdec8479422120496d7e22db2...2baa1ba50c97a0740c8a3d055bd8a8ca491363d5",
+    "content_review": "Each unique source commit, every final diff path, the source programme routed-findings row, its pending-decisions section and the displaced open question were compared with current main and the current correction estate.",
+    "commit_path_basis": "commit_dispositions[].touched_paths is the exact first-parent path delta: git diff --name-only <first-parent> <commit>. For the two source-branch merge commits, this intentionally lists the origin/main paths imported into the branch; those paths are already ancestry of current main and introduce no source-only obligation."
+  },
+  "counts": {
+    "unique_commits": 35,
+    "non_merge_commits": 33,
+    "merge_commits": 2,
+    "final_paths": 24,
+    "late_review_items": 17,
+    "displaced_decisions": 1
+  },
+  "commit_dispositions": [
+    {
+      "commit": "74ccf01712ab00ca7169f31265d73cb998896843",
+      "subject": "docs(remediation): record the parallel execution program (owner-approved)",
+      "parents": ["4be99dae5d8b0c24e4f22436b856b592637dc9d1"],
+      "touched_paths": [".agent/plans/remediation/00-parallel-execution-program.md"],
+      "disposition": "superseded_with_obligations_migrated",
+      "evidence": "The proof-programme parent remains the queue authority; the active correction plan and findings manifest own current execution and acceptance. Every late finding and decision introduced or refined by this commit is cross-walked below."
+    },
+    {
+      "commit": "8bc0fb0ec07fdb66a1e5501103ca55d2e8dab2e4",
+      "subject": "chore(gates): exclude machine-local surfaces from every gate footprint",
+      "parents": ["74ccf01712ab00ca7169f31265d73cb998896843"],
+      "touched_paths": [
+        ".gitignore",
+        ".markdownlint-cli2.jsonc",
+        ".prettierignore",
+        "agent-tools/src/validators/fitness-vocabulary/validate-fitness-vocabulary.ts",
+        "agent-tools/src/validators/fitness-vocabulary/validate-fitness-vocabulary.unit.test.ts"
+      ],
+      "disposition": "selectively_applied_and_superseded",
+      "evidence": "PR #94 merge e70adb23 delivered the fail-closed tracked-file vocabulary scanner; PR #95 merge 5243e816 delivered the exact machine-local settings exclusion. The markdownlint/prettier exclusions were rejected after an admitted MD040 witness, and current programme/entry text supersedes the July routing."
+    },
+    {
+      "commit": "05b2a538f3495f66936ecf04092f6d50ce4af246",
+      "subject": "docs(remediation): make the program record self-contained; reconcile all entry surfaces",
+      "parents": ["8bc0fb0ec07fdb66a1e5501103ca55d2e8dab2e4"],
+      "touched_paths": [
+        ".agent/plans/remediation/00-parallel-execution-program.md",
+        ".agent/plans/remediation/README.md",
+        ".agent/plans/roadmap.md",
+        ".gitignore",
+        ".markdownlint-cli2.jsonc",
+        "agent-tools/src/validators/fitness-vocabulary/validate-fitness-vocabulary.ts",
+        "agent-tools/src/validators/fitness-vocabulary/validate-fitness-vocabulary.unit.test.ts"
+      ],
+      "disposition": "selectively_applied_and_superseded",
+      "evidence": "PR #94 merge e70adb23 delivered the fail-closed tracked-file vocabulary scanner; PR #95 merge 5243e816 delivered the exact machine-local settings exclusion. The markdownlint/prettier exclusions were rejected after an admitted MD040 witness, and current programme/entry text supersedes the July routing."
+    },
+    {
+      "commit": "edb364587b7feab6b41d9be578e8897cd6c75fba",
+      "subject": "docs(continuity): propagate the parallel-program supersession to the session-opening surfaces",
+      "parents": ["05b2a538f3495f66936ecf04092f6d50ce4af246"],
+      "touched_paths": [
+        ".agent/memory/operational/repo-continuity.md",
+        ".agent/memory/operational/threads/initial-castr-review.next-session.md",
+        ".agent/memory/operational/threads/practice-transplant.next-session.md",
+        ".agent/prompts/session-continuation.prompt.md"
+      ],
+      "disposition": "superseded_current_routing_with_history_retained",
+      "evidence": "Current continuity, thread and prompt surfaces supersede the July route. The recovery branch preserves the historical handoff text; any substantive finding or decision is cross-walked below to a current carrier."
+    },
+    {
+      "commit": "e063a2a434aa1efa1687fc486fd89c6d302a3b26",
+      "subject": "refactor(gates): scan tracked files only in the vocabulary validator",
+      "parents": ["edb364587b7feab6b41d9be578e8897cd6c75fba"],
+      "touched_paths": [
+        "agent-tools/src/validators/fitness-vocabulary/validate-fitness-vocabulary.ts",
+        "agent-tools/src/validators/fitness-vocabulary/validate-fitness-vocabulary.unit.test.ts"
+      ],
+      "disposition": "selectively_applied_and_superseded",
+      "evidence": "PR #94 merge e70adb23 delivered the fail-closed tracked-file vocabulary scanner; PR #95 merge 5243e816 delivered the exact machine-local settings exclusion. The markdownlint/prettier exclusions were rejected after an admitted MD040 witness, and current programme/entry text supersedes the July routing."
+    },
+    {
+      "commit": "3a5be747ecfd3e22f85e49c4ee52a447a5a43172",
+      "subject": "docs(delivery): reconcile the delivery ledger to the parallel-lane model",
+      "parents": ["e063a2a434aa1efa1687fc486fd89c6d302a3b26"],
+      "touched_paths": [".agent/plans/delivery-ledger.md"],
+      "disposition": "superseded_current_policy",
+      "evidence": "The current delivery ledger owns live PR state and extraction/closure requirements. The source branch retains the July ledger state as historical evidence."
+    },
+    {
+      "commit": "5a1b339bc3add3676099f3c4020872480dd8d101",
+      "subject": "docs(remediation): add micro-lane L-K9 for the itemSchema mapping",
+      "parents": ["3a5be747ecfd3e22f85e49c4ee52a447a5a43172"],
+      "touched_paths": [".agent/plans/remediation/00-parallel-execution-program.md"],
+      "disposition": "superseded_with_obligations_migrated",
+      "evidence": "The proof-programme parent remains the queue authority; the active correction plan and findings manifest own current execution and acceptance. Every late finding and decision introduced or refined by this commit is cross-walked below."
+    },
+    {
+      "commit": "6cb58b20fb55791ffd05c4536bb1652f94d9f0b4",
+      "subject": "docs(remediation): split the M9 disposition across L-K1 and L-K9",
+      "parents": ["5a1b339bc3add3676099f3c4020872480dd8d101"],
+      "touched_paths": [".agent/plans/remediation/00-parallel-execution-program.md"],
+      "disposition": "superseded_with_obligations_migrated",
+      "evidence": "The proof-programme parent remains the queue authority; the active correction plan and findings manifest own current execution and acceptance. Every late finding and decision introduced or refined by this commit is cross-walked below."
+    },
+    {
+      "commit": "1e91b875ca118ff8536badbbe9bec12f6aa06629",
+      "subject": "docs(plans): supersede stale criteria in the per-finding plans",
+      "parents": ["6cb58b20fb55791ffd05c4536bb1652f94d9f0b4"],
+      "touched_paths": [
+        ".agent/plans/active/02-ir-fidelity-proof-harness.md",
+        ".agent/plans/remediation/03-zod-2020-12-keyword-semantics.md",
+        ".agent/plans/remediation/04-zod-parser-strict-whitelist.md",
+        ".agent/plans/remediation/05-single-source-type-guards.md",
+        ".agent/plans/remediation/06-doctrine-enforcement-truthing.md",
+        ".agent/plans/remediation/07-test-hygiene.md"
+      ],
+      "disposition": "superseded_with_obligations_migrated",
+      "evidence": "The proof-programme parent remains the queue authority; the active correction plan and findings manifest own current execution and acceptance. Every late finding and decision introduced or refined by this commit is cross-walked below."
+    },
+    {
+      "commit": "d7779982bd77fbc9311fc1dcf1c0eb940b78d94a",
+      "subject": "docs(napkin): capture parallel-program operational lessons",
+      "parents": ["1e91b875ca118ff8536badbbe9bec12f6aa06629"],
+      "touched_paths": [".agent/memory/active/napkin.md"],
+      "disposition": "retained_historical_with_obligations_migrated",
+      "evidence": "Operational learning remains on the retained recovery branch. Substantive findings and decisions are carried by the current findings manifest and open-question register."
+    },
+    {
+      "commit": "124c90885f4037ef690aa418bd15eb03dc6ad671",
+      "subject": "docs(remediation): add L-K9 to the authoritative lane table",
+      "parents": ["d7779982bd77fbc9311fc1dcf1c0eb940b78d94a"],
+      "touched_paths": [".agent/plans/remediation/00-parallel-execution-program.md"],
+      "disposition": "superseded_with_obligations_migrated",
+      "evidence": "The proof-programme parent remains the queue authority; the active correction plan and findings manifest own current execution and acceptance. Every late finding and decision introduced or refined by this commit is cross-walked below."
+    },
+    {
+      "commit": "b4b9eb2ff90f5c9220826f34c45030dec8cad7bc",
+      "subject": "docs(remediation): split M9 in the fixed-by-lane row; retire the brief's interim fail-fast clause",
+      "parents": ["124c90885f4037ef690aa418bd15eb03dc6ad671"],
+      "touched_paths": [
+        ".agent/memory/operational/threads/initial-castr-review.next-session.md",
+        ".agent/plans/remediation/00-parallel-execution-program.md"
+      ],
+      "disposition": "superseded_with_obligations_migrated",
+      "evidence": "The proof-programme parent remains the queue authority; the active correction plan and findings manifest own current execution and acceptance. Every late finding and decision introduced or refined by this commit is cross-walked below."
+    },
+    {
+      "commit": "fe70212f83c3276bfc6f71c3c7230fc19aa2c9c7",
+      "subject": "docs(continuity): author the remediation-program thread record for successor handoff",
+      "parents": ["b4b9eb2ff90f5c9220826f34c45030dec8cad7bc"],
+      "touched_paths": [
+        ".agent/memory/operational/repo-continuity.md",
+        ".agent/memory/operational/threads/remediation-parallel-program.next-session.md",
+        ".agent/plans/delivery-ledger.md"
+      ],
+      "disposition": "superseded_current_routing_with_history_retained",
+      "evidence": "Current continuity, thread and prompt surfaces supersede the July route. The recovery branch preserves the historical handoff text; any substantive finding or decision is cross-walked below to a current carrier."
+    },
+    {
+      "commit": "b646ebf0349689b2eb6572368b2c562521207930",
+      "subject": "docs(continuity): home the concept-exploration provenance; refresh the handoff record",
+      "parents": ["fe70212f83c3276bfc6f71c3c7230fc19aa2c9c7"],
+      "touched_paths": [
+        ".agent/memory/operational/threads/remediation-parallel-program.next-session.md",
+        ".agent/research/remediation-program-concept-exploration-2026-07-17.md"
+      ],
+      "disposition": "retained_historical_with_current_carrier",
+      "evidence": "The research provenance remains on the recovery branch; current correction scope and finding custody are carried by the active correction plan and findings manifest."
+    },
+    {
+      "commit": "14c375b56afc0519d05effc2ae937e4d64f29e9d",
+      "subject": "docs(delivery): supersede the global single-branch convention; defer the PR list to recomputation",
+      "parents": ["b646ebf0349689b2eb6572368b2c562521207930"],
+      "touched_paths": [".agent/plans/delivery-ledger.md"],
+      "disposition": "superseded_current_policy",
+      "evidence": "The current delivery ledger owns live PR state and extraction/closure requirements. The source branch retains the July ledger state as historical evidence."
+    },
+    {
+      "commit": "a0a1dda1573cb933b5d97d5471c1e9193c9ef4a2",
+      "subject": "docs(continuity): complete the successor handoff; capture Q-016",
+      "parents": ["14c375b56afc0519d05effc2ae937e4d64f29e9d"],
+      "touched_paths": [
+        ".agent/memory/operational/open-questions.md",
+        ".agent/memory/operational/threads/remediation-parallel-program.next-session.md"
+      ],
+      "disposition": "superseded_current_routing_with_history_retained",
+      "evidence": "Current continuity, thread and prompt surfaces supersede the July route. The recovery branch preserves the historical handoff text; any substantive finding or decision is cross-walked below to a current carrier."
+    },
+    {
+      "commit": "468b5eee8ec9a13c5708b8ed0d3a3396399160f5",
+      "subject": "docs(continuity): final work-location manifest at orchestrator handoff",
+      "parents": ["a0a1dda1573cb933b5d97d5471c1e9193c9ef4a2"],
+      "touched_paths": [
+        ".agent/memory/operational/threads/remediation-parallel-program.next-session.md"
+      ],
+      "disposition": "superseded_current_routing_with_history_retained",
+      "evidence": "Current continuity, thread and prompt surfaces supersede the July route. The recovery branch preserves the historical handoff text; any substantive finding or decision is cross-walked below to a current carrier."
+    },
+    {
+      "commit": "341b7e1aeb46a5c92a65ce018cdff37ede222a53",
+      "subject": "docs(napkin): successor session-open captures",
+      "parents": ["468b5eee8ec9a13c5708b8ed0d3a3396399160f5"],
+      "touched_paths": [".agent/memory/active/napkin.md"],
+      "disposition": "retained_historical_with_obligations_migrated",
+      "evidence": "Operational learning remains on the retained recovery branch. Substantive findings and decisions are carried by the current findings manifest and open-question register."
+    },
+    {
+      "commit": "ebab32a73b48d9d572b19768bee6821fade80e5b",
+      "subject": "docs(continuity): register the successor designation; refresh the live state",
+      "parents": ["341b7e1aeb46a5c92a65ce018cdff37ede222a53"],
+      "touched_paths": [
+        ".agent/memory/operational/threads/remediation-parallel-program.next-session.md"
+      ],
+      "disposition": "superseded_current_routing_with_history_retained",
+      "evidence": "Current continuity, thread and prompt surfaces supersede the July route. The recovery branch preserves the historical handoff text; any substantive finding or decision is cross-walked below to a current carrier."
+    },
+    {
+      "commit": "d66a084ee50d5572e832fbd3eff5436c614cf46f",
+      "subject": "docs(napkin): deep-handoff loss-scan and metaloss captures",
+      "parents": ["ebab32a73b48d9d572b19768bee6821fade80e5b"],
+      "touched_paths": [".agent/memory/active/napkin.md"],
+      "disposition": "retained_historical_with_obligations_migrated",
+      "evidence": "Operational learning remains on the retained recovery branch. Substantive findings and decisions are carried by the current findings manifest and open-question register."
+    },
+    {
+      "commit": "6ce7ea5d23105b7d4a3758e7a0daa06c493b263b",
+      "subject": "docs(continuity): register the arc-bring identity on the practice-transplant thread",
+      "parents": ["d66a084ee50d5572e832fbd3eff5436c614cf46f"],
+      "touched_paths": [".agent/memory/operational/threads/practice-transplant.next-session.md"],
+      "disposition": "superseded_current_routing_with_history_retained",
+      "evidence": "Current continuity, thread and prompt surfaces supersede the July route. The recovery branch preserves the historical handoff text; any substantive finding or decision is cross-walked below to a current carrier."
+    },
+    {
+      "commit": "f1a00024773e2470a3c505be52c5548c67de321e",
+      "subject": "docs(remediation): resolve PR #10 round-9 findings by recomputation and truth",
+      "parents": ["6ce7ea5d23105b7d4a3758e7a0daa06c493b263b"],
+      "touched_paths": [
+        ".agent/memory/operational/open-questions.md",
+        ".agent/memory/operational/repo-continuity.md",
+        ".agent/memory/operational/threads/remediation-parallel-program.next-session.md"
+      ],
+      "disposition": "superseded_current_routing_with_history_retained",
+      "evidence": "Current continuity, thread and prompt surfaces supersede the July route. The recovery branch preserves the historical handoff text; any substantive finding or decision is cross-walked below to a current carrier."
+    },
+    {
+      "commit": "cfba2057ec02383af2cd3b71044cccbe5bfab47b",
+      "subject": "docs(remediation): register the L-K10 MCP-nullability micro-lane from PR #20 review",
+      "parents": ["f1a00024773e2470a3c505be52c5548c67de321e"],
+      "touched_paths": [
+        ".agent/memory/operational/threads/remediation-parallel-program.next-session.md",
+        ".agent/plans/remediation/00-parallel-execution-program.md"
+      ],
+      "disposition": "superseded_with_obligations_migrated",
+      "evidence": "The proof-programme parent remains the queue authority; the active correction plan and findings manifest own current execution and acceptance. Every late finding and decision introduced or refined by this commit is cross-walked below."
+    },
+    {
+      "commit": "7cd5858de141adfe43a5d9509bbc7d977f01b720",
+      "subject": "docs(continuity): supersede the top-banner remediation-02 pointer in the session prompt",
+      "parents": ["cfba2057ec02383af2cd3b71044cccbe5bfab47b"],
+      "touched_paths": [".agent/prompts/session-continuation.prompt.md"],
+      "disposition": "superseded_current_routing_with_history_retained",
+      "evidence": "Current continuity, thread and prompt surfaces supersede the July route. The recovery branch preserves the historical handoff text; any substantive finding or decision is cross-walked below to a current carrier."
+    },
+    {
+      "commit": "89ed5c19517dcbfaed681d30c01699eb68767ef7",
+      "subject": "docs(continuity): record the arc-bring handover residue at stand-down",
+      "parents": ["7cd5858de141adfe43a5d9509bbc7d977f01b720"],
+      "touched_paths": [".agent/memory/operational/threads/practice-transplant.next-session.md"],
+      "disposition": "superseded_current_routing_with_history_retained",
+      "evidence": "Current continuity, thread and prompt surfaces supersede the July route. The recovery branch preserves the historical handoff text; any substantive finding or decision is cross-walked below to a current carrier."
+    },
+    {
+      "commit": "f68eeec3a7ee04541810f8331dca5b5278de35a9",
+      "subject": "docs(remediation): close the round-11 contract gaps — L-K10 dispatchable, L-K9 gated on L-D",
+      "parents": ["89ed5c19517dcbfaed681d30c01699eb68767ef7"],
+      "touched_paths": [".agent/plans/remediation/00-parallel-execution-program.md"],
+      "disposition": "superseded_with_obligations_migrated",
+      "evidence": "The proof-programme parent remains the queue authority; the active correction plan and findings manifest own current execution and acceptance. Every late finding and decision introduced or refined by this commit is cross-walked below."
+    },
+    {
+      "commit": "1e0c98390273757b1c54511cb366f9044de7666e",
+      "subject": "docs(remediation): gate L-K10 on L-D everywhere; complete the round-11 wave-2 edit",
+      "parents": ["f68eeec3a7ee04541810f8331dca5b5278de35a9"],
+      "touched_paths": [".agent/plans/remediation/00-parallel-execution-program.md"],
+      "disposition": "superseded_with_obligations_migrated",
+      "evidence": "The proof-programme parent remains the queue authority; the active correction plan and findings manifest own current execution and acceptance. Every late finding and decision introduced or refined by this commit is cross-walked below."
+    },
+    {
+      "commit": "71313f34462633e987e06cef88029cf450310d73",
+      "subject": "docs(remediation): register the x-* extension-capture backlog candidate",
+      "parents": ["1e0c98390273757b1c54511cb366f9044de7666e"],
+      "touched_paths": [".agent/plans/remediation/00-parallel-execution-program.md"],
+      "disposition": "superseded_with_obligations_migrated",
+      "evidence": "The proof-programme parent remains the queue authority; the active correction plan and findings manifest own current execution and acceptance. Every late finding and decision introduced or refined by this commit is cross-walked below."
+    },
+    {
+      "commit": "c2dc2bfe0efe932c9a69119b77024c72c83a26cd",
+      "subject": "docs(continuity): finish the recompute ring in the thread record",
+      "parents": ["71313f34462633e987e06cef88029cf450310d73"],
+      "touched_paths": [
+        ".agent/memory/operational/threads/remediation-parallel-program.next-session.md"
+      ],
+      "disposition": "superseded_current_routing_with_history_retained",
+      "evidence": "Current continuity, thread and prompt surfaces supersede the July route. The recovery branch preserves the historical handoff text; any substantive finding or decision is cross-walked below to a current carrier."
+    },
+    {
+      "commit": "607dd8b82def9e1553837f13fb523a43b2f11baf",
+      "subject": "docs(remediation): add both L-K9 edges to the normative edge list",
+      "parents": ["c2dc2bfe0efe932c9a69119b77024c72c83a26cd"],
+      "touched_paths": [".agent/plans/remediation/00-parallel-execution-program.md"],
+      "disposition": "superseded_with_obligations_migrated",
+      "evidence": "The proof-programme parent remains the queue authority; the active correction plan and findings manifest own current execution and acceptance. Every late finding and decision introduced or refined by this commit is cross-walked below."
+    },
+    {
+      "commit": "165c95022786b3c5ffdd7ba86a5a1a4dd6147b13",
+      "subject": "Merge remote-tracking branch 'origin/main' into docs/remediation-program-record",
+      "parents": [
+        "607dd8b82def9e1553837f13fb523a43b2f11baf",
+        "b62d73abdd388e0edd2e9342816993764da32fb8"
+      ],
+      "touched_paths": [
+        ".agent/memory/active/napkin.md",
+        ".claude/scripts/subagent-statusline.mjs",
+        ".claude/settings.json",
+        "agent-tools/knip.ts",
+        "agent-tools/package.json",
+        "agent-tools/src/claude/statusline-render.ts",
+        "agent-tools/src/claude/subagent-statusline-adapter.ts",
+        "agent-tools/src/claude/subagent-statusline.ts",
+        "agent-tools/tests/claude/statusline-render.unit.test.ts",
+        "agent-tools/tests/claude/subagent-statusline.unit.test.ts",
+        "lib/src/cli/index.ts",
+        "lib/src/cli/resolve-prettier-config.test.ts",
+        "lib/src/cli/resolve-prettier-config.ts",
+        "lib/src/rendering/templating.ts",
+        "lib/tests-snapshot/integration/resolve-prettier-config.test.ts",
+        "lib/tests-snapshot/integration/samples.test.ts"
+      ],
+      "disposition": "historical_sync_only",
+      "evidence": "Merge of origin/main into the source branch. Its source-parent content is covered by the individual source commits and final-path audit; the other parent is already ancestry of current main."
+    },
+    {
+      "commit": "88b6906ea3a18983450620657aefe4088015775d",
+      "subject": "docs(continuity): safe-pause point — wind-down state, loss-scan, and channel conservation",
+      "parents": ["165c95022786b3c5ffdd7ba86a5a1a4dd6147b13"],
+      "touched_paths": [
+        ".agent/collaboration/rapid-comms/2026-07-18-practice-imports-liaison-stormbound-circling-kite-midnight-watching-night.md",
+        ".agent/memory/active/napkin.md",
+        ".agent/memory/operational/threads/remediation-parallel-program.next-session.md",
+        ".agent/plans/remediation/00-parallel-execution-program.md"
+      ],
+      "disposition": "superseded_current_routing_with_history_retained",
+      "evidence": "Current continuity, thread and prompt surfaces supersede the July route. The recovery branch preserves the historical handoff text; any substantive finding or decision is cross-walked below to a current carrier."
+    },
+    {
+      "commit": "f8d44c9b40e146bc0c530a658e53a0644326b5e1",
+      "subject": "Merge remote-tracking branch 'origin/main' into docs/remediation-program-record",
+      "parents": [
+        "88b6906ea3a18983450620657aefe4088015775d",
+        "35efaa45f54c0e7f02eaae42dadb46ad9e4451c2"
+      ],
+      "touched_paths": [
+        "agent-tools/src/claude/statusline-render.ts",
+        "agent-tools/src/claude/statusline-segments.ts",
+        "agent-tools/src/claude/statusline-usage.ts",
+        "agent-tools/tests/claude/statusline-render.unit.test.ts"
+      ],
+      "disposition": "historical_sync_only",
+      "evidence": "Merge of origin/main into the source branch. Its source-parent content is covered by the individual source commits and final-path audit; the other parent is already ancestry of current main."
+    },
+    {
+      "commit": "56fd52edea8b370ee2b068326d965889235e7684",
+      "subject": "docs(continuity): pause-point closeout addendum — estate safe, merge-asks named",
+      "parents": ["f8d44c9b40e146bc0c530a658e53a0644326b5e1"],
+      "touched_paths": [
+        ".agent/memory/operational/threads/remediation-parallel-program.next-session.md"
+      ],
+      "disposition": "superseded_current_routing_with_history_retained",
+      "evidence": "Current continuity, thread and prompt surfaces supersede the July route. The recovery branch preserves the historical handoff text; any substantive finding or decision is cross-walked below to a current carrier."
+    },
+    {
+      "commit": "2baa1ba50c97a0740c8a3d055bd8a8ca491363d5",
+      "subject": "docs(continuity): close the cold-pickup audit gaps — supersession tags and the live spine",
+      "parents": ["56fd52edea8b370ee2b068326d965889235e7684"],
+      "touched_paths": [
+        ".agent/memory/operational/repo-continuity.md",
+        ".agent/memory/operational/threads/remediation-parallel-program.next-session.md"
+      ],
+      "disposition": "superseded_current_routing_with_history_retained",
+      "evidence": "Current continuity, thread and prompt surfaces supersede the July route. The recovery branch preserves the historical handoff text; any substantive finding or decision is cross-walked below to a current carrier."
+    }
+  ],
+  "file_dispositions": [
+    {
+      "path": ".agent/collaboration/rapid-comms/2026-07-18-practice-imports-liaison-stormbound-circling-kite-midnight-watching-night.md",
+      "disposition": "retained_historical",
+      "evidence": "Preserved on docs/remediation-program-record as dated collaboration evidence; no live instruction is imported."
+    },
+    {
+      "path": ".agent/memory/active/napkin.md",
+      "disposition": "retained_historical_with_obligations_migrated",
+      "evidence": "The recovery branch preserves the July learning record; current findings and decisions are migrated to durable current carriers."
+    },
+    {
+      "path": ".agent/memory/operational/open-questions.md",
+      "disposition": "selectively_applied",
+      "evidence": "The source enum/nullability question is restored as current Q-017; current Q-016 continues to own the distinct orchestration decision. Other July state remains historical."
+    },
+    {
+      "path": ".agent/memory/operational/repo-continuity.md",
+      "disposition": "superseded_current_routing",
+      "evidence": "The current continuity route records the merged delivery chain, Q-09 evidence and next PR #14 transition."
+    },
+    {
+      "path": ".agent/memory/operational/threads/initial-castr-review.next-session.md",
+      "disposition": "retained_historical",
+      "evidence": "The source branch preserves the initial-review handoff; the active correction thread owns the current route."
+    },
+    {
+      "path": ".agent/memory/operational/threads/practice-transplant.next-session.md",
+      "disposition": "retained_historical",
+      "evidence": "The source branch preserves the stopped July handoff; current Q-13 owns any future selective disposition."
+    },
+    {
+      "path": ".agent/memory/operational/threads/remediation-parallel-program.next-session.md",
+      "disposition": "superseded_with_obligations_migrated",
+      "evidence": "The current correction thread supersedes live routing; all late findings and the displaced decision are cross-walked below."
+    },
+    {
+      "path": ".agent/plans/active/02-ir-fidelity-proof-harness.md",
+      "disposition": "superseded_with_acceptance_preserved",
+      "evidence": "Current Q-11/Q-12 acceptance and the correction findings manifest preserve the harness obligations without reviving the July lane scheduler."
+    },
+    {
+      "path": ".agent/plans/delivery-ledger.md",
+      "disposition": "superseded_current_policy",
+      "evidence": "The current ledger is the single live PR-disposition home and links this audit."
+    },
+    {
+      "path": ".agent/plans/remediation/00-parallel-execution-program.md",
+      "disposition": "superseded_with_obligations_migrated",
+      "evidence": "The parent queue and active correction plan supersede July sequencing; every late review item is cross-walked below."
+    },
+    {
+      "path": ".agent/plans/remediation/03-zod-2020-12-keyword-semantics.md",
+      "disposition": "superseded_with_acceptance_preserved",
+      "evidence": "Current Q-12 and PR10 finding carriers preserve the keyword-semantic obligations."
+    },
+    {
+      "path": ".agent/plans/remediation/04-zod-parser-strict-whitelist.md",
+      "disposition": "superseded_with_acceptance_preserved",
+      "evidence": "Current Q-05/Q-12 and the findings manifest preserve whole-declaration Zod admission obligations."
+    },
+    {
+      "path": ".agent/plans/remediation/05-single-source-type-guards.md",
+      "disposition": "superseded_with_acceptance_preserved",
+      "evidence": "Current Q-12 and the findings manifest preserve canonical-guard and hostile-own-key obligations."
+    },
+    {
+      "path": ".agent/plans/remediation/06-doctrine-enforcement-truthing.md",
+      "disposition": "superseded_with_acceptance_preserved",
+      "evidence": "Current Q-14 and the active correction plan own doctrine correction and effective enforcement."
+    },
+    {
+      "path": ".agent/plans/remediation/07-test-hygiene.md",
+      "disposition": "superseded_with_acceptance_preserved",
+      "evidence": "Current Q-07/Q-22 and the findings manifest own concrete isolation and proof-integrity obligations."
+    },
+    {
+      "path": ".agent/plans/remediation/README.md",
+      "disposition": "superseded_navigation",
+      "evidence": "Current plan indexes and the parent queue are authoritative; the recovery branch preserves July navigation."
+    },
+    {
+      "path": ".agent/plans/roadmap.md",
+      "disposition": "superseded_current_routing",
+      "evidence": "The current roadmap and parent queue own live ordering; source wording remains historical on the recovery branch."
+    },
+    {
+      "path": ".agent/prompts/session-continuation.prompt.md",
+      "disposition": "superseded_current_routing",
+      "evidence": "Current continuation surfaces route through the parent plan, active correction plan and current correction thread."
+    },
+    {
+      "path": ".agent/research/remediation-program-concept-exploration-2026-07-17.md",
+      "disposition": "retained_historical_with_current_carrier",
+      "evidence": "The recovery branch preserves provenance; the active correction plan and findings manifest retain actionable substance."
+    },
+    {
+      "path": ".gitignore",
+      "disposition": "applied",
+      "evidence": "PR #95 merge 5243e816 delivered the exact .claude/settings.local.json exclusion while keeping canonical settings admitted."
+    },
+    {
+      "path": ".markdownlint-cli2.jsonc",
+      "disposition": "rejected",
+      "evidence": "The proposed tmp/** exclusion suppressed an admitted MD040 witness and was removed before PR #95 merged."
+    },
+    {
+      "path": ".prettierignore",
+      "disposition": "rejected",
+      "evidence": "No exclusion survived; admitted files remain inside formatting enforcement."
+    },
+    {
+      "path": "agent-tools/src/validators/fitness-vocabulary/validate-fitness-vocabulary.ts",
+      "disposition": "applied",
+      "evidence": "PR #94 merge e70adb23 delivered the fail-closed tracked-index/working-tree scanner."
+    },
+    {
+      "path": "agent-tools/src/validators/fitness-vocabulary/validate-fitness-vocabulary.unit.test.ts",
+      "disposition": "applied",
+      "evidence": "PR #94 merge e70adb23 delivered the adversarial behavioural proof."
+    }
+  ],
+  "late_finding_crosswalk": [
+    {
+      "source_item": "MCP nullable metadata loss",
+      "disposition": "new-carrier",
+      "current_carriers": ["PR10/mcp-nullability"]
+    },
+    {
+      "source_item": "Carried $ref siblings dropped by both code generators",
+      "disposition": "new-carrier",
+      "current_carriers": ["PR10/codegen-ref-siblings"]
+    },
+    {
+      "source_item": "Prototype-unsafe assignment seams",
+      "disposition": "new-carrier",
+      "current_carriers": ["PR10/prototype-assignment-seams"]
+    },
+    {
+      "source_item": "Turbo test-task outputs warning",
+      "disposition": "already-delivered",
+      "current_carriers": ["3cd9cb581"]
+    },
+    {
+      "source_item": "Specification-extension loss across x-* positions",
+      "disposition": "new-carrier",
+      "current_carriers": ["PR10/x-extension-capture"]
+    },
+    {
+      "source_item": "Zod .describe() argument loss",
+      "disposition": "new-carrier",
+      "current_carriers": ["PR10/zod-describe-argument-loss"]
+    },
+    {
+      "source_item": "Zod .meta() unknown-key loss",
+      "disposition": "new-carrier",
+      "current_carriers": ["PR10/zod-meta-key-loss"]
+    },
+    {
+      "source_item": "Zod .length(n) upper-bound loss",
+      "disposition": "new-carrier",
+      "current_carriers": ["PR10/zod-length-upper-bound-loss"]
+    },
+    {
+      "source_item": "Zod regex flag loss",
+      "disposition": "new-carrier",
+      "current_carriers": ["PR10/zod-regex-flags-loss"]
+    },
+    {
+      "source_item": "MCP outputSchema derivation gap",
+      "disposition": "existing-carrier",
+      "current_carriers": ["M6"]
+    },
+    {
+      "source_item": "Zod default input-optionality/output-presence mismatch",
+      "disposition": "new-carrier",
+      "current_carriers": ["PR10/zod-default-required-contract"]
+    },
+    {
+      "source_item": "cloneWithoutSharedKeywords guard bypass",
+      "disposition": "new-carrier",
+      "current_carriers": ["PR10/clone-shared-keyword-guard-bypass"]
+    },
+    {
+      "source_item": "Weak expected.json subset oracle",
+      "disposition": "new-carrier",
+      "current_carriers": ["PR10/test-fixture-subset-oracle"]
+    },
+    {
+      "source_item": "Endpoint/MCP primary-success selection difference",
+      "disposition": "existing-carrier",
+      "current_carriers": ["M6", "F-02"]
+    },
+    {
+      "source_item": "CLI Prettier configuration resolution",
+      "disposition": "already-delivered",
+      "current_carriers": ["61e309738"]
+    },
+    {
+      "source_item": "itemSchema mapping and capability wording",
+      "disposition": "new-carrier",
+      "current_carriers": ["M9", "PR10/item-schema-contract"]
+    },
+    {
+      "source_item": "L-K2 maybePretty producer-bug unblock",
+      "disposition": "existing-carrier",
+      "current_carriers": ["M11", "PR #26"]
+    }
+  ],
+  "decision_crosswalk": [
+    {
+      "source_item": "PR #10 Q-016: OpenAPI 3.0 enum:[null] without nullable:true",
+      "source": "https://github.com/EngraphCode/castr/blob/2baa1ba50c97a0740c8a3d055bd8a8ca491363d5/.agent/memory/operational/open-questions.md#L89",
+      "disposition": "restored_pending_decision",
+      "current_carrier": ".agent/memory/operational/open-questions.md#q-017-openapi-30-enumnull-without-nullabletrue--owner-semantics-ruling-required",
+      "finding_carrier": "PR10/enum-null-policy-decision",
+      "renumbering": "Renumbered Q-017 because current Q-016 already owns the separate orchestration direction."
+    }
+  ],
+  "result": {
+    "commit_coverage": "35 of 35 unique commits dispositioned, including both source-branch merge commits.",
+    "file_coverage": "24 of 24 final paths dispositioned.",
+    "review_finding_coverage": "17 of 17 late review items mapped to landed evidence or an existing/new current carrier.",
+    "decision_coverage": "The displaced enum/nullability policy question is restored as Q-017 without disturbing current Q-016.",
+    "q09_acceptance": "Patch-equivalence custody is complete. Outstanding semantic carriers remain open and are not represented as delivered."
+  }
+}

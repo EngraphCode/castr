@@ -38,16 +38,17 @@ adherence, independent model attestation or reliable judgement quality.
 
 T1/T2 were delivered by PR #88; I1 and D1 by PR #91. The final six-return record now
 satisfies I2, completing this atomic plan's acceptance. This plan is in completion
-staging; delivery of the evidence/lifecycle PR remains subject to its current-head
-checks and reviews. The commissioned task must report merge-ready state and must
-not merge its own PR. PR #14's dependency-ownership extraction follows that merge.
+staging. PR #93 delivered the evidence/lifecycle record as
+`07ebdb2322ae52bd0627c2f6d36bf42970260a4e` after exact-head checks and reviews.
+PR #14's dependency-ownership extraction follows from current main.
 The broader C05 family, correction commission and compiler programme remain open;
-Q-09 remains pending for PR #10.
+Q-09 subsequently completed through PRs #94/#95, the retained recovery branch and
+the [PR #10 custody audit](../../correction-manifests/q09-pr10-disposition.json).
 
 Validation for this documentation/evidence slice: formatting, Markdown and by-file
 link checks, portability, repository validators, the canonical `pnpm check`, intact
 commit/push hooks and current-head PR review/check harvest. Exact execution outcomes
-belong in the PR and coordinating-task handoff, rather than an anticipatory green claim.
+are retained in PR #93 and the coordinating-task handoff.
 Parent/ledger/continuity edits are confined to this atomic lifecycle transition.
 
 ## Previous delivery state — 9 September 2026 (historical)
@@ -94,12 +95,12 @@ established. The
 [dated attempt record](../../../reports/agentic-engineering/cricket-castr-integrated-boundary-undelivered-2026-09-09.json)
 preserves that boundary without substituting generic agents.
 
-The C05 Cricket atomic plan remains open only for six substantive returns from the final
+At that recorded point, the C05 Cricket atomic plan remained open only for six substantive returns from the final
 installed templates: three registered-role dispatches in a freshly loaded Castr task,
 then adversarial follow-ups to those same agents. PR #92 corrects the premature lifecycle
 closeout. This bounded proof and its lifecycle reconciliation precede PR #14's
 dependency-ownership extraction. The broader C05 family, correction commission and
-compiler programme remain unfinished; Q-09 remains pending for PR #10.
+compiler programme remained unfinished; Q-09 was pending for PR #10.
 
 The execution record below is historical evidence. Status statements in it describe
 the observed boundary at the time and do not override this section.
