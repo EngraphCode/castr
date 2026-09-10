@@ -273,8 +273,10 @@
       "original_acceptance": "Acceptance (`integration` + `non-code`): Draft-04 behaviour proven through public seams; gates green; #14 closed with the verification recorded.",
       "commission_scope": "in_scope_carrier",
       "scope_reason": "Consume only the repair, documentary, proof or inherited-PR disposition duty authorised by the correction plan; this source queue does not restart the paused autonomous experiment.",
-      "current_reproduction": "pending",
-      "proposed_closing_proof": "Record the applicable original acceptance on the actual integrated revision, or an explicit scope disposition. Documentary edits never establish product or operational runtime completion."
+      "current_reproduction": "verified-green",
+      "current_status": "completed",
+      "disposition": "applied",
+      "proposed_closing_proof": "Satisfied on integrated main by PR #98 merge 0c3d4bdc42ed9483672f9f86423904e3ba3f04bd: Draft-04 public-seam proofs passed 14/14 and 7/7; package resolution, Knip and protected gates passed; PR #14 closed with four-file extraction and excluded-commit verification recorded."
     },
     {
       "id": "Q-07",
@@ -292,8 +294,8 @@
       "original_acceptance": "Acceptance (`integration` + `non-code`): salvaged fixes green; #21 closed with verification recorded.",
       "commission_scope": "in_scope_carrier",
       "scope_reason": "Consume only the repair, documentary, proof or inherited-PR disposition duty authorised by the correction plan; this source queue does not restart the paused autonomous experiment.",
-      "current_reproduction": "pending",
-      "proposed_closing_proof": "Record the applicable original acceptance on the actual integrated revision, or an explicit scope disposition. Documentary edits never establish product or operational runtime completion."
+      "current_reproduction": "partial: M4 reproduced on main; remaining PR #21 acceptance pending",
+      "proposed_closing_proof": "Reproduce the remaining source deltas, extract only the concrete isolation and logger/E2E fixes, pass their behavioural and aggregate gates, then close PR #21 with exact extraction and exclusion evidence."
     },
     {
       "id": "Q-08",
@@ -1283,10 +1285,10 @@
       "queue_carriers": ["Q-07", "Q-12"],
       "closing_proof_ids": ["determinism"],
       "related_ids": [],
-      "current_reproduction": "pending",
-      "reproduction_note": "No behavioural reproduction was executed for this inventory. Source inspection and dated reports are not a current green/red result.",
-      "disposition": "pending_reverification",
-      "scope_reason": "Retain the full source finding; reproduce against the implementation base and repair or record an evidence-backed disposition within the approved strict/fail-fast correction scope.",
+      "current_reproduction": "reproduced-on-main",
+      "reproduction_note": "Verified at main 0c3d4bdc42ed9483672f9f86423904e3ba3f04bd. lib/src/schema-processing/parsers/zod/zod-parser.runner.integration.test.ts still reads fixture directories/files, conditionally writes expected files under UPDATE_SNAPSHOTS and soft-skips a missing expected fixture; lib/vitest.config.ts includes it in the primary src/**/*.test.ts gate. The non-E2E snapshot collector also includes openapi-spec-compliance.test.ts, which reads repository files through process.cwd(), and oas-3.0-vs-3.1-feature-parity.test.ts, which creates, writes and removes a temporary fixture. This is a current source/configuration reproduction; no repair or Q-07 completion is claimed.",
+      "disposition": "outstanding",
+      "scope_reason": "Q-07 is the immediate carrier for the concrete isolation/E2E salvage and PR #21 disposition; Q-12 remains the later fallback. The full Q-07 source delta and M5 still require their own current reproduction.",
       "original_dependencies": [
         {
           "queue": "Q-07",
@@ -2070,10 +2072,10 @@
       "queue_carriers": ["Q-06"],
       "closing_proof_ids": ["packaging"],
       "related_ids": ["R6", "Q-06"],
-      "current_reproduction": "pending",
-      "reproduction_note": "No behavioural reproduction was executed for this inventory. Source inspection and dated reports are not a current green/red result.",
-      "disposition": "pending_reverification",
-      "scope_reason": "Retain the full source finding; reproduce against the implementation base and repair or record an evidence-backed disposition within the approved strict/fail-fast correction scope.",
+      "current_reproduction": "verified-green",
+      "reproduction_note": "The pre-fix PR #98 base reproduced the ownership mismatch: lib imported ajv-draft-04, only the root declared it, and lib/knip.ts suppressed it. PR #98 moved the declaration to lib, removed the root declaration and suppression, retained resolution 1.0.0(ajv@8.20.0), and merged as 0c3d4bdc42ed9483672f9f86423904e3ba3f04bd. Package-local resolution, frozen installation, Knip, 14/14 Draft-04 public-seam cases, 7/7 parity cases and protected gates passed; merge second-parent/tree equality was verified.",
+      "disposition": "applied",
+      "scope_reason": "The original consuming-manifest ownership defect is repaired on main. The commission's final isolated pack/install walkthrough remains a separate C10 acceptance and is not silently claimed here.",
       "original_dependencies": [
         {
           "queue": "Q-06",
@@ -2081,7 +2083,20 @@
         }
       ],
       "technical_dependencies": [],
-      "bounded_historical_evidence": []
+      "bounded_historical_evidence": [
+        {
+          "scope": "Four-file dependency-ownership repair, exact-head checks and verified source-PR closure.",
+          "source": {
+            "register": "merged_successor",
+            "path": "lib/package.json",
+            "line": 94,
+            "commit": "0c3d4bdc42ed9483672f9f86423904e3ba3f04bd",
+            "url": "https://github.com/EngraphCode/castr/blob/0c3d4bdc42ed9483672f9f86423904e3ba3f04bd/lib/package.json#L94"
+          },
+          "date": "2026-09-10",
+          "pull_request": "https://github.com/EngraphCode/castr/pull/98"
+        }
+      ]
     },
     {
       "id": "L19",
@@ -2283,10 +2298,10 @@
       "queue_carriers": [],
       "closing_proof_ids": ["historical-disposition"],
       "related_ids": [],
-      "current_reproduction": "pending",
-      "reproduction_note": "No behavioural reproduction was executed for this inventory. Source inspection and dated reports are not a current green/red result.",
-      "disposition": "historical_candidate_disposition",
-      "scope_reason": "Retain the full source finding; reproduce against the implementation base and repair or record an evidence-backed disposition within the approved strict/fail-fast correction scope.",
+      "current_reproduction": "refuted-on-main",
+      "reproduction_note": "Verified during Q-06: lib/tests-snapshot/spec-compliance/openapi-spec-compliance.test.ts imports ajv-draft-04/dist/index.js and its Draft-04 public-seam suite passed 14/14. PR #98 removed the Knip suppression after declaring the dependency in the consuming lib manifest.",
+      "disposition": "historical",
+      "scope_reason": "Preserve the original refutation. The dependency is demonstrably used; the distinct L18 ownership defect is repaired by PR #98.",
       "original_dependencies": [],
       "technical_dependencies": [],
       "bounded_historical_evidence": []

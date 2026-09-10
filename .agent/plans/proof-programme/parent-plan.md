@@ -71,7 +71,7 @@ todos:
     depends_on: [Q-00]
   - id: Q-06
     content: 'PR #14 value extraction: dependency-only Draft-04 slice, then close #14 with the verification recorded'
-    status: pending
+    status: completed
     depends_on: [Q-00]
   - id: Q-07
     content: 'PR #21 value extraction: isolation/E2E salvage, then close #21 with the verification recorded'
@@ -179,7 +179,12 @@ completion staging: the final-main native record contains three normal and three
 same-agent adversarial registered-role returns (six total). Earlier dated and UNDELIVERED records
 remain preserved. PR #92 corrected the premature closeout; PR #93 then delivered the
 final evidence and lifecycle record as `07ebdb2322ae52bd0627c2f6d36bf42970260a4e`.
-PR #14's dependency-ownership extraction is the next recorded source-PR transition.
+Q-06 is delivered. PR #98 moved `ajv-draft-04` into the consuming `lib`
+manifest, removed the root declaration and Knip suppression, and updated the
+lockfile without changing the resolved version. Reviewed head `5d9bc962` merged
+as `0c3d4bdc`; the merge commit's second parent and tree match that reviewed
+head. PR #14 then closed without merge with its source branch retained. Q-07 and
+PR #21 are the next recorded source-PR transition.
 The broader C05 family retains its other documented obligations. Q-09 is complete:
 PR #90 delivered the #28 preservation record before #28 closed, PRs #94 and #95
 delivered PR #10's surviving validator and machine-state boundary, and #10 closed
@@ -914,6 +919,17 @@ Non-goals: no napkin/continuity deltas from the branch (dispositioned, not merge
 assertions over `package.json`. Acceptance (`integration` + `non-code`): Draft-04 behaviour
 proven through public seams; gates green; #14 closed with the verification recorded. Source:
 report §11.3 #14. Gate: B-11 (success verdict).
+
+Outcome (10 September 2026): PR #98 landed the exact dependency correction from
+reviewed head `5d9bc96238a4fa512c2c31cf412579a7e6b99872` as merge
+`0c3d4bdc42ed9483672f9f86423904e3ba3f04bd`. Its four files were
+`lib/knip.ts`, `lib/package.json`, root `package.json` and `pnpm-lock.yaml`;
+the merge's second parent and tree match the reviewed head. The existing
+Draft-04 public-seam proof passed 14/14 and the OAS 3.0/3.1 parity proof passed
+7/7. Package-local resolution, frozen installation, Knip, canonical `pnpm check`,
+protected checks, Sonar and code scanning passed. PR #14 closed without merge
+after its closure record mapped the four surviving files to PR #98 and excluded
+the unrelated napkin/continuity commits; its recovery branch remains intact.
 
 **Q-07 — #21 extraction + closure.** Surface: logger/E2E relocation and concrete isolation
 fixes only. Non-goals: no source-scanning framework, no known-violation baselines, no

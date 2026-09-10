@@ -105,12 +105,12 @@
     ".agent/memory/operational/repo-continuity.md": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
-      "carrier": "Q-09/lifecycle-closeout",
-      "reviewed_git_blob_hash": "5778ca52bdcb5d9c3e95e005de05fa709fa90531",
-      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
+      "carrier": "Q-06/lifecycle-closeout",
+      "reviewed_git_blob_hash": "3ff0bc43aabb1cc9beaaa89d6441b08e97c1fc25",
+      "base_revision": "0c3d4bdc42ed9483672f9f86423904e3ba3f04bd",
       "review_date": "2026-09-10",
-      "scope": "Current repository route identifies the next source-PR transition and keeps pending semantic work in its permanent homes.",
-      "prior_reviewed_git_blob_hash": "2b3810c522036cf9788944d64d24753b36415e66",
+      "scope": "Current next-safe-step route only: Q-06/PR #98 delivery, verified PR #14 closure and Q-07/PR #21 next.",
+      "prior_reviewed_git_blob_hash": "5778ca52bdcb5d9c3e95e005de05fa709fa90531",
       "review_history": [
         {
           "reviewed_git_blob_hash": "aa994d4df94bf54905bbe6386e785531a66d0b3c",
@@ -171,18 +171,24 @@
           "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
           "review_date": "2026-09-10",
           "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "5778ca52bdcb5d9c3e95e005de05fa709fa90531",
+          "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
+          "review_date": "2026-09-10",
+          "scope": "Current repository route identifies the next source-PR transition and keeps pending semantic work in its permanent homes."
         }
       ]
     },
     ".agent/memory/operational/threads/castr-correction.next-session.md": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
-      "carrier": "Q-09/lifecycle-closeout",
-      "reviewed_git_blob_hash": "4fa34c68a55bd6f2bdf9f131acbdaf44987c34df",
-      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
+      "carrier": "Q-06/lifecycle-closeout",
+      "reviewed_git_blob_hash": "b078128cee2942b112f169f4778ca49beafc10ee",
+      "base_revision": "0c3d4bdc42ed9483672f9f86423904e3ba3f04bd",
       "review_date": "2026-09-10",
-      "scope": "Current correction route identifies the next source-PR transition and preserves pending semantic carriers.",
-      "prior_reviewed_git_blob_hash": "59aa6f9ea82b0dc16099e8a32ea12adab485b6ce",
+      "scope": "Current continuation route only: begin Q-07/PR #21 from integrated main with M4 reproduced and the remaining acceptance pending.",
+      "prior_reviewed_git_blob_hash": "4fa34c68a55bd6f2bdf9f131acbdaf44987c34df",
       "review_history": [
         {
           "reviewed_git_blob_hash": "ae6fe73228a3c4e1a0dcb3a259a21528aada7f3c",
@@ -237,18 +243,24 @@
           "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
           "review_date": "2026-09-10",
           "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "4fa34c68a55bd6f2bdf9f131acbdaf44987c34df",
+          "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
+          "review_date": "2026-09-10",
+          "scope": "Current correction route identifies the next source-PR transition and preserves pending semantic carriers."
         }
       ]
     },
     ".agent/plans/delivery-ledger.md": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
-      "carrier": "Q-09/lifecycle-closeout",
-      "reviewed_git_blob_hash": "e9ccfccd3ccbfa8c2ead3536254e9e1dfc5268b0",
-      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
+      "carrier": "Q-06/lifecycle-closeout",
+      "reviewed_git_blob_hash": "688f2a7e9486dcf45664a08f48a2940ab2e7dc0c",
+      "base_revision": "0c3d4bdc42ed9483672f9f86423904e3ba3f04bd",
       "review_date": "2026-09-10",
-      "scope": "Inherited source PR states expose current carriers and distinguish custody from semantic delivery.",
-      "prior_reviewed_git_blob_hash": "75dc2d768d12bc7d0093a1db4e5dae98af81de2f",
+      "scope": "Q-06 successor and source-PR disposition only: PR #98 merge evidence, verified PR #14 closure, live 13-source-PR census and the route to Q-07/PR #21.",
+      "prior_reviewed_git_blob_hash": "e9ccfccd3ccbfa8c2ead3536254e9e1dfc5268b0",
       "review_history": [
         {
           "reviewed_git_blob_hash": "5c5be6c63b1527fe55a4a4ebec612bf8bdb514f6",
@@ -351,18 +363,24 @@
           "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
           "review_date": "2026-09-10",
           "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "e9ccfccd3ccbfa8c2ead3536254e9e1dfc5268b0",
+          "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
+          "review_date": "2026-09-10",
+          "scope": "Inherited source PR states expose current carriers and distinguish custody from semantic delivery."
         }
       ]
     },
     ".agent/plans/proof-programme/parent-plan.md": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
-      "carrier": "Q-09/lifecycle-closeout",
-      "reviewed_git_blob_hash": "fcdb77f7e308b9a54a208fd22c1718179ad2a3f2",
-      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
+      "carrier": "Q-06/lifecycle-closeout",
+      "reviewed_git_blob_hash": "84807de2156a2b6c4db750cb4c3a4e8aedb72918",
+      "base_revision": "0c3d4bdc42ed9483672f9f86423904e3ba3f04bd",
       "review_date": "2026-09-10",
-      "scope": "Q-09 completion is backed by surviving substance in permanent homes and is absent from executable candidates; the parent remains the queue authority.",
-      "prior_reviewed_git_blob_hash": "db44a9b285635b17674f8a341b9c717c5e2191ee",
+      "scope": "Q-06 completion evidence and the transition to Q-07 only; original acceptance, queue authority and remaining programme obligations are unchanged.",
+      "prior_reviewed_git_blob_hash": "fcdb77f7e308b9a54a208fd22c1718179ad2a3f2",
       "review_history": [
         {
           "reviewed_git_blob_hash": "0ff9d3c127d4dc16606daf587688b910b619283c",
@@ -459,18 +477,24 @@
           "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
           "review_date": "2026-09-10",
           "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "fcdb77f7e308b9a54a208fd22c1718179ad2a3f2",
+          "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
+          "review_date": "2026-09-10",
+          "scope": "Q-09 completion is backed by surviving substance in permanent homes and is absent from executable candidates; the parent remains the queue authority."
         }
       ]
     },
     ".agent/plans/active/castr-documentation-and-fidelity-correction.md": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
-      "carrier": "Q-09/lifecycle-closeout",
-      "reviewed_git_blob_hash": "4b17d1678e0a8f3d79a5793ea7341a718d55de2e",
-      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
+      "carrier": "Q-06/lifecycle-closeout",
+      "reviewed_git_blob_hash": "8e21bde050b01f0c57d55e40ccdbe1b3724b1282",
+      "base_revision": "0c3d4bdc42ed9483672f9f86423904e3ba3f04bd",
       "review_date": "2026-09-10",
-      "scope": "Current delivery plan records the Q-09 acceptance boundary and keeps the wider correction commission open.",
-      "prior_reviewed_git_blob_hash": "efde15c9d69508130f5bc07fa4de9861552edc54",
+      "scope": "Current delivery route only: Q-06 and PR #14 are closed by merged evidence, M4 remains outstanding, and Q-07/PR #21 is next; A1-A6 and the wider commission remain open.",
+      "prior_reviewed_git_blob_hash": "4b17d1678e0a8f3d79a5793ea7341a718d55de2e",
       "review_history": [
         {
           "reviewed_git_blob_hash": "8c14b62e02166f3c9c07c37021e60cb7f0010886",
@@ -579,18 +603,24 @@
           "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
           "review_date": "2026-09-10",
           "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "4b17d1678e0a8f3d79a5793ea7341a718d55de2e",
+          "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
+          "review_date": "2026-09-10",
+          "scope": "Current delivery plan records the Q-09 acceptance boundary and keeps the wider correction commission open."
         }
       ]
     },
     ".agent/plans/correction-manifests/castr-correction-findings.json": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
-      "carrier": "Q-09/lifecycle-closeout",
-      "reviewed_git_blob_hash": "5217040f1ba2deabbe87a81ee70e731ee46d6582",
-      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
+      "carrier": "Q-06/lifecycle-closeout",
+      "reviewed_git_blob_hash": "1981f57eecaca5d521649e1d0579488feb5840ba",
+      "base_revision": "0c3d4bdc42ed9483672f9f86423904e3ba3f04bd",
       "review_date": "2026-09-10",
-      "scope": "Added the distinct current PR #10 finding and decision carriers without changing the immutable baseline records; pending reproduction remains explicit.",
-      "prior_reviewed_git_blob_hash": "9fb355d777bd628c349563296362906f01359649",
+      "scope": "Q-06 and L18 integrated completion, R6 refutation evidence and the current M4 reproduction routed to Q-07; no other finding is dispositioned.",
+      "prior_reviewed_git_blob_hash": "5217040f1ba2deabbe87a81ee70e731ee46d6582",
       "review_history": [
         {
           "reviewed_git_blob_hash": "ae7b00c90757dadce02cabc720e2d3b434ea1343",
@@ -603,6 +633,12 @@
           "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
           "review_date": "2026-09-09",
           "scope": "Finding Q-22/error-negative-oracles delivery state only: PR89's bounded Error-oracle merge evidence, final exact source hashes, mutation proof, oracle-only closing proof and retained Q22 residuals."
+        },
+        {
+          "reviewed_git_blob_hash": "5217040f1ba2deabbe87a81ee70e731ee46d6582",
+          "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
+          "review_date": "2026-09-10",
+          "scope": "Added the distinct current PR #10 finding and decision carriers without changing the immutable baseline records; pending reproduction remains explicit."
         }
       ]
     },
@@ -900,11 +936,11 @@
     ".agent/prompts/cricket-platform-parity-continuation.md": {
       "review_state": "partially-reviewed",
       "disposition": "applied",
-      "carrier": "C05/cricket-final-native-proof",
-      "reviewed_git_blob_hash": "cbab4310b2774c5bb90936cf8ff2ef9f43ccc693",
-      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
+      "carrier": "Q-06/lifecycle-closeout",
+      "reviewed_git_blob_hash": "276c8d1d3b296cc0c112371470d2b0ddda9d23f3",
+      "base_revision": "0c3d4bdc42ed9483672f9f86423904e3ba3f04bd",
       "review_date": "2026-09-10",
-      "scope": "Historical Cricket continuation prompt retained at its dated boundary; current routing lives in the active plans and continuity surfaces.",
+      "scope": "Operative route corrected after PR #98 delivery and PR #14 closure; superseded historical instructions remain verbatim and Q-07/PR #21 is next.",
       "prior_reviewed_git_blob_hash": "cbab4310b2774c5bb90936cf8ff2ef9f43ccc693",
       "review_history": [
         {
@@ -954,6 +990,12 @@
             "Final-main native record .agent/reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json retains three registered-role normal dispatches and same-agent adversarial follow-ups, all six substantive verbatim returns, configured role files/source hashes and explicit limitations. I2 is complete; this evidence/lifecycle PR is pending delivery."
           ],
           "remaining": "Merge the bounded final evidence/lifecycle PR after current-head checks and reviews, then extract PR #14. Broader C05, Q-09/Q-22 and C09/C10 acceptance remains open in the controlling plans."
+        },
+        {
+          "reviewed_git_blob_hash": "cbab4310b2774c5bb90936cf8ff2ef9f43ccc693",
+          "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
+          "review_date": "2026-09-10",
+          "scope": "Historical Cricket continuation prompt retained at its dated boundary; current routing lives in the active plans and continuity surfaces."
         }
       ]
     },
@@ -1022,12 +1064,12 @@
     ".agent/plans/current/complete/cricket-platform-parity.md": {
       "review_state": "partially-reviewed",
       "disposition": "applied",
-      "carrier": "Q-09/lifecycle-closeout",
-      "reviewed_git_blob_hash": "82bf6613c46cccbc3ce97ac9d6b2b18c41dc6ae0",
-      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
+      "carrier": "Q-06/lifecycle-closeout",
+      "reviewed_git_blob_hash": "7a596b73669c5319060683868f9be0769213c280",
+      "base_revision": "0c3d4bdc42ed9483672f9f86423904e3ba3f04bd",
       "review_date": "2026-09-10",
-      "scope": "Q-09 cross-reference corrected to point to the current PR #10 custody route; C05 evidence and limitations are unchanged.",
-      "prior_reviewed_git_blob_hash": "bd01ba5d258a506f3c48a249d8a97fa5bd9b8f69",
+      "scope": "Current final-proof route corrected after Q-06 delivery and PR #14 closure; C05 evidence, limitations and historical sections are unchanged.",
+      "prior_reviewed_git_blob_hash": "82bf6613c46cccbc3ce97ac9d6b2b18c41dc6ae0",
       "review_history": [
         {
           "reviewed_git_blob_hash": "c255cd3894e8a6718288e1eef4ab49018a330ac3",
@@ -1100,6 +1142,12 @@
           "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
           "review_date": "2026-09-10",
           "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "82bf6613c46cccbc3ce97ac9d6b2b18c41dc6ae0",
+          "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
+          "review_date": "2026-09-10",
+          "scope": "Q-09 cross-reference corrected to point to the current PR #10 custody route; C05 evidence and limitations are unchanged."
         }
       ]
     },
