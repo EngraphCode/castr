@@ -3,8 +3,8 @@
 ## Continuation route
 
 - Controlling queue: [parent plan](../../../plans/proof-programme/parent-plan.md#current-execution-state).
-- Next acceptance: the [Q-06 brief](../../../plans/proof-programme/parent-plan.md#slice-briefs)
-  for PR #14's dependency-only extraction and verified closure.
+- Next acceptance: the [Q-07 brief](../../../plans/proof-programme/parent-plan.md#slice-briefs)
+  for PR #21's concrete isolation/E2E salvage and verified closure.
 - Completed transition: the Q-09 brief plus the
   [source PR table](../../../plans/delivery-ledger.md#source-pr-dispositions).
 - PR custody and next delivery action: [delivery ledger](../../../plans/delivery-ledger.md).
@@ -19,8 +19,11 @@
   installation in PR #91 as `af840d9b`. PR #92 corrected the premature atomic closeout.
   Final I2 is now complete: the fresh trusted task retained all six final-template
   native returns with `fork_turns: "none"` and same-agent adversarial follow-ups.
-  PR #93 delivered the evidence/lifecycle record as `07ebdb23`. The coordinator now
-  begins PR #14's dependency-ownership extraction from current `origin/main`.
+  PR #93 delivered the evidence/lifecycle record as `07ebdb23`. Q-06 then delivered
+  PR #14's four-file dependency correction through PR #98 at merge `0c3d4bdc`; source
+  PR #14 closed without merge with its recovery branch retained. The coordinator now
+  begins Q-07/PR #21 from current `origin/main`, starting with fresh reproduction and
+  exact source-delta custody. M4 is reproduced; the rest of Q-07 remains pending.
   The broader C05 family retains the obligations
   named below. Coordinate expensive aggregate runs and re-read actual claims before edits.
 - Source: PR #81 at `SHA:33be633862864ce8efb22e70abbbe9bce863c510`, never rewritten.

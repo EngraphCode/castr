@@ -64,8 +64,9 @@ lifecycle closeout, and PR #93 delivered the final evidence/lifecycle record as
 `07ebdb23`. The [final native record](../../reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json)
 now retains all six substantive final-template returns from the fresh trusted Castr
 task, with normal and same-agent adversarial stances. The atomic plan is in completion
-staging. The next recorded source-PR transition is PR #14's dependency-ownership
-extraction from current `origin/main`.
+staging. Q-06 is delivered through PR #98 at merge `0c3d4bdc`; source PR #14 closed
+without merge with its recovery branch retained. Q-07/PR #21 is the next recorded
+source-PR transition from current `origin/main`.
 The broader C05
 family retains its other obligations. Earlier
 continuation instructions are [preserved verbatim](../../plans/archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
