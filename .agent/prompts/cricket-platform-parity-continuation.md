@@ -6,10 +6,11 @@ are in completion staging. The
 contains all six substantive registered-role returns on main `c1e73c1a`, with normal
 and same-agent adversarial stances. Do not repeat this unchanged frame.
 
-Complete delivery of the bounded evidence/lifecycle PR through current-head checks
-and reviews. The commissioned proof task must report merge-ready state to the
-coordinator and must not merge its own PR. PR #14 extraction follows that merge.
-Broader C05 and correction-programme obligations remain in their controlling plans.
+PR #93 delivered the bounded evidence/lifecycle record. Q-06 then delivered PR #14's
+four-file dependency correction through PR #98 at merge `0c3d4bdc`; source PR #14
+closed without merge with its recovery branch retained. Follow the parent queue and
+delivery ledger to Q-07/PR #21. Broader C05 and correction-programme obligations
+remain in their controlling plans.
 
 ## Previous continuation — retained history
 

@@ -40,7 +40,9 @@ T1/T2 were delivered by PR #88; I1 and D1 by PR #91. The final six-return record
 satisfies I2, completing this atomic plan's acceptance. This plan is in completion
 staging. PR #93 delivered the evidence/lifecycle record as
 `07ebdb2322ae52bd0627c2f6d36bf42970260a4e` after exact-head checks and reviews.
-PR #14's dependency-ownership extraction follows from current main.
+Q-06 then delivered PR #14's dependency-only correction through PR #98 at merge
+`0c3d4bdc42ed9483672f9f86423904e3ba3f04bd`; source PR #14 closed without merge
+with its recovery branch retained. Q-07/PR #21 follows from current main.
 The broader C05 family, correction commission and compiler programme remain open;
 Q-09 subsequently completed through PRs #94/#95, PR #10 closure, permanent finding
 and decision carriers, and the retained recovery branch.

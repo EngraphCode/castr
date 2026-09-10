@@ -107,9 +107,13 @@ the C05 tooling contract; PR #91 delivered its dependent installation. PR #90
 delivered the preservation record and PR #28 then closed without merge. The C05 Cricket
 atomic plan is in completion staging after all six final-template native returns on
 10 September. PR #92 corrected the premature closeout; PR #93 delivered the final
-evidence/lifecycle record as `07ebdb2322ae52bd0627c2f6d36bf42970260a4e`. PR #14
-dependency ownership is the next recorded source-PR transition. The broader C05
-family retains its other obligations. Q-09 is complete: PR #90 delivered the #28
+evidence/lifecycle record as `07ebdb2322ae52bd0627c2f6d36bf42970260a4e`. Q-06 is
+delivered through PR #98 at merge `0c3d4bdc42ed9483672f9f86423904e3ba3f04bd`;
+source PR #14 then closed without merge with its recovery branch retained. Q-07 and
+PR #21 are the next recorded source-PR transition. The reproduced M4 filesystem-I/O
+test defect remains an outstanding part of Q-07; this record does not claim the
+rest of PR #21 has been reverified. The broader C05 family retains its other
+obligations. Q-09 is complete: PR #90 delivered the #28
 preservation record before #28 closed, PRs #94/#95 delivered PR #10's surviving
 validator and exact machine-state boundary, and #10 closed while its recovery branch
 remained intact. PR #10's surviving semantic findings now live in the correction
@@ -136,9 +140,11 @@ successful Copilot review run, all eight review threads were resolved, and exact
 Codex/Copilot plus gateway, documentation and onboarding review found no remaining
 blocker. The completed atomic C05 plan preserves the dated native proof, the later
 `UNDELIVERED` attempt and the six substantive final-template returns from 10 September.
-PR #93 delivered the final I2 evidence and lifecycle reconciliation. PR #14 follows
-from current main. The broader C05 family remains open, and the coordinating agent
-retains this commission, parent queue, ledger and coverage manifests.
+PR #93 delivered the final I2 evidence and lifecycle reconciliation. Q-06 then
+delivered the dependency-only PR #14 value in PR #98 and closed the source PR with
+verification recorded. Q-07/PR #21 follows from current main. The broader C05 family
+remains open, and the coordinating agent retains this commission, parent queue,
+ledger and coverage manifests.
 
 | Outcome family     | Reviewable outcome and dependencies                                                                                                                                                                                                                                                                                        |
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
