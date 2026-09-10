@@ -132,7 +132,7 @@ unrelated compiler repairs after its own surviving substance is accounted for.
   and health checks share strict platform and canonical-source contracts. The
   coordinating agent accepted full custody of the dependent native Cricket
   installation after this merge.
-- **C05 Cricket final native proof complete; lifecycle PR delivery pending:** PR #88
+- **C05 Cricket atomic plan complete and delivered:** PR #88
   delivered the strict platform contract as
   `bd115294`; PR #91 delivered the installation from reviewed head `48e2194d` as merge
   commit `af840d9b`. All 17 exact-head check runs passed: 16 repository, security and
@@ -144,27 +144,32 @@ unrelated compiler repairs after its own surviving substance is accounted for.
   [completed atomic plan](current/complete/cricket-platform-parity.md).
   The 10 September final-main run delivered all six substantive registered-role returns,
   including same-agent adversarial follow-ups. Earlier dated and UNDELIVERED attempts
-  remain historical evidence. I2 is complete; the small evidence/lifecycle PR remains
-  pending delivery. PR #14 extraction follows its merge; broader C05 remains open.
+  remain historical evidence. PR #93 delivered I2 and the lifecycle record as
+  `07ebdb2322ae52bd0627c2f6d36bf42970260a4e`; its exact reviewed head was
+  `2ab84f1e94857a52e7b699a0916562bd00285f3f`. PR #14 extraction follows from
+  current main; broader C05 remains open.
+- **Q-09 complete:** PR #90 delivered the #28 preservation disposition as
+  `cb73c4de`, after which #28 closed with its recovery branch retained. PR #94
+  delivered PR #10's strengthened tracked-file fitness scanner as `e70adb23`; PR #95
+  delivered the exact `.claude/settings.local.json` machine-state boundary as
+  `5243e816`, retaining strict `tmp/` Markdown admission. PR #10 then closed without
+  merge with its recovery branch retained. Its surviving semantic findings live in
+  the correction findings register, and its displaced decision lives as Q-017;
+  pending carriers are not represented as delivered.
 
 No Q-08/Q-14/Q-16/Q-20 completion is claimed by these custody/review slices.
 Those rows retain their original acceptance.
 
-## Open PR dispositions
+## Source PR dispositions
 
-Verified on 10 September 2026 with `gh pr list --state open --limit 100`: 15 older
-PRs remain open, comprising the fourteen inherited rows below and frozen source #81.
-PR #87 merged as `c1e73c1a` and PR #92 as `8deca63f`. This is the pre-opening census for final
-I2 evidence/lifecycle PR #93; that PR is additional while open. PR #91 merged as `af840d9b`; PR #90 previously
-merged the bounded Q-09/#28 disposition as `cb73c4de`, after which PR #28 closed without
-merge and retained its recovery branch. The remaining source PRs close only when their
-recorded extraction or supersession conditions are verified. PR #14 extraction follows
-the final evidence/lifecycle PR merge. The following 6 September check and review states
-are historical observations, not fresh merge readiness.
-
-PR #92's opening commit bundled continuity records with lifecycle documents; that
-historical deviation remains recorded. This final proof delivery keeps continuity
-observations in their own `chore(continuity)` commit within the same bounded PR.
+The table covers inherited source PRs and frozen source #81. Current delivery PRs
+are outside this source inventory. PRs #10 and #28 remain listed as closed source
+records. PR #87 merged as
+`c1e73c1a`, PR #92 as `8deca63f`, PR #93 as `07ebdb23`, PR #94 as `e70adb23`, and
+PR #95 as `5243e816`. The remaining source PRs close only when their recorded
+extraction or supersession conditions are verified. PR #14 is the next recorded
+source-PR transition. The following 6 September check and review states are
+historical observations, not fresh merge readiness.
 
 Observed 2026-09-06T10:15:18.139331+00:00; 16 open PRs (the 15 inherited rows below plus
 #81 above), against main `e025d23316e4b175551711a32a09c0f4d492fd1a`.
@@ -181,7 +186,7 @@ interactive sequencing of these obligations without silently completing old rows
 
 | PR and observed head                                                                                                                                                                           | Live status and head checks                                                                                                              | Surviving value and overlap with main                                                                                                                                                                                                                                                                            | Owning queue / consuming tranche                                          | Evidence required for extraction and closure                                                                                                                                                                                                                                                                 |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [#10](https://github.com/EngraphCode/castr/pull/10) — Programme record and gate footprint; [2baa1ba5](https://github.com/EngraphCode/castr/commit/2baa1ba50c97a0740c8a3d055bd8a8ca491363d5)    | Open, non-draft; CONFLICTING/DIRTY; 14/14 successful checks; 26 resolved threads.                                                        | Retain still-accurate evidence and any tracked-file scanner/ignore correction not already on main. The old remediation ordering is superseded by the parent programme.                                                                                                                                           | Q-09; evidence consumers Tranches 01/14                                   | Verify unique commits and file deltas against current main; home surviving evidence and correction, explicitly retire obsolete policy, then close with the destination paths and verification recorded.                                                                                                      |
+| [#10](https://github.com/EngraphCode/castr/pull/10) — Programme record and gate footprint; [2baa1ba5](https://github.com/EngraphCode/castr/commit/2baa1ba50c97a0740c8a3d055bd8a8ca491363d5)    | Closed without merge at 00:46:24 UTC on 10 September 2026; recovery branch retained at the original head.                                | PR #94 landed the strengthened tracked-file fitness scanner; PR #95 landed the exact machine-local settings boundary without weakening strict Markdown admission. Obsolete July routing was superseded; historical/session evidence remains on the preserved source branch.                                      | Q-09 complete                                                             | Pending semantics live in the [findings register](correction-manifests/castr-correction-findings.json); the dialect decision is [Q-017](../memory/operational/open-questions.md#q-017-openapi-30-enumnull-without-nullabletrue--owner-semantics-ruling-required).                                            |
 | [#11](https://github.com/EngraphCode/castr/pull/11) — Fidelity harness and test truth; [64feef9e](https://github.com/EngraphCode/castr/commit/64feef9e32ff8c3b8568e13645388aabd42b16d1)        | Open, non-draft; MERGEABLE/BEHIND; 12/12 successful checks; 3 resolved threads.                                                          | Q-02/#35 already landed the artifact-agnostic runner and mutant-bite proof. Retain remaining non-vacuity, case and outcome concepts for the full profile-bearing harness; do not restore the old OpenAPI/legacy-root runner.                                                                                     | Q-11; Q-12 / Tranche 01 completion and closure                            | Inventory the residual deltas against Q-02; prove independent source/target oracles and seeded wrong-parser, wrong-writer, absent-artifact and vacuous-witness failures; close only after the full residual disposition is recorded.                                                                         |
 | [#12](https://github.com/EngraphCode/castr/pull/12) — Capability traversal; [7f4d23d6](https://github.com/EngraphCode/castr/commit/7f4d23d6b3c2d6ed0a613841bb661c0f4c82a558)                   | Open, non-draft; CONFLICTING/DIRTY; 12/12 successful checks; 5 resolved threads.                                                         | Recursive traversal and contextual diagnostics remain useful. The artifact roots, processing facets and target/version policy they must traverse are still programme work.                                                                                                                                       | Q-12 / Tranches 02C–04                                                    | Rework after roots, facets and identity primitives; cover every declared position and give `itemSchema` an implemented or explicit target disposition. Record extracted or superseded deltas and green proofs before closure.                                                                                |
 | [#13](https://github.com/EngraphCode/castr/pull/13) — Zod parser recognition; [a18d2943](https://github.com/EngraphCode/castr/commit/a18d2943eca07b075405b66295b1343f85a9d1f3)                 | Open, non-draft; CONFLICTING/DIRTY; 12/12 successful checks; 13 resolved threads.                                                        | Retain genuinely unrecognised-AST failures and `.and()`, `.or()` and `.array()` challenges. Q-05 owns the earlier nested-loss repair; the blanket catchall rejection conflicts with the ratified value semantics.                                                                                                | Q-05 for the bounded defect; Q-12 / Tranche 07 for extraction and closure | Use the bounded grammar after accepted-input, produced-output and processing semantics exist; replace blanket catchall rejection with classified behaviour and prove the supported and unsupported boundaries before closure.                                                                                |
@@ -195,52 +200,10 @@ interactive sequencing of these obligations without silently completing old rows
 | [#23](https://github.com/EngraphCode/castr/pull/23) — Practice imports; [5fa82e88](https://github.com/EngraphCode/castr/commit/5fa82e88cc6e818b7b8f692627011f98b833ec96)                       | Open, non-draft; CONFLICTING/DIRTY; 14/14 successful checks; 13 resolved threads.                                                        | Main now contains concept exploration, cognition/template work and later merge-authority changes. Preserve only still-needed canonical deltas with present consumers; the old wholesale transplant is stopped and this assembled snapshot is superseded.                                                         | Q-13                                                                      | Compare each unique delta with the then-current canonical skill and Practice estate, including Q-21 and any later Q-19 work. Record selective extraction or retirement, pass Practice gates, resolve the transplant disposition and close with verification; never overwrite later policy by resync.         |
 | [#26](https://github.com/EngraphCode/castr/pull/26) — Formatting failure and typed omit; [dc9adddf](https://github.com/EngraphCode/castr/commit/dc9adddf9377cbc1f08348ae678b192dc0593600)      | Draft; MERGEABLE/BEHIND; 12/14 successful checks; remaining: proof-suites, quality-gates; 0 resolved threads.                            | The red branch preserves evidence that formatting exposed invalid generated TypeScript. `maybePretty` still swallows failures on main; the producer defect and a safe naming/literal boundary remain the substantive obligation.                                                                                 | Q-12 / Tranche 08                                                         | Rework with TypeScript compilation as the validity oracle and Prettier as presentation. Fix the reserved-word producer, add positive/negative compiler projects and bounded diagnostics; keep draft until an integrated green extraction accounts for both file deltas, then close.                          |
 | [#27](https://github.com/EngraphCode/castr/pull/27) — Additional-properties semantics; [a48eced8](https://github.com/EngraphCode/castr/commit/a48eced8868bb6900a7b33cf1eb305ed3d8f4111)        | Draft; CONFLICTING/DIRTY; 11/14 successful checks; remaining: proof-suites, quality-gates, SonarCloud Code Analysis; 0 resolved threads. | Essential input to admission, retention and catchall semantics; those facets remain pending. The branch also carries a large fixture rewrite and rejects some recursive catchalls, so neither its size nor its red checks proves delivery.                                                                       | Q-12 / Tranche 02C, then Tranches 05 and 07                               | Extract algebra, facet persistence, JSON Schema and Zod support in that order, with independent behavioural witnesses and atomic green landings. Justify fixture changes individually; do not copy flags onto the legacy universal node. Close only after all semantic and fixture deltas are accounted for. |
-| [#28](https://github.com/EngraphCode/castr/pull/28) — Pre-rebase preservation twin; [e150a0e8](https://github.com/EngraphCode/castr/commit/e150a0e8e87edb95b06ad7fb7fd67e3c15c88431)           | Closed without merge at 19:03:37 UTC after PR #90 landed the disposition; recovery head retained.                                        | Preservation verification is complete: every original hunk is retained in #27, adapted only by existing TSDoc cleanup, or intentionally retired as stale current-entry instruction. No unique implementation or test value requires extraction from #28.                                                         | Q-09                                                                      | [Closure evidence](https://github.com/EngraphCode/castr/pull/28#issuecomment-5607208414) names the commit map, retained homes and retired instructions. PR #10 remains the other Q-09 obligation.                                                                                                            |
+| [#28](https://github.com/EngraphCode/castr/pull/28) — Pre-rebase preservation twin; [e150a0e8](https://github.com/EngraphCode/castr/commit/e150a0e8e87edb95b06ad7fb7fd67e3c15c88431)           | Closed without merge at 19:03:37 UTC after PR #90 preserved its surviving source; recovery head retained.                                | Preservation verification is complete: every original hunk is retained in [#27](https://github.com/EngraphCode/castr/pull/27), adapted only by existing TSDoc cleanup, or intentionally retired as stale current-entry instruction. No unique implementation or test value requires extraction from #28.         | Q-09 complete                                                             | [#27](https://github.com/EngraphCode/castr/pull/27) remains the implementation source under Q-12; Q-22 retains the separate fixture and generator work.                                                                                                                                                      |
 
-Each row needs exact extraction or supersession evidence before closure. Updating
-this ledger does not extract code, close a PR or establish merge readiness.
-
-## Q-09 PR #28 preservation disposition — 9 September 2026
-
-The preservation audit compared PR #28 head
-`e150a0e8e87edb95b06ad7fb7fd67e3c15c88431` with PR #27 head
-`a48eced8868bb6900a7b33cf1eb305ed3d8f4111` and then-current main
-`bd115294cd545db6d6e64f6c4629a5a583e5ded3`, using the actual unique ranges
-from merge bases `393e476144bc0ca4f9920c2c569e1b037b6752d5` and
-`4be99dae5d8b0c24e4f22436b856b592637dc9d1`. PR #89 changed no path in the
-PR #28 inventory; the 58-path PR #88 merge delta from PR #89's main likewise
-has zero intersection with the 104 audited source/successor paths. The refreshed
-main therefore does not alter the disposition.
-
-All 99 rename-aware file deltas (102 raw paths) and 849 original per-commit
-hunks are accounted for. Of those, 825 preserve the same changed lines in
-PR #27, six differ only through the existing TSDoc cleanup on main, and 18
-current-entry instruction hunks are intentionally retired. The exact original
-commit map is `3073145c1858266711de799ad33108d122b2642f` to
-`df8783d99f288d391699c6a56072cdc63c668ebf`,
-`0cee0634d22f8d96927cf2d8023b04e6bb87c5a0` to
-`476b7e2d06aa1ed5281f343b6fc6eb188af0faec`, and
-`e150a0e8e87edb95b06ad7fb7fd67e3c15c88431` to
-`3dcca7a5666bd2b32b57c2b6a08002e273be4bb5`.
-
-The original napkin additions survive verbatim in PR #27's
-`.agent/memory/active/archive/napkin-2026-03-to-04.md`; the original plan body
-survives in `.agent/plans/current/paused/explicit-additional-properties-support.md`.
-The 18 retired session-prompt and roadmap hunks remain available in immutable
-PR #28 history, but their April completion, gate and next-step wording must not
-return as current authority. PR #27 remains the selective additional-properties
-source under Q-12. Q-22 retains the separate fixture/generator cleanup; PR #27's
-fourth cleanup commit does not represent unique PR #28 value.
-
-No unique implementation, test or documentary value remained to extract from
-PR #28. PR #90 landed this record as
-`cb73c4deaae9eecdbe406f28304314c71e339e02`; after both heads were refreshed,
-PR #28 closed without merge at 19:03:37 UTC with the
-[commit map and retained homes](https://github.com/EngraphCode/castr/pull/28#issuecomment-5607208414)
-recorded, and its recovery branch remains. This disposition establishes
-preservation custody only. It
-does not establish PR #27 merge readiness, delivered additional-properties
-semantics, Q-22 completion or Q-09 completion. PR #10 remains wholly outstanding.
+Each still-open row needs exact extraction or supersession evidence before closure.
+Updating this ledger does not extract code, close a PR or establish merge readiness.
 
 ## PR #18 selective security value — 6 September 2026
 

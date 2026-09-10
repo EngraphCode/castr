@@ -82,7 +82,7 @@ todos:
     status: pending
   - id: Q-09
     content: 'PR closure wave 1: #10 and #28 patch-equivalence verification and closure'
-    status: pending
+    status: completed
   - id: Q-13
     content: 'PR #23 disposition: execute the B-11 sequencing outcome (merge-or-retire with value extraction), then close #23'
     status: pending
@@ -174,13 +174,19 @@ delivered the dependent installation as
 `af840d9b68e9b4ef00813a2af97675c7abca3c33`. Its reviewed head was the merge
 commit's second parent and the trees are identical; all 17 exact-head check runs passed,
 including the successful Copilot review run, and all eight review threads were resolved.
-The C05 Cricket [atomic plan](../current/complete/cricket-platform-parity.md) is now
-in completion staging: the final-main native record contains three normal and three
+The C05 Cricket [atomic plan](../current/complete/cricket-platform-parity.md) is in
+completion staging: the final-main native record contains three normal and three
 same-agent adversarial registered-role returns (six total). Earlier dated and UNDELIVERED records
-remain preserved. PR #92 corrected the premature closeout; the final evidence/lifecycle
-PR must merge before PR #14's dependency-ownership extraction.
-The broader C05 family retains its other documented obligations. Q-09 remains pending
-for PR #10. When Q-22 resumes, migrate
+remain preserved. PR #92 corrected the premature closeout; PR #93 then delivered the
+final evidence and lifecycle record as `07ebdb2322ae52bd0627c2f6d36bf42970260a4e`.
+PR #14's dependency-ownership extraction is the next recorded source-PR transition.
+The broader C05 family retains its other documented obligations. Q-09 is complete:
+PR #90 delivered the #28 preservation record before #28 closed, PRs #94 and #95
+delivered PR #10's surviving validator and machine-state boundary, and #10 closed
+while its recovery branch remained intact. Its surviving semantic findings and
+displaced enum/nullability decision live in their permanent carriers; outstanding
+semantic work remains open.
+When Q-22 resumes, migrate
 the integer contract coherently across its live consumers and doctrine, then land
 the generator fix and all regenerated outputs together, including the fixed-fixture
 export imports. Its full original acceptance remains mandatory. Other independent
@@ -346,7 +352,8 @@ sequencing order** (transplant first), which only ballot item B-11 may supersede
 T00a; the report certifies all of them parallel-safe with the T00a walk itself (§6 named
 exceptions, §15.4 step 2). Q-13 (the #23 disposition) executes the B-11 outcome itself. Q-10 is gated by T00a proper
 **and by Q-14** (`depends_on`) — the doctrine wave lands before charter-consuming work.
-Q-01, Q-08, and Q-09 predate no standing order and are eligible immediately.
+Q-01 and Q-08 predate no standing order and are eligible immediately. Q-09 is
+complete and is no longer an executable queue candidate.
 
 ### Slice briefs
 
@@ -932,10 +939,12 @@ eyeball); no dangling link introduced; gates green. Source: report §7 T00 instr
 verification, surviving evidence migrated to its named home, closed with verification
 recorded. Non-goals: no wholesale branch merges; #23 is NOT this row (see Q-13). Acceptance
 (`non-code`): each closed PR's closure note names what moved where and what was retired.
-Source: report §11.3. The [PR #28 preservation disposition](../delivery-ledger.md#q-09-pr-28-preservation-disposition--9-september-2026)
-accounts for all 849 original hunks and finds no unique value requiring extraction.
-Its repository landing and verified PR closure remain the PR #28 transition; PR #10
-remains wholly outstanding. Q-09 therefore stays pending.
+Source: report §11.3. Outcome: PR #90 preserved #28's surviving source before #28
+closed; PRs #94 and #95 delivered #10's surviving validator and machine-state boundary
+before #10 closed. Both recovery branches remain. The
+[source PR table](../delivery-ledger.md#source-pr-dispositions) exposes their current
+state and functional carriers. Pending semantic findings and Q-017 remain open in
+their permanent homes; current routes do not depend on either source branch.
 
 **Q-13 — PR #23 disposition.** Surface: execute whichever outcome B-11 ratified for the
 practice-transplant lane — selective canonical-delta sync then close, or retire-with-record —
@@ -1563,7 +1572,7 @@ landing.
 
 ## Risks
 
-- **Ballot latency**: only the remediation-family and spine slices wait on it; Q-01/Q-08/Q-09
+- **Ballot latency**: only the remediation-family and spine slices wait on it; Q-01/Q-08
   keep the loop productive meanwhile. The ballot is pre-filled; one sitting suffices.
 - **Review-bot non-convergence** (measured on PR 30, six rounds): bounded by ADR-051 clause 4.
 - **Fresh-container drift** (measured: missing gitleaks): Q-01 owns it; any new environment

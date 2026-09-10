@@ -105,18 +105,12 @@
     ".agent/memory/operational/repo-continuity.md": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
-      "carrier": "C05/cricket-final-native-proof",
-      "reviewed_git_blob_hash": "2b3810c522036cf9788944d64d24753b36415e66",
-      "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
+      "carrier": "Q-09/lifecycle-closeout",
+      "reviewed_git_blob_hash": "5778ca52bdcb5d9c3e95e005de05fa709fa90531",
+      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
       "review_date": "2026-09-10",
-      "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged.",
-      "evidence": [
-        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
-        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
-        "Final-main native record .agent/reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json retains three registered-role normal dispatches and same-agent adversarial follow-ups, all six substantive verbatim returns, configured role files/source hashes and explicit limitations. I2 is complete; this evidence/lifecycle PR is pending delivery."
-      ],
-      "remaining": "Merge the bounded final evidence/lifecycle PR after current-head checks and reviews, then extract PR #14. Broader C05, Q-09/Q-22 and C09/C10 acceptance remains open in the controlling plans.",
-      "prior_reviewed_git_blob_hash": "dbbf9919c792082e287ab21315cb2042c5b0b342",
+      "scope": "Current repository route identifies the next source-PR transition and keeps pending semantic work in its permanent homes.",
+      "prior_reviewed_git_blob_hash": "2b3810c522036cf9788944d64d24753b36415e66",
       "review_history": [
         {
           "reviewed_git_blob_hash": "aa994d4df94bf54905bbe6386e785531a66d0b3c",
@@ -171,24 +165,24 @@
           "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
           "review_date": "2026-09-10",
           "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "2b3810c522036cf9788944d64d24753b36415e66",
+          "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
+          "review_date": "2026-09-10",
+          "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged."
         }
       ]
     },
     ".agent/memory/operational/threads/castr-correction.next-session.md": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
-      "carrier": "C05/cricket-final-native-proof",
-      "reviewed_git_blob_hash": "59aa6f9ea82b0dc16099e8a32ea12adab485b6ce",
-      "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
+      "carrier": "Q-09/lifecycle-closeout",
+      "reviewed_git_blob_hash": "4fa34c68a55bd6f2bdf9f131acbdaf44987c34df",
+      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
       "review_date": "2026-09-10",
-      "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged.",
-      "evidence": [
-        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
-        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
-        "Final-main native record .agent/reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json retains three registered-role normal dispatches and same-agent adversarial follow-ups, all six substantive verbatim returns, configured role files/source hashes and explicit limitations. I2 is complete; this evidence/lifecycle PR is pending delivery."
-      ],
-      "remaining": "Merge the bounded final evidence/lifecycle PR after current-head checks and reviews, then extract PR #14. Broader C05, Q-09/Q-22 and C09/C10 acceptance remains open in the controlling plans.",
-      "prior_reviewed_git_blob_hash": "61c203a3886ce9ef6ad8344bc27f7c93085af389",
+      "scope": "Current correction route identifies the next source-PR transition and preserves pending semantic carriers.",
+      "prior_reviewed_git_blob_hash": "59aa6f9ea82b0dc16099e8a32ea12adab485b6ce",
       "review_history": [
         {
           "reviewed_git_blob_hash": "ae6fe73228a3c4e1a0dcb3a259a21528aada7f3c",
@@ -237,24 +231,24 @@
           "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
           "review_date": "2026-09-10",
           "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "59aa6f9ea82b0dc16099e8a32ea12adab485b6ce",
+          "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
+          "review_date": "2026-09-10",
+          "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged."
         }
       ]
     },
     ".agent/plans/delivery-ledger.md": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
-      "carrier": "C05/cricket-final-native-proof",
-      "reviewed_git_blob_hash": "75dc2d768d12bc7d0093a1db4e5dae98af81de2f",
-      "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
+      "carrier": "Q-09/lifecycle-closeout",
+      "reviewed_git_blob_hash": "e9ccfccd3ccbfa8c2ead3536254e9e1dfc5268b0",
+      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
       "review_date": "2026-09-10",
-      "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged.",
-      "evidence": [
-        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
-        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
-        "Final-main native record .agent/reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json retains three registered-role normal dispatches and same-agent adversarial follow-ups, all six substantive verbatim returns, configured role files/source hashes and explicit limitations. I2 is complete; this evidence/lifecycle PR is pending delivery."
-      ],
-      "remaining": "Merge the bounded final evidence/lifecycle PR after current-head checks and reviews, then extract PR #14. Broader C05, Q-09/Q-22 and C09/C10 acceptance remains open in the controlling plans.",
-      "prior_reviewed_git_blob_hash": "da84cb4b1db7aa4e22c1f1d3a1821e2f38a60f19",
+      "scope": "Inherited source PR states expose current carriers and distinguish custody from semantic delivery.",
+      "prior_reviewed_git_blob_hash": "75dc2d768d12bc7d0093a1db4e5dae98af81de2f",
       "review_history": [
         {
           "reviewed_git_blob_hash": "5c5be6c63b1527fe55a4a4ebec612bf8bdb514f6",
@@ -351,24 +345,24 @@
           "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
           "review_date": "2026-09-10",
           "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "75dc2d768d12bc7d0093a1db4e5dae98af81de2f",
+          "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
+          "review_date": "2026-09-10",
+          "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged."
         }
       ]
     },
     ".agent/plans/proof-programme/parent-plan.md": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
-      "carrier": "C05/cricket-final-native-proof",
-      "reviewed_git_blob_hash": "db44a9b285635b17674f8a341b9c717c5e2191ee",
-      "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
+      "carrier": "Q-09/lifecycle-closeout",
+      "reviewed_git_blob_hash": "fcdb77f7e308b9a54a208fd22c1718179ad2a3f2",
+      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
       "review_date": "2026-09-10",
-      "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged.",
-      "evidence": [
-        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
-        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
-        "Final-main native record .agent/reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json retains three registered-role normal dispatches and same-agent adversarial follow-ups, all six substantive verbatim returns, configured role files/source hashes and explicit limitations. I2 is complete; this evidence/lifecycle PR is pending delivery."
-      ],
-      "remaining": "Merge the bounded final evidence/lifecycle PR after current-head checks and reviews, then extract PR #14. Broader C05, Q-09/Q-22 and C09/C10 acceptance remains open in the controlling plans.",
-      "prior_reviewed_git_blob_hash": "f0639306a6c7bafb6b553d4f39a3c936c73b3a92",
+      "scope": "Q-09 completion is backed by surviving substance in permanent homes and is absent from executable candidates; the parent remains the queue authority.",
+      "prior_reviewed_git_blob_hash": "db44a9b285635b17674f8a341b9c717c5e2191ee",
       "review_history": [
         {
           "reviewed_git_blob_hash": "0ff9d3c127d4dc16606daf587688b910b619283c",
@@ -459,24 +453,24 @@
           "base_revision": "519490123029d68d3865b4061cf3d7726c174c66",
           "review_date": "2026-09-09",
           "scope": "Current interactive execution sequence only: C05 Cricket implementation and installation are delivered, final-template I2 remains outstanding, and its lifecycle reconciliation precedes PR14; Q09/Q22 acceptance and sole queue authority remain unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "db44a9b285635b17674f8a341b9c717c5e2191ee",
+          "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
+          "review_date": "2026-09-10",
+          "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged."
         }
       ]
     },
     ".agent/plans/active/castr-documentation-and-fidelity-correction.md": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
-      "carrier": "C05/cricket-final-native-proof",
-      "reviewed_git_blob_hash": "efde15c9d69508130f5bc07fa4de9861552edc54",
-      "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
+      "carrier": "Q-09/lifecycle-closeout",
+      "reviewed_git_blob_hash": "4b17d1678e0a8f3d79a5793ea7341a718d55de2e",
+      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
       "review_date": "2026-09-10",
-      "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged.",
-      "evidence": [
-        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
-        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
-        "Final-main native record .agent/reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json retains three registered-role normal dispatches and same-agent adversarial follow-ups, all six substantive verbatim returns, configured role files/source hashes and explicit limitations. I2 is complete; this evidence/lifecycle PR is pending delivery."
-      ],
-      "remaining": "Merge the bounded final evidence/lifecycle PR after current-head checks and reviews, then extract PR #14. Broader C05, Q-09/Q-22 and C09/C10 acceptance remains open in the controlling plans.",
-      "prior_reviewed_git_blob_hash": "1e02fcab3aee802032104352b82f309778024c69",
+      "scope": "Current delivery plan records the Q-09 acceptance boundary and keeps the wider correction commission open.",
+      "prior_reviewed_git_blob_hash": "efde15c9d69508130f5bc07fa4de9861552edc54",
       "review_history": [
         {
           "reviewed_git_blob_hash": "8c14b62e02166f3c9c07c37021e60cb7f0010886",
@@ -579,29 +573,36 @@
           "base_revision": "519490123029d68d3865b4061cf3d7726c174c66",
           "review_date": "2026-09-09",
           "scope": "Current owner-corrected delivery sequence only: PR88/PR91 delivered C05 Cricket tooling and installation; PR92 reopens final I2 and routes its proof before PR14 without changing broader commission acceptance."
+        },
+        {
+          "reviewed_git_blob_hash": "efde15c9d69508130f5bc07fa4de9861552edc54",
+          "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
+          "review_date": "2026-09-10",
+          "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged."
         }
       ]
     },
     ".agent/plans/correction-manifests/castr-correction-findings.json": {
       "review_state": "partially-reviewed",
       "disposition": "outstanding",
-      "carrier": "C08/Q22-oracles",
-      "reviewed_git_blob_hash": "9fb355d777bd628c349563296362906f01359649",
-      "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
-      "review_date": "2026-09-09",
-      "scope": "Finding Q-22/error-negative-oracles delivery state only: PR89's bounded Error-oracle merge evidence, final exact source hashes, mutation proof, oracle-only closing proof and retained Q22 residuals.",
-      "evidence": [
-        "Paired documentation/onboarding review verified that Q-22/error-negative-oracles moved from reproduced RED to bounded delivered GREEN only, with PR89 exact head/merge/tree evidence and the remaining generator, integer/export and Pet/Pets/NewPet obligations retained.",
-        "Copilot's exact-head PR90 review found that the delivered bounded oracle row still named the future fixture-generator proof. The finding was accepted; closing proof now names only oracle while the separate generator/regeneration acceptance remains outstanding in the row and Q22 carrier."
-      ],
-      "remaining": "All other finding rows retain their existing state and carrier; Q22 remains open at its full original acceptance.",
-      "prior_reviewed_git_blob_hash": "ae7b00c90757dadce02cabc720e2d3b434ea1343",
+      "carrier": "Q-09/lifecycle-closeout",
+      "reviewed_git_blob_hash": "5217040f1ba2deabbe87a81ee70e731ee46d6582",
+      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
+      "review_date": "2026-09-10",
+      "scope": "Added the distinct current PR #10 finding and decision carriers without changing the immutable baseline records; pending reproduction remains explicit.",
+      "prior_reviewed_git_blob_hash": "9fb355d777bd628c349563296362906f01359649",
       "review_history": [
         {
           "reviewed_git_blob_hash": "ae7b00c90757dadce02cabc720e2d3b434ea1343",
           "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
           "review_date": "2026-09-09",
           "scope": "Finding Q-22/error-negative-oracles delivery state before PR90 review: PR89's bounded Error-oracle merge evidence, final exact source hashes, mutation proof and retained Q22 residuals; superseded because its closing-proof list still included the future fixture generator."
+        },
+        {
+          "reviewed_git_blob_hash": "9fb355d777bd628c349563296362906f01359649",
+          "base_revision": "bd115294cd545db6d6e64f6c4629a5a583e5ded3",
+          "review_date": "2026-09-09",
+          "scope": "Finding Q-22/error-negative-oracles delivery state only: PR89's bounded Error-oracle merge evidence, final exact source hashes, mutation proof, oracle-only closing proof and retained Q22 residuals."
         }
       ]
     },
@@ -901,15 +902,10 @@
       "disposition": "applied",
       "carrier": "C05/cricket-final-native-proof",
       "reviewed_git_blob_hash": "cbab4310b2774c5bb90936cf8ff2ef9f43ccc693",
-      "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
+      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
       "review_date": "2026-09-10",
-      "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged.",
-      "evidence": [
-        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
-        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
-        "Final-main native record .agent/reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json retains three registered-role normal dispatches and same-agent adversarial follow-ups, all six substantive verbatim returns, configured role files/source hashes and explicit limitations. I2 is complete; this evidence/lifecycle PR is pending delivery."
-      ],
-      "remaining": "Merge the bounded final evidence/lifecycle PR after current-head checks and reviews, then extract PR #14. Broader C05, Q-09/Q-22 and C09/C10 acceptance remains open in the controlling plans.",
+      "scope": "Historical Cricket continuation prompt retained at its dated boundary; current routing lives in the active plans and continuity surfaces.",
+      "prior_reviewed_git_blob_hash": "cbab4310b2774c5bb90936cf8ff2ef9f43ccc693",
       "review_history": [
         {
           "reviewed_git_blob_hash": "74825b123189c4cc4d8d7f0ff2d40bf89090015c",
@@ -946,24 +942,30 @@
           "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
           "review_date": "2026-09-10",
           "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "cbab4310b2774c5bb90936cf8ff2ef9f43ccc693",
+          "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
+          "review_date": "2026-09-10",
+          "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged.",
+          "evidence": [
+            "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+            "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+            "Final-main native record .agent/reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json retains three registered-role normal dispatches and same-agent adversarial follow-ups, all six substantive verbatim returns, configured role files/source hashes and explicit limitations. I2 is complete; this evidence/lifecycle PR is pending delivery."
+          ],
+          "remaining": "Merge the bounded final evidence/lifecycle PR after current-head checks and reviews, then extract PR #14. Broader C05, Q-09/Q-22 and C09/C10 acceptance remains open in the controlling plans."
         }
-      ],
-      "prior_reviewed_git_blob_hash": "30986b0768f36af98897df51fba1ce63d97bf408"
+      ]
     },
     ".agent/reports/agentic-engineering/cricket-castr-integrated-boundary-undelivered-2026-09-09.json": {
       "review_state": "partially-reviewed",
       "disposition": "historical",
       "carrier": "C05/cricket-final-native-proof",
       "reviewed_git_blob_hash": "7597c9417dd7ab3ff2a0c6947b2a1559fc979f69",
-      "base_revision": "a97cb1c0e32e1d9c0984143d6154e7bfb66a35e8",
+      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
       "review_date": "2026-09-10",
-      "scope": "Current final-I2 status and remaining delivery route only; prior source-review scope and dated observations remain in review_history.",
-      "evidence": [
-        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
-        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
-        "Final-main native record .agent/reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json retains three registered-role normal dispatches and same-agent adversarial follow-ups, all six substantive verbatim returns, configured role files/source hashes and explicit limitations. I2 is complete; this evidence/lifecycle PR is pending delivery."
-      ],
-      "remaining": "Merge the bounded final evidence/lifecycle PR after current-head checks and reviews, then extract PR #14. Broader C05, Q-09/Q-22 and C09/C10 acceptance remains open in the controlling plans.",
+      "scope": "Dated UNDELIVERED attempt evidence retained with its original limits; it does not override the later final native record.",
+      "prior_reviewed_git_blob_hash": "7597c9417dd7ab3ff2a0c6947b2a1559fc979f69",
       "review_history": [
         {
           "reviewed_git_blob_hash": "7597c9417dd7ab3ff2a0c6947b2a1559fc979f69",
@@ -971,6 +973,18 @@
           "review_date": "2026-09-09",
           "scope": "Complete dated attempt record: exact task and turn identifiers, both requests, persisted terminal messages, absence of observable dispatch/tool/return markers, six UNDELIVERED results and inference limits.",
           "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes."
+        },
+        {
+          "reviewed_git_blob_hash": "7597c9417dd7ab3ff2a0c6947b2a1559fc979f69",
+          "base_revision": "a97cb1c0e32e1d9c0984143d6154e7bfb66a35e8",
+          "review_date": "2026-09-10",
+          "scope": "Current final-I2 status and remaining delivery route only; prior source-review scope and dated observations remain in review_history.",
+          "evidence": [
+            "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+            "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+            "Final-main native record .agent/reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json retains three registered-role normal dispatches and same-agent adversarial follow-ups, all six substantive verbatim returns, configured role files/source hashes and explicit limitations. I2 is complete; this evidence/lifecycle PR is pending delivery."
+          ],
+          "remaining": "Merge the bounded final evidence/lifecycle PR after current-head checks and reviews, then extract PR #14. Broader C05, Q-09/Q-22 and C09/C10 acceptance remains open in the controlling plans."
         }
       ]
     },
@@ -979,15 +993,10 @@
       "disposition": "applied",
       "carrier": "C05/cricket-final-native-proof",
       "reviewed_git_blob_hash": "0eeac5709410516ed7b9128e1c533c1e1dadf113",
-      "base_revision": "a97cb1c0e32e1d9c0984143d6154e7bfb66a35e8",
+      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
       "review_date": "2026-09-10",
-      "scope": "Current final-I2 status and remaining delivery route only; prior source-review scope and dated observations remain in review_history.",
-      "evidence": [
-        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
-        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
-        "Final-main native record .agent/reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json retains three registered-role normal dispatches and same-agent adversarial follow-ups, all six substantive verbatim returns, configured role files/source hashes and explicit limitations. I2 is complete; this evidence/lifecycle PR is pending delivery."
-      ],
-      "remaining": "Merge the bounded final evidence/lifecycle PR after current-head checks and reviews, then extract PR #14. Broader C05, Q-09/Q-22 and C09/C10 acceptance remains open in the controlling plans.",
+      "scope": "Current Cricket invocation contract; programme status and delivery sequencing remain in their operating plans.",
+      "prior_reviewed_git_blob_hash": "0eeac5709410516ed7b9128e1c533c1e1dadf113",
       "review_history": [
         {
           "reviewed_git_blob_hash": "0eeac5709410516ed7b9128e1c533c1e1dadf113",
@@ -995,23 +1004,30 @@
           "review_date": "2026-09-09",
           "scope": "Current Cricket frame contract only: five required context fields, mandatory STANCE control, fail-fast invalid-frame response and panel-count treatment.",
           "remaining": "Final I2 requires three substantive registered-role returns from the final installed templates and adversarial follow-ups to those same agents in a freshly loaded trusted Castr task. Reconcile the atomic lifecycle after that proof; PR #14 follows. The broader C05 family, Q-09/Q-22 and C09/C10 obligations remain open in their named homes."
+        },
+        {
+          "reviewed_git_blob_hash": "0eeac5709410516ed7b9128e1c533c1e1dadf113",
+          "base_revision": "a97cb1c0e32e1d9c0984143d6154e7bfb66a35e8",
+          "review_date": "2026-09-10",
+          "scope": "Current final-I2 status and remaining delivery route only; prior source-review scope and dated observations remain in review_history.",
+          "evidence": [
+            "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
+            "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
+            "Final-main native record .agent/reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json retains three registered-role normal dispatches and same-agent adversarial follow-ups, all six substantive verbatim returns, configured role files/source hashes and explicit limitations. I2 is complete; this evidence/lifecycle PR is pending delivery."
+          ],
+          "remaining": "Merge the bounded final evidence/lifecycle PR after current-head checks and reviews, then extract PR #14. Broader C05, Q-09/Q-22 and C09/C10 acceptance remains open in the controlling plans."
         }
       ]
     },
     ".agent/plans/current/complete/cricket-platform-parity.md": {
       "review_state": "partially-reviewed",
       "disposition": "applied",
-      "carrier": "C05/cricket-final-native-proof",
-      "reviewed_git_blob_hash": "bd01ba5d258a506f3c48a249d8a97fa5bd9b8f69",
-      "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
+      "carrier": "Q-09/lifecycle-closeout",
+      "reviewed_git_blob_hash": "82bf6613c46cccbc3ce97ac9d6b2b18c41dc6ae0",
+      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
       "review_date": "2026-09-10",
-      "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged.",
-      "evidence": [
-        "PR #88 delivered C05 Cricket platform-contract tooling as bd115294. PR #91 delivered the installed definitions and operating documentation from exact reviewed head 48e2194d as merge commit af840d9b; the merge commit's second parent and tree match that reviewed head.",
-        "All 17 PR #91 exact-head check runs passed: 16 repository, security and quality runs plus the successful Copilot review run; all eight authoritative review threads were resolved, exact-head Codex completed without a further finding, Copilot reported no additional change, and gateway, documentation and onboarding reviewers approved that delivery.",
-        "Final-main native record .agent/reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json retains three registered-role normal dispatches and same-agent adversarial follow-ups, all six substantive verbatim returns, configured role files/source hashes and explicit limitations. I2 is complete; this evidence/lifecycle PR is pending delivery."
-      ],
-      "remaining": "Merge the bounded final evidence/lifecycle PR after current-head checks and reviews, then extract PR #14. Broader C05, Q-09/Q-22 and C09/C10 acceptance remains open in the controlling plans.",
+      "scope": "Q-09 cross-reference corrected to point to the current PR #10 custody route; C05 evidence and limitations are unchanged.",
+      "prior_reviewed_git_blob_hash": "bd01ba5d258a506f3c48a249d8a97fa5bd9b8f69",
       "review_history": [
         {
           "reviewed_git_blob_hash": "c255cd3894e8a6718288e1eef4ab49018a330ac3",
@@ -1078,22 +1094,54 @@
           "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
           "review_date": "2026-09-10",
           "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged."
+        },
+        {
+          "reviewed_git_blob_hash": "bd01ba5d258a506f3c48a249d8a97fa5bd9b8f69",
+          "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
+          "review_date": "2026-09-10",
+          "scope": "Final Cricket I2 evidence and atomic lifecycle route only; historical record preserved and broader acceptance unchanged."
         }
-      ],
-      "prior_reviewed_git_blob_hash": "cb88d29183bea4207295b91356b26b008a0a4153"
+      ]
     },
     ".agent/reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json": {
       "review_state": "partially-reviewed",
       "disposition": "applied",
       "carrier": "C05/cricket-final-native-proof",
       "reviewed_git_blob_hash": "e843ddca2ccc875d000423aa34a5c5a4e722544a",
-      "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
+      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
       "review_date": "2026-09-10",
-      "scope": "Complete dated native invocation record and limited semantic spot check; no reliability or perfect adherence claim.",
-      "evidence": [
-        "Final-main native record .agent/reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json retains three registered-role normal dispatches and same-agent adversarial follow-ups, all six substantive verbatim returns, configured role files/source hashes and explicit limitations. I2 is complete; this evidence/lifecycle PR is pending delivery."
-      ],
-      "remaining": "Merge the bounded final evidence/lifecycle PR after current-head checks and reviews, then extract PR #14. Broader C05, Q-09/Q-22 and C09/C10 acceptance remains open in the controlling plans."
+      "scope": "Final native Cricket evidence at its recorded scope; report content and limitations are unchanged.",
+      "prior_reviewed_git_blob_hash": "e843ddca2ccc875d000423aa34a5c5a4e722544a",
+      "review_history": [
+        {
+          "reviewed_git_blob_hash": "e843ddca2ccc875d000423aa34a5c5a4e722544a",
+          "base_revision": "c1e73c1ae1f26ee97af603e45df78be1e775884a",
+          "review_date": "2026-09-10",
+          "scope": "Complete dated native invocation record and limited semantic spot check; no reliability or perfect adherence claim.",
+          "evidence": [
+            "Final-main native record .agent/reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json retains three registered-role normal dispatches and same-agent adversarial follow-ups, all six substantive verbatim returns, configured role files/source hashes and explicit limitations. I2 is complete; this evidence/lifecycle PR is pending delivery."
+          ],
+          "remaining": "Merge the bounded final evidence/lifecycle PR after current-head checks and reviews, then extract PR #14. Broader C05, Q-09/Q-22 and C09/C10 acceptance remains open in the controlling plans."
+        }
+      ]
+    },
+    ".agent/memory/operational/open-questions.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "Q-09/lifecycle-closeout",
+      "reviewed_git_blob_hash": "d27ecf2eb7a2ebbed0c77323d2f93cd4c6f51fd6",
+      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
+      "review_date": "2026-09-10",
+      "scope": "Restored source PR #10's displaced enum/nullability decision as Q-017 while preserving the distinct current Q-016 orchestration direction."
+    },
+    ".agent/plans/current/zod-truth-surface-and-dependency-currency.md": {
+      "review_state": "partially-reviewed",
+      "disposition": "outstanding",
+      "carrier": "Q-09/lifecycle-closeout",
+      "reviewed_git_blob_hash": "9a3d23a977bfb3dd66a9c3eeeab5fddd33cd1e48",
+      "base_revision": "5243e816e2c6622cdec8479422120496d7e22db2",
+      "review_date": "2026-09-10",
+      "scope": "Removed completed Q-09 from the current dependency choice while retaining the Zod programme acceptance and ordering."
     }
   },
   "post_baseline_reconciliations": [
