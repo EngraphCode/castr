@@ -43,6 +43,9 @@
     ".cursor/**",
     ".claude/**",
     ".agents/**",
+    // Untracked local material is ignored by Git, while this gate deliberately
+    // sets `gitignore: false`; keep machine-local scratch outside its footprint.
+    "tmp/**",
     // Archives and generated artefacts everywhere.
     "**/archive/**",
     "**/reference/**",
