@@ -91,6 +91,7 @@
     "@types/node": "^24.13.3",
     "@typescript-eslint/parser": "^8.68.0",
     "@vitest/coverage-v8": "^4.1.11",
+    "ajv-draft-04": "^1.0.0",
     "degit": "^3.8.0",
     "dependency-cruiser": "^18.2.0",
     "eslint": "^10.9.1",
