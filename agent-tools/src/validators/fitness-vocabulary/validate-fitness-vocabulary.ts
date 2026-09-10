@@ -9,11 +9,10 @@
  *
  * Exit 0 = clean. Exit 1 = drift found.
  *
- * Scope: walks all `.md` files under `.agent/`, `docs/`, root `*.md`, and
- * repo `*.md` plan/prompt locations; excludes `archive/`, backup
- * directories, `incoming/` practice boxes, and ADR-144 itself (which is
- * allowed to discuss the retired vocabulary in §Context, §Decision #6,
- * and §Consequences).
+ * Scope: all tracked `.md`, `.ts`, and `.mjs` files minus the documented
+ * exclusions. Candidates come from `git ls-files`, so untracked reference
+ * clones, worktrees, build output, and other machine-local files cannot alter
+ * the result.
  *
  * Forbidden phrases list (case-sensitive unless noted):
  * - "two-threshold", "Two-Threshold", "Two Threshold" (model name retired)
@@ -29,14 +28,17 @@
  * used and that the three-zone revision retired.
  */
 
-import fs from 'node:fs/promises';
+import { execFileSync } from 'node:child_process';
+import { realpath } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { resolveRepoRoot } from '../../core/repo-root.js';
+import { readRequiredRepositorySource } from '../../core/required-repository-source.js';
 import { writeLine } from '../../core/terminal-output.js';
+import { resolveTrustedGit } from '../../core/trusted-git.js';
 
-const repoRoot = resolveRepoRoot(import.meta.url);
+const repoRoot = resolveRepoRoot(import.meta.url, { projectDir: undefined });
 
 const FORBIDDEN_PHRASES = [
   'two-threshold',
@@ -50,7 +52,6 @@ const FORBIDDEN_PHRASES = [
   'not a blocking gate',
 ];
 
-const EXCLUDED_DIRECTORY_NAMES = new Set(['.git', 'coverage', 'dist', 'node_modules']);
 const EXCLUDED_PATH_PREFIXES = ['.agent/practice-core-backup-', '.agent/practice-core/incoming/'];
 const EXCLUDED_PATH_SEGMENTS = ['/archive/'];
 const EXCLUDED_PATH_PREFIXES_EXTRA = ['.agent/experience/', '.remember/'];
@@ -63,6 +64,7 @@ const ALLOWED_FILES = new Set([
   'docs/architecture/architectural-decisions/144-two-threshold-fitness-model.md',
   'agent-tools/src/validators/fitness-vocabulary/validate-fitness-vocabulary.ts',
   'agent-tools/src/validators/fitness-vocabulary/validate-fitness-vocabulary.unit.test.ts',
+  'agent-tools/e2e-tests/fitness-vocabulary.e2e.test.ts',
 ]);
 
 /**
@@ -94,19 +96,6 @@ export function shouldReportMatch(phrase: string, line: string): boolean {
 
 function normalizeRelativePath(relPath: string): string {
   return relPath.split(path.sep).join('/');
-}
-
-function shouldSkipDirectory(relPath: string): boolean {
-  const normalized = normalizeRelativePath(relPath);
-  const directoryName = normalized.split('/').pop() ?? '';
-
-  if (EXCLUDED_DIRECTORY_NAMES.has(directoryName)) {
-    return true;
-  }
-  if (EXCLUDED_PATH_PREFIXES.some((prefix) => normalized.startsWith(prefix))) {
-    return true;
-  }
-  return EXCLUDED_PATH_SEGMENTS.some((segment) => normalized.includes(segment));
 }
 
 /**
@@ -144,6 +133,12 @@ interface ForbiddenPhraseMatch {
   readonly line: string;
 }
 
+export interface TrackedFile {
+  readonly mode: string;
+  readonly objectId: string;
+  readonly path: string;
+}
+
 /**
  * Scan a single file's content for forbidden phrases.
  *
@@ -166,28 +161,189 @@ export function findForbiddenPhrases(content: string): readonly ForbiddenPhraseM
   return findings;
 }
 
-async function walkFiles(relDir = '.'): Promise<readonly string[]> {
-  const absDir = path.join(repoRoot, relDir);
-  const entries = await fs.readdir(absDir, { withFileTypes: true });
-  const files: string[] = [];
+/**
+ * Remove ambient variables that can redirect Git away from the requested repository.
+ *
+ * @param environment - environment inherited by the validator process
+ * @returns a copy without any case variant of a `GIT_*` variable
+ */
+export function sanitiseGitEnvironment(
+  environment: Readonly<NodeJS.ProcessEnv>,
+): NodeJS.ProcessEnv {
+  return Object.fromEntries(
+    Object.entries(environment).filter(([name]) => !name.toUpperCase().startsWith('GIT_')),
+  );
+}
 
-  for (const entry of entries) {
-    const relPath = relDir === '.' ? entry.name : path.join(relDir, entry.name);
-
-    if (entry.isDirectory()) {
-      if (shouldSkipDirectory(relPath)) {
-        continue;
+/**
+ * Parse the NUL-delimited output of `git ls-files --stage`.
+ *
+ * @param output - Git index records
+ * @returns validated stage-zero file records
+ * @throws when a record is malformed or the index contains an unresolved merge stage
+ */
+export function parseTrackedFiles(output: string): readonly TrackedFile[] {
+  return output
+    .split('\u0000')
+    .filter((record) => record.length > 0)
+    .map((record) => {
+      const separator = record.indexOf('\t');
+      const metadata = separator >= 0 ? record.slice(0, separator) : '';
+      const filePath = separator >= 0 ? record.slice(separator + 1) : '';
+      const match = /^(?<mode>[0-7]{6}) (?<objectId>[0-9a-f]{40,64}) (?<stage>[0-3])$/u.exec(
+        metadata,
+      );
+      if (match?.groups === undefined || filePath.length === 0) {
+        throw new Error('Cannot parse a tracked-file record from the Git index.');
       }
-      files.push(...(await walkFiles(relPath)));
-      continue;
-    }
+      if (match.groups.stage !== '0') {
+        throw new Error(
+          `Cannot validate '${filePath}' while the Git index contains unresolved merge stages.`,
+        );
+      }
+      return {
+        mode: match.groups.mode ?? '',
+        objectId: match.groups.objectId ?? '',
+        path: filePath,
+      };
+    });
+}
 
-    if (entry.isFile() && shouldInspectFile(relPath)) {
-      files.push(normalizeRelativePath(relPath));
+function runGit(
+  root: string,
+  arguments_: readonly string[],
+  purpose: string,
+  environment: Readonly<NodeJS.ProcessEnv>,
+): string {
+  try {
+    return execFileSync(resolveTrustedGit(), arguments_, {
+      cwd: root,
+      encoding: 'utf8',
+      env: sanitiseGitEnvironment(environment),
+      maxBuffer: 64 * 1024 * 1024,
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+  } catch (error) {
+    throw new Error(`Cannot ${purpose} for the fitness-vocabulary scan in '${root}'.`, {
+      cause: error,
+    });
+  }
+}
+
+function runGitBytes(
+  root: string,
+  arguments_: readonly string[],
+  purpose: string,
+  input: string,
+  environment: Readonly<NodeJS.ProcessEnv>,
+): Buffer {
+  try {
+    return execFileSync(resolveTrustedGit(), arguments_, {
+      cwd: root,
+      env: sanitiseGitEnvironment(environment),
+      input,
+      maxBuffer: 64 * 1024 * 1024,
+      stdio: ['pipe', 'pipe', 'pipe'],
+    });
+  } catch (error) {
+    throw new Error(`Cannot ${purpose} for the fitness-vocabulary scan in '${root}'.`, {
+      cause: error,
+    });
+  }
+}
+
+function listScanCandidates(
+  root: string,
+  environment: Readonly<NodeJS.ProcessEnv>,
+): readonly TrackedFile[] {
+  const trackedFiles = parseTrackedFiles(
+    runGit(
+      root,
+      ['ls-files', '--cached', '--stage', '-z'],
+      'read the tracked-file index',
+      environment,
+    ),
+  );
+  const candidates = trackedFiles.filter((file) => shouldInspectFile(file.path));
+  for (const candidate of candidates) {
+    if (candidate.mode !== '100644' && candidate.mode !== '100755') {
+      throw new Error(
+        `Cannot scan tracked path '${candidate.path}' with Git mode ${candidate.mode}; ` +
+          'fitness-vocabulary candidates must be regular files.',
+      );
     }
   }
+  return candidates;
+}
 
-  return files;
+async function assertRepositoryRoot(
+  root: string,
+  environment: Readonly<NodeJS.ProcessEnv>,
+): Promise<void> {
+  const topLevel = runGit(
+    root,
+    ['rev-parse', '--show-toplevel'],
+    'resolve the repository top level',
+    environment,
+  ).trim();
+  if (topLevel.length === 0 || topLevel.includes('\n')) {
+    throw new Error(`Cannot resolve the repository top level for the fitness-vocabulary scan.`);
+  }
+  const [requestedRoot, repositoryTopLevel] = await Promise.all([
+    realpath(root),
+    realpath(topLevel),
+  ]);
+  if (requestedRoot !== repositoryTopLevel) {
+    throw new Error(
+      `Cannot scan '${root}': the requested path must be the repository top level '${topLevel}'.`,
+    );
+  }
+}
+
+function readIndexFiles(
+  root: string,
+  files: readonly TrackedFile[],
+  environment: Readonly<NodeJS.ProcessEnv>,
+): ReadonlyMap<string, string> {
+  if (files.length === 0) {
+    return new Map();
+  }
+
+  const input = `${files.map((file) => file.objectId).join('\n')}\n`;
+  const output = runGitBytes(
+    root,
+    ['--no-replace-objects', 'cat-file', '--batch'],
+    'read indexed file content',
+    input,
+    environment,
+  );
+  const contents = new Map<string, string>();
+  let offset = 0;
+
+  for (const file of files) {
+    const headerEnd = output.indexOf(0x0a, offset);
+    if (headerEnd < 0) {
+      throw new Error(`Cannot parse indexed content header for '${file.path}'.`);
+    }
+    const header = output.subarray(offset, headerEnd).toString('utf8');
+    const match = /^(?<objectId>[\da-f]{40,64}) blob (?<size>\d+)$/u.exec(header);
+    const size = Number(match?.groups?.size);
+    if (match?.groups?.objectId !== file.objectId || !Number.isSafeInteger(size) || size < 0) {
+      throw new Error(`Cannot parse indexed content header for '${file.path}'.`);
+    }
+    const contentStart = headerEnd + 1;
+    const contentEnd = contentStart + size;
+    if (contentEnd >= output.length || output[contentEnd] !== 0x0a) {
+      throw new Error(`Cannot parse indexed content body for '${file.path}'.`);
+    }
+    contents.set(file.path, output.subarray(contentStart, contentEnd).toString('utf8'));
+    offset = contentEnd + 1;
+  }
+
+  if (offset !== output.length) {
+    throw new Error('Cannot parse the complete indexed content response.');
+  }
+  return contents;
 }
 
 function formatFileFindings(
@@ -205,46 +361,129 @@ function formatFileFindings(
   return lines;
 }
 
-async function main(): Promise<number> {
-  const files = await walkFiles('.');
-  const allFindings: { file: string; findings: readonly ForbiddenPhraseMatch[] }[] = [];
+type FileFindings = {
+  readonly file: string;
+  readonly findings: readonly ForbiddenPhraseMatch[];
+};
 
-  for (const file of files) {
-    const content = await fs.readFile(path.join(repoRoot, file), 'utf8');
-    const findings = findForbiddenPhrases(content);
-    if (findings.length > 0) {
-      allFindings.push({ file, findings });
-    }
+async function readWorktreeFile(root: string, file: TrackedFile): Promise<string> {
+  try {
+    return await readRequiredRepositorySource(root, file.path);
+  } catch (error) {
+    throw new Error(
+      `Cannot read tracked file '${file.path}' for the fitness-vocabulary scan. ` +
+        'Restore it or commit its deletion; tracked files cannot be skipped.',
+      { cause: error },
+    );
+  }
+}
+
+function requireIndexContent(indexContents: ReadonlyMap<string, string>, file: string): string {
+  const content = indexContents.get(file);
+  if (content === undefined) {
+    throw new Error(`Indexed content is missing for tracked file '${file}'.`);
+  }
+  return content;
+}
+
+function contentFindings(file: string, content: string): FileFindings | undefined {
+  const findings = findForbiddenPhrases(content);
+  return findings.length === 0 ? undefined : { file, findings };
+}
+
+function trackedFileFindings(
+  file: string,
+  worktreeContent: string,
+  indexContent: string,
+): readonly FileFindings[] {
+  if (indexContent === worktreeContent) {
+    const findings = contentFindings(file, worktreeContent);
+    return findings === undefined ? [] : [findings];
   }
 
-  writeLine('\nFitness Vocabulary Consistency Check (ADR-144)');
-  writeLine('════════════════════════════════════════════════\n');
+  return [
+    contentFindings(`${file} (working tree)`, worktreeContent),
+    contentFindings(`${file} (Git index)`, indexContent),
+  ].filter((findings): findings is FileFindings => findings !== undefined);
+}
+
+function reportFindings(
+  allFindings: readonly FileFindings[],
+  output: (line: string) => void,
+): number {
+  output('\nFitness Vocabulary Consistency Check (ADR-144)');
+  output('════════════════════════════════════════════════\n');
 
   if (allFindings.length === 0) {
-    writeLine('\x1b[32m✓ All surfaces use the three-zone vocabulary.\x1b[0m\n');
+    output('\x1b[32m✓ All surfaces use the three-zone vocabulary.\x1b[0m\n');
     return 0;
   }
 
-  const totalOccurrences = allFindings.reduce((sum, f) => sum + f.findings.length, 0);
-  writeLine(
+  const totalOccurrences = allFindings.reduce((sum, item) => sum + item.findings.length, 0);
+  output(
     `\x1b[31m✗ Found ${totalOccurrences} retired-vocabulary occurrence${totalOccurrences === 1 ? '' : 's'} across ${allFindings.length} file${allFindings.length === 1 ? '' : 's'}:\x1b[0m\n`,
   );
 
   for (const { file, findings } of allFindings) {
     for (const outputLine of formatFileFindings(file, findings)) {
-      writeLine(outputLine);
+      output(outputLine);
     }
   }
 
-  writeLine(
+  output(
     '\x1b[33mRemediation: translate each occurrence to the three-zone vocabulary.\nSee ADR-144 §Decision for the canonical zone names.\x1b[0m\n',
   );
   return 1;
 }
 
+/**
+ * Validate the tracked live-document vocabulary of one repository.
+ *
+ * @param root - absolute repository path whose tracked files are validated
+ * @param output - output sink for the human-readable report
+ * @param environment - process environment supplied to Git after sanitisation
+ * @returns zero when clean, otherwise one when forbidden vocabulary is found
+ * @throws when Git enumeration or a tracked-file read fails
+ */
+export async function validateFitnessVocabulary(
+  root: string,
+  output: (line: string) => void = writeLine,
+  environment: Readonly<NodeJS.ProcessEnv> = process.env,
+): Promise<number> {
+  await assertRepositoryRoot(root, environment);
+  const files = listScanCandidates(root, environment);
+  const indexContents = readIndexFiles(root, files, environment);
+  const allFindings: FileFindings[] = [];
+
+  for (const file of files) {
+    const worktreeContent = await readWorktreeFile(root, file);
+    const indexContent = requireIndexContent(indexContents, file.path);
+    allFindings.push(...trackedFileFindings(file.path, worktreeContent, indexContent));
+  }
+
+  return reportFindings(allFindings, output);
+}
+
+/**
+ * Resolve the repository root requested at the executable boundary.
+ *
+ * @param arguments_ - command-line arguments after the script path
+ * @returns the default repository root or the explicit `--root` value
+ * @throws for malformed or unsupported arguments
+ */
+export function parseCliRoot(arguments_: readonly string[]): string {
+  if (arguments_.length === 0) {
+    return repoRoot;
+  }
+  if (arguments_.length === 2 && arguments_[0] === '--root' && arguments_[1] !== undefined) {
+    return path.resolve(arguments_[1]);
+  }
+  throw new Error('Usage: validate-fitness-vocabulary [--root <repository-path>]');
+}
+
 const currentFilePath = fileURLToPath(import.meta.url);
 
 if (process.argv[1] === currentFilePath) {
-  const exitCode = await main();
+  const exitCode = await validateFitnessVocabulary(parseCliRoot(process.argv.slice(2)));
   process.exit(exitCode);
 }
