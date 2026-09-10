@@ -3,7 +3,7 @@ title: Castr documentation correction and fidelity repair
 status: active
 lane: active
 created: 2026-09-06
-last_updated: 2026-09-09
+last_updated: 2026-09-10
 owner_directive: >-
   Implement the owner-approved comprehensive documentation correction and fidelity
   repair: split PR #81, correct all documents, repair all known in-scope fidelity
@@ -81,8 +81,8 @@ not correctness. A changed blob invalidates its prior content-review evidence.
 Disposition vocabulary: applied, already accurate/correct with evidence, historical,
 superseded with evidence, or outstanding with a named carrier. Preserve distinct
 source findings even when one repair closes several. The [delivery ledger](../delivery-ledger.md)
-is the single current PR-disposition home; inventories link to it rather than
-maintaining independent live PR/check statuses.
+provides functional source-PR navigation; inventories do not maintain independent
+live PR/check statuses.
 
 ## Delivery mechanism
 
@@ -101,13 +101,20 @@ Select subsequent slices to deliver their acceptance on main and discharge the
 corresponding inherited-PR obligations. Close a source PR promptly once every
 surviving delta has a verified destination or evidenced supersession. Preserve its
 source and the full acceptance; reducing the count by unverified closure is not
-progress. The ledger owns the live census and closure evidence. PR #88 delivered
+progress. The source PR table exposes current state and functional carrier links.
+PR #88 delivered
 the C05 tooling contract; PR #91 delivered its dependent installation. PR #90
 delivered the preservation record and PR #28 then closed without merge. The C05 Cricket
 atomic plan is in completion staging after all six final-template native returns on
-10 September. PR #92 corrected the premature closeout; the final evidence/lifecycle
-PR must merge before PR #14 extraction. The broader C05 family retains its other
-obligations.
+10 September. PR #92 corrected the premature closeout; PR #93 delivered the final
+evidence/lifecycle record as `07ebdb2322ae52bd0627c2f6d36bf42970260a4e`. PR #14
+dependency ownership is the next recorded source-PR transition. The broader C05
+family retains its other obligations. Q-09 is complete: PR #90 delivered the #28
+preservation record before #28 closed, PRs #94/#95 delivered PR #10's surviving
+validator and exact machine-state boundary, and #10 closed while its recovery branch
+remained intact. PR #10's surviving semantic findings now live in the correction
+findings register, and its displaced enum/nullability decision lives as Q-017. Current
+routes no longer depend on the retained source branch; pending carriers remain open.
 
 Owner-directed Cricket cadence (6 September 2026): run the full registered Codex
 panel in normal and adversarial stances at substantive delivery and architectural
@@ -129,9 +136,9 @@ successful Copilot review run, all eight review threads were resolved, and exact
 Codex/Copilot plus gateway, documentation and onboarding review found no remaining
 blocker. The completed atomic C05 plan preserves the dated native proof, the later
 `UNDELIVERED` attempt and the six substantive final-template returns from 10 September.
-The final I2 evidence and lifecycle reconciliation await PR delivery; PR #14 follows
-that merge. The broader C05 family remains open, and the coordinating agent retains
-this commission, parent queue, ledger and coverage manifests.
+PR #93 delivered the final I2 evidence and lifecycle reconciliation. PR #14 follows
+from current main. The broader C05 family remains open, and the coordinating agent
+retains this commission, parent queue, ledger and coverage manifests.
 
 | Outcome family     | Reviewable outcome and dependencies                                                                                                                                                                                                                                                                                        |
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -331,13 +338,13 @@ want of a new permission that this commission already provides.
   no inherited dependencies, generates a committed fixture, compiles/imports the
   result, accepts conforming data, rejects distinguishing invalid data, and proves
   deterministic output plus actionable failure. Neither is an adoption test.
-- **A6 — closeout (repo-safe):** bounded retrospective accounts for work,
-  interventions, recurrent failures, missing evidence and repairs from existing
-  autonomy records. Retain fitness measures and append workflow observations,
-  never a fabricated composite score. Successor PRs merged, source PR closed when
-  eligible, manifests/lifecycle reconciled to main, consolidation complete and
-  claims closed. The broader programme and autonomous experiment stay unfinished
-  or paused as applicable; commission stops only when these criteria hold.
+- **A6 — closeout (repo-safe):** apply evidenced recurrent-failure lessons to the
+  permanent rules, validators or directives that change future work. Retain fitness
+  measures and useful workflow observations in their operating homes, without a
+  separate retrospective ledger or composite score. Successor PRs merged, source PR
+  closed when eligible, current manifests/lifecycle reconciled to main, consolidation
+  complete and claims closed. The broader programme and autonomous experiment stay
+  unfinished or paused as applicable; commission stops only when these criteria hold.
 
 Run existing formatting, portability, repository validators, by-file reference
 reports and canonical `pnpm check`. Coordinate expensive aggregate runs; keep hooks

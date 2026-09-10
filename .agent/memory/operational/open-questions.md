@@ -47,15 +47,41 @@ items in the gap-rescan backlog §Owner-ruling additions. The permanent homes ar
 not a tombstone here. New questions are appended below by future drains and consolidation
 passes._
 
-### Q-016 — Orchestration above low-level conversion: direction resolved
+### Q-016: Orchestration above low-level conversion — direction resolved
 
-Owner decision, 6 September 2026: separate orchestration from low-level conversion
-utilities, then make the architectural gate effective. Resolver wiring, dependency
-policy and prohibited-import proof land together. Implementation remains outstanding
-under [C08 of the correction plan](../../plans/active/castr-documentation-and-fidelity-correction.md#fidelity-repair-families-and-describing-surfaces);
-this decision is not a claim that boundaries are enforced. The applicable local
-architecture record is ADR-037, not the original question's mistaken ADR-036.
-The [original question](archive/q016-direction-2026-09-06.md) is conserved as history.
+- Raised by: C08 architecture review; owner decision recorded 6 September 2026.
+- Context: separate orchestration from low-level conversion utilities, then make
+  the architectural gate effective. Resolver wiring, dependency policy and
+  prohibited-import proof land together. The applicable local architecture record
+  is ADR-037; the original question's ADR-036 reference was mistaken.
+- Why deferred: the direction is answered, while implementation remains a bounded
+  architecture repair and cannot be represented by a documentation-only status change.
+- Suggested resolution path: deliver the complete C08 resolver, classification,
+  dependency policy and prohibited-import proof together.
+- Status: answered-in-place
+- Linked: [C08 of the correction plan](../../plans/active/castr-documentation-and-fidelity-correction.md#fidelity-repair-families-and-describing-surfaces)
+  and the [conserved original question](archive/q016-direction-2026-09-06.md).
+
+### Q-017: OpenAPI 3.0 `enum:[null]` without `nullable:true` — owner semantics ruling required
+
+- Raised by: PR #15 review round and PR #10 commit
+  `a0a1dda1573cb933b5d97d5471c1e9193c9ef4a2`, 18 July 2026. This was Q-016
+  on the retained PR #10 source branch; it is renumbered because current Q-016
+  owns the distinct orchestration direction.
+- Context: should an OpenAPI 3.0 schema containing `enum: [null]` without
+  `nullable: true` treat null as accepted at the parse boundary? The recorded
+  default applies strict conjunction: the null member is dead under a
+  non-nullable type. The other candidate policies are lenient inference, or
+  fail-fast rejection of the contradictory input.
+- Why deferred: the choice changes user-visible generated output and requires an
+  owner semantics ruling; this custody pass does not decide it by analogy.
+- Suggested resolution path: decide the policy once at the OpenAPI 3.0 parser
+  boundary so every writer inherits the same rule, then add separating parser and
+  writer proofs for the chosen semantics.
+- Status: open
+- Linked: finding `PR10/enum-null-policy-decision` in the
+  [correction findings manifest](../../plans/correction-manifests/castr-correction-findings.json)
+  and the [immutable source question](https://github.com/EngraphCode/castr/blob/2baa1ba50c97a0740c8a3d055bd8a8ca491363d5/.agent/memory/operational/open-questions.md#L89).
 
 _Transplant decisions (delivery framing, single-TS-override, statusline, release tooling,
 hook-matcher precision) are carried by

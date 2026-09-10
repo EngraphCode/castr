@@ -457,8 +457,8 @@ so manifest refactoring lands under cross-truth proof; ADR
 last-but-referencing-both so doctrine records what exists; Q-29 (runtime-performance guidance)
 follows Q-25 by `depends_on`, in the tail with Q-26/Q-27. Sequencing relative to the existing
 queue: after the safety instruments (Q-18/Q-20/Q-22/Q-19), ahead of
-Q-05..Q-09 — owner-adjustable; the rows carry no gates beyond `depends_on`
-within this plan.
+Q-05..Q-08 — owner-adjustable; the rows carry no gates beyond `depends_on`
+within this plan. Q-09 subsequently completed and is no longer part of that choice.
 
 Runtime introspection (`_zod.def` walking) is deliberately NOT adopted as
 the parser: its costs (executing user code, expression-level diagnostics
