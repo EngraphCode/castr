@@ -22,11 +22,19 @@ describe('maybePretty', () => {
     expect(result).toBe('const x = 1;\n');
   });
 
-  test('returns input on syntax error', async () => {
+  test('throws an actionable error naming the offending source on invalid TypeScript', async () => {
     const input = `const x = {{{invalid syntax`;
-    const result = await maybePretty(input);
 
-    expect(result).toBe(input);
+    await expect(maybePretty(input)).rejects.toThrow('Prettier failed to format');
+    await expect(maybePretty(input)).rejects.toThrow(input);
+  });
+
+  test('preserves the formatter error as cause when formatting fails', async () => {
+    const input = `const x = {{{invalid syntax`;
+
+    await expect(maybePretty(input)).rejects.toMatchObject({
+      cause: expect.any(Error),
+    });
   });
 
   test('formats complex TypeScript with types', async () => {
