@@ -68,6 +68,18 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   normalised fixtures are stale against the writer and `validation-parity` imports the
   stale `petstore-3.0/zod.js`; IDENTITY.md admits explicit `additionalProperties` but
   parser/writer do not.
+- **Gate failure at the first push, root cause on main, not in the change:** `check:ci`'s
+  `prettier --check` glob reads gitignored instance-tier files, and `.prettierignore` claims
+  to mirror `.agent/state/collaboration/.gitignore` but omitted `handoffs/` and
+  `comms-archive/`; the 9 September Codex handoff records on this machine (29 files) tripped
+  it. Cured by mirroring the two paths in `.prettierignore` with the tracked README and
+  `.gitkeep` re-included. CI never sees these files, so only local pushes fail — a
+  machine-local gate divergence class worth a validator (`.prettierignore` recomputed
+  from the collaboration `.gitignore`).
+- **Mistake (mine, the pipe-eats-exit-code family in a new coat):** the background push
+  command ended with `echo "push rc=$?"`, so the task reported exit 0 while the push had
+  failed; the failure was only visible because I read the log. Cure unchanged: when the exit
+  status is the signal, let the command be last, or `exit $rc` explicitly.
 - **Draft defect caught in `castr-adr-conservation`:** it deletes the `.agent/directives`
   ADR-045 copy without reconciling its unique content (input/canonical document split,
   vendor-extension signature, drift-harness caveats) into `docs/` ADR-045 —
