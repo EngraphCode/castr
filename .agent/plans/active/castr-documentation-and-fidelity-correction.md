@@ -3,7 +3,7 @@ title: Castr documentation correction and fidelity repair
 status: active
 lane: active
 created: 2026-09-06
-last_updated: 2026-09-10
+last_updated: 2026-09-12
 owner_directive: >-
   Implement the owner-approved comprehensive documentation correction and fidelity
   repair: split PR #81, correct all documents, repair all known in-scope fidelity
@@ -189,7 +189,9 @@ workstream with separate custody; coordinate expensive aggregate runs across bot
 Preserve existing drafts and source custody; resume them when their delivery slot
 opens.
 The [9 September prerequisite sequence](#9-september-q-22-prerequisite-sequence)
-supersedes the initial next-action ordering below this step-back. Its displaced
+supersedes the initial next-action ordering below this step-back, and the
+[12 September value-proof sequence](#12-september-value-proof-sequence) supersedes
+the container ordering for inherited PRs and dirty worktrees. Its displaced
 paragraph is [conserved verbatim](../archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
 No acceptance, gate or review condition is weakened.
 
@@ -260,6 +262,153 @@ acceptance or certify an unexecuted behavioural proof.
 | `principles.md` equates fail-fast with `.parse()` everywhere.                                                                                    | C07 reconciles that proposition across current surfaces: a proof asserting structured rejection is compatible with absolute strictness. Product admission must still fail actionably.                                                                                                                                                            |
 | Sonar main analysis `9605deb3-6bb1-4acd-a16f-70e65c3dc36d` at `6c3b18f0` reports 400 open issues, plus five removed historical rows.             | C09 owns per-issue reconciliation of the captured 405-key census with existing C05/C08 carriers. The security reviewer inspected selected classes, leaving 344 rows individually unadjudicated. Counts and a green new-code gate are not semantic proof; no issue was administratively suppressed. Current PR findings stay with their shepherd. |
 | Dependabot #74 adds `GHSA-4mjr-xmp4-gh2g` for `qs`, alongside #73.                                                                               | Existing QS1 dependency-currency custody owns verified resolution and aggregate proof. Neither alert is closed by this oracle or Sonar review.                                                                                                                                                                                                   |
+
+## 12 September value-proof sequence
+
+Owner direction, 12 September 2026 (verbatim substance): the open PRs and dirty
+worktrees may or may not be of value; the goal is not to merge them, the goal is to
+preserve value, and value must be proven first. Work merges only when it furthers
+the vision and the goal of the repository. Every PR must be fully green and clean
+before merge. Bypassing checks is prohibited in any environment that can run them.
+Analysis and intelligence, not brute force.
+
+This section supersedes the container-by-container ordering that the delivery
+ledger and the 9 September sequence implied for inherited PRs and dirty worktrees.
+Q-22's prerequisites and every original queue acceptance are unchanged.
+
+### Unit of work and proof contract
+
+The unit of work is a **gap** between current main and the doctrine in
+[principles.md](../../directives/principles.md), [VISION.md](../../directives/VISION.md)
+and [IDENTITY.md](../../IDENTITY.md): content lost, invalid or partial output,
+non-deterministic output, a swallowed or degraded error, a widened type, a silent
+ignore. Inherited PRs and worktrees are evidence about gaps, never units of delivery.
+
+A gap is proven when a failing test on unpatched main names it in doctrine terms
+(principles.md §Testing Standards, TDD steps 1 and 2). Proof and preservation land
+together: the red test and its cure in one PR, green and clean, merged by merge
+commit. The cure must match current doctrine, not the doctrine of the branch it was
+taken from, and must not add escape hatches (`as`, `any`, `!`, `Record<string, unknown>`,
+`Object.*`, `Reflect.*`, check-disabling directives) even where main already carries them.
+A container's code is at most a reference for the green step. A claimed gap for
+which no failing test can be constructed is unproven; its container closes with the
+record "no witness constructible".
+
+The red test's assertion is derived from the doctrine clause, the format
+specification, or an independent oracle (the TypeScript compiler for emitted types,
+the installed Zod runtime for emitted schemas, AJV for JSON Schema projections, a
+second generation run for determinism), never from a container's own output: a test
+that merely asserts the candidate's output fails on main for any change and proves
+nothing. Every rejection-shaped test is shown to bite by at least one wrong-cure
+mutant before it counts. "Applies cleanly" and "doctrine-current" are independent
+properties of a hunk: the July branches predate the August and September rulings on
+object admission, the Zod version contract and the integer contract, so each borrowed
+hunk is checked against current doctrine before reuse. A container's closure record
+names which of its review-thread rationales the cure adopted or rejected, so settled
+reasoning is not re-litigated.
+
+Consequences for containers: a source PR closes only when every gap it claims is
+either proven and cured on main, recorded as unprovable, or ruled not wanted by the
+owner. A red test on a branch preserves nothing; until the cure is merged the source
+PR stays open as the custody surface for that gap. Its branch is deleted only when no
+claimed gap remains unresolved and no documentation claim survives; otherwise it is
+retained. A dirty worktree is emptied by the same route or discarded at owner word.
+
+### Gap register, 12 September
+
+Evidence level is `observation` (read directly on main) until the red test exists.
+Sources are candidates for the green step, not authority.
+
+| Gap on main                                                                                                                                                   | Doctrine                                                                                              | Evidence level                                                                                                                                       | Candidate source                                                                                                                                                                                                                                           |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Zod parser drops unrecognised chained methods silently; `.and()`, `.or()`, `.array()` shorthands unparsed                                                     | Fail-fast; input completeness rule 1                                                                  | observation                                                                                                                                          | #13                                                                                                                                                                                                                                                        |
+| Parser rejects explicit `.catchall()` and writer always emits `strictObject`, contradicting IDENTITY.md's carried explicit `additionalProperties`             | No content loss; IDENTITY.md                                                                          | observation                                                                                                                                          | #27 source slice                                                                                                                                                                                                                                           |
+| JSON Schema `$ref` siblings, draft-07 `additionalItems`, content keywords not carried round trip                                                              | No content loss; roadmap JSON Schema commitment                                                       | observation                                                                                                                                          | #16, requires re-derivation against Q-04                                                                                                                                                                                                                   |
+| Wildcard response statuses `1XX`..`5XX` lost at endpoint projection                                                                                           | No content loss                                                                                       | observation                                                                                                                                          | #17                                                                                                                                                                                                                                                        |
+| Default-only operations excluded from generated output with a warning under `spec-compliant`                                                                  | Fail-fast: a warning is a degraded failure; the auto-correct path proves the mapping is representable | observation, policy present on main and kept by #17                                                                                                  | none; remove the exclusion path and carry the default response honestly; the `defaultStatusBehavior` option then has no reason to exist; the cure supersedes `docs/DEFAULT-RESPONSE-BEHAVIOR.md` through an ADR because it reverses a documented behaviour |
+| Component names starting with a digit emit invalid TypeScript and `maybePretty` returns the unformatted source                                                | Invalid output must throw                                                                             | observation, reproduced with #26 applied                                                                                                             | #18 identity slice cures the producer, #26 removes the swallow                                                                                                                                                                                             |
+| Bundle metadata embeds wall-clock time and cwd                                                                                                                | Deterministic output                                                                                  | observation, downgraded: no writer, renderer or context path reads `capturedAt`; whether it reaches any written output or persisted IR is unverified | #15 bundle commit only if the red test shows the values reach an output or persisted artifact; otherwise the row is "no witness constructible"                                                                                                             |
+| TypeScript writer widens enum, const and type-array literals to `string`; `null` type-array members mis-rendered                                              | No invented widening                                                                                  | observation                                                                                                                                          | #15 literal commits                                                                                                                                                                                                                                        |
+| MCP validation errors leave `expected` and `received` empty                                                                                                   | Helpful error messages                                                                                | observation                                                                                                                                          | #15                                                                                                                                                                                                                                                        |
+| Capability traversal skips `patternProperties`, `propertyNames`, `if`/`then`/`else`, `contains`                                                               | Strict everywhere: unsupported semantics pass silently                                                | observation                                                                                                                                          | #12                                                                                                                                                                                                                                                        |
+| Two `isRecord` guards with different semantics; the one in `type-utils/types.ts` rejects `{}` and is imported by 16 product files; `isCastrSchema` duplicates | Single source of truth; an empty properties map is a valid object                                     | observation; the non-empty variant is the one in use                                                                                                 | #20 as reference only: each of the 16 callers is re-derived for whether it relied on non-emptiness before the guards are unified                                                                                                                           |
+| CLI maps invalid option values to `undefined` silently; several accepted options are ignored                                                                  | Validate external boundaries; fail loud                                                               | observation                                                                                                                                          | #17 for value validation; option removal is fresh work: client-era options leave per VISION, every other ignored option is removed and returns only as a tested feature                                                                                    |
+| Committed normalised fixtures differ from the writer's output; `validation-parity` imports the stale `petstore-3.0/zod.js`                                    | Deterministic output; run twice and compare                                                           | observation from the fixture-reproduction worktree                                                                                                   | Q-22 regeneration with the integer contract; principles.md settles the direction: `bigint` and `z.int64()` for TypeScript and Zod, fail fast for JSON Schema                                                                                               |
+| Missing hygiene gate: in-process test suites can import `node:fs`, `node:child_process` and read `process.env`                                                | Testing principle 5, enforced not reviewed                                                            | observation                                                                                                                                          | none; a lint restriction on those imports in in-process test globs, not the #21 scanner                                                                                                                                                                    |
+| 87 product files use `Object.*` or `Reflect.*`                                                                                                                | Type discipline                                                                                       | observation                                                                                                                                          | the Q-14 lint lane at the Q-12 split; fresh cures must not add instances                                                                                                                                                                                   |
+| Recursive catchall emission fails fast in the #27 source                                                                                                      | Pair model rule 4: an implementation gap, not an impossibility                                        | observation                                                                                                                                          | none yet; land the honest error with the admission, queue the implementation                                                                                                                                                                               |
+
+### Container map, 12 September
+
+Measured on disposable copies of `origin/main` at `21e23229`: the container's `lib/`
+diff applied with `git apply --3way`, then its own tests and `tsc --noEmit`. A green
+result proves the container is self-consistent on today's main. It does not prove the
+gap or the cure; only the red test does.
+
+| Container                                     | Gaps claimed                             | Measured state                                                                                                      | Route                                                                                                                  |
+| --------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| #12                                           | traversal                                | applies clean; own tests, type-check and full snapshot suite green                                                  | red test, cure from source re-derived without `Object.*`/`Reflect.*`, close                                            |
+| #13                                           | Zod fail-fast and shorthands             | applies clean; 150 tests green                                                                                      | red tests per slice; the catchall rejection hunk is stale doctrine and is not taken                                    |
+| #15                                           | bundle determinism, literals, MCP errors | applies clean; 136 tests green; 9 integration snapshots move to literal unions                                      | three red tests, three PRs                                                                                             |
+| #17                                           | wildcards, CLI validation                | applies clean; 104 tests green; snapshot operationId count 137 to 116                                               | red tests for wildcards and CLI; the exclusion path is removed rather than kept                                        |
+| #18                                           | identity, extension skipping, security   | 18-file identity subset applies clean and is green together with #26; security slice conflicts with Q-03 in 6 files | red test for digit-leading names; security residual only if a red test for document-level `security: []` fails on main |
+| #20                                           | single `isRecord`                        | one import conflict plus one Q-03 import to repoint                                                                 | red test for `{}` as record                                                                                            |
+| #26                                           | swallowed formatter failure              | applies clean; exposes the producer defect                                                                          | lands after the identity cure                                                                                          |
+| #27                                           | explicit `additionalProperties`          | 80 of 81 lib files apply; one function conflicts where main has a newer partial `writeAdditionalProperties`         | red tests for admission, retention and emission; the 68,000-line fixture deletion is justified separately or not taken |
+| #16                                           | JSON Schema keywords                     | 13 files conflict with Q-04                                                                                         | red tests first; cure written fresh against the current parser                                                         |
+| #11                                           | fidelity harness                         | applies clean, tests green                                                                                          | no gap: Q-02's semantic-outcome runner covers it; close                                                                |
+| #21                                           | logger, runner, scanner                  | logger landed in #100; the Q-07 worktree E2E test passes 12/12                                                      | Q-07 lands via hooks; close; the scanner is superseded by the lint restriction above                                   |
+| #23                                           | Practice transplant                      | 21 files conflict; main is ahead on shared parts                                                                    | no gap in this repository's product; close, retain the branch per the 26 August parity ruling                          |
+| #81                                           | documentation source                     | 9 of 136 records applied                                                                                            | stays open until C09; the `07-test-hygiene.md` numbering defect is a two-line fix on main                              |
+| q07-zod-fixture-runner                        | runner FS I/O in process                 | E2E green in place; one file unformatted                                                                            | commit with hooks, PR, merge                                                                                           |
+| adr-conservation                              | Q-08 C04a                                | applies clean; deletes the directive ADR-045 copy without reconciling its unique content                            | reconcile 045 first, then PR                                                                                           |
+| adr-navigation, planning-authority            | Q-08 C04b; dangling ADR-117 reference    | apply clean                                                                                                         | PR each                                                                                                                |
+| vision-claims                                 | Q-14 C06 doctrine                        | applies clean; refined successor of the #81 copies                                                                  | PR with owner approval of the doctrine text                                                                            |
+| api-contract, local-entry, local-api-examples | C03b/c documentation truth               | fail to apply; PR #85 moved the targets                                                                             | after the CLI option removal and #17, one docs PR re-derived from the three                                            |
+| custody-corrections, operation-security-empty | none; content already on main            | code files equal main                                                                                               | discard at owner word                                                                                                  |
+| fixture-reproduction                          | stale fixtures                           | generated, unformatted, carries the undecided integer output                                                        | record under Q-22; discard the files at owner word                                                                     |
+
+### Parallax checkpoint, 12 September
+
+Parallax core depth, same-context emulated execution, software-engineering profile;
+the audit pass is self-review and not independent assurance. Frames considered:
+the gap ledger (unit is a doctrine gap; adopted), container salvage (unit is a PR;
+rejected because it ports stale doctrine and counts as a proxy), a doctrine-clause
+walk (unit is a clause of principles.md; not executed, see the coverage gap), consumer
+incidence (a gap matters only if a real input hits it; constrained by the owner's
+ruling that usefulness is settled and no usefulness gate is introduced), and knowledge
+preservation (review-thread rationale; folded into the closure-record clause above).
+Bridge claims: green-with-patch supports only "self-consistent on main"; a red test
+supports "gap exists" only when its assertion is doctrine- or oracle-derived; 13
+product-code commits since July support "hunks apply", not "doctrine unchanged".
+Two register rows were downgraded by defeater probes: the `isRecord` unification has
+16 callers to re-derive, and the bundle timestamp has no observed path to output.
+Declared coverage gap: the register is anchored on where the containers pointed; a
+clause-by-clause walk of the doctrine against main has not been done, and C07/C08 are
+its home. Status: provisional. Reopen if a red test can only be written from a
+container's output, if a cure requires a doctrine change, or if the owner reverses a
+recorded determination.
+
+### Order and limits
+
+Content loss first, then invalid output hidden, then determinism and widening, then
+the gaps no container covers. One integrating PR at a time with at most one prepared
+candidate. Every PR carries its red test, specialist review per family, and merges by
+merge commit only when current-head checks, reviews and ruleset conditions hold.
+
+Determinations from the decision lenses, recorded so they are not re-asked: the warned
+exclusion of default-only operations is a defect; fresh cures add no escape hatches;
+the hygiene gate is a lint restriction; the int64 direction follows principles.md's
+own example; #81 stays open until C09; #23's branch is retained. Owner gates that
+remain: discarding the two obsolete worktrees and the regenerated fixture files;
+approving the vision doctrine text; naming any removed CLI option wanted as a feature.
+
+Acceptance for this sequence: every register row has a red test merged with its cure
+or a recorded "no witness constructible"; every inherited PR is closed with that
+record; every dirty worktree is emptied or discarded at owner word; the ledger and
+this section agree with main. Evidence from the 12 September analysis is tracked under
+[`research/inherited-estate-2026-09-12/`](../../research/inherited-estate-2026-09-12/README.md);
+the napkin carries the narrative.
 
 ## Fidelity repair families and describing surfaces
 

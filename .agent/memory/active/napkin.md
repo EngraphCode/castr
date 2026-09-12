@@ -2,6 +2,101 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-09-12 (Codex handover reflection, read-only — Coal weaves Pumice / f67c69)
+
+- **OWNER RULING (verbatim substance): "Bypassing checks in any circumstance is prohibited in
+  environments that can run checks locally; the bypass was specifically for cloud environments
+  with no execution environment, i.e. environments that literally could not run code."**
+  Corrects my proposal to request a scoped `HUSKY=0` grant for eleven preservation commits.
+  Mistake class (mine): doctrine-by-analogy — the 2026-08-31 cloud-only grant generalised into
+  a requestable local option. Cure: on any host that can run hooks, the hooks run; "fresh
+  authorisation" in `no-verify-requires-fresh-authorisation` is not a lever to pull locally.
+  `candidate:` rule amendment naming the local-host prohibition explicitly.
+- **OWNER RULINGS (same turn):** "work is only safe once it is a PR" is true and a separate
+  concern from reaching zero open PRs; zero is reached by careful and thoughtful analysis and
+  merging; every PR fully green and clean before merge; analysis and intelligence, not brute
+  force.
+- **Handover verification (`tmp/temp-handover-doc.md`, gitignored):** 13 open PRs confirmed;
+  PR #26 is MERGEABLE/BEHIND, not conflicting as the handover states; 11 dirty worktrees and
+  their path counts exact; zero unique unpushed commits on any local branch; Q-07 E2E file is
+  unformatted (matches its own "final formatting not rerun"); #81 source manifest 136 records /
+  274 hunks / 9 successor records confirmed. Five stale `Bora seeks Turbulence` claims remain
+  unarchived; no napkin write since 2026-08-31 despite four Codex sessions 6–10 September.
+- **Near-miss (mine): load-avg 14.8 on 14 cores + 14.9 GB swap read as saturation** — the
+  `no-unbounded-host-load` macOS amendment fired on re-read; `top` showed 71% idle, 42% memory
+  free. Measured before surfacing; the Linux-shaped misread the rule documents nearly recurred.
+- **Play seed (association, not finding):** the #81 per-hunk manifest (sha256 + carrier per
+  hunk, recomputable) "looks shaped like" the instrument every other source PR lacks; proposed
+  in the reflection reply as the closure instrument, not asserted as done.
+- **OWNER CORRECTION (second, same session, verbatim substance): "a commit existing somewhere,
+  on some branch makes NOTHING safe, a commit on `main` is safe, and that can only happen via
+  PR. The destination should be merged code if the code should be merged; finding that out
+  will require analysis; it might be that only documentation should survive; it might be that
+  the PR should be closed and the branch deleted. There is no one size fits all solution, and
+  you need to DO THE WORK to find out what is what."** Two mistakes of mine it names: (1)
+  "preservation draft PRs" offered as safety for the dirty worktrees — false safety, an
+  unmerged branch is unreviewed content wherever it sits; (2) asking the owner to ratify
+  "register-row = verified destination" — a blanket policy sought so the count could be
+  reached without per-delta analysis. Both are the same shape as the HUSKY proposal above:
+  reaching for a rule to avoid the cost of the work. Also: proposing a manifest generator
+  BEFORE the second consumer exists violated `consolidate-at-second-consumer`. Cure: the
+  disposition of each PR and each worktree is an OUTPUT of its analysis, never an input;
+  start with the queue's named next row and let the evidence decide merge / docs-only /
+  close-and-delete.
+- **Two-hour first-hand analysis executed (16:07–16:30 wall clock; report in the session
+  scratchpad `disposition-report-2026-09-12.md`, delivered in chat).** Method that worked:
+  one disposable `git worktree add --detach` per PR from `origin/main` under the scratchpad
+  (`pnpm install --frozen-lockfile --offline` takes 6 s from the store), `git apply --3way`
+  of the PR's `lib/` diff, then its own vitest files plus `tsc --noEmit`. Turns "applies
+  cleanly" into "green on main" in under a minute per PR. The repo hook correctly refused
+  `git reset --hard` even on a scratch worktree; fresh worktrees per probe is the compliant
+  shape.
+- **Calibration finding that reframes the whole estate:** of the 475 commits since the
+  July PR bases, 13 touched `lib/src` (63 files). The ledger's "rework after roots/facets"
+  framing was inherited classification: #12, #13, #15, #17, #26 apply clean and go green on
+  main; #20 and #27 need one-file adaptations; only #16 needs real rework (13 files conflict
+  with Q-04). Verify-don't-trust applied to the estate's own ledger.
+- **OWNER CORRECTION (mid-analysis, verbatim substance): "the question was never only
+  'can the PRs be merged', it is 'should the PRs be merged'… Work is merged ONLY if it
+  furthers the vision and goal of the repo."** Cure applied: every row carries a doctrine
+  verdict against principles.md / VISION.md / IDENTITY.md before its mechanical state.
+- **Defects on main surfaced by the "should" pass** (each is a doctrine violation the old
+  PRs cure): digit-leading component names emit invalid TS and `maybePretty` hides it;
+  bundle metadata embeds `new Date()` + `process.cwd()`; two `isRecord` definitions with
+  different semantics; capability traversal skips six keyword positions; CLI silently
+  drops invalid option values; TS writer widens enum literals to `string`; committed
+  normalised fixtures are stale against the writer and `validation-parity` imports the
+  stale `petstore-3.0/zod.js`; IDENTITY.md admits explicit `additionalProperties` but
+  parser/writer do not.
+- **Parallax pass over the value-proof sequence (core depth, same-context) changed the
+  plan in four places and downgraded two register rows.** Defeater probes: the
+  `types.ts` non-empty `isRecord` is the one 16 product files import, so unifying the
+  guards is a per-caller re-derivation, not a swap; `capturedAt`/cwd have no observed path
+  from bundle metadata to any writer or renderer, so the "non-deterministic output" row
+  was an over-claim until a red test shows the values reach an artifact. Proof contract
+  sharpened: assertions derive from doctrine, spec or an independent oracle, never from a
+  container's output; rejection tests must bite a mutant; "applies cleanly" and
+  "doctrine-current" are independent; closure records cite adopted/rejected review
+  rationale. Declared coverage gap: the register is container-anchored; no clause walk
+  of principles.md against main has been done. Same-context audit is not independent
+  assurance; recorded as such in the plan checkpoint.
+- **Gate failure at the first push, root cause on main, not in the change:** `check:ci`'s
+  `prettier --check` glob reads gitignored instance-tier files, and `.prettierignore` claims
+  to mirror `.agent/state/collaboration/.gitignore` but omitted `handoffs/` and
+  `comms-archive/`; the 9 September Codex handoff records on this machine (29 files) tripped
+  it. Cured by mirroring the two paths in `.prettierignore` with the tracked README and
+  `.gitkeep` re-included. CI never sees these files, so only local pushes fail — a
+  machine-local gate divergence class worth a validator (`.prettierignore` recomputed
+  from the collaboration `.gitignore`).
+- **Mistake (mine, the pipe-eats-exit-code family in a new coat):** the background push
+  command ended with `echo "push rc=$?"`, so the task reported exit 0 while the push had
+  failed; the failure was only visible because I read the log. Cure unchanged: when the exit
+  status is the signal, let the command be last, or `exit $rc` explicitly.
+- **Draft defect caught in `castr-adr-conservation`:** it deletes the `.agent/directives`
+  ADR-045 copy without reconciling its unique content (input/canonical document split,
+  vendor-extension signature, drift-harness caveats) into `docs/` ADR-045 —
+  `replace-dont-bridge` requires reconciliation before deletion.
+
 ## 2026-08-31 (PR #72 disposition: scorer harvested and closed — same session, part 11; Dolphin binds Trench / 013aPY)
 
 - **Correction (mine): "the scorer does not exist / was never built" was wrong.** It was

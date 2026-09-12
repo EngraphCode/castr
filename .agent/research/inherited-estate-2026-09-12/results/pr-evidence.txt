@@ -1,0 +1,1023 @@
+################ PR #11  branch=fix/remediation-la-harness-test-truth  local=64feef9e remote=64feef9e base=4be99dae commits=2
+--- commits
+  64feef9e test(transforms): revalidate writer output and add source-assertion hook to fidelity harness
+  169131eb test(transforms): add fidelity harness, strengthen suppression and determinism proofs
+--- cherry (- = patch already on main)
+  + x1
+  + x1
+--- file fate (D=deleted on main, U=unchanged on main since base, C=changed on main since base, =head identical to main)
+  C .agent/directives/DEFINITION_OF_DONE.md
+  D docs/architecture/fidelity-proof-harness.md
+  U lib/src/rendering/templates/schemas-with-metadata.test.ts
+  U lib/src/rendering/templating.unit.test.ts
+  U lib/tests-transforms/__fixtures__/edge-cases/README.md
+  D lib/tests-transforms/__fixtures__/edge-cases/fidelity-smoke.yaml
+  D lib/tests-transforms/__tests__/fidelity-harness.smoke.integration.test.ts
+  D lib/tests-transforms/utils/fidelity-harness.ts
+--- merge-tree conflicts
+  .agent/directives/DEFINITION_OF_DONE.md
+  Auto-merging .agent/directives/DEFINITION_OF_DONE.md
+  CONFLICT (content): Merge conflict in .agent/directives/DEFINITION_OF_DONE.md
+  (rc=1)
+################ PR #12  branch=fix/remediation-lk1-capability-guards  local=7f4d23d6 remote=7f4d23d6 base=61e30973 commits=6
+--- commits
+  7f4d23d6 Merge remote-tracking branch 'origin/main' into fix/remediation-lk1-capability-guards
+  e23156a5 fix(compatibility): skip unreachable branches for literal boolean if schemas
+  30b30d43 fix(compatibility): gate then/else capability traversal on if presence
+  99fe1650 fix(compatibility): make the itemSchema guard error self-contained
+  1d9778b4 fix(compatibility): state itemSchema guard as unimplemented-mapping fail-fast (M9 review follow-up)
+  caf1d6d5 fix(compatibility): complete IR capability traversal and reword itemSchema guard
+--- cherry (- = patch already on main)
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+--- file fate (D=deleted on main, U=unchanged on main since base, C=changed on main since base, =head identical to main)
+  C .agent/memory/active/napkin.md
+  U lib/src/schema-processing/compatibility/integer-target-capabilities.openapi-schemas.ts
+  U lib/src/schema-processing/compatibility/integer-target-capabilities.traversal.ts
+  U lib/src/schema-processing/compatibility/integer-target-capabilities.unit.test.ts
+  U lib/src/schema-processing/compatibility/item-schema-target-capabilities.ts
+  D lib/src/schema-processing/compatibility/item-schema-target-capabilities.unit.test.ts
+--- merge-tree conflicts
+  77d1b3b57d52c1839082d03aa76a4b868edb8caa
+  .agent/memory/active/napkin.md
+  Auto-merging .agent/memory/active/napkin.md
+  CONFLICT (content): Merge conflict in .agent/memory/active/napkin.md
+  (rc=1)
+################ PR #13  branch=fix/remediation-lc-zod-parser-whitelist  local=a18d2943 remote=a18d2943 base=61e30973 commits=11
+--- commits
+  a18d2943 docs(napkin): record the .array() shorthand and union-optionality lane lessons
+  22c41354 fix(zod-parser): parse the .array() shorthand and hoist union member optionality
+  72814346 Merge remote-tracking branch 'origin/main' into fix/remediation-lc-zod-parser-whitelist
+  909457d3 docs(napkin): record the .or() union-shorthand lane lessons
+  58e8a9b5 fix(zod-parser): parse the .or() union shorthand into anyOf IR
+  5a2a14af fix(zod-parser): parse .and() chained onto z.intersection()
+  1815bc7e docs(napkin): record lane L-C product follow-up candidates
+  c6dd808e fix(zod-parser): close six review-identified silent-loss and lockstep gaps
+  8f91b255 fix(zod-parser): capture describe on composite schemas (C5 review follow-up)
+  6d6485ba fix(zod-parser): close intersection silent-drop paths (C5 review follow-up)
+  0203296d fix(zod-parser): fail fast on unrecognised constructs instead of silent drops
+--- cherry (- = patch already on main)
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+--- file fate (D=deleted on main, U=unchanged on main since base, C=changed on main since base, =head identical to main)
+  C .agent/memory/active/napkin.md
+  D lib/src/schema-processing/parsers/zod/ast/zod-ast.literals.ts
+  U lib/src/schema-processing/parsers/zod/ast/zod-ast.ts
+  U lib/src/schema-processing/parsers/zod/composition/zod-parser.composition.ts
+  U lib/src/schema-processing/parsers/zod/composition/zod-parser.composition.unit.test.ts
+  D lib/src/schema-processing/parsers/zod/composition/zod-parser.enum.ts
+  D lib/src/schema-processing/parsers/zod/composition/zod-parser.fail-fast.unit.test.ts
+  U lib/src/schema-processing/parsers/zod/composition/zod-parser.intersection.ts
+  U lib/src/schema-processing/parsers/zod/composition/zod-parser.intersection.unit.test.ts
+  U lib/src/schema-processing/parsers/zod/composition/zod-parser.union.ts
+  U lib/src/schema-processing/parsers/zod/composition/zod-parser.union.unit.test.ts
+  D lib/src/schema-processing/parsers/zod/modifiers/zod-parser.chain-whitelist.ts
+  U lib/src/schema-processing/parsers/zod/modifiers/zod-parser.constraints.extra.unit.test.ts
+  U lib/src/schema-processing/parsers/zod/modifiers/zod-parser.constraints.ts
+  U lib/src/schema-processing/parsers/zod/modifiers/zod-parser.defaults.ts
+  U lib/src/schema-processing/parsers/zod/modifiers/zod-parser.meta.ts
+  D lib/src/schema-processing/parsers/zod/types/zod-parser.fail-fast.unit.test.ts
+  U lib/src/schema-processing/parsers/zod/types/zod-parser.object.ts
+  U lib/src/schema-processing/parsers/zod/types/zod-parser.primitives.chain.ts
+  U lib/src/schema-processing/parsers/zod/types/zod-parser.primitives.ts
+  U lib/src/schema-processing/parsers/zod/zod-constants.ts
+  U lib/src/schema-processing/parsers/zod/zod-parser.core.ts
+  U lib/src/shared/utils/index.ts
+  D lib/src/shared/utils/strings/regex-escape.ts
+  U lib/tests-fixtures/zod-parser/happy-path/constraints.expected.json
+  U lib/tests-transforms/__tests__/scenario-2-zod-roundtrip.integration.test.ts
+--- merge-tree conflicts
+  dee9cb88a9d8af986fc448b18bd1e2211895506c
+  .agent/memory/active/napkin.md
+  Auto-merging .agent/memory/active/napkin.md
+  CONFLICT (content): Merge conflict in .agent/memory/active/napkin.md
+  (rc=1)
+################ PR #15  branch=fix/remediation-lkbatch-micro-fixes  local=529a7a70 remote=529a7a70 base=61e30973 commits=7
+--- commits
+  529a7a70 Merge remote-tracking branch 'origin/main' into fix/remediation-lkbatch-micro-fixes
+  aa64bec7 fix(typescript-writer): render runtime null type-array members as the null type
+  72939c9a fix(writers): honour conjunctive keyword semantics and drop clock/cwd from bundle metadata
+  2d5c9cfd fix(typescript-writer): close silent widening + integer semantics in literal emission
+  6633c884 fix(typescript-writer): emit literal unions for enum, const, type arrays
+  ae3f4fb4 fix(load-openapi-document): inject capture context into bundle metadata
+  9afa67ae fix(validation): populate expected/received on MCP validation errors
+--- cherry (- = patch already on main)
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+--- file fate (D=deleted on main, U=unchanged on main since base, C=changed on main since base, =head identical to main)
+  C .agent/memory/active/napkin.md
+  U lib/src/schema-processing/writers/typescript/type-writer.integer-semantics.unit.test.ts
+  D lib/src/schema-processing/writers/typescript/type-writer.null-type-member.integration.test.ts
+  U lib/src/schema-processing/writers/typescript/type-writer.unit.test.ts
+  U lib/src/schema-processing/writers/typescript/type-writer/core.ts
+  D lib/src/schema-processing/writers/typescript/type-writer/literal-token-resolution.ts
+  D lib/src/schema-processing/writers/typescript/type-writer/literal-types.ts
+  U lib/src/shared/load-openapi-document.test.ts
+  U lib/src/shared/load-openapi-document/bundle/bundle-infrastructure.test.ts
+  U lib/src/shared/load-openapi-document/bundle/bundle-infrastructure.ts
+  U lib/src/shared/load-openapi-document/bundle/bundle-metadata.types.ts
+  U lib/src/shared/load-openapi-document/metadata.test.ts
+  U lib/src/validation/mcp-error-formatting.test.ts
+  U lib/src/validation/mcp-error-formatting.ts
+  U lib/tests-snapshot/edge-cases/array-default-values.test.ts
+  U lib/tests-snapshot/edge-cases/jsdoc.test.ts
+  U lib/tests-snapshot/endpoints/errors-responses.test.ts
+  C lib/tests-snapshot/integration/__snapshots__/generateZodClientFromOpenAPI.test.ts.snap
+  C lib/tests-snapshot/integration/__snapshots__/samples.test.ts.snap
+  U lib/tests-snapshot/options/generation/__snapshots__/group-strategy.test.ts.snap
+  U lib/tests-snapshot/options/validation/enum-null.test.ts
+  U lib/tests-snapshot/schemas/composition/allOf-oneOf-anyOf-single-ref.test.ts
+  U lib/tests-snapshot/schemas/composition/anyOf-behavior.test.ts
+  U lib/tests-snapshot/schemas/composition/array-oneOf-discriminated-union.test.ts
+  U lib/tests-snapshot/utilities/openApiToTypescript.test.ts
+--- merge-tree conflicts
+  c10fae7adaecc20d2548594b4f9a96610c3e9836
+  .agent/memory/active/napkin.md
+  Auto-merging .agent/memory/active/napkin.md
+  CONFLICT (content): Merge conflict in .agent/memory/active/napkin.md
+  Auto-merging lib/tests-snapshot/integration/__snapshots__/generateZodClientFromOpenAPI.test.ts.snap
+  Auto-merging lib/tests-snapshot/integration/__snapshots__/samples.test.ts.snap
+  (rc=1)
+################ PR #16  branch=fix/remediation-lf-json-schema-fidelity  local=f94065e4 remote=f94065e4 base=61e30973 commits=8
+--- commits
+  f94065e4 fix(json-schema): carry boolean sub-schemas at every nested position into the ir
+  26ba2d0f fix(json-schema): skip capability assertions on statically unreachable conditional branches
+  c1d1791b Merge remote-tracking branch 'origin/main' into fix/remediation-lf-json-schema-fidelity
+  fba653bc fix(json-schema): map draft 07 additionalItems to 2020-12 items and guard the position
+  912644d4 fix(json-schema): restrict the draft 07 $ref-sibling guard to schema positions
+  64ad35dc fix(json-schema): apply PR review round across parser, IR, and writer surfaces
+  45d209f9 fix(json-schema): carry $ref siblings at every nesting position (H4 review follow-up)
+  1bfbdd95 fix(schema-processing): carry and emit JSON Schema keywords faithfully (H1/H2/H4/L9-L14)
+--- cherry (- = patch already on main)
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+--- file fate (D=deleted on main, U=unchanged on main since base, C=changed on main since base, =head identical to main)
+  C .agent/README.md
+  U .agent/acceptance-criteria/json-schema-and-parity-acceptance-criteria.md
+  C .agent/memory/active/napkin.md
+  U lib/src/schema-processing/conversion/json-schema/convert-schema.test.ts
+  U lib/src/schema-processing/conversion/json-schema/keywords/keyword-array.ts
+  U lib/src/schema-processing/conversion/json-schema/keywords/keyword-object.ts
+  C lib/src/schema-processing/index.ts
+  U lib/src/schema-processing/ir/models/schema.ts
+  U lib/src/schema-processing/ir/validation/validators.schema.ts
+  C lib/src/schema-processing/parsers/json-schema/index.ts
+  C lib/src/schema-processing/parsers/json-schema/index.unit.test.ts
+  C lib/src/schema-processing/parsers/json-schema/json-schema-parser.2020-keywords.ts
+  C lib/src/schema-processing/parsers/json-schema/json-schema-parser.core.ts
+  U lib/src/schema-processing/parsers/json-schema/json-schema-parser.core.unit.test.ts
+  C lib/src/schema-processing/parsers/json-schema/json-schema-parser.helpers.ts
+  C lib/src/schema-processing/parsers/json-schema/json-schema-parser.normalization.unit.test.ts
+  C lib/src/schema-processing/parsers/json-schema/json-schema-parser.object-fields.ts
+  U lib/src/schema-processing/parsers/json-schema/json-schema-parser.object-fields.unit.test.ts
+  D lib/src/schema-processing/parsers/json-schema/json-schema-parser.ref-siblings.unit.test.ts
+  C lib/src/schema-processing/parsers/json-schema/json-schema-parser.types.ts
+  U lib/src/schema-processing/parsers/json-schema/normalization/index.ts
+  D lib/src/schema-processing/parsers/json-schema/normalization/json-schema-parser.normalization.apply.ts
+  C lib/src/schema-processing/parsers/json-schema/normalization/json-schema-parser.normalization.helpers.ts
+  U lib/src/schema-processing/parsers/json-schema/normalization/json-schema-parser.normalization.refs.ts
+  C lib/src/schema-processing/parsers/json-schema/normalization/json-schema-parser.normalization.ts
+  C lib/src/schema-processing/parsers/json-schema/normalization/json-schema-parser.normalization.types.ts
+  D lib/src/schema-processing/parsers/openapi/builder.core.ref-siblings.unit.test.ts
+  U lib/src/schema-processing/parsers/openapi/builder.core.ts
+  C lib/src/schema-processing/writers/json-schema/json-schema-writer.schema.ts
+  C lib/src/schema-processing/writers/json-schema/json-schema-writer.schema.unit.test.ts
+  D lib/src/schema-processing/writers/openapi/schema/openapi-writer.schema.fidelity.unit.test.ts
+  U lib/src/schema-processing/writers/openapi/schema/openapi-writer.schema.ts
+  C lib/src/schema-processing/writers/shared/json-schema-2020-12-fields.ts
+  D lib/src/schema-processing/writers/shared/json-schema-2020-12-fields.unit.test.ts
+  D lib/src/schema-processing/writers/shared/json-schema-fields.metadata.ts
+  C lib/src/schema-processing/writers/shared/json-schema-fields.ts
+  D lib/src/schema-processing/writers/shared/json-schema-fields.unit.test.ts
+  C lib/src/schema-processing/writers/shared/json-schema-object.ts
+  D lib/tests-transforms/__fixtures__/edge-cases/2020-12-content-keywords.json
+  D lib/tests-transforms/__fixtures__/edge-cases/2020-12-ref-siblings.json
+  D lib/tests-transforms/__fixtures__/edge-cases/draft-07-nested-keywords.json
+  D lib/tests-transforms/__tests__/fidelity-json-schema-keywords.integration.test.ts
+--- merge-tree conflicts
+  fb6d1e4a5f6e864a42795aef9ab9ef381281eeb3
+  .agent/memory/active/napkin.md
+  lib/src/schema-processing/parsers/json-schema/index.ts
+  lib/src/schema-processing/parsers/json-schema/json-schema-parser.core.ts
+  lib/src/schema-processing/parsers/json-schema/json-schema-parser.helpers.ts
+  lib/src/schema-processing/parsers/json-schema/json-schema-parser.normalization.unit.test.ts
+  lib/src/schema-processing/parsers/json-schema/json-schema-parser.types.ts
+  lib/src/schema-processing/parsers/json-schema/normalization/json-schema-parser.normalization.helpers.ts
+  lib/src/schema-processing/parsers/json-schema/normalization/json-schema-parser.normalization.ts
+  lib/src/schema-processing/parsers/json-schema/normalization/json-schema-parser.normalization.types.ts
+  lib/src/schema-processing/writers/json-schema/json-schema-writer.schema.ts
+  lib/src/schema-processing/writers/json-schema/json-schema-writer.schema.unit.test.ts
+  lib/src/schema-processing/writers/shared/json-schema-2020-12-fields.ts
+  lib/src/schema-processing/writers/shared/json-schema-fields.ts
+  lib/src/schema-processing/writers/shared/json-schema-object.ts
+  Auto-merging .agent/README.md
+  Auto-merging .agent/memory/active/napkin.md
+  CONFLICT (content): Merge conflict in .agent/memory/active/napkin.md
+  Auto-merging lib/src/schema-processing/index.ts
+  Auto-merging lib/src/schema-processing/parsers/json-schema/index.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/parsers/json-schema/index.ts
+  Auto-merging lib/src/schema-processing/parsers/json-schema/index.unit.test.ts
+  Auto-merging lib/src/schema-processing/parsers/json-schema/json-schema-parser.2020-keywords.ts
+  Auto-merging lib/src/schema-processing/parsers/json-schema/json-schema-parser.core.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/parsers/json-schema/json-schema-parser.core.ts
+  Auto-merging lib/src/schema-processing/parsers/json-schema/json-schema-parser.helpers.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/parsers/json-schema/json-schema-parser.helpers.ts
+  Auto-merging lib/src/schema-processing/parsers/json-schema/json-schema-parser.normalization.unit.test.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/parsers/json-schema/json-schema-parser.normalization.unit.test.ts
+  Auto-merging lib/src/schema-processing/parsers/json-schema/json-schema-parser.object-fields.ts
+  Auto-merging lib/src/schema-processing/parsers/json-schema/json-schema-parser.types.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/parsers/json-schema/json-schema-parser.types.ts
+  Auto-merging lib/src/schema-processing/parsers/json-schema/normalization/json-schema-parser.normalization.helpers.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/parsers/json-schema/normalization/json-schema-parser.normalization.helpers.ts
+  Auto-merging lib/src/schema-processing/parsers/json-schema/normalization/json-schema-parser.normalization.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/parsers/json-schema/normalization/json-schema-parser.normalization.ts
+  Auto-merging lib/src/schema-processing/parsers/json-schema/normalization/json-schema-parser.normalization.types.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/parsers/json-schema/normalization/json-schema-parser.normalization.types.ts
+  Auto-merging lib/src/schema-processing/writers/json-schema/json-schema-writer.schema.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/writers/json-schema/json-schema-writer.schema.ts
+  Auto-merging lib/src/schema-processing/writers/json-schema/json-schema-writer.schema.unit.test.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/writers/json-schema/json-schema-writer.schema.unit.test.ts
+  Auto-merging lib/src/schema-processing/writers/shared/json-schema-2020-12-fields.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/writers/shared/json-schema-2020-12-fields.ts
+  Auto-merging lib/src/schema-processing/writers/shared/json-schema-fields.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/writers/shared/json-schema-fields.ts
+  Auto-merging lib/src/schema-processing/writers/shared/json-schema-object.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/writers/shared/json-schema-object.ts
+  (rc=1)
+################ PR #17  branch=fix/remediation-lh-endpoints-mcp-cli  local=de4abf4d remote=de4abf4d base=61e30973 commits=5
+--- commits
+  de4abf4d Merge remote-tracking branch 'origin/main' into fix/remediation-lh-endpoints-mcp-cli
+  496947e3 fix(mcp): commit to the selected primary success response
+  3c3c2e93 fix(endpoints): filter before capability checks; share primary-success selection
+  20cc1302 fix(endpoints): unify defaultStatusBehavior across MCP, complete success codes, drop console spies
+  bfdbd180 fix(endpoints): preserve wildcard statuses, honor defaultStatusBehavior, validate CLI flags
+--- cherry (- = patch already on main)
+  + x1
+  + x1
+  + x1
+  + x1
+--- file fate (D=deleted on main, U=unchanged on main since base, C=changed on main since base, =head identical to main)
+  C .agent/memory/active/napkin.md
+  C docs/API-REFERENCE.md
+  C docs/DEFAULT-RESPONSE-BEHAVIOR.md
+  D lib/src/cli/helpers.test.ts
+  U lib/src/cli/helpers.ts
+  C lib/src/cli/index.ts
+  U lib/src/endpoints/definition.types.ts
+  U lib/src/endpoints/index.ts
+  C lib/src/index.ts
+  U lib/src/schema-processing/context/endpoints/index.ts
+  U lib/src/schema-processing/context/endpoints/template-context.endpoints.from-ir.ts
+  U lib/src/schema-processing/context/endpoints/template-context.endpoints.from-ir.unit.test.ts
+  U lib/src/schema-processing/context/endpoints/template-context.endpoints.helpers.ts
+  U lib/src/schema-processing/context/endpoints/template-context.status-codes.ts
+  D lib/src/schema-processing/context/endpoints/template-context.status-codes.unit.test.ts
+  C lib/src/schema-processing/context/index.ts
+  U lib/src/schema-processing/context/mcp/index.ts
+  C lib/src/schema-processing/context/mcp/template-context.mcp.from-ir.test.ts
+  U lib/src/schema-processing/context/mcp/template-context.mcp.responses.from-ir.test.ts
+  U lib/src/schema-processing/context/mcp/template-context.mcp.responses.ts
+  U lib/src/schema-processing/context/mcp/template-context.mcp.ts
+  D lib/src/schema-processing/context/template-context.default-status.unit.test.ts
+  U lib/src/schema-processing/context/template-context.ts
+  C lib/src/schema-processing/index.ts
+  C lib/tests-snapshot/integration/__snapshots__/generateZodClientFromOpenAPI.test.ts.snap
+  U lib/tests-snapshot/options/generation/__snapshots__/group-strategy.test.ts.snap
+  U lib/tests-snapshot/spec-compliance/defaut-status-behavior.test.ts
+--- merge-tree conflicts
+  46bde2ea492e4074233abe1123ec9ee563373fa9
+  .agent/memory/active/napkin.md
+  docs/DEFAULT-RESPONSE-BEHAVIOR.md
+  Auto-merging .agent/memory/active/napkin.md
+  CONFLICT (content): Merge conflict in .agent/memory/active/napkin.md
+  Auto-merging docs/API-REFERENCE.md
+  Auto-merging docs/DEFAULT-RESPONSE-BEHAVIOR.md
+  CONFLICT (content): Merge conflict in docs/DEFAULT-RESPONSE-BEHAVIOR.md
+  Auto-merging lib/src/cli/index.ts
+  Auto-merging lib/src/index.ts
+  Auto-merging lib/src/schema-processing/context/index.ts
+  Auto-merging lib/src/schema-processing/context/mcp/template-context.mcp.from-ir.test.ts
+  Auto-merging lib/src/schema-processing/index.ts
+  Auto-merging lib/tests-snapshot/integration/__snapshots__/generateZodClientFromOpenAPI.test.ts.snap
+  (rc=1)
+################ PR #18  branch=fix/remediation-ld-security-and-names  local=9c93ccaa remote=9c93ccaa base=61e30973 commits=7
+--- commits
+  9c93ccaa fix(schema-processing): fail fast on symbol collisions and reject stale flat security
+  ad1432e9 fix(schema-processing): regenerate the samples snapshot on the merged era
+  a49bceec fix(schema-processing): skip x-* specification extensions when iterating responses and paths
+  0fbdc27f Merge remote-tracking branch 'origin/main' into fix/remediation-ld-security-and-names
+  1a2058d8 fix(schema-processing): eliminate prototype-unsafe name maps and emit declared empty security
+  89035ac2 fix(schema-processing): unify code-symbol sanitiser seam and prove security edge cases
+  26319818 fix(schema-processing): preserve security AND-groups and component-name identity
+--- cherry (- = patch already on main)
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+--- file fate (D=deleted on main, U=unchanged on main since base, C=changed on main since base, =head identical to main)
+  C .agent/memory/active/napkin.md
+  U docs/architectural_decision_records/ADR-026-no-string-manipulation-for-parsing.md
+  C= lib/src/architecture/ir-completeness.arch.test.ts
+  C lib/src/index.ts
+  U lib/src/rendering/templates/schemas-with-metadata.test.ts
+  C lib/src/schema-processing/context/index.ts
+  U lib/src/schema-processing/context/mcp/schemas/template-context.mcp.inline-json-schema.from-ir.test.ts
+  U lib/src/schema-processing/context/mcp/schemas/template-context.mcp.inline-json-schema.ts
+  C= lib/src/schema-processing/context/mcp/template-context.mcp.from-ir.test.ts
+  C lib/src/schema-processing/context/mcp/template-context.mcp.security.from-ir.test.ts
+  C lib/src/schema-processing/context/mcp/template-context.mcp.security.from-ir.ts
+  C lib/src/schema-processing/index.ts
+  C lib/src/schema-processing/ir/index.ts
+  C lib/src/schema-processing/ir/models/index.ts
+  C lib/src/schema-processing/ir/models/schema.operations.ts
+  C lib/src/schema-processing/ir/serialization.unit.test.ts
+  D lib/src/schema-processing/ir/validation/operations/validators.security.ts
+  C lib/src/schema-processing/ir/validation/validators.document.ts
+  C lib/src/schema-processing/ir/validation/validators.unit.test.ts
+  U lib/src/schema-processing/parsers/openapi/operations/builder.operations.ts
+  D lib/src/schema-processing/parsers/openapi/operations/builder.operations.unit.test.ts
+  U lib/src/schema-processing/parsers/openapi/operations/builder.parameters.ts
+  U lib/src/schema-processing/parsers/openapi/operations/builder.parameters.unit.test.ts
+  U lib/src/schema-processing/parsers/openapi/operations/builder.request-body.ts
+  U lib/src/schema-processing/parsers/openapi/operations/builder.request-body.unit.test.ts
+  U lib/src/schema-processing/parsers/openapi/operations/builder.responses.ts
+  U lib/src/schema-processing/parsers/openapi/operations/builder.responses.unit.test.ts
+  C lib/src/schema-processing/parsers/openapi/operations/fields/builder.operations.fields.ts
+  U lib/src/schema-processing/parsers/openapi/schemas/builder.enums.ts
+  U lib/src/schema-processing/parsers/openapi/schemas/builder.schemas.ts
+  C lib/src/schema-processing/writers/openapi/openapi-writer.ts
+  C lib/src/schema-processing/writers/openapi/openapi-writer.unit.test.ts
+  C lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.determinism.unit.test.ts
+  C lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.fields.ts
+  C lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.unit.test.ts
+  D lib/src/schema-processing/writers/typescript/components.ts
+  U lib/src/schema-processing/writers/typescript/helpers.ts
+  D lib/src/schema-processing/writers/typescript/helpers.unit.test.ts
+  U lib/src/schema-processing/writers/typescript/index.ts
+  U lib/src/schema-processing/writers/typescript/type-writer/core.ts
+  U lib/src/schema-processing/writers/typescript/typescript.unit.test.ts
+  U lib/src/schema-processing/writers/zod/index.ts
+  D lib/src/shared/openapi/specification-extensions.ts
+  D lib/src/shared/openapi/specification-extensions.unit.test.ts
+  U lib/src/shared/utils/identifier-utils.ts
+  C lib/tests-snapshot/integration/__snapshots__/generateZodClientFromOpenAPI.test.ts.snap
+  C= lib/tests-snapshot/integration/__snapshots__/samples.test.ts.snap
+  U lib/tests-snapshot/naming/name-with-special-characters.test.ts
+  D lib/tests-transforms/__fixtures__/edge-cases/dotted-component-name.yaml
+  D lib/tests-transforms/__fixtures__/edge-cases/empty-string-descriptions.yaml
+  D lib/tests-transforms/__fixtures__/edge-cases/security-and-group.yaml
+  D lib/tests-transforms/__fixtures__/edge-cases/security-document-empty.yaml
+  D lib/tests-transforms/__fixtures__/edge-cases/security-optional-and-public.yaml
+  D lib/tests-transforms/__tests__/fidelity-security-and-names.integration.test.ts
+  C= lib/tests-transforms/__tests__/parser-field-coverage.integration.test.ts
+--- merge-tree conflicts
+  5f7c8a5cd55ef3bad0c9319ee4ebfd7c193c84e1
+  .agent/memory/active/napkin.md
+  lib/src/schema-processing/context/mcp/template-context.mcp.security.from-ir.ts
+  lib/src/schema-processing/ir/models/schema.operations.ts
+  lib/src/schema-processing/ir/validation/validators.document.ts
+  lib/src/schema-processing/parsers/openapi/operations/fields/builder.operations.fields.ts
+  lib/src/schema-processing/writers/openapi/openapi-writer.ts
+  lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.fields.ts
+  Auto-merging .agent/memory/active/napkin.md
+  CONFLICT (content): Merge conflict in .agent/memory/active/napkin.md
+  Auto-merging lib/src/index.ts
+  Auto-merging lib/src/schema-processing/context/index.ts
+  Auto-merging lib/src/schema-processing/context/mcp/template-context.mcp.security.from-ir.test.ts
+  Auto-merging lib/src/schema-processing/context/mcp/template-context.mcp.security.from-ir.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/context/mcp/template-context.mcp.security.from-ir.ts
+  Auto-merging lib/src/schema-processing/index.ts
+  Auto-merging lib/src/schema-processing/ir/index.ts
+  Auto-merging lib/src/schema-processing/ir/models/index.ts
+  Auto-merging lib/src/schema-processing/ir/models/schema.operations.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/ir/models/schema.operations.ts
+  Auto-merging lib/src/schema-processing/ir/serialization.unit.test.ts
+  Auto-merging lib/src/schema-processing/ir/validation/validators.document.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/ir/validation/validators.document.ts
+  Auto-merging lib/src/schema-processing/ir/validation/validators.unit.test.ts
+  Auto-merging lib/src/schema-processing/parsers/openapi/operations/fields/builder.operations.fields.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/parsers/openapi/operations/fields/builder.operations.fields.ts
+  Auto-merging lib/src/schema-processing/writers/openapi/openapi-writer.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/writers/openapi/openapi-writer.ts
+  Auto-merging lib/src/schema-processing/writers/openapi/openapi-writer.unit.test.ts
+  Auto-merging lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.determinism.unit.test.ts
+  Auto-merging lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.fields.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.fields.ts
+  Auto-merging lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.unit.test.ts
+  Auto-merging lib/tests-snapshot/integration/__snapshots__/generateZodClientFromOpenAPI.test.ts.snap
+  (rc=1)
+################ PR #20  branch=fix/remediation-le-single-source-guards  local=9e29c4df remote=9e29c4df base=b62d73ab commits=3
+--- commits
+  9e29c4df Merge remote-tracking branch 'origin/main' into fix/remediation-le-single-source-guards
+  b870c5d4 docs(napkin): conserve the lane-session napkin captures at safe pause
+  881f6fb2 fix(shared): single-source isRecord and isCastrSchema type guards
+--- cherry (- = patch already on main)
+  + x1
+  + x1
+--- file fate (D=deleted on main, U=unchanged on main since base, C=changed on main since base, =head identical to main)
+  C .agent/memory/active/napkin.md
+  U lib/examples/custom/openapi/v3.1/multi-auth.yaml
+  U lib/src/schema-processing/context/mcp/schemas/template-context.mcp.inline-json-schema.ts
+  U lib/src/schema-processing/context/mcp/schemas/template-context.mcp.schemas.json-schema.ts
+  U lib/src/schema-processing/context/mcp/template-context.mcp.parameters.ts
+  U lib/src/schema-processing/context/schemas/template-context.schemas.ts
+  C lib/src/schema-processing/ir/serialization.ts
+  U lib/src/schema-processing/ir/validation/content/validators.content.ts
+  C lib/src/schema-processing/ir/validation/validators.document.ts
+  U lib/src/schema-processing/ir/validation/validators.schema.ts
+  U lib/src/schema-processing/parsers/openapi/components/builder.circular.ts
+  U lib/src/schema-processing/parsers/openapi/components/builder.dependency-graph.ts
+  U lib/src/schema-processing/parsers/openapi/components/builder.media-type-components.ts
+  C lib/src/schema-processing/parsers/openapi/index.ts
+  U lib/src/schema-processing/parsers/openapi/openapi-document.object-semantics.schemas.ts
+  U lib/src/schema-processing/parsers/openapi/operations/builder.media-types.ts
+  U lib/src/schema-processing/writers/openapi/openapi-validator.ts
+  U lib/src/shared/doctor/prefix-nonstandard.ts
+  C lib/src/shared/doctor/preflight-validator.ts
+  U lib/src/shared/index.ts
+  U lib/src/shared/load-openapi-document/additional-operations-validation/index.ts
+  U lib/src/shared/openapi/access/schema-component-access.ts
+  U lib/src/shared/openapi/access/schema-shape-guards.ts
+  U lib/src/shared/openapi/version.ts
+  D lib/src/shared/openapi/version.unit.test.ts
+  U lib/src/shared/type-utils/index.ts
+  U lib/src/shared/type-utils/type-guards.ts
+  U lib/src/shared/type-utils/type-guards.unit.test.ts
+  U lib/src/shared/type-utils/types.ts
+  U lib/tests-helpers/openapi-assertions.ts
+  C lib/tests-snapshot/integration/__snapshots__/samples.test.ts.snap
+  D lib/tests-transforms/__tests__/fidelity-empty-properties.integration.test.ts
+--- merge-tree conflicts
+  265ca088c6160efa832a68f45bbdbe238218b7bf
+  .agent/memory/active/napkin.md
+  lib/src/schema-processing/ir/serialization.ts
+  Auto-merging .agent/memory/active/napkin.md
+  CONFLICT (content): Merge conflict in .agent/memory/active/napkin.md
+  Auto-merging lib/src/schema-processing/ir/serialization.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/ir/serialization.ts
+  Auto-merging lib/src/schema-processing/ir/validation/validators.document.ts
+  Auto-merging lib/src/schema-processing/parsers/openapi/index.ts
+  Auto-merging lib/src/shared/doctor/preflight-validator.ts
+  Auto-merging lib/tests-snapshot/integration/__snapshots__/samples.test.ts.snap
+  (rc=1)
+################ PR #21  branch=fix/remediation-li-test-hygiene  local=4a869f98 remote=4a869f98 base=61e30973 commits=7
+--- commits
+  4a869f98 fix(tests): guard cwd touches and object-api global mutation in hygiene scan
+  5c8935b7 fix(tests): strip type-assertion wrappers in hygiene scanner base resolution
+  6746b8a9 fix(tests): widen hygiene guard to reject process.env reads in gated tests
+  c27d2465 Merge remote-tracking branch 'origin/main' into fix/remediation-li-test-hygiene
+  b578ec81 fix(tests): harden hygiene guard via ast scan, lock fixture equality, reclassify logger suite
+  9c6a9906 fix(tests): close guard gaps for module mocking and gate-glob coverage
+  8ac48453 fix(tests): remove FS IO and console mutation from in-process suites
+--- cherry (- = patch already on main)
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+--- file fate (D=deleted on main, U=unchanged on main since base, C=changed on main since base, =head identical to main)
+  C .agent/memory/active/napkin.md
+  D lib/src/architecture/test-hygiene-scanner.ts
+  D lib/src/architecture/test-hygiene-scanner.unit.test.ts
+  D lib/src/architecture/test-hygiene.arch.test.ts
+  U lib/src/schema-processing/ast/ast-builder.test.ts
+  U lib/src/schema-processing/parsers/zod/zod-parser.runner.integration.test.ts
+  C= lib/src/shared/utils/logger.integration.test.ts
+  D lib/src/shared/utils/logger.test.ts
+  C lib/src/shared/utils/logger.ts
+  D lib/tests-e2e/zod-parser-fixtures.test.ts
+  U lib/tests-fixtures/zod-parser/happy-path/unknown-key-semantics.expected.json
+--- merge-tree conflicts
+  8cd105386879ef647be6dc8532c958213e75be18
+  .agent/memory/active/napkin.md
+  lib/src/shared/utils/logger.ts
+  Auto-merging .agent/memory/active/napkin.md
+  CONFLICT (content): Merge conflict in .agent/memory/active/napkin.md
+  Auto-merging lib/src/shared/utils/logger.ts
+  CONFLICT (content): Merge conflict in lib/src/shared/utils/logger.ts
+  (rc=1)
+################ PR #23  branch=docs/resonance-practice-imports  local=5fa82e88 remote=5fa82e88 base=35efaa45 commits=14
+--- commits
+  5fa82e88 docs(handoff): session capture and record closeouts at the sfb succession
+  7f49b4bc Merge remote-tracking branch 'origin/main' into docs/resonance-practice-imports
+  e86708f4 fix(review): fold PR #23 round 3 — wake-not-verdict ALL-GREEN semantics; lock hash refresh
+  88bec5ec Merge remote-tracking branch 'origin/main' into docs/resonance-practice-imports
+  e1839445 fix(review): fold PR #23 round 2 — merge-state in ALL-GREEN; comment-proof TOML tracking
+  cbbde8a3 fix(validators): decode escape spellings in quoted toml keys
+  96a0fa12 docs(continuity): session-close capture — loss-scan homes, succession state, metaloss record
+  098fafa9 fix(review): fold PR #23 round 1 — close the TOML-key gate bypass; implement the ALL-GREEN exit
+  9fa057de Merge remote-tracking branch 'origin/main' into docs/resonance-practice-imports
+  568c420a docs(continuity): record the owner push-hold and resume trigger; bank the gate evidence
+  ef75d54d docs(continuity): author the resonance-practice-imports thread record
+  b295a6c6 feat(transplant): re-sync the pr-lifecycle skill; fold the five-reviewer battery
+  3277ed92 feat(transplant): import the three-tier fleet-composition framework from resonance
+  eee2a735 feat(transplant): bring the concept-exploration skill from resonance
+--- cherry (- = patch already on main)
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+  + x1
+--- file fate (D=deleted on main, U=unchanged on main since base, C=changed on main since base, =head identical to main)
+  C .agent/directives/AGENT.md
+  U .agent/directives/principles.md
+  D .agent/experience/2026-07-18-instruments-that-lie-and-records-that-confess.md
+  C .agent/memory/active/napkin.md
+  C .agent/memory/executive/cross-platform-agent-surface-matrix.md
+  C .agent/memory/executive/invoke-code-experts.md
+  C .agent/memory/operational/pending-graduations.md
+  C .agent/memory/operational/repo-continuity.md
+  D .agent/memory/operational/threads/resonance-practice-imports.next-session.md
+  D .agent/memory/operational/threads/statusline-owner-adjustments.next-session.md
+  D .agent/plans/transplant/resonance-practice-imports-2026-07.md
+  D .agent/practice-core/compound-agent-composition-invocation-and-information-preserving-dissolution-2026-07-11.md
+  U .agent/practice-core/decision-records/PDR-124-multi-agent-audit-harness.md
+  D .agent/practice-core/decision-records/PDR-125-adversarial-verification-of-delegated-work.md
+  D .agent/practice-core/decision-records/PDR-126-machine-identities-for-agent-fleets.md
+  D .agent/practice-core/decision-records/PDR-140-we-do-not-discard-information.md
+  D .agent/practice-core/decision-records/PDR-141-compound-agent-composition-invocation-and-dissolution.md
+  D .agent/practice-core/decision-records/PDR-142-three-tier-fleet-composition.md
+  U .agent/practice-core/decision-records/README.md
+  C .agent/practice-index.md
+  C .agent/research/concept-exploration-practice-transfer-2026-07.md
+  D .agent/rules/adversarially-verify-subagent-output.md
+  U .agent/rules/invoke-reviewers.md
+  D .agent/skills/concept-exploration/SKILL-CANONICAL.md
+  D .agent/skills/lean-task-subagents/SKILL-CANONICAL.md
+  C .agent/skills/pr-lifecycle/SKILL-CANONICAL.md
+  C .agent/sub-agents/README.md
+  D .agent/sub-agents/components/behaviours/worker-reading-discipline.md
+  U .agent/sub-agents/templates/subagent-architect.md
+  D .agent/sub-agents/templates/task-worker.md
+  D .agents/rules/adversarially-verify-subagent-output.md
+  C .agents/skills/engraph-concept-exploration/SKILL.md
+  D .agents/skills/engraph-lean-task-subagents/SKILL.md
+  D .claude/agents/task-worker.md
+  D .claude/rules/adversarially-verify-subagent-output.md
+  C .claude/settings.json
+  C .claude/skills/engraph-concept-exploration/SKILL.md
+  D .claude/skills/engraph-lean-task-subagents/SKILL.md
+  D .codex/agents/task-worker.toml
+  C .codex/config.toml
+  D .cursor/agents/task-worker.md
+  D .cursor/rules/adversarially-verify-subagent-output.mdc
+  C RULES_INDEX.md
+  D agent-tools/src/agent-adapter-generate/agent-projection.ts
+  D agent-tools/src/agent-adapter-generate/agent-projection.unit.test.ts
+  C agent-tools/src/agent-adapter-generate/checker.ts
+  C agent-tools/src/agent-adapter-generate/generator.ts
+  U agent-tools/src/pr-watch/cli.integration.test.ts
+  U agent-tools/src/pr-watch/cli.ts
+  U agent-tools/src/pr-watch/report.ts
+  U agent-tools/src/pr-watch/report.unit.test.ts
+  C agent-tools/src/validators/subagents/validate-subagents-codex-adapter-validation.ts
+  C agent-tools/src/validators/subagents/validate-subagents-codex-instructions.ts
+  C agent-tools/src/validators/subagents/validate-subagents-codex-toml.ts
+  U agent-tools/src/validators/subagents/validate-subagents-helpers.ts
+  D agent-tools/src/validators/subagents/validate-subagents-template-checks.ts
+  C agent-tools/src/validators/subagents/validate-subagents.ts
+  C agent-tools/src/validators/subagents/validate-subagents.unit.test.ts
+  C agent-tools/tests/agent-adapter-generate/generator.unit.test.ts
+  U skills-lock.json
+--- merge-tree conflicts
+  [engraph-semantic-merge] refusing to line-merge .agent/memory/operational/pending-graduations.md: it is a memory/state file whose meaning a git line-merge silently corrupts (stacked entries, dropped sessions, split tables). Do NOT line-merge. Reconcile the CONCEPTS by hand: run the engraph-semantic-merge skill (base/ours/theirs are at `git show :1:.agent/memory/operational/pending-graduations.md` / `:2:.agent/memory/operational/pending-graduations.md` / `:3:.agent/memory/operational/pending-graduations.md`), author the union, then stage the resolved file.
+  [engraph-semantic-merge] refusing to line-merge .agent/memory/executive/invoke-code-experts.md: it is a memory/state file whose meaning a git line-merge silently corrupts (stacked entries, dropped sessions, split tables). Do NOT line-merge. Reconcile the CONCEPTS by hand: run the engraph-semantic-merge skill (base/ours/theirs are at `git show :1:.agent/memory/executive/invoke-code-experts.md` / `:2:.agent/memory/executive/invoke-code-experts.md` / `:3:.agent/memory/executive/invoke-code-experts.md`), author the union, then stage the resolved file.
+  [engraph-semantic-merge] refusing to line-merge .agent/memory/executive/cross-platform-agent-surface-matrix.md: it is a memory/state file whose meaning a git line-merge silently corrupts (stacked entries, dropped sessions, split tables). Do NOT line-merge. Reconcile the CONCEPTS by hand: run the engraph-semantic-merge skill (base/ours/theirs are at `git show :1:.agent/memory/executive/cross-platform-agent-surface-matrix.md` / `:2:.agent/memory/executive/cross-platform-agent-surface-matrix.md` / `:3:.agent/memory/executive/cross-platform-agent-surface-matrix.md`), author the union, then stage the resolved file.
+  [engraph-semantic-merge] refusing to line-merge .agent/memory/active/napkin.md: it is a memory/state file whose meaning a git line-merge silently corrupts (stacked entries, dropped sessions, split tables). Do NOT line-merge. Reconcile the CONCEPTS by hand: run the engraph-semantic-merge skill (base/ours/theirs are at `git show :1:.agent/memory/active/napkin.md` / `:2:.agent/memory/active/napkin.md` / `:3:.agent/memory/active/napkin.md`), author the union, then stage the resolved file.
+  9e6a69bbca035a8d6bfc550300137e2cd53bee55
+  .agent/directives/AGENT.md
+  .agent/memory/active/napkin.md
+  .agent/memory/executive/cross-platform-agent-surface-matrix.md
+  .agent/memory/executive/invoke-code-experts.md
+  .agent/memory/operational/pending-graduations.md
+  .agent/memory/operational/repo-continuity.md
+  .agent/research/concept-exploration-practice-transfer-2026-07.md
+  .agent/skills/pr-lifecycle/SKILL-CANONICAL.md
+  .agent/sub-agents/README.md
+  .agents/skills/engraph-concept-exploration/SKILL.md
+  .claude/skills/engraph-concept-exploration/SKILL.md
+  .codex/config.toml
+  agent-tools/src/agent-adapter-generate/generator.ts
+  agent-tools/src/validators/subagents/validate-subagents-codex-adapter-validation.ts
+  agent-tools/src/validators/subagents/validate-subagents-codex-toml.ts
+  agent-tools/src/validators/subagents/validate-subagents.ts
+  agent-tools/src/validators/subagents/validate-subagents.unit.test.ts
+  agent-tools/tests/agent-adapter-generate/generator.unit.test.ts
+  Auto-merging .agent/directives/AGENT.md
+  CONFLICT (content): Merge conflict in .agent/directives/AGENT.md
+  Auto-merging .agent/memory/active/napkin.md
+  CONFLICT (content): Merge conflict in .agent/memory/active/napkin.md
+  Auto-merging .agent/memory/executive/cross-platform-agent-surface-matrix.md
+  CONFLICT (content): Merge conflict in .agent/memory/executive/cross-platform-agent-surface-matrix.md
+  Auto-merging .agent/memory/executive/invoke-code-experts.md
+  CONFLICT (content): Merge conflict in .agent/memory/executive/invoke-code-experts.md
+  Auto-merging .agent/memory/operational/pending-graduations.md
+  CONFLICT (content): Merge conflict in .agent/memory/operational/pending-graduations.md
+  Auto-merging .agent/memory/operational/repo-continuity.md
+  CONFLICT (content): Merge conflict in .agent/memory/operational/repo-continuity.md
+  Auto-merging .agent/practice-index.md
+  Auto-merging .agent/research/concept-exploration-practice-transfer-2026-07.md
+  CONFLICT (add/add): Merge conflict in .agent/research/concept-exploration-practice-transfer-2026-07.md
+  Auto-merging .agent/skills/pr-lifecycle/SKILL-CANONICAL.md
+  CONFLICT (content): Merge conflict in .agent/skills/pr-lifecycle/SKILL-CANONICAL.md
+  Auto-merging .agent/sub-agents/README.md
+  CONFLICT (content): Merge conflict in .agent/sub-agents/README.md
+  Auto-merging .agents/skills/engraph-concept-exploration/SKILL.md
+  CONFLICT (add/add): Merge conflict in .agents/skills/engraph-concept-exploration/SKILL.md
+  Auto-merging .claude/settings.json
+  Auto-merging .claude/skills/engraph-concept-exploration/SKILL.md
+  CONFLICT (add/add): Merge conflict in .claude/skills/engraph-concept-exploration/SKILL.md
+  Auto-merging .codex/config.toml
+  CONFLICT (content): Merge conflict in .codex/config.toml
+  Auto-merging RULES_INDEX.md
+  Auto-merging agent-tools/src/agent-adapter-generate/checker.ts
+  Auto-merging agent-tools/src/agent-adapter-generate/generator.ts
+  CONFLICT (content): Merge conflict in agent-tools/src/agent-adapter-generate/generator.ts
+  Auto-merging agent-tools/src/validators/subagents/validate-subagents-codex-adapter-validation.ts
+  CONFLICT (content): Merge conflict in agent-tools/src/validators/subagents/validate-subagents-codex-adapter-validation.ts
+  Auto-merging agent-tools/src/validators/subagents/validate-subagents-codex-instructions.ts
+  Auto-merging agent-tools/src/validators/subagents/validate-subagents-codex-toml.ts
+  CONFLICT (content): Merge conflict in agent-tools/src/validators/subagents/validate-subagents-codex-toml.ts
+  Auto-merging agent-tools/src/validators/subagents/validate-subagents.ts
+  CONFLICT (content): Merge conflict in agent-tools/src/validators/subagents/validate-subagents.ts
+  Auto-merging agent-tools/src/validators/subagents/validate-subagents.unit.test.ts
+  CONFLICT (content): Merge conflict in agent-tools/src/validators/subagents/validate-subagents.unit.test.ts
+  Auto-merging agent-tools/tests/agent-adapter-generate/generator.unit.test.ts
+  CONFLICT (content): Merge conflict in agent-tools/tests/agent-adapter-generate/generator.unit.test.ts
+  (rc=1)
+################ PR #26  branch=fix/remediation-lk2-maybe-pretty  local=dc9adddf remote=dc9adddf base=b62d73ab commits=2
+--- commits
+  dc9adddf Merge remote-tracking branch 'origin/main' into fix/remediation-lk2-maybe-pretty
+  5befb8d0 fix(shared): preserve the blocked L-K2 maybePretty work at safe pause
+--- cherry (- = patch already on main)
+  + x1
+--- file fate (D=deleted on main, U=unchanged on main since base, C=changed on main since base, =head identical to main)
+  U lib/src/shared/maybe-pretty.test.ts
+  U lib/src/shared/maybe-pretty.ts
+--- merge-tree conflicts
+  (rc=0)
+################ PR #27  branch=feat/explicit-additional-properties-rebased  local=a48eced8 remote=a48eced8 base=4be99dae commits=4
+--- commits
+  a48eced8 fix(fixtures): remove stale normalized/oak-api after fixture move
+  3dcca7a5 docs: consolidate explicit additionalProperties close-out
+  476b7e2d Consolidate explicit additionalProperties docs
+  df8783d9 Support explicit additionalProperties honestly
+--- cherry (- = patch already on main)
+  + x1
+  + x1
+  + x1
+  + x1
+--- file fate (D=deleted on main, U=unchanged on main since base, C=changed on main since base, =head identical to main)
+  U .agent/IDENTITY.md
+  C .agent/README.md
+  U .agent/acceptance-criteria/zod-output-acceptance-criteria.md
+  U .agent/acceptance-criteria/zod-parser-acceptance-criteria.md
+  U .agent/memory/active/archive/napkin-2026-03-to-04.md
+  U .agent/plans/current/complete/eperusteet-real-spec-validation.md
+  U .agent/plans/current/complete/identity-doctrine-alignment.md
+  U .agent/plans/current/complete/ir-and-runtime-validator-remediation.md
+  U .agent/plans/current/complete/json-schema-parser.md
+  U .agent/plans/current/complete/strict-object-semantics-enforcement.md
+  C .agent/plans/current/paused/explicit-additional-properties-support.md
+  C .agent/plans/roadmap.md
+  C README.md
+  C docs/MIGRATION.md
+  C docs/USAGE.md
+  U docs/architectural_decision_records/ADR-031-zod-output-strategy.md
+  U docs/architectural_decision_records/ADR-032-zod-input-strategy.md
+  U docs/architectural_decision_records/ADR-038-object-unknown-key-semantics.md
+  U docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md
+  U docs/architecture/recursive-unknown-key-semantics.md
+  U docs/architecture/zod-round-trip-limitations.md
+  U lib/scripts/generate-normalized-fixtures.ts
+  U lib/src/characterisation/schema-dependencies.char.test.ts
+  U lib/src/schema-processing/context/mcp/schemas/template-context.mcp.schemas.from-ir.test.ts
+  U lib/src/schema-processing/ir/validation/validators.schema.ts
+  U lib/src/schema-processing/ir/validation/validators.schema.unit.test.ts
+  C lib/src/schema-processing/parsers/json-schema/index.unit.test.ts
+  C lib/src/schema-processing/parsers/json-schema/json-schema-parser.object-fields.ts
+  U lib/src/schema-processing/parsers/json-schema/json-schema-parser.object-fields.unit.test.ts
+  U lib/src/schema-processing/parsers/openapi/builder.core.ts
+  U lib/src/schema-processing/parsers/openapi/builder.core.unit.test.ts
+  U lib/src/schema-processing/parsers/openapi/builder.object-keywords.unit.test.ts
+  C lib/src/schema-processing/parsers/openapi/builder.unit.test.ts
+  U lib/src/schema-processing/parsers/openapi/builder/builder.additional-properties.ts
+  U lib/src/schema-processing/parsers/openapi/builder/builder.documentation.ts
+  U lib/src/schema-processing/parsers/openapi/components/builder.circular.ts
+  U lib/src/schema-processing/parsers/openapi/openapi-document.object-semantics.schemas.ts
+  U lib/src/schema-processing/parsers/zod/README.md
+  U lib/src/schema-processing/parsers/zod/policy/zod-parser.object-policy.ts
+  D lib/src/schema-processing/parsers/zod/policy/zod-parser.object.catchall.ts
+  U lib/src/schema-processing/parsers/zod/types/zod-parser.object.ts
+  U lib/src/schema-processing/parsers/zod/types/zod-parser.object.unit.test.ts
+  U lib/src/schema-processing/parsers/zod/zod-constants.ts
+  U lib/src/schema-processing/parsers/zod/zod-parser.integration.test.ts
+  C lib/src/schema-processing/writers/json-schema/json-schema-writer.document.unit.test.ts
+  C lib/src/schema-processing/writers/json-schema/json-schema-writer.schema.unit.test.ts
+  U lib/src/schema-processing/writers/openapi/components/openapi-writer.components.unit.test.ts
+  C lib/src/schema-processing/writers/openapi/schema/openapi-writer.schema.unit.test.ts
+  C lib/src/schema-processing/writers/shared/json-schema-fields.ts
+  D lib/src/schema-processing/writers/support/zod/catchall-recursion.ts
+  D lib/src/schema-processing/writers/support/zod/dynamic-reference-fail-fast.ts
+  D lib/src/schema-processing/writers/support/zod/permissive-catchall.ts
+  D lib/src/schema-processing/writers/support/zod/properties.recursion.ts
+  U lib/src/schema-processing/writers/typescript/type-writer.unit.test.ts
+  U lib/src/schema-processing/writers/typescript/type-writer/fail-fast.ts
+  U lib/src/schema-processing/writers/zod/README.md
+  D lib/src/schema-processing/writers/zod/__tests__/fail-fast.unit.test.ts
+  D lib/src/schema-processing/writers/zod/__tests__/properties.unit.test.ts
+  D lib/src/schema-processing/writers/zod/__tests__/recursive-catchall.unit.test.ts
+  D lib/src/schema-processing/writers/zod/__tests__/writer.unit.test.ts
+  U lib/src/schema-processing/writers/zod/additional-properties.ts
+  U lib/src/schema-processing/writers/zod/generators/collections.ts
+  U lib/src/schema-processing/writers/zod/index.ts
+  U lib/src/schema-processing/writers/zod/properties.recursion.ts
+  U lib/src/schema-processing/writers/zod/properties.ts
+  D lib/src/shared/zod/permissive-catchall.constants.ts
+  D lib/tests-fixtures/openapi-samples/real-world/oak-api.json
+  U lib/tests-generated/rejection-validation.gen.test.ts
+  U lib/tests-snapshot/edge-cases/array-default-values.test.ts
+  U lib/tests-snapshot/edge-cases/is-main-response.test.ts
+  U lib/tests-snapshot/edge-cases/jsdoc.test.ts
+  U lib/tests-snapshot/edge-cases/main-description-as-fallback.test.ts
+  U lib/tests-snapshot/edge-cases/number-default-as-number.test.ts
+  U lib/tests-snapshot/edge-cases/object-default-values.test.ts
+  U lib/tests-snapshot/endpoints/errors-responses.test.ts
+  U lib/tests-snapshot/endpoints/param-with-content.test.ts
+  C lib/tests-snapshot/integration/__snapshots__/generateZodClientFromOpenAPI.test.ts.snap
+  C lib/tests-snapshot/integration/__snapshots__/samples.test.ts.snap
+  U lib/tests-snapshot/naming/handle-props-with-special-characters.test.ts
+  U lib/tests-snapshot/options/generation/__snapshots__/group-strategy-file-multi-props-object-as-query-parameter.test.ts.snap
+  U lib/tests-snapshot/options/generation/__snapshots__/group-strategy.test.ts.snap
+  U lib/tests-snapshot/options/generation/additionalProperties-is-default.test.ts
+  U lib/tests-snapshot/options/generation/withImplicitRequired-option.test.ts
+  U lib/tests-snapshot/options/validation/min-with-max.test.ts
+  U lib/tests-snapshot/schemas/composition/allOf-infer-required-only-item.test.ts
+  U lib/tests-snapshot/schemas/composition/allOf-missing-and.test.ts
+  U lib/tests-snapshot/schemas/composition/anyOf-behavior.test.ts
+  U lib/tests-snapshot/schemas/composition/array-oneOf-discriminated-union.test.ts
+  C lib/tests-snapshot/schemas/references/handle-refs-without-var-name.test.ts
+  U lib/tests-snapshot/schemas/references/missing-zod-chains-on-z-object-with-refs-props.test.ts
+  U lib/tests-snapshot/schemas/references/request-body-ref.test.ts
+  U lib/tests-snapshot/schemas/types/infer-as-object-when-only-properties-set.test.ts
+  U lib/tests-snapshot/spec-compliance/openapi-spec-compliance.test.ts
+  U lib/tests-snapshot/utilities/openApiToTypescript.test.ts
+  U lib/tests-transforms/__fixtures__/arbitrary/README.md
+  U lib/tests-transforms/__fixtures__/arbitrary/oak-api.json
+  U lib/tests-transforms/__fixtures__/normalized/oak-api/input.json
+  U lib/tests-transforms/__fixtures__/normalized/oak-api/ir.json
+  U lib/tests-transforms/__fixtures__/normalized/oak-api/ir2.json
+  U lib/tests-transforms/__fixtures__/normalized/oak-api/reprocessed.json
+  U lib/tests-transforms/__fixtures__/normalized/oak-api/zod.ts
+  U lib/tests-transforms/__tests__/real-world-rejection.integration.test.ts
+  U lib/tests-transforms/__tests__/scenario-1-openapi-roundtrip.integration.test.ts
+  U lib/tests-transforms/input-coverage.integration.test.ts
+--- merge-tree conflicts
+  .agent/plans/roadmap.md
+  README.md
+  docs/USAGE.md
+  lib/src/schema-processing/writers/shared/json-schema-fields.ts
+  Auto-merging .agent/README.md
+  Auto-merging .agent/plans/current/paused/explicit-additional-properties-support.md
+  Auto-merging .agent/plans/roadmap.md
+  CONFLICT (content): Merge conflict in .agent/plans/roadmap.md
+  Auto-merging README.md
+  CONFLICT (content): Merge conflict in README.md
+  Auto-merging docs/MIGRATION.md
+  Auto-merging docs/USAGE.md
+  CONFLICT (content): Merge conflict in docs/USAGE.md
+  Auto-merging lib/src/schema-processing/parsers/json-schema/index.unit.test.ts
+  Auto-merging lib/src/schema-processing/parsers/json-schema/json-schema-parser.object-fields.ts
+  Auto-merging lib/src/schema-processing/parsers/openapi/builder.unit.test.ts
+  Auto-merging lib/src/schema-processing/writers/json-schema/json-schema-writer.document.unit.test.ts
+  Auto-merging lib/src/schema-processing/writers/json-schema/json-schema-writer.schema.unit.test.ts
+  Auto-merging lib/src/schema-processing/writers/openapi/schema/openapi-writer.schema.unit.test.ts
+  Auto-merging lib/src/schema-processing/writers/shared/json-schema-fields.ts
+  CONFLICT (content): Merge conflict in lib/src/schema-processing/writers/shared/json-schema-fields.ts
+  Auto-merging lib/src/schema-processing/writers/zod/__tests__/fail-fast.unit.test.ts
+  Auto-merging lib/src/schema-processing/writers/zod/__tests__/writer.unit.test.ts
+  Auto-merging lib/tests-snapshot/integration/__snapshots__/generateZodClientFromOpenAPI.test.ts.snap
+  Auto-merging lib/tests-snapshot/integration/__snapshots__/samples.test.ts.snap
+  Auto-merging lib/tests-snapshot/schemas/references/handle-refs-without-var-name.test.ts
+  (rc=1)
+################ PR #81  branch=codex/plan-estate-refresh  local=33be6338 remote=33be6338 base=e025d233 commits=2
+--- commits
+  33be6338 docs: record refresh pr and dependency advisory custody
+  28029cd5 docs: reconcile castr doctrine and plan estate
+--- cherry (- = patch already on main)
+  + x1
+  + x1
+--- file fate (D=deleted on main, U=unchanged on main since base, C=changed on main since base, =head identical to main)
+  U .agent/IDENTITY.md
+  U .agent/README.md
+  U .agent/analysis-and-reports/proof-programme-loop-review-2026-08-24.md
+  U .agent/claude-harness-integrations/account-access.md
+  U .agent/claude-harness-integrations/account-portability-register.md
+  U .agent/claude-harness-integrations/cloud-environment.md
+  U .agent/directives/ADR-044-drop-openapi3-ts-adopt-scalar-types.md
+  U .agent/directives/ADR-045-strict-reexport-module-openapi-types.md
+  U .agent/directives/ADR-046-separate-storage-additional-operations.md
+  C .agent/directives/AGENT.md
+  C .agent/directives/DEFINITION_OF_DONE.md
+  D .agent/directives/PRACTICE-VISION.md
+  U .agent/directives/VISION.md
+  U .agent/directives/principles.md
+  U .agent/directives/requirements.md
+  U .agent/directives/testing-strategy.md
+  U .agent/memory/active/napkin.md
+  U .agent/memory/active/patterns/README.md
+  U .agent/memory/active/patterns/autonomous-background-programme.md
+  U .agent/memory/active/patterns/templates-encode-failure-modes.md
+  D .agent/memory/operational/archive/entry-paths-2026-09-06.md
+  D .agent/memory/operational/archive/plan-estate-2026-09-06.md
+  C .agent/memory/operational/open-questions.md
+  C .agent/memory/operational/pending-graduations.md
+  C .agent/memory/operational/repo-continuity.md
+  C .agent/memory/operational/threads/consolidation-routine-and-watcher.next-session.md
+  U .agent/memory/operational/threads/initial-castr-review.next-session.md
+  D .agent/memory/operational/threads/plan-estate-refresh.next-session.md
+  U .agent/memory/operational/threads/practice-transplant.next-session.md
+  U .agent/memory/operational/threads/proof-programme-review.next-session.md
+  C .agent/memory/operational/threads/proof-programme.next-session.md
+  U .agent/plans/active/README.md
+  U .agent/plans/current/archive-pii-scrub.md
+  U .agent/plans/current/complete/3.3a-02-eslint-enforcement-redesign.md
+  U .agent/plans/current/complete/3.3a-03-zod-parser-semantic-parsing.md
+  U .agent/plans/current/complete/3.3b-04-format-parity-hostname-float.md
+  U .agent/plans/current/complete/anchor-and-dynamic-references.md
+  U .agent/plans/current/complete/architecture-review-packs.md
+  U .agent/plans/current/complete/discovery-and-prioritisation.md
+  U .agent/plans/current/complete/doctor-rescue-loop-runtime-redesign.md
+  U .agent/plans/current/complete/eperusteet-real-spec-validation.md
+  U .agent/plans/current/complete/format-specific-drift-remediation.md
+  U .agent/plans/current/complete/identity-doctrine-alignment.md
+  U .agent/plans/current/complete/ir-and-runtime-validator-remediation.md
+  U .agent/plans/current/complete/json-schema-parser.md
+  U .agent/plans/current/complete/oas-3.2-full-feature-support.md
+  U .agent/plans/current/complete/openapi3-ts-dependency-exit.md
+  U .agent/plans/current/complete/pattern-properties-and-property-names.md
+  D .agent/plans/current/complete/plan-estate-and-documentation-refresh.md
+  U .agent/plans/current/complete/practice-equality-identity-and-cognition.md
+  U .agent/plans/current/complete/prefixitems-tuple-and-contains.md
+  D .agent/plans/current/complete/proof-programme-loop-review.md
+  U .agent/plans/current/complete/recursive-unknown-key-semantics-remediation.md
+  U .agent/plans/current/complete/recursive-wrapper-remediation.md
+  U .agent/plans/current/complete/strict-object-semantics-enforcement.md
+  U .agent/plans/current/complete/type-safety-remediation.md
+  U .agent/plans/current/complete/zod-defect-quarantine-remediation.md
+  U .agent/plans/current/paused/02-ir-fidelity-proof-harness.md
+  U .agent/plans/current/paused/README.md
+  U .agent/plans/current/paused/explicit-additional-properties-support.md
+  U .agent/plans/current/paused/oak-practice-transplant.md
+  U .agent/plans/current/paused/practice-equality-parity-follow-up.md
+  C .agent/plans/current/zod-truth-surface-and-dependency-currency.md
+  C .agent/plans/delivery-ledger.md
+  U .agent/plans/future/castr-check-verb.md
+  U .agent/plans/future/castr-surface-architecture-and-verb-model.md
+  U .agent/plans/future/gemini-antigravity-agentic-platform-support.md
+  U .agent/plans/future/oak-adapter-boundary-replacement.md
+  U .agent/plans/future/oak-code-first-openapi-generation-replacement.md
+  U .agent/plans/future/oak-wider-openapi-stack-replacement.md
+  C .agent/plans/future/phase-5-ecosystem-expansion.md
+  U .agent/plans/future/strategy-vision-estate-overhaul.md
+  U .agent/plans/future/temporal-first-js-ts-date-time-doctrine.md
+  U .agent/plans/practice-alignment-brief.md
+  C .agent/plans/proof-programme/parent-plan.md
+  U .agent/plans/proof-programme/queued-decisions.md
+  C .agent/plans/proof-programme/routine-prompt.md
+  U .agent/plans/remediation/03-zod-2020-12-keyword-semantics.md
+  U .agent/plans/remediation/04-zod-parser-strict-whitelist.md
+  U .agent/plans/remediation/05-single-source-type-guards.md
+  U .agent/plans/remediation/06-doctrine-enforcement-truthing.md
+  U .agent/plans/remediation/07-test-hygiene.md
+  U .agent/plans/remediation/README.md
+  C .agent/plans/roadmap.md
+  U .agent/plans/transplant/02-agent-tools-build-design.md
+  U .agent/plans/transplant/06-memory-and-generator-consolidation.md
+  U .agent/plans/transplant/07-adapters-and-gate-flips.md
+  U .agent/plans/transplant/08-collaboration-active.md
+  U .agent/plans/transplant/README.md
+  U .agent/plans/transplant/corpus-analysis-suite-bring.md
+  U .agent/plans/transplant/d1-sonarjs-findings.md
+  U .agent/plans/transplant/dangling-reference-census.md
+  U .agent/plans/transplant/first-run-friction-inventory.md
+  U .agent/plans/transplant/oak-backflow/castr-feedback-2026-06-10.md
+  U .agent/plans/transplant/oak-backflow/castr-innovations-ledger.md
+  U .agent/plans/transplant/oak-castr-delta-review-2026-07-03.md
+  U .agent/plans/transplant/oak-castr-gap-rescan-2026-06-28.md
+  U .agent/plans/transplant/oak-parity-program.md
+  U .agent/plans/transplant/practice-loop-closure-remediation.md
+  U .agent/plans/transplant/reason-skill-parity-bring.md
+  U .agent/plans/transplant/reference-closure.md
+  U .agent/plans/transplant/relevance-ledger.md
+  U .agent/plans/transplant/statusline-logo-bring-manifests-2026-07-03.md
+  U .agent/plans/transplant/transplant-completeness-supporting-infrastructure.md
+  U .agent/practice-core/CHANGELOG.md
+  D .agent/practice-core/decision-records/PDR-135-verified-claims-engineering.md
+  U .agent/practice-core/decision-records/README.md
+  C .agent/practice-index.md
+  C .agent/prompts/session-continuation.prompt.md
+  U .agent/rules/input-output-pair-compatibility.md
+  U .agent/skills/gates/SKILL-CANONICAL.md
+  U .agent/skills/napkin/SKILL-CANONICAL.md
+  U .agent/skills/plan/SKILL-CANONICAL.md
+  U .agent/skills/session-handoff/SKILL-CANONICAL.md
+  U .agent/skills/start-right-quick/shared/start-right.md
+  U .agent/skills/start-right-thorough/shared/start-right-thorough.md
+  U .agent/skills/wrap/SKILL-CANONICAL.md
+  C README.md
+  U docs/architectural_decision_records/ADR-002-defer-types-to-openapi3-ts.md
+  U docs/architectural_decision_records/ADR-018-openapi-3.1-first-architecture.md
+  U docs/architectural_decision_records/ADR-019-scalar-pipeline-adoption.md
+  U docs/architectural_decision_records/ADR-020-intersection-type-strategy.md
+  U docs/architectural_decision_records/ADR-021-legacy-dependency-removal.md
+  U docs/architectural_decision_records/ADR-031-zod-output-strategy.md
+  U docs/architectural_decision_records/ADR-032-zod-input-strategy.md
+  U docs/architectural_decision_records/ADR-037-strict-architectural-domain-boundaries.md
+  U docs/architectural_decision_records/ADR-038-object-unknown-key-semantics.md
+  U docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md
+  U docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md
+  U docs/architectural_decision_records/ADR-044-drop-openapi3-ts-adopt-scalar-types.md
+  U docs/architectural_decision_records/ADR-045-strict-reexport-module-openapi-types.md
+  U docs/architectural_decision_records/ADR-046-separate-storage-additional-operations.md
+  U docs/architectural_decision_records/ADR-051-autonomous-background-implementation-loop.md
+  U docs/architectural_decision_records/README.md
+  U docs/architectural_decision_records/SUMMARY.md
+--- merge-tree conflicts
+  [engraph-semantic-merge] refusing to line-merge .agent/memory/operational/threads/consolidation-routine-and-watcher.next-session.md: it is a memory/state file whose meaning a git line-merge silently corrupts (stacked entries, dropped sessions, split tables). Do NOT line-merge. Reconcile the CONCEPTS by hand: run the engraph-semantic-merge skill (base/ours/theirs are at `git show :1:.agent/memory/operational/threads/consolidation-routine-and-watcher.next-session.md` / `:2:.agent/memory/operational/threads/consolidation-routine-and-watcher.next-session.md` / `:3:.agent/memory/operational/threads/consolidation-routine-and-watcher.next-session.md`), author the union, then stage the resolved file.
+  [engraph-semantic-merge] refusing to line-merge .agent/memory/operational/repo-continuity.md: it is a memory/state file whose meaning a git line-merge silently corrupts (stacked entries, dropped sessions, split tables). Do NOT line-merge. Reconcile the CONCEPTS by hand: run the engraph-semantic-merge skill (base/ours/theirs are at `git show :1:.agent/memory/operational/repo-continuity.md` / `:2:.agent/memory/operational/repo-continuity.md` / `:3:.agent/memory/operational/repo-continuity.md`), author the union, then stage the resolved file.
+  [engraph-semantic-merge] refusing to line-merge .agent/memory/operational/pending-graduations.md: it is a memory/state file whose meaning a git line-merge silently corrupts (stacked entries, dropped sessions, split tables). Do NOT line-merge. Reconcile the CONCEPTS by hand: run the engraph-semantic-merge skill (base/ours/theirs are at `git show :1:.agent/memory/operational/pending-graduations.md` / `:2:.agent/memory/operational/pending-graduations.md` / `:3:.agent/memory/operational/pending-graduations.md`), author the union, then stage the resolved file.
+  [engraph-semantic-merge] refusing to line-merge .agent/memory/operational/open-questions.md: it is a memory/state file whose meaning a git line-merge silently corrupts (stacked entries, dropped sessions, split tables). Do NOT line-merge. Reconcile the CONCEPTS by hand: run the engraph-semantic-merge skill (base/ours/theirs are at `git show :1:.agent/memory/operational/open-questions.md` / `:2:.agent/memory/operational/open-questions.md` / `:3:.agent/memory/operational/open-questions.md`), author the union, then stage the resolved file.
+  5a5d32e8bf1ab27c196475c341b17c782becf234
+  .agent/memory/operational/open-questions.md
+  .agent/memory/operational/pending-graduations.md
+  .agent/memory/operational/repo-continuity.md
+  .agent/memory/operational/threads/consolidation-routine-and-watcher.next-session.md
+  .agent/memory/operational/threads/proof-programme.next-session.md
+  .agent/plans/current/zod-truth-surface-and-dependency-currency.md
+  .agent/plans/delivery-ledger.md
+  .agent/plans/proof-programme/parent-plan.md
+  .agent/plans/proof-programme/routine-prompt.md
+  .agent/plans/roadmap.md
+  .agent/practice-index.md
+  .agent/prompts/session-continuation.prompt.md
+  README.md
+  Auto-merging .agent/directives/AGENT.md
+  Auto-merging .agent/directives/DEFINITION_OF_DONE.md
+  Auto-merging .agent/memory/operational/open-questions.md
+  CONFLICT (content): Merge conflict in .agent/memory/operational/open-questions.md
+  Auto-merging .agent/memory/operational/pending-graduations.md
+  CONFLICT (content): Merge conflict in .agent/memory/operational/pending-graduations.md
+  Auto-merging .agent/memory/operational/repo-continuity.md
+  CONFLICT (content): Merge conflict in .agent/memory/operational/repo-continuity.md
+  Auto-merging .agent/memory/operational/threads/consolidation-routine-and-watcher.next-session.md
+  CONFLICT (content): Merge conflict in .agent/memory/operational/threads/consolidation-routine-and-watcher.next-session.md
+  Auto-merging .agent/memory/operational/threads/proof-programme.next-session.md
+  CONFLICT (content): Merge conflict in .agent/memory/operational/threads/proof-programme.next-session.md
+  Auto-merging .agent/plans/current/zod-truth-surface-and-dependency-currency.md
+  CONFLICT (content): Merge conflict in .agent/plans/current/zod-truth-surface-and-dependency-currency.md
+  Auto-merging .agent/plans/delivery-ledger.md
+  CONFLICT (content): Merge conflict in .agent/plans/delivery-ledger.md
+  Auto-merging .agent/plans/future/phase-5-ecosystem-expansion.md
+  Auto-merging .agent/plans/proof-programme/parent-plan.md
+  CONFLICT (content): Merge conflict in .agent/plans/proof-programme/parent-plan.md
+  Auto-merging .agent/plans/proof-programme/routine-prompt.md
+  CONFLICT (content): Merge conflict in .agent/plans/proof-programme/routine-prompt.md
+  Auto-merging .agent/plans/roadmap.md
+  CONFLICT (content): Merge conflict in .agent/plans/roadmap.md
+  Auto-merging .agent/practice-index.md
+  CONFLICT (content): Merge conflict in .agent/practice-index.md
+  Auto-merging .agent/prompts/session-continuation.prompt.md
+  CONFLICT (content): Merge conflict in .agent/prompts/session-continuation.prompt.md
+  Auto-merging README.md
+  CONFLICT (content): Merge conflict in README.md
+  (rc=1)
