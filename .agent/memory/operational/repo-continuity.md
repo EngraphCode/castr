@@ -67,6 +67,11 @@ task, with normal and same-agent adversarial stances. The atomic plan is in comp
 staging. Q-06 is delivered through PR #98 at merge `0c3d4bdc`; source PR #14 closed
 without merge with its recovery branch retained. Q-07/PR #21 is the next recorded
 source-PR transition from current `origin/main`.
+On 12 September the owner redirected inherited-PR and dirty-worktree work to proving
+value before preserving it; the
+[value-proof sequence](../../plans/active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence)
+now governs that work, with its gap register and container map. Q-07 remains the first
+landing.
 The broader C05
 family retains its other obligations. Earlier
 continuation instructions are [preserved verbatim](../../plans/archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
