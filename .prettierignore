@@ -46,7 +46,7 @@ CHANGELOG.md
 .agent/state/collaboration/comms/
 .agent/state/collaboration/comms-seen/
 .agent/state/collaboration/comms-draft/
-.agent/state/collaboration/handoffs/
+.agent/state/collaboration/handoffs/*
 !.agent/state/collaboration/handoffs/README.md
-.agent/state/collaboration/comms-archive/
+.agent/state/collaboration/comms-archive/*
 !.agent/state/collaboration/comms-archive/.gitkeep
