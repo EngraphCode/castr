@@ -260,8 +260,9 @@ Owner direction of 12 September: the goal is to preserve proven value, not to me
 containers. The [value-proof sequence](active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence)
 owns the gap register, the proof contract and the container map; the rows above keep
 their original acceptance and evidence conditions. The following facts were measured
-on disposable copies of `origin/main` at `21e23229` and are reproducible from the
-session record in `../memory/active/napkin.md`.
+on disposable copies of `origin/main` at `21e23229`. The scripts and their outputs
+are tracked under [`research/inherited-estate-2026-09-12/`](../research/inherited-estate-2026-09-12/README.md);
+the napkin carries the narrative.
 
 - Of the 475 commits between the July source-PR bases and main, 13 touched `lib/src`.
 - #12, #13, #15, #17 and #26 apply cleanly to main and pass their own tests and

@@ -1,0 +1,128 @@
+################ castr-q07-zod-fixture-runner branch=codex/q07-zod-fixture-runner head=21e23229 behind=0
+--- dirty files (st | equals-main | main-changed-since-base | +ins/-del vs HEAD)
+   M | eq=n | main=same | +1/-2 | lib/package.json
+   D | eq=n | main=same | +0/-149 | lib/src/schema-processing/parsers/zod/zod-parser.runner.integration.test.ts
+   M | eq=n | main=same | +169/-1 | lib/tests-fixtures/zod-parser/happy-path/unknown-key-semantics.expected.json
+   M | eq=n | main=same | +7/-6 | lib/tests-fixtures/zod-parser/happy-path/unknown-key-semantics.zod4.ts
+   M | eq=n | main=same | +0/-3 | pnpm-lock.yaml
+  ?? | eq=n | main=new | +143 | lib/tests-e2e/zod-parser-fixtures.e2e.test.ts
+################ castr-adr-conservation branch=codex/castr-adr-conservation head=dd7e705d behind=96
+--- dirty files (st | equals-main | main-changed-since-base | +ins/-del vs HEAD)
+   D | eq=n | main=same | +0/-55 | .agent/directives/ADR-044-drop-openapi3-ts-adopt-scalar-types.md
+   D | eq=n | main=same | +0/-79 | .agent/directives/ADR-045-strict-reexport-module-openapi-types.md
+   D | eq=n | main=same | +0/-45 | .agent/directives/ADR-046-separate-storage-additional-operations.md
+   M | eq=n | main=same | +1/-1 | .agent/plans/current/complete/oas-3.2-full-feature-support.md
+   M | eq=n | main=same | +1/-1 | .agent/plans/current/complete/openapi3-ts-dependency-exit.md
+   M | eq=n | main=same | +13/-2 | docs/architectural_decision_records/ADR-044-drop-openapi3-ts-adopt-scalar-types.md
+   M | eq=n | main=same | +1/-1 | docs/architectural_decision_records/ADR-046-separate-storage-additional-operations.md
+################ castr-adr-navigation branch=codex/castr-adr-navigation head=3ad2ab5d behind=92
+--- dirty files (st | equals-main | main-changed-since-base | +ins/-del vs HEAD)
+   M | eq=n | main=same | +1/-1 | docs/architectural_decision_records/ADR-002-defer-types-to-openapi3-ts.md
+   M | eq=n | main=same | +5/-5 | docs/architectural_decision_records/ADR-018-openapi-3.1-first-architecture.md
+   M | eq=n | main=same | +5/-5 | docs/architectural_decision_records/ADR-019-scalar-pipeline-adoption.md
+   M | eq=n | main=same | +6/-6 | docs/architectural_decision_records/ADR-020-intersection-type-strategy.md
+   M | eq=n | main=same | +8/-8 | docs/architectural_decision_records/ADR-021-legacy-dependency-removal.md
+   M | eq=n | main=same | +1/-1 | docs/architectural_decision_records/ADR-037-strict-architectural-domain-boundaries.md
+   M | eq=n | main=same | +54/-63 | docs/architectural_decision_records/README.md
+   M | eq=n | main=same | +55/-43 | docs/architectural_decision_records/SUMMARY.md
+################ castr-api-contract branch=codex/castr-api-contract head=3ad2ab5d behind=92
+--- dirty files (st | equals-main | main-changed-since-base | +ins/-del vs HEAD)
+   M | eq=n | main=CHANGED | +1/-0 | .agent/memory/operational/threads/castr-correction.next-session.md
+   M | eq=n | main=CHANGED | +72/-1 | .agent/plans/correction-manifests/castr-correction-documents.json
+   M | eq=n | main=CHANGED | +21/-4 | .agent/plans/correction-manifests/castr-correction-findings.json
+   M | eq=n | main=CHANGED | +150/-91 | docs/API-REFERENCE.md
+   M | eq=n | main=CHANGED | +93/-178 | docs/USAGE.md
+   M | eq=n | main=CHANGED | +45/-29 | lib/src/cli/index.ts
+   M | eq=n | main=same | +32/-19 | lib/src/rendering/generation-result.ts
+   M | eq=n | main=same | +48/-67 | lib/src/schema-processing/context/template-context.ts
+################ castr-custody-corrections branch=codex/castr-custody-corrections head=b14caede behind=105
+--- dirty files (st | equals-main | main-changed-since-base | +ins/-del vs HEAD)
+   M | eq=n | main=CHANGED | +10/-0 | .agent/memory/operational/repo-continuity.md
+   M | eq=Y | main=CHANGED | +20/-0 | .agent/memory/operational/threads/proof-programme.next-session.md
+   M | eq=n | main=CHANGED | +3/-1 | .agent/plans/active/castr-documentation-and-fidelity-correction.md
+   M | eq=n | main=CHANGED | +210/-5 | .agent/plans/correction-manifests/castr-correction-findings.json
+   M | eq=n | main=CHANGED | +9/-2 | .agent/plans/proof-programme/parent-plan.md
+################ castr-fixture-reproduction branch=codex/castr-fixture-reproduction head=6c3b18f0 behind=85
+--- dirty files (st | equals-main | main-changed-since-base | +ins/-del vs HEAD)
+   M | eq=n | main=same | +29/-11 | lib/tests-transforms/__fixtures__/normalized/callback-3.0/ir.json
+   M | eq=n | main=same | +29/-11 | lib/tests-transforms/__fixtures__/normalized/callback-3.0/ir2.json
+   M | eq=n | main=same | +10/-4 | lib/tests-transforms/__fixtures__/normalized/callback-3.0/normalized.json
+   M | eq=n | main=same | +10/-4 | lib/tests-transforms/__fixtures__/normalized/callback-3.0/reprocessed.json
+   M | eq=n | main=same | +49/-49 | lib/tests-transforms/__fixtures__/normalized/callback-3.0/zod.ts
+   M | eq=n | main=same | +1844/-536 | lib/tests-transforms/__fixtures__/normalized/oak-api/ir.json
+   M | eq=n | main=same | +1844/-536 | lib/tests-transforms/__fixtures__/normalized/oak-api/ir2.json
+   M | eq=n | main=same | +1276/-341 | lib/tests-transforms/__fixtures__/normalized/oak-api/normalized.json
+   M | eq=n | main=same | +1276/-341 | lib/tests-transforms/__fixtures__/normalized/oak-api/reprocessed.json
+   M | eq=n | main=same | +6409/-6021 | lib/tests-transforms/__fixtures__/normalized/oak-api/zod.ts
+   M | eq=n | main=same | +65/-21 | lib/tests-transforms/__fixtures__/normalized/petstore-3.0/ir.json
+   M | eq=n | main=same | +65/-21 | lib/tests-transforms/__fixtures__/normalized/petstore-3.0/ir2.json
+   M | eq=n | main=same | +18/-6 | lib/tests-transforms/__fixtures__/normalized/petstore-3.0/normalized.json
+   M | eq=n | main=same | +18/-6 | lib/tests-transforms/__fixtures__/normalized/petstore-3.0/reprocessed.json
+   M | eq=n | main=same | +113/-106 | lib/tests-transforms/__fixtures__/normalized/petstore-3.0/zod.ts
+   M | eq=n | main=same | +74/-26 | lib/tests-transforms/__fixtures__/normalized/petstore-expanded-3.0/ir.json
+   M | eq=n | main=same | +74/-26 | lib/tests-transforms/__fixtures__/normalized/petstore-expanded-3.0/ir2.json
+   M | eq=n | main=same | +11/-4 | lib/tests-transforms/__fixtures__/normalized/petstore-expanded-3.0/normalized.json
+   M | eq=n | main=same | +11/-4 | lib/tests-transforms/__fixtures__/normalized/petstore-expanded-3.0/reprocessed.json
+   M | eq=n | main=same | +187/-155 | lib/tests-transforms/__fixtures__/normalized/petstore-expanded-3.0/zod.ts
+   M | eq=n | main=same | +142/-39 | lib/tests-transforms/__fixtures__/normalized/tictactoe-3.1/ir.json
+   M | eq=n | main=same | +142/-39 | lib/tests-transforms/__fixtures__/normalized/tictactoe-3.1/ir2.json
+   M | eq=n | main=same | +30/-10 | lib/tests-transforms/__fixtures__/normalized/tictactoe-3.1/normalized.json
+   M | eq=n | main=same | +30/-10 | lib/tests-transforms/__fixtures__/normalized/tictactoe-3.1/reprocessed.json
+   M | eq=n | main=same | +145/-136 | lib/tests-transforms/__fixtures__/normalized/tictactoe-3.1/zod.ts
+   M | eq=n | main=same | +16/-6 | lib/tests-transforms/__fixtures__/normalized/webhook-3.1/ir.json
+   M | eq=n | main=same | +16/-6 | lib/tests-transforms/__fixtures__/normalized/webhook-3.1/ir2.json
+   M | eq=n | main=same | +5/-2 | lib/tests-transforms/__fixtures__/normalized/webhook-3.1/normalized.json
+   M | eq=n | main=same | +5/-2 | lib/tests-transforms/__fixtures__/normalized/webhook-3.1/reprocessed.json
+   M | eq=n | main=same | +7/-9 | lib/tests-transforms/__fixtures__/normalized/webhook-3.1/zod.ts
+################ castr-local-api-examples branch=codex/castr-local-api-examples head=3ad2ab5d behind=92
+--- dirty files (st | equals-main | main-changed-since-base | +ins/-del vs HEAD)
+   M | eq=n | main=CHANGED | +76/-82 | docs/EXAMPLES.md
+   M | eq=n | main=CHANGED | +47/-40 | docs/MIGRATION.md
+   M | eq=n | main=CHANGED | +55/-16 | lib/README.md
+   M | eq=n | main=same | +63/-33 | lib/src/schema-processing/parsers/zod/README.md
+   M | eq=n | main=same | +12/-10 | lib/src/schema-processing/parsers/zod/index.ts
+   M | eq=n | main=same | +24/-21 | lib/src/schema-processing/parsers/zod/zod-parser.ts
+   M | eq=n | main=same | +42/-41 | lib/src/schema-processing/parsers/zod/zod-parser.types.ts
+################ castr-local-entry branch=codex/castr-local-entry head=b14caede behind=105
+--- dirty files (st | equals-main | main-changed-since-base | +ins/-del vs HEAD)
+   M | eq=n | main=CHANGED | +1/-1 | .agent/directives/DEFINITION_OF_DONE.md
+   M | eq=n | main=CHANGED | +20/-5 | CONTRIBUTING.md
+   M | eq=n | main=CHANGED | +63/-142 | README.md
+   M | eq=n | main=CHANGED | +142/-86 | docs/API-REFERENCE.md
+   M | eq=n | main=CHANGED | +50/-464 | docs/DEFAULT-RESPONSE-BEHAVIOR.md
+   M | eq=n | main=CHANGED | +66/-116 | docs/EXAMPLES.md
+   M | eq=n | main=CHANGED | +34/-64 | docs/MCP_INTEGRATION_GUIDE.md
+   M | eq=n | main=CHANGED | +59/-102 | docs/MIGRATION.md
+   M | eq=n | main=CHANGED | +50/-53 | docs/OPENAPI-FETCH-INTEGRATION.md
+   M | eq=n | main=CHANGED | +114/-164 | docs/USAGE.md
+   M | eq=n | main=CHANGED | +74/-80 | lib/README.md
+   M | eq=n | main=CHANGED | +1/-4 | lib/package.json
+   M | eq=n | main=CHANGED | +45/-29 | lib/src/cli/index.ts
+   M | eq=n | main=CHANGED | +3/-2 | lib/tests-e2e/packaging-integrity.test.ts
+wc: stdin: read: Is a directory
+  ?? | eq=n | main=CHANGED | + | examples/
+################ castr-operation-security-empty branch=codex/castr-operation-security-empty head=3ad2ab5d behind=92
+--- dirty files (st | equals-main | main-changed-since-base | +ins/-del vs HEAD)
+   M | eq=n | main=CHANGED | +55/-4 | .agent/plans/active/castr-documentation-and-fidelity-correction.md
+   M | eq=n | main=CHANGED | +98/-11 | .agent/plans/correction-manifests/castr-correction-documents.json
+   M | eq=n | main=CHANGED | +90/-7 | .agent/plans/correction-manifests/castr-correction-findings.json
+   M | eq=n | main=CHANGED | +21/-13 | .agent/plans/proof-programme/parent-plan.md
+   M | eq=Y | main=CHANGED | +2/-1 | lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.fields.ts
+   M | eq=Y | main=CHANGED | +25/-0 | lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.unit.test.ts
+   M | eq=Y | main=CHANGED | +61/-5 | lib/tests-transforms/__tests__/security-formula.integration.test.ts
+  ?? | eq=n | main=CHANGED | +37 | .agent/plans/archive/correction-sequencing-2026-09-06.md
+################ castr-planning-authority branch=codex/castr-planning-authority head=3ad2ab5d behind=92
+--- dirty files (st | equals-main | main-changed-since-base | +ins/-del vs HEAD)
+   M | eq=n | main=same | +8/-2 | .agent/memory/active/patterns/templates-encode-failure-modes.md
+   M | eq=n | main=same | +8/-4 | .agent/skills/plan/SKILL-CANONICAL.md
+################ castr-vision-claims branch=codex/castr-vision-claims head=3ad2ab5d behind=92
+--- dirty files (st | equals-main | main-changed-since-base | +ins/-del vs HEAD)
+   M | eq=n | main=same | +138/-248 | .agent/directives/VISION.md
+   M | eq=n | main=same | +0/-18 | .agent/memory/operational/pending-graduations.md
+   M | eq=n | main=same | +9/-0 | .agent/practice-core/CHANGELOG.md
+   M | eq=n | main=same | +1/-0 | .agent/practice-core/decision-records/README.md
+   M | eq=n | main=same | +8/-0 | .agent/practice-core/index.md
+   M | eq=n | main=same | +17/-0 | .agent/practice-index.md
+  ?? | eq=n | main=new | +65 | .agent/directives/PRACTICE-VISION.md
+  ?? | eq=n | main=new | +288 | .agent/memory/operational/archive/vision-and-graduation-2026-09-06.md
+  ?? | eq=n | main=new | +76 | .agent/practice-core/decision-records/PDR-135-verified-claims-engineering.md

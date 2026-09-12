@@ -307,11 +307,12 @@ hunk is checked against current doctrine before reuse. A container's closure rec
 names which of its review-thread rationales the cure adopted or rejected, so settled
 reasoning is not re-litigated.
 
-Consequences for containers: a source PR closes when every gap it claims is either
-proven and cured on main, proven and carried by a named queue row with the red test
-committed, or recorded as unprovable. Its branch is deleted only when no claimed
-gap remains unresolved and no documentation claim survives; otherwise it is retained.
-A dirty worktree is emptied by the same route or discarded at owner word.
+Consequences for containers: a source PR closes only when every gap it claims is
+either proven and cured on main, recorded as unprovable, or ruled not wanted by the
+owner. A red test on a branch preserves nothing; until the cure is merged the source
+PR stays open as the custody surface for that gap. Its branch is deleted only when no
+claimed gap remains unresolved and no documentation claim survives; otherwise it is
+retained. A dirty worktree is emptied by the same route or discarded at owner word.
 
 ### Gap register, 12 September
 
@@ -405,9 +406,9 @@ approving the vision doctrine text; naming any removed CLI option wanted as a fe
 Acceptance for this sequence: every register row has a red test merged with its cure
 or a recorded "no witness constructible"; every inherited PR is closed with that
 record; every dirty worktree is emptied or discarded at owner word; the ledger and
-this section agree with main. Evidence from the 12 September analysis is retained in
-the session record in `napkin.md`; measured facts above are reproducible with the
-commands named there.
+this section agree with main. Evidence from the 12 September analysis is tracked under
+[`research/inherited-estate-2026-09-12/`](../../research/inherited-estate-2026-09-12/README.md);
+the napkin carries the narrative.
 
 ## Fidelity repair families and describing surfaces
 
