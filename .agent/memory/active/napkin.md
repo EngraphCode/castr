@@ -68,6 +68,18 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   normalised fixtures are stale against the writer and `validation-parity` imports the
   stale `petstore-3.0/zod.js`; IDENTITY.md admits explicit `additionalProperties` but
   parser/writer do not.
+- **Parallax pass over the value-proof sequence (core depth, same-context) changed the
+  plan in four places and downgraded two register rows.** Defeater probes: the
+  `types.ts` non-empty `isRecord` is the one 16 product files import, so unifying the
+  guards is a per-caller re-derivation, not a swap; `capturedAt`/cwd have no observed path
+  from bundle metadata to any writer or renderer, so the "non-deterministic output" row
+  was an over-claim until a red test shows the values reach an artifact. Proof contract
+  sharpened: assertions derive from doctrine, spec or an independent oracle, never from a
+  container's output; rejection tests must bite a mutant; "applies cleanly" and
+  "doctrine-current" are independent; closure records cite adopted/rejected review
+  rationale. Declared coverage gap: the register is container-anchored; no clause walk
+  of principles.md against main has been done. Same-context audit is not independent
+  assurance; recorded as such in the plan checkpoint.
 - **Gate failure at the first push, root cause on main, not in the change:** `check:ci`'s
   `prettier --check` glob reads gitignored instance-tier files, and `.prettierignore` claims
   to mirror `.agent/state/collaboration/.gitignore` but omitted `handoffs/` and
