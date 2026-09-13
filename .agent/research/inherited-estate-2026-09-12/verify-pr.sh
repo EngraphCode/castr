@@ -2,12 +2,13 @@
 # Apply one source PR's lib/ diff to a disposable copy of the measured main revision
 # and run its own tests plus tsc. Proves self-consistency on that main only, never a
 # doctrine gap. Exits non-zero if the apply, any test run, or the type-check fails.
-# Usage: [BASE=<sha>] [SCRATCH=<dir>] ./verify-pr.sh <label> <merge-base-sha> <branch>
+# Usage: [BASE=<sha>] [SCRATCH=<dir>] ./verify-pr.sh <label> <merge-base-sha> <head-sha>
+# Pass the PR's recorded head SHA, not a branch name, so a rerun measures the same object.
 set -uo pipefail
 R=$(git rev-parse --show-toplevel)
 BASE=${BASE:-21e232295426ac104dc1ff47b2d7543858abf4bf}
 S=${SCRATCH:-$(mktemp -d)}
-label=$1; base=$2; br=$3
+label=$1; base=$2; head=$3
 V=$S/v-$label; log=$S/verify-$label.txt
 failures=0
 
@@ -20,17 +21,22 @@ fi
 run_vitest() {
   # $1 label, $2 config flag or empty, remaining: test files
   local name=$1 cfg=$2; shift 2
+  local out=$S/$label.$name.out
   echo "--- $name tests: $*"
   local rc=0
   # shellcheck disable=SC2086 # cfg is intentionally word-split (empty or "--config file")
-  pnpm exec vitest run $cfg --reporter=dot "$@" > "$S/$label.$name.out" 2>&1 || rc=$?
-  grep -E 'Test Files|Tests |FAIL|Error:' "$S/$label.$name.out" | head -12
+  pnpm exec vitest run $cfg --reporter=dot "$@" > "$out" 2>&1 || rc=$?
+  # The summary is kept whole; the diagnostics are truncated separately.
+  grep -E 'Test Files|Tests ' "$out" || echo "no vitest summary in $out"
+  grep -E 'FAIL|Error:' "$out" | head -10
   if [[ $rc -ne 0 ]]; then echo "$name tests FAILED rc=$rc"; failures=$((failures + 1)); fi
 }
 
+# Plain redirection keeps this group in the current shell, so the failure count reaches
+# the exit status; a pipeline into tee would run it in a subshell and always exit 0.
 {
-  echo "===== $label base=$base branch=$br main=$BASE $(date '+%H:%M:%S')"
-  git -C "$R" diff --binary "$base" "$br" -- lib ':!lib/tests-snapshot/integration/__snapshots__' > "$S/$label.patch"
+  echo "===== $label base=$base head=${head:0:8} main=${BASE:0:8} $(date '+%H:%M:%S')"
+  git -C "$R" diff --binary "$base" "$head" -- lib ':!lib/tests-snapshot/integration/__snapshots__' > "$S/$label.patch"
   echo "patch: $(grep -c '^diff --git' "$S/$label.patch") files"
   rc=0
   git -C "$V" apply --3way --index "$S/$label.patch" > "$S/$label.apply.log" 2>&1 || rc=$?
@@ -39,7 +45,7 @@ run_vitest() {
   tests=$(git -C "$V" diff --name-only --cached | grep '\.test\.ts$' | grep -v 'tests-snapshot\|tests-transforms\|tests-e2e' | sed 's#^lib/##' | tr '\n' ' ' || true)
   tt=$(git -C "$V" diff --name-only --cached | grep 'tests-transforms/.*\.test\.ts$' | sed 's#^lib/##' | tr '\n' ' ' || true)
   ts=$(git -C "$V" diff --name-only --cached | grep 'tests-snapshot/.*\.test\.ts$' | sed 's#^lib/##' | tr '\n' ' ' || true)
-  cd "$V/lib"
+  cd "$V/lib" || { echo "cannot enter $V/lib" >&2; exit 1; }
   # shellcheck disable=SC2086 # the lists are intentionally word-split into file arguments
   if [[ -n "$tests" ]]; then run_vitest unit "" $tests; fi
   # shellcheck disable=SC2086
@@ -54,6 +60,12 @@ run_vitest() {
   sed 's/\x1b\[[0-9;]*m//g' "$S/$label.tsc.log" | head -6
   if [[ $rc -ne 0 ]]; then failures=$((failures + 1)); fi
   echo "===== done $(date '+%H:%M:%S') failures=$failures"
-} 2>&1 | tee "$log"
+} > "$log" 2>&1
 
+# The disposable worktree's install ran the repository postinstall, which writes the
+# semantic-merge driver path into the shared .git/config; re-arm it from the main
+# checkout so removing the worktree does not leave every checkout with a dead driver.
+(cd "$R" && pnpm run postinstall >/dev/null 2>&1) || echo "re-arm of the merge driver failed in $R" >&2
+
+cat "$log"
 exit "$failures"

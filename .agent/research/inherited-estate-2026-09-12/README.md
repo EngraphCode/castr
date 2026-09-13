@@ -16,34 +16,47 @@ All scripts are Bash. They resolve the repository from `git rev-parse --show-top
 measure against `$BASE`, which defaults to the recorded main revision above, and write
 to `$SCRATCH`, defaulting to a fresh `mktemp -d`. None writes to the repository.
 
-- `pr-evidence.sh`: for each open source PR head, the merge-base, commit list,
-  `git cherry` patch-id matches, per-file fate on main (`D` absent, `U` unchanged
-  since base, `C` changed since base, `=` head identical to main) and the
-  `git merge-tree --write-tree` conflict list.
+- `pr-evidence.sh`: for each open source PR, measured at the head SHA recorded on
+  12 September and pinned in the script, the merge-base, commit list, `git cherry`
+  patch-id matches, per-file fate on main (`D` absent, `U` unchanged since base, `C`
+  changed since base, `=` head identical to main) and the `git merge-tree --write-tree`
+  conflict list with the merge driver's messages. The local branch and the live GitHub
+  head are printed beside the pinned head, with a `DRIFT` line when either differs.
+  The merge result-tree OID is not printed: for containers touching memory files it
+  depends on the semantic-merge driver build, so it is not evidence.
 - `wt-evidence.sh <worktree-path>...`: for each dirty worktree, every dirty path,
   with untracked directories expanded to their files, with whether its content already
   equals the measured main and whether main changed the path since the worktree's base.
-- `verify-pr.sh <label> <merge-base> <branch>`: adds a disposable detached worktree
-  at the measured main, installs offline from the store, applies the branch's `lib/`
-  diff with `git apply --3way` excluding integration snapshots, runs the branch's own
-  test files under the matching vitest config, then `tsc --noEmit`. It exits non-zero
-  if the apply, any test run, or the type-check fails. The worktree is left for
-  inspection; remove it with `git worktree remove --force`.
+- `verify-pr.sh <label> <merge-base> <head-sha>`: adds a disposable detached worktree
+  at the measured main, installs offline from the store, applies the head's `lib/`
+  diff with `git apply --3way` excluding integration snapshots, runs the head's own
+  test files under the matching vitest config, then `tsc --noEmit`. The vitest
+  summary lines are kept whole for every run and the diagnostics are truncated
+  separately. It exits with the number of failed steps (apply, each test run, the
+  type-check), shown on 13 September by the pr16, pr18 and pr27 reruns exiting 4, 5
+  and 5. The worktree is left for inspection; remove it with
+  `git worktree remove --force`. Because the repository `postinstall` writes the
+  semantic-merge driver path of whichever checkout ran it into the shared
+  `.git/config`, the script re-arms the driver from the primary checkout after each run.
 
 ## Results
 
 `results/` holds the outputs as produced, with machine-local prefixes replaced by
 `<scratch>`, `<repo>` and `<worktrees>` and ANSI codes stripped:
 
-- `pr-evidence.txt`, `wt-evidence.txt`: the mechanical evidence for all 13 PRs and
-  11 worktrees.
-- `verify-<label>.txt`: one per probed PR (11, 12, 13, 15, 16, 17, 18, 20, 26, 27),
-  produced by the 12 September zsh predecessor of `verify-pr.sh`, whose output shape
-  the Bash rewrite preserves. Each records the patch file count, apply result and
-  conflicted files, the test files run with their pass and fail counts, and the
-  type-check result.
-- `wt-evidence.txt` was produced before untracked directories were expanded; the
-  `castr-local-entry` row shows `examples/` as one entry (one file, identical to main).
+- `pr-evidence.txt`: the mechanical evidence for all 13 PRs, regenerated on
+  13 September by `pr-evidence.sh` at the pinned heads; no drift from the 12 September
+  heads was reported, and the conflict lists match the 12 September run.
+- `wt-evidence.txt`: the mechanical evidence for the 11 worktrees, produced on
+  12 September before untracked directories were expanded; the `castr-local-entry`
+  row shows `examples/` as one entry (one file, identical to main).
+- `verify-<label>.txt`: one per probed PR (11, 12, 13, 15, 16, 17, 18, 20, 26, 27).
+  `verify-pr16.txt`, `verify-pr18.txt` and `verify-pr27.txt` were regenerated on
+  13 September by `verify-pr.sh` at the pinned heads; the other seven were produced by
+  the 12 September zsh predecessor, whose output shape the Bash rewrite preserves.
+  Each records the patch file count, apply result and conflicted files, the test files
+  run with their vitest summary (pass and fail counts per run), and the type-check
+  result.
 
 Two later probes are not scripted: the PR #18 identity-slice subset (an 18-file
 pathspec of the same diff) and the manual resolution of PR #20's and PR #27's single

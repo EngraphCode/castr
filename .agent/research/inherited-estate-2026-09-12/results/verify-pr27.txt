@@ -1,40 +1,42 @@
-===== pr27 base=4be99dae branch=feat/explicit-additional-properties-rebased 16:21:54
+===== pr27 base=4be99dae5d8b0c24e4f22436b856b592637dc9d1 head=a48eced8 main=21e23229 11:07:18
 patch: 81 files
 apply rc=1; conflicted files: lib/src/schema-processing/writers/shared/json-schema-fields.ts 
-apply errors: 0
---- unit tests: src/characterisation/schema-dependencies.char.test.ts src/schema-processing/context/mcp/schemas/template-context.mcp.schemas.from-ir.test.ts src/schema-processing/ir/validation/validators.schema.unit.test.ts src/schema-processing/parsers/json-schema/index.unit.test.ts src/schema-processing/parsers/json-schema/json-schema-parser.object-fields.unit.test.ts src/schema-processing/parsers/openapi/builder.core.unit.test.ts src/schema-processing/parsers/openapi/builder.object-keywords.unit.test.ts src/schema-processing/parsers/openapi/builder.unit.test.ts src/schema-processing/parsers/zod/types/zod-parser.object.unit.test.ts src/schema-processing/parsers/zod/zod-parser.integration.test.ts src/schema-processing/writers/json-schema/json-schema-writer.document.unit.test.ts src/schema-processing/writers/json-schema/json-schema-writer.schema.unit.test.ts src/schema-processing/writers/openapi/components/openapi-writer.components.unit.test.ts src/schema-processing/writers/openapi/schema/openapi-writer.schema.unit.test.ts src/schema-processing/writers/typescript/type-writer.unit.test.ts src/schema-processing/writers/zod/__tests__/fail-fast.unit.test.ts src/schema-processing/writers/zod/__tests__/properties.unit.test.ts src/schema-processing/writers/zod/__tests__/recursive-catchall.unit.test.ts src/schema-processing/writers/zod/__tests__/writer.unit.test.ts tests-generated/rejection-validation.gen.test.ts 
+--- unit tests: src/characterisation/schema-dependencies.char.test.ts src/schema-processing/context/mcp/schemas/template-context.mcp.schemas.from-ir.test.ts src/schema-processing/ir/validation/validators.schema.unit.test.ts src/schema-processing/parsers/json-schema/index.unit.test.ts src/schema-processing/parsers/json-schema/json-schema-parser.object-fields.unit.test.ts src/schema-processing/parsers/openapi/builder.core.unit.test.ts src/schema-processing/parsers/openapi/builder.object-keywords.unit.test.ts src/schema-processing/parsers/openapi/builder.unit.test.ts src/schema-processing/parsers/zod/types/zod-parser.object.unit.test.ts src/schema-processing/parsers/zod/zod-parser.integration.test.ts src/schema-processing/writers/json-schema/json-schema-writer.document.unit.test.ts src/schema-processing/writers/json-schema/json-schema-writer.schema.unit.test.ts src/schema-processing/writers/openapi/components/openapi-writer.components.unit.test.ts src/schema-processing/writers/openapi/schema/openapi-writer.schema.unit.test.ts src/schema-processing/writers/typescript/type-writer.unit.test.ts src/schema-processing/writers/zod/__tests__/fail-fast.unit.test.ts src/schema-processing/writers/zod/__tests__/properties.unit.test.ts src/schema-processing/writers/zod/__tests__/recursive-catchall.unit.test.ts src/schema-processing/writers/zod/__tests__/writer.unit.test.ts tests-generated/rejection-validation.gen.test.ts
+ Test Files  4 failed | 14 passed (18)
+      Tests  333 passed (333)
  FAIL  src/schema-processing/writers/json-schema/json-schema-writer.document.unit.test.ts [ src/schema-processing/writers/json-schema/json-schema-writer.document.unit.test.ts ]
 Error: Transform failed with 1 error:
  FAIL  src/schema-processing/writers/json-schema/json-schema-writer.schema.unit.test.ts [ src/schema-processing/writers/json-schema/json-schema-writer.schema.unit.test.ts ]
- FAIL  src/schema-processing/writers/openapi/schema/openapi-writer.schema.unit.test.ts [ src/schema-processing/writers/openapi/schema/openapi-writer.schema.unit.test.ts ]
  FAIL  src/schema-processing/writers/openapi/components/openapi-writer.components.unit.test.ts [ src/schema-processing/writers/openapi/components/openapi-writer.components.unit.test.ts ]
+ FAIL  src/schema-processing/writers/openapi/schema/openapi-writer.schema.unit.test.ts [ src/schema-processing/writers/openapi/schema/openapi-writer.schema.unit.test.ts ]
 Error: Transform failed with 1 error:
- Test Files  4 failed | 14 passed (18)
-      Tests  333 passed (333)
---- transforms tests: tests-transforms/__tests__/real-world-rejection.integration.test.ts tests-transforms/__tests__/scenario-1-openapi-roundtrip.integration.test.ts tests-transforms/input-coverage.integration.test.ts 
- FAIL  tests-transforms/__tests__/scenario-1-openapi-roundtrip.integration.test.ts [ tests-transforms/__tests__/scenario-1-openapi-roundtrip.integration.test.ts ]
-Error: Transform failed with 1 error:
+unit tests FAILED rc=1
+--- transforms tests: tests-transforms/__tests__/real-world-rejection.integration.test.ts tests-transforms/__tests__/scenario-1-openapi-roundtrip.integration.test.ts tests-transforms/input-coverage.integration.test.ts
  Test Files  1 failed | 1 passed (2)
       Tests  50 passed (50)
---- snapshot tests: tests-snapshot/edge-cases/array-default-values.test.ts tests-snapshot/edge-cases/is-main-response.test.ts tests-snapshot/edge-cases/jsdoc.test.ts tests-snapshot/edge-cases/main-description-as-fallback.test.ts tests-snapshot/edge-cases/number-default-as-number.test.ts tests-snapshot/edge-cases/object-default-values.test.ts tests-snapshot/endpoints/errors-responses.test.ts tests-snapshot/endpoints/param-with-content.test.ts tests-snapshot/naming/handle-props-with-special-characters.test.ts tests-snapshot/options/generation/additionalProperties-is-default.test.ts tests-snapshot/options/generation/withImplicitRequired-option.test.ts tests-snapshot/options/validation/min-with-max.test.ts tests-snapshot/schemas/composition/allOf-infer-required-only-item.test.ts tests-snapshot/schemas/composition/allOf-missing-and.test.ts tests-snapshot/schemas/composition/anyOf-behavior.test.ts tests-snapshot/schemas/composition/array-oneOf-discriminated-union.test.ts tests-snapshot/schemas/references/handle-refs-without-var-name.test.ts tests-snapshot/schemas/references/missing-zod-chains-on-z-object-with-refs-props.test.ts tests-snapshot/schemas/references/request-body-ref.test.ts tests-snapshot/schemas/types/infer-as-object-when-only-properties-set.test.ts tests-snapshot/spec-compliance/openapi-spec-compliance.test.ts tests-snapshot/utilities/openApiToTypescript.test.ts 
- FAIL  tests-snapshot/endpoints/errors-responses.test.ts [ tests-snapshot/endpoints/errors-responses.test.ts ]
- FAIL  tests-snapshot/endpoints/param-with-content.test.ts [ tests-snapshot/endpoints/param-with-content.test.ts ]
+ FAIL  tests-transforms/__tests__/scenario-1-openapi-roundtrip.integration.test.ts [ tests-transforms/__tests__/scenario-1-openapi-roundtrip.integration.test.ts ]
+Error: Transform failed with 1 error:
+transforms tests FAILED rc=1
+--- snapshot tests: tests-snapshot/edge-cases/array-default-values.test.ts tests-snapshot/edge-cases/is-main-response.test.ts tests-snapshot/edge-cases/jsdoc.test.ts tests-snapshot/edge-cases/main-description-as-fallback.test.ts tests-snapshot/edge-cases/number-default-as-number.test.ts tests-snapshot/edge-cases/object-default-values.test.ts tests-snapshot/endpoints/errors-responses.test.ts tests-snapshot/endpoints/param-with-content.test.ts tests-snapshot/naming/handle-props-with-special-characters.test.ts tests-snapshot/options/generation/additionalProperties-is-default.test.ts tests-snapshot/options/generation/withImplicitRequired-option.test.ts tests-snapshot/options/validation/min-with-max.test.ts tests-snapshot/schemas/composition/allOf-infer-required-only-item.test.ts tests-snapshot/schemas/composition/allOf-missing-and.test.ts tests-snapshot/schemas/composition/anyOf-behavior.test.ts tests-snapshot/schemas/composition/array-oneOf-discriminated-union.test.ts tests-snapshot/schemas/references/handle-refs-without-var-name.test.ts tests-snapshot/schemas/references/missing-zod-chains-on-z-object-with-refs-props.test.ts tests-snapshot/schemas/references/request-body-ref.test.ts tests-snapshot/schemas/types/infer-as-object-when-only-properties-set.test.ts tests-snapshot/spec-compliance/openapi-spec-compliance.test.ts tests-snapshot/utilities/openApiToTypescript.test.ts
+ Test Files  22 failed (22)
+      Tests  no tests
  FAIL  tests-snapshot/edge-cases/array-default-values.test.ts [ tests-snapshot/edge-cases/array-default-values.test.ts ]
  FAIL  tests-snapshot/edge-cases/is-main-response.test.ts [ tests-snapshot/edge-cases/is-main-response.test.ts ]
  FAIL  tests-snapshot/edge-cases/jsdoc.test.ts [ tests-snapshot/edge-cases/jsdoc.test.ts ]
+ FAIL  tests-snapshot/edge-cases/main-description-as-fallback.test.ts [ tests-snapshot/edge-cases/main-description-as-fallback.test.ts ]
  FAIL  tests-snapshot/edge-cases/number-default-as-number.test.ts [ tests-snapshot/edge-cases/number-default-as-number.test.ts ]
- FAIL  tests-snapshot/spec-compliance/openapi-spec-compliance.test.ts [ tests-snapshot/spec-compliance/openapi-spec-compliance.test.ts ]
+ FAIL  tests-snapshot/edge-cases/object-default-values.test.ts [ tests-snapshot/edge-cases/object-default-values.test.ts ]
+ FAIL  tests-snapshot/endpoints/errors-responses.test.ts [ tests-snapshot/endpoints/errors-responses.test.ts ]
+ FAIL  tests-snapshot/endpoints/param-with-content.test.ts [ tests-snapshot/endpoints/param-with-content.test.ts ]
+ FAIL  tests-snapshot/naming/handle-props-with-special-characters.test.ts [ tests-snapshot/naming/handle-props-with-special-characters.test.ts ]
  FAIL  tests-snapshot/utilities/openApiToTypescript.test.ts [ tests-snapshot/utilities/openApiToTypescript.test.ts ]
- FAIL  tests-snapshot/options/generation/additionalProperties-is-default.test.ts [ tests-snapshot/options/generation/additionalProperties-is-default.test.ts ]
- FAIL  tests-snapshot/options/generation/withImplicitRequired-option.test.ts [ tests-snapshot/options/generation/withImplicitRequired-option.test.ts ]
- FAIL  tests-snapshot/options/validation/min-with-max.test.ts [ tests-snapshot/options/validation/min-with-max.test.ts ]
- FAIL  tests-snapshot/schemas/composition/allOf-infer-required-only-item.test.ts [ tests-snapshot/schemas/composition/allOf-infer-required-only-item.test.ts ]
+snapshot tests FAILED rc=1
 --- type-check
-type-check rc=2 errors=0
+type-check rc=2 errors=6
 src/schema-processing/writers/shared/json-schema-fields.ts:14:1 - error TS1185: Merge conflict marker encountered.
 
 14 <<<<<<< ours
    ~~~~~~~
 
 src/schema-processing/writers/shared/json-schema-fields.ts:17:1 - error TS1185: Merge conflict marker encountered.
-===== done 16:22:04
+===== done 11:07:29 failures=5
