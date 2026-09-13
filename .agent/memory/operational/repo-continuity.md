@@ -11,6 +11,10 @@ owns the sole queue and Q-30 interactive sequencing amendment. The platform-neut
 autonomous-development experiment is paused and its Claude Routine disabled,
 owner-confirmed on 6 September 2026; no live platform inspection is claimed.
 The commission authorises interactive implementation and condition-based merging.
+The order of work for every inherited PR, dirty worktree and piece of unpushed work
+is the sequence's
+[terminal state and priorities](../../plans/active/castr-documentation-and-fidelity-correction.md#terminal-state-and-priorities):
+zero of each, reached by proof and preservation or by closure and discard.
 
 ## Active threads
 
@@ -49,6 +53,17 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
+Current priority (13 September 2026 close): first, by owner instruction, cure the
+bootstrap merge-driver defect in its own PR from current main, red test first (the
+[thread record](threads/castr-correction.next-session.md) carries the brief); then
+land [PR #101](https://github.com/EngraphCode/castr/pull/101), which carries the
+value-proof sequence and its priority order, when it is green and clean; then the
+hygiene-gate red test on unpatched main with the Q-07 relocation cure; then the
+register in its recorded order. The stash question is open as Q-018; nothing is
+dropped. The
+[priority order](../../plans/active/castr-documentation-and-fidelity-correction.md#terminal-state-and-priorities)
+is stated once, there. The history below is retained as dated evidence.
+
 Q-09 is complete. The [source PR table](../../plans/delivery-ledger.md#source-pr-dispositions)
 records that PR #90 preserved #28's surviving source as `cb73c4de`; PR #28 then
 closed without merge while its recovery branch remained
@@ -81,10 +96,11 @@ continuation instructions are [preserved verbatim](../../plans/archive/correctio
 
 ## Deep consolidation status
 
-due — 13 September 2026: three pending-graduation candidates captured (local-host
+due — 13 September 2026 close: five pending-graduation candidates now wait (local-host
 hook-bypass prohibition, prettier-ignore recomputation validator, container-anchored
-register pattern) and owner rulings of 12 September live only in the napkin and
-distilled entries; not run at this closeout because the commission's C09/C10 owns
-register, graduation and lifecycle reconciliation and the pass is not bounded to one
-session. Historical consolidation claims remain in the conserved source record at
+register pattern, evidence scripts shown failing first, postinstall writing the shared
+git config), the owner rulings of 12 and 13 September live in the napkin and distilled
+entries, and Q-018 is open; not run at this closeout because the commission's C09/C10
+owns register, graduation and lifecycle reconciliation and the pass is not bounded to
+one session. Historical consolidation claims remain in the conserved source record at
 their actual scope; they do not prove this commission complete.

@@ -219,3 +219,15 @@ Distilled from the napkin's Phase 3–6 transplant entries (2026-06-04 → 2026-
   in minutes, and the ledger's "rework after roots" framing was inherited classification,
   yet none of that proved a single gap until the assertion was re-derived from
   principles.md. Same family as green-gates-mask-gaps and verify-agent-claims-firsthand.
+- **When the owner names a number as the goal, record the number (2026-09-13).** The 12
+  September records carried the goal only as per-item acceptance language ("every PR is
+  closed", "every worktree emptied"); the owner's word was "zero", and a reader could not
+  tell whether an open PR with a custody record was an acceptable steady state. Now stated
+  once in the correction plan §Terminal state and priorities and pointed to from every
+  other record. Corollary: enumerate every class the count covers (the stash was unpushed
+  work no record named) and the named, dated exceptions.
+- **A script cited as evidence is shown failing first (2026-09-13).** Three exit-code
+  masking recurrences in one session, the last (`{ ... } | tee` runs the group in a
+  subshell, so the counter never reaches `exit`) inside the commit that named the class.
+  Before citing a script's output, run it on an input known to fail and record the
+  non-zero exit; the pr16/pr18/pr27 reruns exiting 4/5/5 are the worked instance.

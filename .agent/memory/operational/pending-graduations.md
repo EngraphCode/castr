@@ -162,3 +162,24 @@ that a defect register derived from candidate fixes is bounded by the candidates
 doctrine-clause walk is the independent second pass. `[captured: 2026-09-12 | source:
 plan checkpoint, parallax pass]` trigger-condition: a second register built from
 candidates, or the C07/C08 doctrine walk. status: pending.
+
+### A script cited as evidence must be shown exiting non-zero on a failing input
+
+Three recurrences in one session (zsh scripts with no propagation; `echo "push rc=$?"`;
+a brace group piped into `tee`, which runs in a subshell so the failure counter never
+reached `exit`), the last inside the commit that named the class. Candidate permanent
+home: a rule under `read-diagnostic-artefacts-in-full`'s family: before a script's output
+is cited as evidence, run it once on an input known to fail and record the non-zero exit.
+`[captured: 2026-09-13 | source: napkin.md, PR #101 Codex P1]` trigger-condition: the next
+script whose output is cited as evidence, or the next consolidation pass. status: pending.
+
+### Postinstall writes a machine-local path into the shared git config
+
+`registerSemanticMergeDriver` in `agent-tools/src/bootstrap/bootstrap.ts` runs
+`git config --local` from whichever checkout ran `pnpm install`; in a linked worktree
+that writes the shared `.git/config`, so the last install wins and a removed disposable
+worktree leaves every checkout's merge driver dead. Owner instruction 13 September: cure
+it first on resume, red test first. Candidate permanent home once cured: an amendment to
+`no-machine-local-paths` naming shared git config as a surface, or a validator that
+the armed driver path resolves. `[captured: 2026-09-13 | source: napkin.md, evidence
+regeneration]` trigger-condition: the cure landing on main. status: pending.

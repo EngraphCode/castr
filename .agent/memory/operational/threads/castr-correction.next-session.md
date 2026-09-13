@@ -2,18 +2,39 @@
 
 ## Continuation route
 
+- Order of work: the
+  [terminal state and priorities](../../../plans/active/castr-documentation-and-fidelity-correction.md#terminal-state-and-priorities)
+  of the value-proof sequence. Zero open inherited PRs, zero dirty worktrees, zero
+  unpushed work, reached by proof and preservation or by closure and discard.
 - Controlling queue: [parent plan](../../../plans/proof-programme/parent-plan.md#current-execution-state).
-- Next acceptance: the [Q-07 brief](../../../plans/proof-programme/parent-plan.md#slice-briefs)
-  for PR #21's concrete isolation/E2E salvage and verified closure.
+- Next acceptance: the [Q-07 brief](../../../plans/proof-programme/parent-plan.md#slice-briefs),
+  now the hygiene-gate gap: its failing test on unpatched main with the lint
+  restriction and the relocation cure; #21 closes when its claimed gaps are exhausted.
 - Governing sequence for every inherited PR and dirty worktree: the
   [12 September value-proof sequence](../../../plans/active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence).
   Containers are evidence about gaps; a gap is proven only by a failing test on
   unpatched main, and proof lands with its cure in one green-and-clean PR.
-- Live state at 13 September: the sequence is on PR #101, green on checks, three
-  Codex and two Copilot threads answered with fixing commits, Sonar new-code gate to
-  re-pass after the Bash rewrite; not merged. Next safe step: merge #101 when green
-  and clean, then Q-07 with its red test first. Nothing in the 11 dirty worktrees or
-  13 source PRs has been touched.
+- Live state at the 13 September close: the sequence, the priority order, the
+  unpushed-work inventory, the script fixes and the regenerated evidence are all on
+  PR #101 (branch `claude/value-proof-sequence-2026-09-12`); the three third-wave Codex
+  threads are answered with the fixing commit and resolved; the wave on the new head
+  was not yet observed at the close. Not merged. Nothing in the 11 dirty worktrees,
+  the 13 source PRs or the stash has been touched.
+- Owner instructions at the 13 September close, in force for the next session:
+  1. First action on resume: cure the bootstrap merge-driver defect
+     (`agent-tools/src/bootstrap/bootstrap.ts`, `registerSemanticMergeDriver` writes the
+     installing checkout's absolute path into the shared `.git/config`) under
+     principles.md, testing-strategy.md and validation-strategy.md: red test first, the
+     pure derivation unit-tested in process with no FS or git I/O, Light assurance tier,
+     no machine-local path stored. Own PR from current main; independent of #101.
+  2. The stash is not the owner's decision and "least privilege" is not "never": Codex
+     needs to run code and reach the network in some contexts. The question is which
+     surface carries a context-dependent capability; it is
+     [Q-018](../open-questions.md) and stays open. Do not drop the stash.
+- Next safe step, in order: (a) the bootstrap cure above; (b) merge #101 when green and
+  clean, re-fetching the wave on its current head first; (c) the hygiene-gate red test
+  on unpatched main with the Q-07 relocation cure. Everything else follows the
+  priority order in the plan.
 - Completed transition: the Q-09 brief plus the
   [source PR table](../../../plans/delivery-ledger.md#source-pr-dispositions).
 - PR custody and next delivery action: [delivery ledger](../../../plans/delivery-ledger.md).

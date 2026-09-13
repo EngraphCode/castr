@@ -2,6 +2,104 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-09-13 (records-clarity pass and PR #101 third wave — Coal weaves Pumice / f67c69)
+
+- **Owner question: do the records make the goal clear (PRs, dirty worktrees, unpushed
+  work to zero, preserving only proven value)?** Verified answer: no, not fully. The
+  "proven value" half was clear and strict; "zero" appeared in no permanent record and only
+  in this napkin as "analysis and merging"; "unpushed work" was not a class anywhere, and
+  one stash on main (`stash@{0}` at `e025d233`, five lines of Codex sandbox config) escaped
+  the recorded "no unpushed commits on any local branch" measurement, which covers branches
+  only; the proof standard was code-shaped with no documentation standard; the parent plan
+  still routed sequencing to the 9 September sequence and framed Q-07 as "PR #21 salvage".
+  Cure: a `### Terminal state and priorities` subsection stated once in the correction plan,
+  pointed to from the parent plan, ledger, thread record and repo-continuity; an
+  `### Unpushed work, 13 September` inventory with exits; a documentation proof standard
+  (owner approval of the text, sought explicitly); Q-07 and Q-13 briefs reframed as gaps.
+  Mistake class (mine): I wrote the acceptance in per-item language and never stated the
+  count; the owner's word "zero" was the checkable claim and I recorded it only in a buffer.
+- **Third recurrence of the exit-code-masking class, in the commit that named it.** Codex P1
+  on `20228c4e`: the brace group piped into `tee` runs in a subshell, so `failures` never
+  reached `exit` and the script always exited 0. Reproduced with a two-line bash demo. The
+  three earlier instances: zsh scripts with no propagation, `echo "push rc=$?"`, now the
+  pipeline subshell. Cure: plain redirection to the log and `cat` after; the pr16/pr18/pr27
+  reruns exit 4/5/... as their failure counts. `candidate:` a rule-level line under
+  `read-diagnostic-artefacts-in-full` or a new rule: "a script that reports failure must be
+  shown exiting non-zero on a failing input before its output is cited as evidence".
+- **Two more Codex P2s were also real:** `pr-evidence.sh` measured local branch names and
+  only printed the GitHub head (fixed: each PR pinned to its recorded full head SHA, drift
+  reported); `head -12` after `grep 'FAIL|Error'` dropped the vitest summary in three tracked
+  result files (pr16 unit, pr18 unit, pr27 snapshot), so the README's "records the pass and
+  fail counts" was false for those (fixed: summary extracted separately; files regenerated).
+- **Repo defect surfaced by the regeneration: `postinstall` arms the semantic-merge git driver
+  with an absolute path into whichever checkout ran the install, via `git config --local`,
+  which for a linked worktree writes the SHARED `.git/config`.** My disposable `v-pr18id`
+  worktree from 12 September had left every checkout's driver pointing at a removed
+  directory; `git merge-tree` then spilled `MODULE_NOT_FOUND` into the regenerated evidence.
+  `pnpm install` with an up-to-date lockfile skips postinstall, so it did not re-arm;
+  `pnpm run postinstall` in the primary checkout did. `verify-pr.sh` now re-arms after each
+  run. The proper cure (worktree-scoped config or a path resolved from `--git-common-dir`)
+  needs its red test first; it is agent-tools, not the product register. `candidate:` queue
+  row for `agent-tools/src/bootstrap/bootstrap.ts` `registerSemanticMergeDriver`.
+- **Measurement note:** `git merge-tree --write-tree` result OIDs for containers touching
+  memory files differ between the 12 and 13 September runs (driver build differs); the
+  conflict lists are identical. The OID line is now dropped from the evidence as not
+  environment-independent. With `set -e`, a `grep -v` that filters every line aborts the
+  script (PR #26, no conflicts): `|| true` on that pipeline.
+- **Owner instruction mid-turn:** "Once all relevant documents are updated, please stop."
+  Updates made, gates run on the changed files, nothing committed or pushed at that stop.
+- **OWNER INSTRUCTIONS (after the stop):** (1) on resume, fix the bootstrap merge-driver
+  defect under principles.md, testing-strategy.md and validation-strategy.md (TDD red first;
+  the pure config derivation unit-tested in process with no FS or git I/O; Light assurance
+  tier as agent-tools substrate; no machine-local path stored, so the driver resolves its
+  own checkout at merge time rather than being re-armed). (2) The stash is not the owner's
+  decision: run it through the decision lenses. Determination: the estate already holds the
+  answer. The codex-helper skill makes `--sandbox read-only` the least-privilege default with
+  `workspace-write` chosen per invocation, and every tracked Codex agent file pins
+  `sandbox_mode = "read-only"`; the stash would turn on workspace-write plus sandbox network
+  access for every Codex session through the tracked project config. Lens 2 (strict
+  everywhere) resolves it: not landed; no product value, negative substrate value. The five
+  lines are conserved verbatim in the plan's unpushed-work table; `git stash drop` itself
+  remains a destructive operation that needs explicit owner authorisation
+  (`never-use-git-to-remove-work`), which is an authorisation, not a value decision.
+- **OWNER PUSHBACK (verbatim substance): "I am not sure I agree, Codex needs to be able to
+  run code and access the internet sometimes, it depends entirely on the context."** My
+  "not landed" determination is withdrawn as settled. What the pushback corrects: I treated
+  "least privilege" as "never", and read the stash as a permission widening rather than as a
+  capability Codex sessions in this repo do need in some contexts (running gates, `gh`,
+  pushes, MCP). The open question is narrower than I framed it: not whether Codex may run
+  code or reach the network, but which surface carries a context-dependent setting (tracked
+  project config, per-invocation flag, or user config) and how the context is selected.
+  Stash disposition: open, undetermined; nothing dropped; the five lines stay conserved in
+  the plan table. Re-run the lenses on that narrower question on resume, with the
+  codex-helper skill's per-invocation model as one option, not the answer.
+- **Wrap capture (2026-09-13 close, owner-requested full handoff for a zero-context
+  successor).** Landed on PR #101 in one push: the priority order, the unpushed-work
+  inventory, Q-07/Q-13 reframed, the script fixes and regenerated evidence, this napkin.
+  Volatile facts a successor needs and no permanent record should carry: the `main`
+  ruleset requires every review thread resolved and zero approvals, so #101 is BLOCKED
+  only while threads are open; `gh` here authenticates as the owner, so my thread replies
+  read as owner reviews; the Sonar gate passed on `20228c4e` and re-runs on every push.
+  Codex per-user memory (`~/.codex/memories/`, rewritten 09:39–09:42 on 13 September)
+  lists "squash-merge" among its castr keywords: this repository merges by merge commit
+  only, so a Codex successor must not inherit that word. Inferences, flagged as such: the
+  four worktree registrations were pruned by that morning Codex session (timing only);
+  the 12-vs-13 September merge-tree OID difference comes from the driver build (the
+  conflict lists match, the cause is unverified); the stash's git author "Jim Cresswell"
+  on 12 September may be an agent session using the machine identity. Blind-spot bounds:
+  Codex rollout summaries and raw memories unread; the CI wave on the pushed head not
+  observed at close; the seven 12 September verify files checked for summary presence
+  only; the cure direction for the bootstrap defect (driver resolving its own checkout
+  at merge time) not yet verified against git's merge-driver documentation. Index of
+  homes: repo-continuity → thread record → correction plan §Terminal state and
+  priorities; research README for the scripts; Q-018 for the stash; this napkin for the
+  day. Claims, monitors, comms: none opened this session, none to close, no comms events
+  authored. Deliberately context-only: the scratchpad `regen/` outputs (reproducible from
+  the tracked scripts) and the reasoning behind each individual document edit (the
+  edits carry it). Metaloss fixed point: a further pass would only re-find the
+  evidence-outrunning claim class and the three flagged inferences; the recursion
+  closes here. `candidate:` none new beyond the two register entries above.
+
 ## 2026-09-12 (Codex handover reflection, read-only — Coal weaves Pumice / f67c69)
 
 - **OWNER RULING (verbatim substance): "Bypassing checks in any circumstance is prohibited in
@@ -13,9 +111,10 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   authorisation" in `no-verify-requires-fresh-authorisation` is not a lever to pull locally.
   `candidate:` rule amendment naming the local-host prohibition explicitly.
 - **OWNER RULINGS (same turn):** "work is only safe once it is a PR" is true and a separate
-  concern from reaching zero open PRs; zero is reached by careful and thoughtful analysis and
-  merging; every PR fully green and clean before merge; analysis and intelligence, not brute
-  force.
+  concern from reaching zero open PRs; zero is reached by careful and thoughtful analysis,
+  then merge, close, or discard (the 13 September re-read caught that my first wording said
+  "analysis and merging", a merge-biased route); every PR fully green and clean before
+  merge; analysis and intelligence, not brute force.
 - **Handover verification (`tmp/temp-handover-doc.md`, gitignored):** 13 open PRs confirmed;
   PR #26 is MERGEABLE/BEHIND, not conflicting as the handover states; 11 dirty worktrees and
   their path counts exact; zero unique unpushed commits on any local branch; Q-07 E2E file is
@@ -84,8 +183,9 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   reviews at `d36907f` are mine, not owner statements; do not inherit them as owner word.
 - **Wrap capture (2026-09-13, compaction prep):** stale Bora seeks Turbulence claims (5)
   still unarchived in `active-claims.json`; four prunable worktree registrations
-  (`castr-gate`, `castr-head-check`, `castr-lane-samples-fix`, `castr-main-check`) still
-  listed; `tmp/temp-handover-doc.md` is gitignored and machine-local, its verified
+  (`castr-gate`, `castr-head-check`, `castr-lane-samples-fix`, `castr-main-check`) were
+  listed at the wrap and are no longer listed on 13 September (36 registrations, none
+  prunable, none missing; pruned outside this session); `tmp/temp-handover-doc.md` is gitignored and machine-local, its verified
   substance lives in the plan and ledger; the 11 dirty worktrees are untouched.
 - **Parallax pass over the value-proof sequence (core depth, same-context) changed the
   plan in four places and downgraded two register rows.** Defeater probes: the

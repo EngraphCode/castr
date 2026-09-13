@@ -87,3 +87,22 @@ _Transplant decisions (delivery framing, single-TS-override, statusline, release
 hook-matcher precision) are carried by
 [`threads/practice-transplant.next-session.md`](threads/practice-transplant.next-session.md)
 § Standing decisions + Lanes._
+
+### Q-018: Which surface carries context-dependent Codex capability (sandbox, network, web search)
+
+`Captured: 2026-09-13 | source: napkin.md (owner pushback), plan §Unpushed work, 13 September`
+
+A stash on main (`stash@{0}` at `e025d233`) adds `web_search = "indexed"`,
+`sandbox_mode = "workspace-write"` and `[sandbox_workspace_write] network_access = true`
+to the tracked `.codex/config.toml`. The owner's ruling on 13 September: whether Codex may
+run code and reach the network "depends entirely on the context"; it is not an owner
+decision, and "least privilege" is not "never". The codex-helper skill selects the
+sandbox per invocation with read-only as its default, and every tracked Codex agent file
+pins `sandbox_mode = "read-only"`. Open question: which surface should carry a
+capability that varies by context (tracked project config, a per-invocation flag, user
+config, or a named profile), and how the context is selected and recorded. Shapes every
+future Codex session in this repository; not cheaply answerable now because it needs
+the Codex project-config precedence and trust rules verified against the vendor
+documentation (`verify-vendor-call-shapes-at-plan-author-time`). Owning artefact: the
+value-proof sequence's unpushed-work table; the stash stays until this is answered.
+Status: open.
