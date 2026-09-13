@@ -9,6 +9,11 @@
   [12 September value-proof sequence](../../../plans/active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence).
   Containers are evidence about gaps; a gap is proven only by a failing test on
   unpatched main, and proof lands with its cure in one green-and-clean PR.
+- Live state at 13 September: the sequence is on PR #101, green on checks, three
+  Codex and two Copilot threads answered with fixing commits, Sonar new-code gate to
+  re-pass after the Bash rewrite; not merged. Next safe step: merge #101 when green
+  and clean, then Q-07 with its red test first. Nothing in the 11 dirty worktrees or
+  13 source PRs has been touched.
 - Completed transition: the Q-09 brief plus the
   [source PR table](../../../plans/delivery-ledger.md#source-pr-dispositions).
 - PR custody and next delivery action: [delivery ledger](../../../plans/delivery-ledger.md).
@@ -64,5 +69,5 @@ this discovery for the architectural repair; no implementation is claimed here.
 | Agent                 | Platform | Model            | Session prefix | Agent UUID                           | Role                                    | First session | Last session |
 | --------------------- | -------- | ---------------- | -------------- | ------------------------------------ | --------------------------------------- | ------------- | ------------ |
 | Bora seeks Turbulence | codex    | gpt-6-astra      | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd             | 2026-09-06    | 2026-09-10   |
-| Coal weaves Pumice    | claude   | claude-fable-5-1 | f67c69         | d0dfc3a1-ed69-535c-96bd-03c07648c274 | handover analysis, value-proof sequence | 2026-09-12    | 2026-09-12   |
+| Coal weaves Pumice    | claude   | claude-fable-5-1 | f67c69         | d0dfc3a1-ed69-535c-96bd-03c07648c274 | handover analysis, value-proof sequence | 2026-09-12    | 2026-09-13   |
 | Foxglove weaves Acorn | codex    | gpt-6-astra      | 01a088         | a6955478-7b8e-59e9-870e-dcef0d6e81cd | final Cricket I2 proof                  | 2026-09-10    | 2026-09-10   |

@@ -68,6 +68,25 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   normalised fixtures are stale against the writer and `validation-parity` imports the
   stale `petstore-3.0/zod.js`; IDENTITY.md admits explicit `additionalProperties` but
   parser/writer do not.
+- **PR #101 review waves (Codex ×2, Copilot ×1, Sonar) — every finding verified true and
+  fixed; all were defects in my own same-day work.** Wave two on the research scripts:
+  zsh shebang on Linux hosts, `[` vs `[[`, `npx` (Sonar new-security E), no `pipefail`
+  and a trailing `cat` masking failures (the same exit-masking class as the push
+  command), `git status --porcelain` collapsing untracked directories, `origin/main`
+  instead of the pinned measured SHA, and the `verify-*.log` outputs silently excluded
+  by the root `*.log` gitignore so the README advertised files that were never tracked.
+  Copilot: the #21/Q-07 route cited only post-application green, exactly what the new
+  contract forbids. Cure shape for the class: a tracked script is product code and gets
+  the product's discipline (portable shell, pinned inputs, propagated exit status,
+  verified tracking of its outputs) even when it only measures.
+- **Attribution note for successors:** `gh` on this machine authenticates as the owner,
+  so my thread replies on PR #101 appear as `jimCresswell COMMENTED` reviews. Those three
+  reviews at `d36907f` are mine, not owner statements; do not inherit them as owner word.
+- **Wrap capture (2026-09-13, compaction prep):** stale Bora seeks Turbulence claims (5)
+  still unarchived in `active-claims.json`; four prunable worktree registrations
+  (`castr-gate`, `castr-head-check`, `castr-lane-samples-fix`, `castr-main-check`) still
+  listed; `tmp/temp-handover-doc.md` is gitignored and machine-local, its verified
+  substance lives in the plan and ledger; the 11 dirty worktrees are untouched.
 - **Parallax pass over the value-proof sequence (core depth, same-context) changed the
   plan in four places and downgraded two register rows.** Defeater probes: the
   `types.ts` non-empty `isRecord` is the one 16 product files import, so unifying the

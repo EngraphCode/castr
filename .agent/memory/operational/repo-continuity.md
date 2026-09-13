@@ -70,14 +70,21 @@ source-PR transition from current `origin/main`.
 On 12 September the owner redirected inherited-PR and dirty-worktree work to proving
 value before preserving it; the
 [value-proof sequence](../../plans/active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence)
-now governs that work, with its gap register and container map. Q-07 remains the first
-landing.
+now governs that work, with its gap register and container map. That sequence is on
+[PR #101](https://github.com/EngraphCode/castr/pull/101), unmerged at 13 September;
+until it merges the plan text on main lacks it. Q-07 remains the first landing, and
+under the sequence it needs its failing test on unpatched main before the relocation
+cure lands with it.
 The broader C05
 family retains its other obligations. Earlier
 continuation instructions are [preserved verbatim](../../plans/archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
 
 ## Deep consolidation status
 
-The correction commission's C09/C10 owns current register/gradation/history and
-lifecycle reconciliation. Historical consolidation claims remain in the conserved
-source record at their actual scope; they do not prove this commission complete.
+due — 13 September 2026: three pending-graduation candidates captured (local-host
+hook-bypass prohibition, prettier-ignore recomputation validator, container-anchored
+register pattern) and owner rulings of 12 September live only in the napkin and
+distilled entries; not run at this closeout because the commission's C09/C10 owns
+register, graduation and lifecycle reconciliation and the pass is not bounded to one
+session. Historical consolidation claims remain in the conserved source record at
+their actual scope; they do not prove this commission complete.

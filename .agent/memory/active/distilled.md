@@ -203,8 +203,19 @@ Distilled from the napkin's Phase 3–6 transplant entries (2026-06-04 → 2026-
 
 ## Work safety (constant requirement)
 
-- **Work is not safe until it is committed, pushed, AND in a PR — a draft PR is
-  sufficient (owner, 2026-08-25).** Branches without PRs are trivially lost and orphaned.
-  Opening a safety draft PR is loss-protection mechanics, not a merge request: it needs
-  no owner ask, and this standing requirement overrides any platform default of not
-  creating PRs unprompted. End no session with pushed work on a PR-less branch.
+- **Work is safe only when it is merged on main, which happens only through a
+  green-and-clean PR (owner, 2026-09-12: "a commit existing somewhere, on some branch
+  makes NOTHING safe").** This sharpens the 2026-08-25 wording: a pushed branch or a
+  draft PR is loss-protection mechanics and a review surface, never safety. Unmerged
+  material is input to analysis, to be merged if it should merge, reduced to its
+  surviving documentation, or closed and deleted. End no session with pushed work on a
+  PR-less branch, and never describe branch commits or PRs as having secured anything.
+- **Green with the candidate applied is self-consistency, not proof (2026-09-12).** A
+  branch whose own tests pass on a copy of main shows only that the branch is coherent
+  there. Proof that main has a defect is a failing test on unpatched main whose assertion
+  derives from doctrine, the format specification, or an independent oracle, never from
+  the candidate's output; and "applies cleanly" says nothing about whether the hunk
+  encodes current doctrine. Worked instance: five April PRs went green on today's main
+  in minutes, and the ledger's "rework after roots" framing was inherited classification,
+  yet none of that proved a single gap until the assertion was re-derived from
+  principles.md. Same family as green-gates-mask-gaps and verify-agent-claims-firsthand.
