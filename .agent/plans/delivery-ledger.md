@@ -174,7 +174,9 @@ records. PR #87 merged as
 `c1e73c1a`, PR #92 as `8deca63f`, PR #93 as `07ebdb23`, PR #94 as `e70adb23`, and
 PR #95 as `5243e816`, and PR #98 as `0c3d4bdc`. The remaining source PRs close
 only when their recorded extraction or supersession conditions are verified.
-PR #21/Q-07 is the next recorded source-PR transition. Thirteen inherited source
+PR #21/Q-07 is the next recorded source-PR transition, under the value-proof
+sequence: the hygiene-gate red test on unpatched main lands with its cure first, and
+#21 closes only when its claimed gaps are exhausted. Thirteen inherited source
 PRs were open at the live 10 September check after #14 closed. The following
 6 September check and review states are historical observations, not fresh merge
 readiness.
@@ -258,8 +260,11 @@ not authorise another shepherd to resolve review or merge conditions.
 
 Owner direction of 12 September: the goal is to preserve proven value, not to merge
 containers. The [value-proof sequence](active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence)
-owns the gap register, the proof contract and the container map; the rows above keep
-their original acceptance and evidence conditions. The following facts were measured
+owns the gap register, the proof contract and the container map, and its
+[terminal state and priorities](active/castr-documentation-and-fidelity-correction.md#terminal-state-and-priorities)
+name the end of this table: zero open inherited PRs, zero dirty worktrees, zero
+unpushed work, reached by proof and preservation or by closure and discard. The rows
+above keep their original acceptance and evidence conditions. The following facts were measured
 on disposable copies of `origin/main` at `21e23229`. The scripts and their outputs
 are tracked under [`research/inherited-estate-2026-09-12/`](../research/inherited-estate-2026-09-12/README.md);
 the napkin carries the narrative.
@@ -269,7 +274,10 @@ the napkin carries the narrative.
   type-check; #18's identity subset does too; #20 needs one import repointed; #27
   applies except one function; #16 conflicts in 13 files with Q-04.
 - PR #26 is MERGEABLE and BEHIND, not conflicting; the other twelve are CONFLICTING.
-- No local branch carries a commit absent from `origin`.
+- No local branch carries a commit absent from `origin`. That measurement covers
+  branches only: one stash on main (`stash@{0}` at `e025d233`, five lines of Codex
+  sandbox settings) is unpushed work and is inventoried in the sequence's
+  [unpushed-work class](active/castr-documentation-and-fidelity-correction.md#unpushed-work-13-september).
 - The eleven dirty worktrees and their path counts match the 12 September handover;
   `castr-operation-security-empty`'s three code files equal main.
 - These are self-consistency facts. A container's value is proven only by a failing

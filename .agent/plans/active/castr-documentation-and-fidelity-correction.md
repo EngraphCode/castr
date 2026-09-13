@@ -3,7 +3,7 @@ title: Castr documentation correction and fidelity repair
 status: active
 lane: active
 created: 2026-09-06
-last_updated: 2026-09-12
+last_updated: 2026-09-13
 owner_directive: >-
   Implement the owner-approved comprehensive documentation correction and fidelity
   repair: split PR #81, correct all documents, repair all known in-scope fidelity
@@ -109,10 +109,10 @@ atomic plan is in completion staging after all six final-template native returns
 10 September. PR #92 corrected the premature closeout; PR #93 delivered the final
 evidence/lifecycle record as `07ebdb2322ae52bd0627c2f6d36bf42970260a4e`. Q-06 is
 delivered through PR #98 at merge `0c3d4bdc42ed9483672f9f86423904e3ba3f04bd`;
-source PR #14 then closed without merge with its recovery branch retained. Q-07 and
-PR #21 are the next recorded source-PR transition. The reproduced M4 filesystem-I/O
-test defect remains an outstanding part of Q-07; this record does not claim the
-rest of PR #21 has been reverified. The broader C05 family retains its other
+source PR #14 then closed without merge with its recovery branch retained. The next
+landing is the hygiene-gate gap with the Q-07 relocation cure, per §Terminal state
+and priorities. The reproduced M4 filesystem-I/O test defect is that gap's observed
+instance; this record does not claim the rest of PR #21 has been reverified. The broader C05 family retains its other
 obligations. Q-09 is complete: PR #90 delivered the #28
 preservation record before #28 closed, PRs #94/#95 delivered PR #10's surviving
 validator and exact machine-state boundary, and #10 closed while its recovery branch
@@ -276,6 +276,38 @@ This section supersedes the container-by-container ordering that the delivery
 ledger and the 9 September sequence implied for inherited PRs and dirty worktrees.
 Q-22's prerequisites and every original queue acceptance are unchanged.
 
+### Terminal state and priorities
+
+The terminal state of this sequence is zero open inherited PRs, zero dirty worktrees
+and zero unpushed work. Two named exceptions carry their own end: #81 stays open until
+C09 closes it, and #23's branch is retained after its PR closes, per the 26 August
+ruling. A retained recovery branch is history, not preserved value: nothing on a
+branch is safe. Zero is reached by proving value and preserving it on main, and
+otherwise by closing or discarding; it is never reached by merging containers or by
+deleting unproven ones. Every container leaves the estate through one of the exits
+the proof contract below records.
+
+The order of work, which every other record points to rather than restates:
+
+0. Owner instruction, 13 September: before further estate work, cure the bootstrap
+   merge-driver defect (`registerSemanticMergeDriver` writes the installing checkout's
+   absolute path into the shared `.git/config`, so a removed disposable worktree leaves
+   every checkout's driver dead) in its own PR from current main, red test first, with
+   no machine-local path stored. It is independent of PR #101 and does not wait for it.
+1. Land PR #101, which carries this section: until it merges, the plan on main lacks
+   the sequence. This includes the review findings on the measurement scripts and
+   the regenerated evidence.
+2. Cure the defects on main from the gap register in the order §Order and limits
+   records, one integrating PR at a time, each with its red test on unpatched main.
+   The first landing is the hygiene-gate row's red test with the Q-07 relocation
+   cure; #21 closes when its claimed gaps are exhausted.
+3. Zero out the residue as gaps resolve or at owner word: #11 closes with no gap
+   (Q-02 covers it); #23 closes with its branch retained; `custody-corrections` and
+   `operation-security-empty` are discarded; the `fixture-reproduction` files are
+   discarded; the stash in §Unpushed work is dropped or landed.
+4. Q-22 and the remaining C-outcomes exactly as the parent queue records them; the
+   9 September prerequisite sequence still governs Q-22 alone.
+
 ### Unit of work and proof contract
 
 The unit of work is a **gap** between current main and the doctrine in
@@ -292,7 +324,10 @@ taken from, and must not add escape hatches (`as`, `any`, `!`, `Record<string, u
 `Object.*`, `Reflect.*`, check-disabling directives) even where main already carries them.
 A container's code is at most a reference for the green step. A claimed gap for
 which no failing test can be constructed is unproven; its container closes with the
-record "no witness constructible".
+record "no witness constructible". For documentation-only content, where no test can
+witness the gap, the proof is the owner's approval of the text, sought explicitly for
+that text; "applies cleanly" is not approval, and unapproved documentation content is
+unproven value.
 
 The red test's assertion is derived from the doctrine clause, the format
 specification, or an independent oracle (the TypeScript compiler for emitted types,
@@ -368,6 +403,19 @@ gap or the cure; only the red test does.
 | custody-corrections, operation-security-empty | none; content already on main            | code files equal main                                                                                               | discard at owner word                                                                                                                                                                                                                    |
 | fixture-reproduction                          | stale fixtures                           | generated, unformatted, carries the undecided integer output                                                        | record under Q-22; discard the files at owner word                                                                                                                                                                                       |
 
+### Unpushed work, 13 September
+
+The third class the terminal state counts. Measured on 13 September in the primary
+checkout; the ledger's "no local branch carries a commit absent from origin" line
+covers branches only, so the stash is listed here as the class that measurement
+missed.
+
+| Item                               | Measured state                                                                                                                                                  | Exit                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `stash@{0}` on main at `e025d233`  | Five added lines in `.codex/config.toml`: `web_search`, `sandbox_mode` and `[sandbox_workspace_write] network_access`; none of them on main; no product content | Open as [Q-018](../../memory/operational/open-questions.md): the owner ruled on 13 September that Codex needs code execution and network access in some contexts and that this is not an owner decision; the question is which surface carries a context-dependent capability. Not dropped until answered |
+| Local branches without an upstream | 27, including the source-PR branches and the `worktree-wf_*` branches; `git log --branches --not --remotes` is empty, so every commit is on `origin`            | None required for safety; local deletion at owner word only                                                                                                                                                                                                                                               |
+| Worktree registrations             | 36 registered, none prunable and none missing on 13 September; the four registrations the 12 September napkin listed as prunable are no longer listed           | None                                                                                                                                                                                                                                                                                                      |
+
 ### Parallax checkpoint, 12 September
 
 Parallax core depth, same-context emulated execution, software-engineering profile;
@@ -405,8 +453,9 @@ approving the vision doctrine text; naming any removed CLI option wanted as a fe
 
 Acceptance for this sequence: every register row has a red test merged with its cure
 or a recorded "no witness constructible"; every inherited PR is closed with that
-record; every dirty worktree is emptied or discarded at owner word; the ledger and
-this section agree with main. Evidence from the 12 September analysis is tracked under
+record, #81 through C09; every dirty worktree is emptied or discarded at owner word;
+no unpushed work remains, the stash included; the ledger and this section agree with
+main. That is the terminal state §Terminal state and priorities names. Evidence from the 12 September analysis is tracked under
 [`research/inherited-estate-2026-09-12/`](../../research/inherited-estate-2026-09-12/README.md);
 the napkin carries the narrative.
 

@@ -74,7 +74,7 @@ todos:
     status: completed
     depends_on: [Q-00]
   - id: Q-07
-    content: 'PR #21 value extraction: isolation/E2E salvage, then close #21 with the verification recorded'
+    content: 'Hygiene-gate gap: failing test on unpatched main for in-process suites that import node:fs or node:child_process or read process.env, cured by the lint restriction with the #21 relocation; close #21 when its claimed gaps are exhausted'
     status: pending
     depends_on: [Q-00]
   - id: Q-08
@@ -84,7 +84,7 @@ todos:
     content: 'PR closure wave 1: #10 and #28 patch-equivalence verification and closure'
     status: completed
   - id: Q-13
-    content: 'PR #23 disposition: execute the B-11 sequencing outcome (merge-or-retire with value extraction), then close #23'
+    content: 'PR #23 disposition: close #23 with its closure record and retain its branch, per the 26 August parity ruling; no product gap is claimed'
     status: pending
     depends_on: [Q-00]
   - id: Q-10
@@ -166,8 +166,11 @@ it does not resume the experiment or scheduled execution. The [delivery ledger](
 owns PR dispositions. Q-30's acceptance checkpoints live in the delivery plan;
 this frontmatter remains the sole execution queue.
 
-The commission's interactive sequencing follows the [9 September prerequisite
-sequence](../active/castr-documentation-and-fidelity-correction.md#9-september-q-22-prerequisite-sequence).
+The commission's interactive sequencing for every inherited PR and dirty worktree
+follows the [12 September value-proof sequence](../active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence)
+and its terminal state and priority order; the [9 September prerequisite
+sequence](../active/castr-documentation-and-fidelity-correction.md#9-september-q-22-prerequisite-sequence)
+governs Q-22 alone.
 C03a, the bounded operation-security repair, and Q-22's Error-oracle prerequisite
 are delivered. PR #88 delivered C05's platform reviewer-contract tooling as `bd115294`; PR #91
 delivered the dependent installation as
@@ -183,8 +186,10 @@ Q-06 is delivered. PR #98 moved `ajv-draft-04` into the consuming `lib`
 manifest, removed the root declaration and Knip suppression, and updated the
 lockfile without changing the resolved version. Reviewed head `5d9bc962` merged
 as `0c3d4bdc`; the merge commit's second parent and tree match that reviewed
-head. PR #14 then closed without merge with its source branch retained. Q-07 and
-PR #21 are the next recorded source-PR transition.
+head. PR #14 then closed without merge with its source branch retained. The next
+landing is the hygiene-gate gap from the value-proof register (its failing test on
+unpatched main with the Q-07 relocation cure); #21 closes when its claimed gaps are
+exhausted, per the sequence's priority order.
 The broader C05 family retains its other documented obligations. Q-09 is complete:
 PR #90 delivered the #28 preservation record before #28 closed, PRs #94 and #95
 delivered PR #10's surviving validator and machine-state boundary, and #10 closed
@@ -235,8 +240,10 @@ firings after this execution-state check.
 Castr has a ratified definition of what it should and should not be, and a proof estate —
 tests and other correctly typed validation — that **goes green exactly when the claims are
 true**: positive proofs, per the owner's 2026-08-22 directive, grounded in canonical OCE
-`principles.md`, `testing-strategy.md`, and `validation-strategy.md`. Every open PR's value is
-extracted and the PR closed. The programme completes when the report's Tranche 14 certificate
+`principles.md`, `testing-strategy.md`, and `validation-strategy.md`. Every open PR's proven
+value is on main and the PR closed, every dirty worktree is emptied or discarded, and no
+unpushed work remains (the [value-proof sequence](../active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence)
+names that terminal state and its exits). The programme completes when the report's Tranche 14 certificate
 gates pass on one integrated commit for the ratified profile, or the owner closes the
 programme earlier at a narrower ratified scope.
 
@@ -931,10 +938,15 @@ protected checks, Sonar and code scanning passed. PR #14 closed without merge
 after its closure record mapped the four surviving files to PR #98 and excluded
 the unrelated napkin/continuity commits; its recovery branch remains intact.
 
-**Q-07 — #21 extraction + closure.** Surface: logger/E2E relocation and concrete isolation
-fixes only. Non-goals: no source-scanning framework, no known-violation baselines, no
-timeout widening. Acceptance (`integration` + `non-code`): salvaged fixes green; #21 closed
-with verification recorded. Source: report §11.3 #21. Gate: B-11 (success verdict).
+**Q-07 — hygiene-gate gap and #21 closure.** Surface: the failing test on unpatched main
+that in-process suites can import `node:fs` or `node:child_process` or read `process.env`
+(value-proof register row "Missing hygiene gate"), its cure as a lint restriction on the
+in-process test globs, and the logger/E2E relocation that cure requires. Non-goals: no
+source-scanning framework, no known-violation baselines, no timeout widening. Acceptance
+(`integration` + `non-code`): the red test and cure merged in one green-and-clean PR; #21
+closed with its closure record naming which review-thread rationales the cure adopted or
+rejected, or kept open while a claimed gap remains unresolved. Source: report §11.3 #21 and
+the value-proof container map. Gate: B-11 (success verdict).
 
 **Q-08 — ADR estate integrity (mechanical).** Surface: **delete** the
 `.agent/directives/ADR-044/045/046` duplicates outright and repoint every referrer to the
@@ -962,10 +974,11 @@ before #10 closed. Both recovery branches remain. The
 state and functional carriers. Pending semantic findings and Q-017 remain open in
 their permanent homes; current routes do not depend on either source branch.
 
-**Q-13 — PR #23 disposition.** Surface: execute whichever outcome B-11 ratified for the
-practice-transplant lane — selective canonical-delta sync then close, or retire-with-record —
-with commit/file-level verification of unique deltas in the closing commit and closure note.
-Non-goals: no wholesale merge of the stale snapshot. Reconciliation duty (owner card
+**Q-13 — PR #23 disposition.** Surface: close #23 with its closure record and retain its
+branch. The 26 August parity ruling settled the outcome: the wholesale transplant is
+stopped, main is ahead on every shared part, and the value-proof container map records no
+product gap for #23. Non-goals: no wholesale merge of the stale snapshot; no branch
+deletion. Reconciliation duty (owner card
 ruling 2026-08-27, on dropping Q-19's dependency): any pr-lifecycle skill content
 extracted from PR #23 is value-extracted against the THEN-CURRENT skill canonical —
 which may already carry Q-21's merge-authority line and Q-19's tally contract — never
