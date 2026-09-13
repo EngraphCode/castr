@@ -1,0 +1,13 @@
+===== pr17 base=61e30973 branch=fix/remediation-lh-endpoints-mcp-cli 16:18:04
+patch: 23 files
+apply rc=0; conflicted files: 
+apply errors: 0
+--- unit tests: src/cli/helpers.test.ts src/schema-processing/context/endpoints/template-context.endpoints.from-ir.unit.test.ts src/schema-processing/context/endpoints/template-context.status-codes.unit.test.ts src/schema-processing/context/mcp/template-context.mcp.from-ir.test.ts src/schema-processing/context/mcp/template-context.mcp.responses.from-ir.test.ts src/schema-processing/context/template-context.default-status.unit.test.ts 
+ Test Files  6 passed (6)
+      Tests  103 passed (103)
+--- snapshot tests: tests-snapshot/spec-compliance/defaut-status-behavior.test.ts 
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+--- type-check
+type-check rc=0 errors=0
+===== done 16:18:10

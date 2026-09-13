@@ -1,0 +1,13 @@
+===== pr13 base=61e30973 branch=fix/remediation-lc-zod-parser-whitelist 16:20:19
+patch: 25 files
+apply rc=0; conflicted files: 
+apply errors: 0
+--- unit tests: src/schema-processing/parsers/zod/composition/zod-parser.composition.unit.test.ts src/schema-processing/parsers/zod/composition/zod-parser.fail-fast.unit.test.ts src/schema-processing/parsers/zod/composition/zod-parser.intersection.unit.test.ts src/schema-processing/parsers/zod/composition/zod-parser.union.unit.test.ts src/schema-processing/parsers/zod/modifiers/zod-parser.constraints.extra.unit.test.ts src/schema-processing/parsers/zod/types/zod-parser.fail-fast.unit.test.ts 
+ Test Files  6 passed (6)
+      Tests  127 passed (127)
+--- transforms tests: tests-transforms/__tests__/scenario-2-zod-roundtrip.integration.test.ts 
+ Test Files  1 passed (1)
+      Tests  23 passed (23)
+--- type-check
+type-check rc=0 errors=0
+===== done 16:20:32

@@ -1,0 +1,36 @@
+===== pr18 base=61e30973 branch=fix/remediation-ld-security-and-names 16:18:16
+patch: 51 files
+apply rc=1; conflicted files: lib/src/schema-processing/context/mcp/template-context.mcp.security.from-ir.ts lib/src/schema-processing/ir/models/schema.operations.ts lib/src/schema-processing/ir/validation/validators.document.ts lib/src/schema-processing/parsers/openapi/operations/fields/builder.operations.fields.ts lib/src/schema-processing/writers/openapi/openapi-writer.ts lib/src/schema-processing/writers/openapi/operations/openapi-writer.operations.fields.ts 
+apply errors: 0
+--- unit tests: src/rendering/templates/schemas-with-metadata.test.ts src/schema-processing/context/mcp/schemas/template-context.mcp.inline-json-schema.from-ir.test.ts src/schema-processing/context/mcp/template-context.mcp.security.from-ir.test.ts src/schema-processing/ir/serialization.unit.test.ts src/schema-processing/ir/validation/validators.unit.test.ts src/schema-processing/parsers/openapi/operations/builder.operations.unit.test.ts src/schema-processing/parsers/openapi/operations/builder.parameters.unit.test.ts src/schema-processing/parsers/openapi/operations/builder.request-body.unit.test.ts src/schema-processing/parsers/openapi/operations/builder.responses.unit.test.ts src/schema-processing/writers/openapi/openapi-writer.unit.test.ts src/schema-processing/writers/openapi/operations/openapi-writer.operations.unit.test.ts src/schema-processing/writers/typescript/helpers.unit.test.ts src/schema-processing/writers/typescript/typescript.unit.test.ts src/shared/openapi/specification-extensions.unit.test.ts 
+ FAIL  src/rendering/templates/schemas-with-metadata.test.ts [ src/rendering/templates/schemas-with-metadata.test.ts ]
+ FAIL  src/schema-processing/ir/validation/validators.unit.test.ts [ src/schema-processing/ir/validation/validators.unit.test.ts ]
+ FAIL  src/schema-processing/writers/typescript/typescript.unit.test.ts [ src/schema-processing/writers/typescript/typescript.unit.test.ts ]
+ FAIL  src/schema-processing/parsers/openapi/operations/builder.operations.unit.test.ts [ src/schema-processing/parsers/openapi/operations/builder.operations.unit.test.ts ]
+ FAIL  src/schema-processing/parsers/openapi/operations/builder.request-body.unit.test.ts [ src/schema-processing/parsers/openapi/operations/builder.request-body.unit.test.ts ]
+ FAIL  src/schema-processing/parsers/openapi/operations/builder.responses.unit.test.ts [ src/schema-processing/parsers/openapi/operations/builder.responses.unit.test.ts ]
+Error: Transform failed with 1 error:
+ FAIL  src/schema-processing/ir/serialization.unit.test.ts [ src/schema-processing/ir/serialization.unit.test.ts ]
+ FAIL  src/schema-processing/context/mcp/template-context.mcp.security.from-ir.test.ts [ src/schema-processing/context/mcp/template-context.mcp.security.from-ir.test.ts ]
+ FAIL  src/schema-processing/writers/openapi/openapi-writer.unit.test.ts [ src/schema-processing/writers/openapi/openapi-writer.unit.test.ts ]
+ FAIL  src/schema-processing/context/mcp/schemas/template-context.mcp.inline-json-schema.from-ir.test.ts [ src/schema-processing/context/mcp/schemas/template-context.mcp.inline-json-schema.from-ir.test.ts ]
+ FAIL  src/schema-processing/parsers/openapi/operations/builder.parameters.unit.test.ts [ src/schema-processing/parsers/openapi/operations/builder.parameters.unit.test.ts ]
+--- transforms tests: tests-transforms/__tests__/fidelity-security-and-names.integration.test.ts 
+ FAIL  tests-transforms/__tests__/fidelity-security-and-names.integration.test.ts [ tests-transforms/__tests__/fidelity-security-and-names.integration.test.ts ]
+Error: Transform failed with 1 error:
+ Test Files  1 failed (1)
+      Tests  no tests
+--- snapshot tests: tests-snapshot/naming/name-with-special-characters.test.ts 
+ FAIL  tests-snapshot/naming/name-with-special-characters.test.ts [ tests-snapshot/naming/name-with-special-characters.test.ts ]
+Error: Transform failed with 1 error:
+ Test Files  1 failed (1)
+      Tests  no tests
+--- type-check
+type-check rc=2 errors=0
+src/schema-processing/context/mcp/template-context.mcp.security.from-ir.ts:161:1 - error TS1185: Merge conflict marker encountered.
+
+161 <<<<<<< ours
+    ~~~~~~~
+
+src/schema-processing/context/mcp/template-context.mcp.security.from-ir.ts:173:1 - error TS1185: Merge conflict marker encountered.
+===== done 16:18:20
