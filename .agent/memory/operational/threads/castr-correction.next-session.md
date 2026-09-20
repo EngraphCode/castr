@@ -28,7 +28,9 @@
   through a closing keyword in a #101 commit message; its closure record and #11's
   per-delta record are in the research README's closure records, and #11 closes when
   this record is on main. Open PRs at this close: #11, #12, #13, #15, #16, #17, #18, #20,
-  #23, #26, #27 and #81, twelve in all; after PR #104 and this record, #23 and #81 only.
+  #23, #26, #27 and #81, twelve in all. After PR #104 (`SHA:11715614`) and PR #105 (`SHA:902a9e0f`)
+  landed their records, #11 and the nine code containers closed without merge with their
+  branches retained; open at the fourth close: #23 (Q-13) and #81 (its C09 exception).
 - Loss event, found 20 September: the `castr-q07-zod-fixture-runner` worktree lived under
   `the system temp directory`; the temp purge removed its `.git` file and all six dirty files between
   13 and 20 September. The 12 September inventory row (git history, `f8a744c2`) is the
@@ -55,11 +57,11 @@
 - Next safe step, in order, under the owner priority stated 20 September (open PR count
   to zero through the PR lifecycle, every piece of lingering and orphaned work resolved,
   then the known Castr defects): (a) done: PRs #101, #102 and #103 are on main; (b) the
-  eleven remaining inherited PRs, each closed through its recorded disposition (ledger §Source PR
+  remaining inherited PRs (#23 under Q-13, #81 under its C09 exception), each closed through its recorded disposition (ledger §Source PR
   dispositions; the 20 September review's §12 table) or its proven parts extracted, one
-  landing slot at a time, starting with #11 (record on main, close, retain the branch) and
-  #23 (Q-13, the doctrine reading of the preliminary inventory), while #81 keeps its C09
-  exception; (c) the ten dirty worktrees, the stash (Q-018 stays open), the
+  landing slot at a time: #23's Q-13 doctrine reading needs the owner's answer to one
+  question (does main want a worker agent class beside the reviewer class?), recorded in
+  the preliminary inventory; #81 keeps its C09 exception; (c) the ten dirty worktrees, the stash (Q-018 stays open), the
   prunable temp-directory registrations and the branches, per §Terminal state item 2;
   (d) the revised repair plan (Q-32), then the hygiene-gate red test (Q-07) with the
   relocation re-derived from PR #21. Use the OCE `pr-lifecycle` and `proportionality`

@@ -59,9 +59,10 @@ and its priority order, `SHA:0ad80a41`) are on main; every checkout builds its o
 run `pnpm install` in a worktree before merging memory files there. Owner priority,
 20 September: bring the open PR count to zero through the PR lifecycle (the OCE
 `pr-lifecycle` and `proportionality` skills), resolve every piece of lingering and
-orphaned work, then repair the known Castr defects. In order: close the eleven remaining
-inherited PRs through their recorded dispositions (queue row Q-34; #23 is Q-13; #81 keeps
-its C09 exception), starting with #11, whose per-delta record is in the research README;
+orphaned work, then repair the known Castr defects. Ten inherited PRs closed without merge on
+20 September with their records on main (PR #104 `SHA:11715614`, PR #105 `SHA:902a9e0f`) and their
+branches retained; open: #23 (Q-13) and #81 (its C09 exception). In order: #23's Q-13 doctrine reading (one owner
+question recorded in the research README's preliminary inventory) and #81's C09 exception;
 then the dirty worktrees, the stash (Q-018), the prunable registrations and the branches;
 then the revised, dependency-ordered repair plan the owner-commissioned
 [20 September review](https://github.com/EngraphCode/castr/pull/101#issuecomment-5750407866)
