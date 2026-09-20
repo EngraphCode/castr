@@ -126,8 +126,7 @@ checkout without that build halts its merges on these paths with an unmerged fil
 module-resolution error naming that path; the unmerged file holds your side only, with no
 conflict markers, so do not stage it. Run `pnpm install` in that checkout (its `postinstall`
 builds the driver and binds it), or `pnpm --filter @engraph/agent-tools build` when the
-checkout is already installed and only `dist` was cleaned, then re-run the merge so the
-routing message fires. The command starts with `node`, so a merge launched from a client
+checkout is already installed and only `dist` was cleaned, then exit the halted operation with `git merge --abort`, `git rebase --abort` or `git cherry-pick --abort`, whichever was running (it discards no committed work and restores the pre-merge tree), and re-run it so the routing message fires. The command starts with `node`, so a merge launched from a client
 whose `PATH` has no `node` halts the same way. A fresh clone that has never run
 `pnpm install` has no binding and falls back to git's default line-merge, and a
 bare-repository or server-side merge (`gh pr merge`, auto-merge, `merge-tree` in a bare
