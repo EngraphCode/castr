@@ -217,9 +217,14 @@ its cure.
   there; thirteen files conflict). Probe: four new suites are red on main on sibling
   and content keywords (doctrine-shaped); `json-schema-2020-12-fields.unit.test.ts`
   fails on a helper main lacks and the transforms suite on a fixture the branch adds,
-  so both are re-run with their companions before they count. Reference material:
-  the omitted-additional-properties policy, which the ledger replaces. Branch
-  `fix/remediation-lf-json-schema-fidelity`.
+  so both are re-run with their companions before they count. The branch's fail-fast
+  for `unevaluatedProperties` and `unevaluatedItems`, and its finding that
+  `cloneWithoutSharedKeywords` deletes those keywords with `dependentSchemas` and
+  `prefixItems` before union-member conversion, transfer to the same row, widened to
+  name them: main parses both keywords and emits refinements for them, but its MCP
+  draft-07 path strips them silently (tested as stripping) and the union path still
+  deletes them. Reference material: the omitted-additional-properties policy, which the
+  ledger replaces. Branch `fix/remediation-lf-json-schema-fidelity`.
 - **PR #17** (`de4abf4d`, twenty-seven files): transfers to three rows (wildcard
   statuses lost at projection; numeric successes other than `200`–`204`/`2XX` sent to
   the error branch; CLI options mapped to `undefined` silently). Probe: three new
@@ -227,16 +232,21 @@ its cure.
   option validation. Reference material: the old primary-response selection and the
   unused options, which the 20 September review §9 corrects. Branch
   `fix/remediation-lh-endpoints-mcp-cli`.
-- **PR #18** (`9c93ccaa`, fifty-five files): the security slice is landed (grouped
-  requirements and anonymous access through Q-03 and PR #50; the operation-level
-  `security: []` repair through PR #86) with the ledger as evidence; the identity
-  slice transfers to the digit-names row ("Component names starting with a digit emit
-  invalid TypeScript", whose source column names this slice for the producer). Probe:
-  the operations suite is red on main because an `x-` extension under a path item is
-  read as a path (doctrine-shaped, extension skipping); the helpers suite asserts the
-  candidate's rename entries (reference only); the specification-extensions suite and
-  the transforms suite need a module and a fixture the branch adds. Branch
-  `fix/remediation-ld-security-and-names`.
+- **PR #18** (`9c93ccaa`, fifty-five files), delta by delta, against the ledger's
+  6 September section: grouped security requirements and anonymous access, landed
+  through Q-03 and PR #50; the operation-level `security: []` override, landed through
+  PR #86; document-level `security: []` loss, reproduced on 6 September and transferred
+  to its own register row (source: this slice; C08/identity-interactions carrier);
+  the `x-` extension under a path item read as a path, reproduced by the probe below
+  and transferred to its own register row with the retained suite as evidence; the
+  identity slice (wire names, collision-safe generated symbols), transferred to the
+  digit-names row whose source column names it for the producer; the description,
+  reference and hostile-key deltas, unresolved investigations routed to the ledger's
+  owning rows (Q-12, tranches 03 and 06), where the exact subset evidence is
+  re-derived. Probe: the operations suite is red on main (extension skipping,
+  doctrine-shaped); the helpers suite asserts the candidate's rename entries
+  (reference only); the specification-extensions suite and the transforms suite need
+  a module and a fixture the branch adds. Branch `fix/remediation-ld-security-and-names`.
 - **PR #27** (`a48eced8`, one hundred and four files): transfers to the
   `additionalProperties` row ("Parser rejects explicit `.catchall()` and writer always
   emits `strictObject`") and to the recursive-catchall row, whose source column already
