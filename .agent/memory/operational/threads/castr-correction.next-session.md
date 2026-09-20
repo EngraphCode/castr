@@ -17,22 +17,18 @@
   [12 September value-proof sequence](../../../plans/active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence).
   Containers are evidence about gaps; a gap is proven only by a failing test on
   unpatched main, and proof lands with its cure in one green-and-clean PR.
-- Live state at the 20 September second close (Candle weaves Residue, a4c7fb):
-  terminal-state item 0 is delivered. PR #103 (branch
-  `claude/bootstrap-merge-driver-relative-2026-09-20` from main `21e23229`) registers the
-  semantic-merge driver by its path within the checkout,
-  `node agent-tools/dist/src/bin/semantic-merge-driver.js %O %A %B %P`: pure derivation
-  unit-tested, registration integration-tested against scripted git fakes, five
-  out-of-process E2E cases, two review rounds each answered in one push, merged as
-  `8a53cc78` at 20:41Z. PR #101 (this branch) carries the sequence, the priority
-  order, the corrected premises and the regenerated evidence; its rounds 4 wave, 5 and 6
-  were answered contemporaneously, one push each, and the round 6 push (`wt-evidence.sh`
-  aborts when `git status` fails; Q-13 depends on Q-32) also carries this handoff. It
-  waits for its wave, a branch update against main and a merge commit. PR #102
-  (retrospective) is CLEAN at `db78c9be` with rounds 1 and 2 answered; it lands after
-  #101 by a hand union of `napkin.md` and `pending-graduations.md` against #101's merged
-  versions, never by the server-side branch update, then merges. Open PRs at the close:
-  #101, #102, the twelve inherited PRs and #81, fifteen in all.
+- Live state at the 20 September third close (Candle weaves Residue, a4c7fb): three PRs
+  landed on main through the lifecycle. PR #103 (the bootstrap merge-driver cure) merged
+  as `8a53cc78` at 20:41Z; PR #102 (the retrospective) as `8ca0db05` at 21:35Z; PR #101
+  (the value-proof sequence, its priority order, the corrected premises, the regenerated
+  evidence and this record's previous close) as `0ad80a41` at 21:56Z after twelve review
+  rounds, the last six on a records-class PR past its budget. The cured merge driver
+  fired in anger on #101's final merge from main, routing `napkin.md` and
+  `pending-graduations.md` to a hand union. PR #21 was closed by GitHub at 21:56:03Z
+  through a closing keyword in a #101 commit message; its closure record and #11's
+  per-delta record are in the research README's closure records, and #11 closes when
+  this record is on main. Open PRs at this close: #11, #12, #13, #15, #16, #17, #18, #20,
+  #23, #26, #27 and #81, twelve in all.
 - Loss event, found 20 September: the `castr-q07-zod-fixture-runner` worktree lived under
   `the system temp directory`; the temp purge removed its `.git` file and all six dirty files between
   13 and 20 September. The 12 September inventory row (git history, `f8a744c2`) is the
@@ -58,12 +54,12 @@
      [Q-018](../open-questions.md) and stays open. Do not drop the stash.
 - Next safe step, in order, under the owner priority stated 20 September (open PR count
   to zero through the PR lifecycle, every piece of lingering and orphaned work resolved,
-  then the known Castr defects): (a) settle and merge PR #101 (fetch the wave on its
-  current head, disposition each finding, update the branch against main, merge with a
-  merge commit), then sync PR #102 by hand union and merge it; (b) the twelve inherited
-  PRs, each closed through its recorded disposition (ledger §Source PR
+  then the known Castr defects): (a) done: PRs #101, #102 and #103 are on main; (b) the
+  eleven remaining inherited PRs, each closed through its recorded disposition (ledger §Source PR
   dispositions; the 20 September review's §12 table) or its proven parts extracted, one
-  landing slot at a time, while #81 keeps its C09 exception; (c) the ten dirty worktrees, the stash (Q-018 stays open), the
+  landing slot at a time, starting with #11 (record on main, close, retain the branch) and
+  #23 (Q-13, the doctrine reading of the preliminary inventory), while #81 keeps its C09
+  exception; (c) the ten dirty worktrees, the stash (Q-018 stays open), the
   prunable temp-directory registrations and the branches, per §Terminal state item 2;
   (d) the revised repair plan (Q-32), then the hygiene-gate red test (Q-07) with the
   relocation re-derived from PR #21. Use the OCE `pr-lifecycle` and `proportionality`

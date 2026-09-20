@@ -53,23 +53,21 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-Current priority (20 September 2026 second close): the bootstrap merge-driver cure is on
-main through [PR #103](https://github.com/EngraphCode/castr/pull/103) (`8a53cc78`); every
-checkout builds its own driver, so run `pnpm install` in a worktree before merging memory
-files there. Owner priority, 20 September: bring the open PR count to zero through the PR
-lifecycle (the OCE `pr-lifecycle` and `proportionality` skills), resolve every piece of
-lingering and orphaned work, then repair the known Castr defects. In order: land
-[PR #101](https://github.com/EngraphCode/castr/pull/101), which carries the value-proof
-sequence and its priority order, when its current-head wave is settled; reconcile the
-retrospective [PR #102](https://github.com/EngraphCode/castr/pull/102) against it by hand
-union of the two memory files and merge it; close the twelve inherited PRs through their
-recorded dispositions, with #81 keeping its C09 exception; then the dirty worktrees, the stash (Q-018), the prunable
-registrations and the branches; then the revised, dependency-ordered repair plan the
-owner-commissioned
+Current priority (20 September 2026 third close): PRs #103 (the bootstrap merge-driver
+cure, `8a53cc78`), #102 (the retrospective, `8ca0db05`) and #101 (the value-proof sequence
+and its priority order, `0ad80a41`) are on main; every checkout builds its own driver, so
+run `pnpm install` in a worktree before merging memory files there. Owner priority,
+20 September: bring the open PR count to zero through the PR lifecycle (the OCE
+`pr-lifecycle` and `proportionality` skills), resolve every piece of lingering and
+orphaned work, then repair the known Castr defects. In order: close the eleven remaining
+inherited PRs through their recorded dispositions (queue row Q-34; #23 is Q-13; #81 keeps
+its C09 exception), starting with #11, whose per-delta record is in the research README;
+then the dirty worktrees, the stash (Q-018), the prunable registrations and the branches;
+then the revised, dependency-ordered repair plan the owner-commissioned
 [20 September review](https://github.com/EngraphCode/castr/pull/101#issuecomment-5750407866)
-asks for; then the hygiene-gate red test on unpatched main, with the Q-07 relocation
-re-derived from PR #21 because the worktree that held it was purged from the system temp
-directory. The
+asks for (Q-32); then the hygiene-gate red test on unpatched main (Q-07), with the
+relocation re-derived from PR #21 because the worktree that held it was purged from the
+system temp directory. The
 [priority order](../../plans/active/castr-documentation-and-fidelity-correction.md#terminal-state-and-priorities)
 is stated once, there. The history below is retained as dated evidence.
 
