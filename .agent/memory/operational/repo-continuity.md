@@ -53,28 +53,26 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-Current priority (20 September 2026 second close): the bootstrap merge-driver cure is on
-main through [PR #103](https://github.com/EngraphCode/castr/pull/103) (`8a53cc78`); every
-checkout builds its own driver, so run `pnpm install` in a worktree before merging memory
-files there. Owner priority, 20 September: bring the open PR count to zero through the PR
-lifecycle (the OCE `pr-lifecycle` and `proportionality` skills), resolve every piece of
-lingering and orphaned work, then repair the known Castr defects. In order: land
-[PR #101](https://github.com/EngraphCode/castr/pull/101), which carries the value-proof
-sequence and its priority order, when its current-head wave is settled; reconcile the
-retrospective [PR #102](https://github.com/EngraphCode/castr/pull/102) against it by hand
-union of the two memory files and merge it; close the twelve inherited PRs through their
-recorded dispositions, with #81 keeping its C09 exception; then the dirty worktrees, the stash (Q-018), the prunable
-registrations and the branches; then the revised, dependency-ordered repair plan the
-owner-commissioned
+Current priority (20 September 2026 third close): PRs #103 (the bootstrap merge-driver
+cure, `SHA:8a53cc78`), #102 (the retrospective, `SHA:8ca0db05`) and #101 (the value-proof sequence
+and its priority order, `SHA:0ad80a41`) are on main; every checkout builds its own driver, so
+run `pnpm install` in a worktree before merging memory files there. Owner priority,
+20 September: bring the open PR count to zero through the PR lifecycle (the OCE
+`pr-lifecycle` and `proportionality` skills), resolve every piece of lingering and
+orphaned work, then repair the known Castr defects. In order: close the eleven remaining
+inherited PRs through their recorded dispositions (queue row Q-34; #23 is Q-13; #81 keeps
+its C09 exception), starting with #11, whose per-delta record is in the research README;
+then the dirty worktrees, the stash (Q-018), the prunable registrations and the branches;
+then the revised, dependency-ordered repair plan the owner-commissioned
 [20 September review](https://github.com/EngraphCode/castr/pull/101#issuecomment-5750407866)
-asks for; then the hygiene-gate red test on unpatched main, with the Q-07 relocation
-re-derived from PR #21 because the worktree that held it was purged from the system temp
-directory. The
+asks for (Q-32); then the hygiene-gate red test on unpatched main (Q-07), with the
+relocation re-derived from PR #21 because the worktree that held it was purged from the
+system temp directory. The
 [priority order](../../plans/active/castr-documentation-and-fidelity-correction.md#terminal-state-and-priorities)
 is stated once, there. The history below is retained as dated evidence.
 
 Q-09 is complete. The [source PR table](../../plans/delivery-ledger.md#source-pr-dispositions)
-records that PR #90 preserved #28's surviving source as `cb73c4de`; PR #28 then
+records that PR #90 preserved #28's surviving source as `SHA:cb73c4de`; PR #28 then
 closed without merge while its recovery branch remained
 intact. PRs #94 and #95 delivered PR #10's surviving validator and machine-state
 boundary; #10 then closed and retained its recovery branch. Its surviving semantic
@@ -83,12 +81,12 @@ decision lives as Q-017. PR #89 delivered the Error-oracle prerequisite;
 the [correction plan](../../plans/active/castr-documentation-and-fidelity-correction.md#9-september-q-22-prerequisite-sequence)
 retains Q-22's integer-contract and paired generator/output prerequisites. C03b/c
 and other prepared drafts retain their bounded carriers. Kite hunts Eyrie delivered PR #88; Bora seeks Turbulence delivered the dependent
-Cricket installation in PR #91 as `af840d9b`. PR #92 corrected the premature C05 Cricket
+Cricket installation in PR #91 as `SHA:af840d9b`. PR #92 corrected the premature C05 Cricket
 lifecycle closeout, and PR #93 delivered the final evidence/lifecycle record as
-`07ebdb23`. The [final native record](../../reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json)
+`SHA:07ebdb23`. The [final native record](../../reports/agentic-engineering/cricket-castr-final-native-2026-09-10.json)
 now retains all six substantive final-template returns from the fresh trusted Castr
 task, with normal and same-agent adversarial stances. The atomic plan is in completion
-staging. Q-06 is delivered through PR #98 at merge `0c3d4bdc`; source PR #14 closed
+staging. Q-06 is delivered through PR #98 at merge `SHA:0c3d4bdc`; source PR #14 closed
 without merge with its recovery branch retained. Q-07/PR #21 is the next recorded
 source-PR transition from current `origin/main`.
 On 12 September the owner redirected inherited-PR and dirty-worktree work to proving

@@ -64,7 +64,11 @@ the merge-driver build as well as the pinned commits.
 - `verify-<label>.txt`: one per probed PR (11, 12, 13, 15, 16, 17, 18, 20, 26, 27).
   `verify-pr16.txt`, `verify-pr18.txt` and `verify-pr27.txt` were regenerated on
   13 September by `verify-pr.sh` at the pinned heads; the other seven were produced by
-  the 12 September zsh predecessor, whose output shape the Bash rewrite preserves.
+  the 12 September zsh predecessor. The two formats differ. The predecessor's header is
+  `===== <label> base=<sha> branch=<name> <time>` and its footer `===== done <time>`;
+  the current script's header is `===== <label> base=<sha> head=<sha> main=<sha> <time>`
+  and its footer `===== done <time> failures=<n>`. The seven older outputs are
+  historical evidence, not reproducible by the current script byte for byte.
   Each records the patch file count, apply result and conflicted files, the test files
   run with their vitest summary (pass and fail counts per run), and the type-check
   result.
@@ -87,3 +91,99 @@ conflicts, both recorded in the napkin entry for the day.
   `git fetch origin refs/pull/<n>/head` for every PR number in the script, then
   `git cat-file -e <pinned head>` confirms the object. The script aborts naming the missing
   object and that command; it does not fetch on its own.
+
+## Closure records
+
+Per-delta dispositions for inherited PRs, recorded here before each PR closes
+(correction plan §Terminal state item 2; every unique delta is landed with exact
+evidence, superseded with a reason, discarded at owner word, unresolved and routed to an
+owning row, or, for a claimed uncured gap only, transferred to the gap register).
+
+### PR #11 residual delta against main (measured 20 September 2026)
+
+Head `64feef9e`, merge base `4be99dae`; eight files changed on the branch. Compared file by
+file with `origin/main` at `8a53cc78` and with the Q-02 evidence record (PR #35, merged
+2026-08-23).
+
+| Delta                                                                                                         | Disposition                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `lib/tests-transforms/utils/fidelity-harness.ts` (229 lines, OpenAPI-bound `runFidelityProof`)                | Superseded with a reason: Q-02 extracted its outcome-record and non-vacuity concepts into the artifact-agnostic `semantic-outcome-runner.ts`, with structural non-vacuity (`separatingSource` recomputed on three legs), independent source/target oracles and per-callback cloning; the report's #11 disposition forbids restoring the OpenAPI/legacy-root runner. Its four properties are dispositioned individually below.                     |
+| Boundary revalidation of writer output through `loadOpenApiDocument`                                          | Landed for the positive direction: `writer-field-coverage.integration.test.ts` reparses emitted Phase D and Phase E output through the shared load boundary (lines 545 and 645 on main), so spec-invalid output would fail those tests. Unresolved investigation routed: no test on main seeds a deliberately spec-invalid written document and asserts the rejection, which #11's second smoke case did; owned by the Tranche 01 harness (Q-11). |
+| IR serialization round-trip (`deserializeIR(serializeIR(ir))`)                                                | Already landed: `serialization.unit.test.ts`, `public-api-preservation.test.ts`, and the security-formula and nested-boolean transform suites exercise it on main.                                                                                                                                                                                                                                                                                |
+| Byte-stable second-pass rewrite                                                                               | Already landed: scenarios 1, 2 and 5 assert byte-identical output on the second pass.                                                                                                                                                                                                                                                                                                                                                             |
+| `sourceAssertions` against the raw loaded source document                                                     | Superseded: the runner's `sourceOracle` is computed directly from the source, never via `parse`, which is the independent-oracle form of the same intent; the report's disposition retains the concept, not the callback.                                                                                                                                                                                                                         |
+| `fidelity-harness.smoke.integration.test.ts` (four cases)                                                     | Case 1 (machine-readable outcome) landed in Q-02; case 2 (a seeded spec-invalid written document rejected at the load boundary) routed to Q-11 as above; cases 3 and 4 (source assertions fire and propagate) superseded as above.                                                                                                                                                                                                                |
+| `__fixtures__/edge-cases/fidelity-smoke.yaml` and the README rewrite                                          | Superseded: the edge-cases directory on main holds only its README; the fixture existed to drive the OpenAPI-bound harness. The per-fixture corpus shape is owned by Tranche 01 (Q-11), which consumes the Q-02 runner.                                                                                                                                                                                                                           |
+| `docs/architecture/fidelity-proof-harness.md` (117 lines)                                                     | Superseded: the runner's module documentation and the `lib/tests-transforms/README.md` row carry the doctrine; the paused plan `02-ir-fidelity-proof-harness.md` records the absorption into the queue (B-11).                                                                                                                                                                                                                                    |
+| `DEFINITION_OF_DONE.md` fidelity-suite bullet                                                                 | Superseded: it points at the never-landed architecture document; main's DoD names the E2E and transform suites in its gate table.                                                                                                                                                                                                                                                                                                                 |
+| `schemas-with-metadata.test.ts` and `templating.unit.test.ts` (typed result access, second-run file equality) | Already landed: main uses `assertSingleFileResult` / `result.content` and asserts first-run against second-run files.                                                                                                                                                                                                                                                                                                                             |
+
+Unresolved investigation routed: the 20 September review §2.1 names a vacuous parity lane
+(transform helpers return when a fixture key is absent) that Q-02's runner does not touch;
+it is owned by the revised repair plan (Q-32), not by #11.
+
+Closure: #11 closes without merge when this record is on main; its branch is retained as
+history, not preserved value.
+
+### PR #21 closure, 20 September 2026
+
+Closed by GitHub at 21:56:03Z, two seconds after PR #101 merged as `0ad80a41`, through
+the words "closes #21" in a round-11 commit message on that PR, not by a deliberate
+close. The outcome matches the recorded disposition: the gap register on main carries
+the hygiene-gate row (in-process suites importing `node:fs` or `node:child_process` or
+reading `process.env`, cured by the lint restriction with this branch's relocation) with
+#21 as its candidate source, and queue row Q-07 resolves it with the failing test on
+unpatched main. The branch `fix/remediation-li-test-hygiene` is retained at `4a869f98`.
+The logger-isolation value landed through PR #100; the large source scanner, the
+known-violation baselines and the timeout widening stay excluded. A closing keyword in
+commit text is a hazard this record names: describe closures in the plan's words
+("closes in the disposition phase") only in files, never in a commit subject or body.
+
+## Disposition inventories in progress
+
+### PR #23 preliminary delta inventory (measured 20 September 2026, head 5fa82e88, base 35efaa45)
+
+Sixty files. Twenty-six are absent from main by path; thirty-four exist on main with main
+ahead of the branch. Per unique delta the closure record must state one of: reproduced
+current gap with selected cure, already landed with exact evidence, superseded with a
+reason, or unresolved investigation routed to an owning row. Mechanical findings so far:
+
+- Moved, present on main: the concept-exploration skill (now under
+  `.agent/skills/cognition/`); the statusline thread's substance (58 referencing files).
+- Number collision: the branch's PDR-125 (adversarial verification of delegated work) is
+  a different record from main's PDR-125 (inter-practice collaboration protocol); any
+  extraction renumbers.
+- Absent from main by path and by identifier: PDR-126 (machine identities for agent
+  fleets), PDR-140 (we do not discard information), PDR-141 and the 343-line
+  compound-agent-composition document, PDR-142 (three-tier fleet composition); the
+  `lean-task-subagents` skill (305 lines) and its platform copies; the
+  `adversarially-verify-subagent-output` rule and its platform copies; the `task-worker`
+  template, its worker-reading-discipline behaviour and its Claude, Codex and Cursor
+  adapters; `agent-projection.ts` and its unit test; `validate-subagents-template-checks.ts`.
+- Code deltas where main has since moved on (branch delta vs its base): the subagent
+  validators (codex-toml +138, adapter-validation +83, validate-subagents +61, unit test
+  +288), the adapter generator (+137/-41 with its test), and pr-watch (report +28, cli
+  +14, tests +104). Each needs an identifier-level comparison with main's current
+  modules before extraction or retirement is recorded.
+- Records that retire with the branch: its napkin, repo-continuity, pending-graduations
+  and thread-record additions (superseded by main's later state), the transplant plan
+  `resonance-practice-imports-2026-07.md`, and the experience file, which is conserved
+  by the retained branch under the 26 August ruling.
+
+Not yet done: the per-delta reading of every absent artefact against current Practice
+doctrine (does main have a consumer for it?), and the identifier-level comparison of the
+code deltas. Owning row: Q-13.
+
+Identifier-level result for the code deltas (20 September): every identifier the branch
+added to the subagent validators (`decodeTomlBasicKey`, `getCodexPermissionCompositionIssues`,
+`getProjectionOnlyKeyIssues`, `getReadingDisciplineIssues`, `templateClassByPath` and their
+companions), to the adapter generator (`claudeWorkerFrontmatter`, `cursorWorkerFrontmatter`,
+`CLAUDE_WORKER_MODEL`), to `agent-projection.ts` (`AgentClass`, `AgentProjection`,
+`readAgentProjection`, `WorkerTool`) and to pr-watch (`isAllGreen`, `allGreenLine`) is absent
+from main. They are one feature: a worker agent class beside the reviewer class, with its
+projection metadata, Codex permission composition and reading-discipline validation. The
+Q-13 record decides it as a unit: either main has a present consumer for a worker class
+(then it is a reproduced gap with the branch as a source, re-derived against main's current
+validators) or it is retired with the reason that no doctrine on main calls for it. That
+is a doctrine reading, not a mechanical one; the owner's 26 August parity ruling and the
+stopped wholesale transplant are its inputs.

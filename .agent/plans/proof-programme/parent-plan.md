@@ -11,11 +11,11 @@ todos:
     depends_on: [Q-00]
   - id: Q-33
     content: 'Land PR #101 (the value-proof sequence and its priority order) and PR #102 (the retrospective) on main through settled waves and merge commits (terminal-state item 1)'
-    status: in_progress
+    status: completed
     depends_on: [Q-31]
   - id: Q-34
     content: "Inherited PR and orphaned-work dispositions (terminal-state item 2): per-delta records for #11, #12, #13, #15, #16, #17, #18, #20, #21, #26 and #27 and for the dirty worktrees, each closing through the proof contract's applicable disposition per delta (landed with exact evidence, superseded with a reason, discarded at owner word, or, for a claimed uncured gap only, the register transfer); #81 keeps its C09 exception; #23 is Q-13"
-    status: pending
+    status: in_progress
     depends_on: [Q-33]
   - id: Q-32
     content: 'Revised dependency-ordered repair plan asked for by the 20 September review (terminal-state item 3), written into the active correction plan with the review as its input'

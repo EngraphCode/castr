@@ -2,6 +2,41 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-09-20 (three merges and a records-PR treadmill — Candle weaves Residue / a4c7fb, part 2)
+
+- **Landed: PR #103 (`SHA:8a53cc78`), PR #102 (`SHA:8ca0db05`), PR #101 (`SHA:0ad80a41`).** The cured
+  merge driver fired in anger on #101's final merge from main and routed both memory
+  files to a hand union; the union was pre-derived from the other branch's final tip and
+  copied in, so the resolution was a copy, not an edit under pressure.
+- **Records-class PR treadmill (mistake class, mine):** PR #101 ran twelve review rounds;
+  from round 6 I cured every finding with a push, and every push drew a fresh round of
+  four to seven pointer and consistency findings on the records I had just renumbered.
+  The PDR-132 ratchet ("after the budget, disposition without a diff unless over the bar")
+  was applied only at round 12, after which the PR settled in one window. `candidate:`
+  on a records-class PR past its budget, the bar is "would misdirect a successor into a
+  wrong action or lose work"; consistency and pointer findings route to the next
+  continuity commit, which exists anyway.
+- **A closing keyword in a commit message closed PR #21 at merge.** My round-11 commit
+  body said "closes #21 in the disposition phase"; GitHub read "closes #21" and closed
+  the PR two seconds after #101 merged, before its closure record existed. Cure applied:
+  the record was written after the fact and the ledger says how it closed. `candidate:`
+  never write "closes", "fixes" or "resolves" followed by a PR or issue number in commit
+  text unless that closure is the commit's intent; describe plan closures in files only.
+- **Reply script cited the wrong SHA.** A hook-blocked command had skipped writing a
+  commit-message file; the re-issued chain failed at the message check, committed nothing,
+  and my reply script cited the unchanged tip on five threads. Corrected on every thread;
+  the cure now in every chain: verify a clean tree and a new HEAD before any reply cites
+  a SHA, write the message file in its own command, never filter commit output through
+  a grep that can hide an error line.
+- **Codex's review limit is not a stop:** after the "usage limit reached" comment it
+  still bound reviews on later tips twice; treat the comment as a timeout-leg candidate,
+  not a certainty, and harvest before every merge decision.
+- **#11's residual delta against Q-02 is recorded** (research README closure records):
+  every property landed or superseded except a seeded spec-invalid written document
+  rejected at the load boundary, routed to Q-11. #23's sixty files are classified; its
+  branch-only substance (four PDRs, one colliding number, a worker agent class with its
+  validators) needs a doctrine reading under Q-13, not a mechanical one.
+
 ## 2026-09-20 (bootstrap merge-driver cure, PR #103; lifecycle on #101 and #102 — Candle weaves Residue / a4c7fb)
 
 - **Owner correction, verbatim substance: "are you moving closer to closing PRs? We want
