@@ -11,6 +11,10 @@ owns the sole queue and Q-30 interactive sequencing amendment. The platform-neut
 autonomous-development experiment is paused and its Claude Routine disabled,
 owner-confirmed on 6 September 2026; no live platform inspection is claimed.
 The commission authorises interactive implementation and condition-based merging.
+The order of work for every inherited PR, dirty worktree and piece of unpushed work
+is the sequence's
+[terminal state and priorities](../../plans/active/castr-documentation-and-fidelity-correction.md#terminal-state-and-priorities):
+zero of each, reached by proof and preservation or by closure and discard.
 
 ## Active threads
 
@@ -49,6 +53,26 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
+Current priority (20 September 2026 second close): the bootstrap merge-driver cure is on
+main through [PR #103](https://github.com/EngraphCode/castr/pull/103) (`8a53cc78`); every
+checkout builds its own driver, so run `pnpm install` in a worktree before merging memory
+files there. Owner priority, 20 September: bring the open PR count to zero through the PR
+lifecycle (the OCE `pr-lifecycle` and `proportionality` skills), resolve every piece of
+lingering and orphaned work, then repair the known Castr defects. In order: land
+[PR #101](https://github.com/EngraphCode/castr/pull/101), which carries the value-proof
+sequence and its priority order, when its current-head wave is settled; reconcile the
+retrospective [PR #102](https://github.com/EngraphCode/castr/pull/102) against it by hand
+union of the two memory files and merge it; close the twelve inherited PRs through their
+recorded dispositions, with #81 keeping its C09 exception; then the dirty worktrees, the stash (Q-018), the prunable
+registrations and the branches; then the revised, dependency-ordered repair plan the
+owner-commissioned
+[20 September review](https://github.com/EngraphCode/castr/pull/101#issuecomment-5750407866)
+asks for; then the hygiene-gate red test on unpatched main, with the Q-07 relocation
+re-derived from PR #21 because the worktree that held it was purged from the system temp
+directory. The
+[priority order](../../plans/active/castr-documentation-and-fidelity-correction.md#terminal-state-and-priorities)
+is stated once, there. The history below is retained as dated evidence.
+
 Q-09 is complete. The [source PR table](../../plans/delivery-ledger.md#source-pr-dispositions)
 records that PR #90 preserved #28's surviving source as `cb73c4de`; PR #28 then
 closed without merge while its recovery branch remained
@@ -67,12 +91,25 @@ task, with normal and same-agent adversarial stances. The atomic plan is in comp
 staging. Q-06 is delivered through PR #98 at merge `0c3d4bdc`; source PR #14 closed
 without merge with its recovery branch retained. Q-07/PR #21 is the next recorded
 source-PR transition from current `origin/main`.
+On 12 September the owner redirected inherited-PR and dirty-worktree work to proving
+value before preserving it; the
+[value-proof sequence](../../plans/active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence)
+now governs that work, with its gap register and container map. That sequence is on
+[PR #101](https://github.com/EngraphCode/castr/pull/101), unmerged at 13 September;
+until it merges the plan text on main lacks it. Q-07 remains the first landing, and
+under the sequence it needs its failing test on unpatched main before the relocation
+cure lands with it.
 The broader C05
 family retains its other obligations. Earlier
 continuation instructions are [preserved verbatim](../../plans/archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
 
 ## Deep consolidation status
 
-The correction commission's C09/C10 owns current register/gradation/history and
-lifecycle reconciliation. Historical consolidation claims remain in the conserved
-source record at their actual scope; they do not prove this commission complete.
+due — 20 September 2026 second close: the postinstall register row's trigger fired (PR #103 on main) and this session adds Q-019 and a napkin section on the cure and the PR lifecycle; PR #102 adds six fast-lane rows and the first slow-lane row on its own branch; on this branch five pending-graduation candidates wait (local-host
+hook-bypass prohibition, prettier-ignore recomputation validator, container-anchored
+register pattern, evidence scripts shown failing first, postinstall writing the shared
+git config), the owner rulings of 12 and 13 September live in the napkin and distilled
+entries, and Q-018 is open; not run at this closeout because the commission's C09/C10
+owns register, graduation and lifecycle reconciliation and the pass is not bounded to
+one session. Historical consolidation claims remain in the conserved source record at
+their actual scope; they do not prove this commission complete.

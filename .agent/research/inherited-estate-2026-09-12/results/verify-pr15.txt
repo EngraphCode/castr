@@ -1,0 +1,13 @@
+===== pr15 base=61e30973 branch=fix/remediation-lkbatch-micro-fixes 16:17:50
+patch: 22 files
+apply rc=0; conflicted files: 
+apply errors: 0
+--- unit tests: src/schema-processing/writers/typescript/type-writer.integer-semantics.unit.test.ts src/schema-processing/writers/typescript/type-writer.null-type-member.integration.test.ts src/schema-processing/writers/typescript/type-writer.unit.test.ts src/shared/load-openapi-document.test.ts src/shared/load-openapi-document/bundle/bundle-infrastructure.test.ts src/shared/load-openapi-document/metadata.test.ts src/validation/mcp-error-formatting.test.ts 
+ Test Files  7 passed (7)
+      Tests  116 passed (116)
+--- snapshot tests: tests-snapshot/edge-cases/array-default-values.test.ts tests-snapshot/edge-cases/jsdoc.test.ts tests-snapshot/endpoints/errors-responses.test.ts tests-snapshot/options/validation/enum-null.test.ts tests-snapshot/schemas/composition/allOf-oneOf-anyOf-single-ref.test.ts tests-snapshot/schemas/composition/anyOf-behavior.test.ts tests-snapshot/schemas/composition/array-oneOf-discriminated-union.test.ts tests-snapshot/utilities/openApiToTypescript.test.ts 
+ Test Files  8 passed (8)
+      Tests  20 passed (20)
+--- type-check
+type-check rc=0 errors=0
+===== done 16:17:57

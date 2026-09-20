@@ -1,0 +1,32 @@
+===== pr16 base=61e3097387a122044f80253ef9be0e3535f8028f head=f94065e4 main=21e23229 11:06:47
+patch: 39 files
+apply rc=1; conflicted files: lib/src/schema-processing/parsers/json-schema/index.ts lib/src/schema-processing/parsers/json-schema/json-schema-parser.core.ts lib/src/schema-processing/parsers/json-schema/json-schema-parser.helpers.ts lib/src/schema-processing/parsers/json-schema/json-schema-parser.normalization.unit.test.ts lib/src/schema-processing/parsers/json-schema/json-schema-parser.types.ts lib/src/schema-processing/parsers/json-schema/normalization/json-schema-parser.normalization.helpers.ts lib/src/schema-processing/parsers/json-schema/normalization/json-schema-parser.normalization.ts lib/src/schema-processing/parsers/json-schema/normalization/json-schema-parser.normalization.types.ts lib/src/schema-processing/writers/json-schema/json-schema-writer.schema.ts lib/src/schema-processing/writers/json-schema/json-schema-writer.schema.unit.test.ts lib/src/schema-processing/writers/shared/json-schema-2020-12-fields.ts lib/src/schema-processing/writers/shared/json-schema-fields.ts lib/src/schema-processing/writers/shared/json-schema-object.ts 
+--- unit tests: src/schema-processing/conversion/json-schema/convert-schema.test.ts src/schema-processing/parsers/json-schema/index.unit.test.ts src/schema-processing/parsers/json-schema/json-schema-parser.core.unit.test.ts src/schema-processing/parsers/json-schema/json-schema-parser.normalization.unit.test.ts src/schema-processing/parsers/json-schema/json-schema-parser.object-fields.unit.test.ts src/schema-processing/parsers/json-schema/json-schema-parser.ref-siblings.unit.test.ts src/schema-processing/parsers/openapi/builder.core.ref-siblings.unit.test.ts src/schema-processing/writers/json-schema/json-schema-writer.schema.unit.test.ts src/schema-processing/writers/openapi/schema/openapi-writer.schema.fidelity.unit.test.ts src/schema-processing/writers/shared/json-schema-2020-12-fields.unit.test.ts src/schema-processing/writers/shared/json-schema-fields.unit.test.ts
+ Test Files  9 failed | 2 passed (11)
+      Tests  22 passed (22)
+ FAIL  src/schema-processing/parsers/json-schema/index.unit.test.ts [ src/schema-processing/parsers/json-schema/index.unit.test.ts ]
+Error: Transform failed with 1 error:
+ FAIL  src/schema-processing/parsers/json-schema/json-schema-parser.core.unit.test.ts [ src/schema-processing/parsers/json-schema/json-schema-parser.core.unit.test.ts ]
+Error: Transform failed with 1 error:
+ FAIL  src/schema-processing/parsers/json-schema/json-schema-parser.normalization.unit.test.ts [ src/schema-processing/parsers/json-schema/json-schema-parser.normalization.unit.test.ts ]
+Error: Transform failed with 1 error:
+ FAIL  src/schema-processing/parsers/json-schema/json-schema-parser.object-fields.unit.test.ts [ src/schema-processing/parsers/json-schema/json-schema-parser.object-fields.unit.test.ts ]
+ FAIL  src/schema-processing/parsers/json-schema/json-schema-parser.ref-siblings.unit.test.ts [ src/schema-processing/parsers/json-schema/json-schema-parser.ref-siblings.unit.test.ts ]
+Error: Transform failed with 1 error:
+ FAIL  src/schema-processing/writers/json-schema/json-schema-writer.schema.unit.test.ts [ src/schema-processing/writers/json-schema/json-schema-writer.schema.unit.test.ts ]
+unit tests FAILED rc=1
+--- transforms tests: tests-transforms/__tests__/fidelity-json-schema-keywords.integration.test.ts
+ Test Files  1 failed (1)
+      Tests  no tests
+ FAIL  tests-transforms/__tests__/fidelity-json-schema-keywords.integration.test.ts [ tests-transforms/__tests__/fidelity-json-schema-keywords.integration.test.ts ]
+Error: Transform failed with 1 error:
+transforms tests FAILED rc=1
+--- type-check
+type-check rc=2 errors=102
+src/schema-processing/parsers/json-schema/index.ts:36:1 - error TS1185: Merge conflict marker encountered.
+
+36 <<<<<<< ours
+   ~~~~~~~
+
+src/schema-processing/parsers/json-schema/index.ts:40:1 - error TS1185: Merge conflict marker encountered.
+===== done 11:06:51 failures=4

@@ -1,0 +1,13 @@
+===== pr11 base=4be99dae branch=fix/remediation-la-harness-test-truth 16:20:39
+patch: 6 files
+apply rc=0; conflicted files: 
+apply errors: 0
+--- unit tests: src/rendering/templates/schemas-with-metadata.test.ts src/rendering/templating.unit.test.ts 
+ Test Files  2 passed (2)
+      Tests  16 passed (16)
+--- transforms tests: tests-transforms/__tests__/fidelity-harness.smoke.integration.test.ts 
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+--- type-check
+type-check rc=0 errors=0
+===== done 16:20:45

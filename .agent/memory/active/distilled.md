@@ -201,10 +201,58 @@ Distilled from the napkin's Phase 3–6 transplant entries (2026-06-04 → 2026-
 - **A brought gate is not done when it is green — prove it FIRES, scope it from the rule, and read the cure's diff per category.** Landing the LC3a machine-local-paths validator: (1) unit-green on the pure helpers is NOT the loop-closure bar — extract and test the BLOCKING contract (exit-on-hit / exit-on-missing-config / fail-loud-on-unreadable) so the signal itself is proven; the real proof was the gate firing on real input (324 real hits → exit 1; then the write-time guard blocked my own as*built edit). (2) The rule defines the gate's scope: the `no-machine-local-paths` rule's own Detection grep runs \_outside* `archive/`, so `archive/` is the documented exemption — enforce exactly the rule, no stricter (would corrupt frozen records) and no looser (would be a hole). (3) A bulk find/replace cure UNDER-SCOPES: it mangled the rule's own teaching example (a file the validator excludes, so the gate could not catch it) and produced malformed `file://../` URIs — caught only by reading the diff of every category firsthand. (4) MEASURE before complying with a reviewer fix: two reviewers said align the validator's case to the write-hook's `iu`; a grep showed case-insensitive would false-positive on real lowercase OpenAPI route fixtures, so case-sensitive was kept. Same family as the loop-closure + [[verify-agent-claims-firsthand]] entries; source: LC3a, 2026-06-27/28.
 - **A decomposed multi-agent audit under-counts at the lane-DESIGN level — always add a completeness-critic phase + a 2nd pass, and don't trust the critic's PRESENCE re-checks.** Running the 2-pass Oak→castr gap rescan (2026-06-28), 12 "exhaustive" lanes missed ~11 whole modalities (projection plane, reference-layer, executive-memory contracts, continual-learning, evals/assurance, roles, prompts, ADR layer, knowledge-estate). A completeness critic that independently re-derives the FULL surface and names what the lanes don't cover caught it; a 2nd pass closed it. This is the audit-method-under-counts root (loop-closure / bring-the-iceberg family) recurring one level up — at the decomposition itself. BUT the critic's value is naming uncovered MODALITIES, not adjudicating presence: its drive-by "X is present on re-check" claims were 3/3 wrong (all firsthand-confirmed absent), while the dedicated classify→verify lanes were reliable. Two companion practices that made the synthesis trustworthy: (a) compute the raw ground-truth set-diffs (slug-level) FIRSTHAND before reading the workflow output, so every "lacks X" is checked not relayed (it independently surfaced the PDR numbering collision); (b) do NOT copy raw subagent synthesis into durable docs — it carries corrected-but-still-present errors; persist only the verified substance + reference the transcripts. Same family as [[verify-agent-claims-firsthand]] + the loop-closure entries; source: 2026-06-28 gap rescan. Candidate pattern-PDR (multi-agent audit harness).
 
+## Shared surfaces and vendor contracts
+
+- **A value that is true of one checkout never belongs in a surface every checkout
+  shares; measure the vendor's execution contract before designing the cure
+  (2026-09-20).** The postinstall bootstrap wrote the installing checkout's absolute
+  `dist` path into the git config that linked worktrees share, so the last install won
+  and a deleted worktree killed every checkout's merge driver. The cure was not "scope
+  the config per worktree" (that still stores a machine-local path, once per worktree)
+  but a command relative to the checkout, which is correct only because git runs merge
+  drivers with the working directory at the merged checkout's top level. That contract
+  was measured on the installed git across merge, cherry-pick, rebase, merge-tree,
+  subdirectories and linked worktrees before a line of code, and the E2E suite proves it
+  from outside the process. Same family as `no-machine-local-paths` and
+  `verify-vendor-call-shapes-at-plan-author-time`.
+
 ## Work safety (constant requirement)
 
-- **Work is not safe until it is committed, pushed, AND in a PR — a draft PR is
-  sufficient (owner, 2026-08-25).** Branches without PRs are trivially lost and orphaned.
-  Opening a safety draft PR is loss-protection mechanics, not a merge request: it needs
-  no owner ask, and this standing requirement overrides any platform default of not
-  creating PRs unprompted. End no session with pushed work on a PR-less branch.
+- **When the owner names closure as the goal, review waves beyond the round budget and
+  describing-surface edits beyond the cure are off the critical path (owner correction,
+  2026-09-20).** With the cure green I ran a second seven-reviewer wave and widened the
+  documentation scope before opening the PR; the owner asked whether I was moving closer
+  to closing PRs. Open the PR when the cure is green and clean, disposition findings
+  under the two-round budget, and route under-bar notes to the thread record instead of
+  pushing a third round for wording. Companion: the same session found that a fourth
+  push on a records-class PR only restarts the wave. Same family as
+  `agentic-judgment-conserve-by-default` and `present-verdicts-not-menus`.
+
+- **Work is safe only when it is merged on main, which happens only through a
+  green-and-clean PR (owner, 2026-09-12: "a commit existing somewhere, on some branch
+  makes NOTHING safe").** This sharpens the 2026-08-25 wording: a pushed branch or a
+  draft PR is loss-protection mechanics and a review surface, never safety. Unmerged
+  material is input to analysis, to be merged if it should merge, reduced to its
+  surviving documentation, or closed and deleted. End no session with pushed work on a
+  PR-less branch, and never describe branch commits or PRs as having secured anything.
+- **Green with the candidate applied is self-consistency, not proof (2026-09-12).** A
+  branch whose own tests pass on a copy of main shows only that the branch is coherent
+  there. Proof that main has a defect is a failing test on unpatched main whose assertion
+  derives from doctrine, the format specification, or an independent oracle, never from
+  the candidate's output; and "applies cleanly" says nothing about whether the hunk
+  encodes current doctrine. Worked instance: five April PRs went green on today's main
+  in minutes, and the ledger's "rework after roots" framing was inherited classification,
+  yet none of that proved a single gap until the assertion was re-derived from
+  principles.md. Same family as green-gates-mask-gaps and verify-agent-claims-firsthand.
+- **When the owner names a number as the goal, record the number (2026-09-13).** The 12
+  September records carried the goal only as per-item acceptance language ("every PR is
+  closed", "every worktree emptied"); the owner's word was "zero", and a reader could not
+  tell whether an open PR with a custody record was an acceptable steady state. Now stated
+  once in the correction plan §Terminal state and priorities and pointed to from every
+  other record. Corollary: enumerate every class the count covers (the stash was unpushed
+  work no record named) and the named, dated exceptions.
+- **A script cited as evidence is shown failing first (2026-09-13).** Three exit-code
+  masking recurrences in one session, the last (`{ ... } | tee` runs the group in a
+  subshell, so the counter never reaches `exit`) inside the commit that named the class.
+  Before citing a script's output, run it on an input known to fail and record the
+  non-zero exit; the pr16/pr18/pr27 reruns exiting 4/5/5 are the worked instance.

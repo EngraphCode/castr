@@ -130,6 +130,64 @@ per-tick threaded replies where canvases are unavailable) for surfaces lacking `
 trigger-condition: next slack-watcher skill edit, or the next Watcher stand-up on an
 edit-capable surface (either confirms or retires the fallback shape). status: pending.
 
+### Hook bypass is cloud-only; local hosts run every gate
+
+Owner ruling 2026-09-12: "Bypassing checks in any circumstance is prohibited in
+environments that can run checks locally; the bypass was specifically for cloud
+environments with no execution environment." Candidate permanent home: an amendment to
+`.agent/rules/no-verify-requires-fresh-authorisation.md` naming the local-host
+prohibition outright, so "fresh authorisation" is never read as a requestable lever on a
+machine that can run hooks. `[captured: 2026-09-12 | source: napkin.md]`
+trigger-condition: next consolidation pass or a second instance of an agent proposing a
+local bypass. status: pending.
+
+### Prettier ignore must be computed from the collaboration gitignore
+
+The pre-push format gate reads the working tree, so gitignored instance-tier files under
+`.agent/state/collaboration/` fail local pushes while CI never sees them; the hand-mirrored
+`.prettierignore` block drifted (`handoffs/`, `comms-archive/` missing, then directory
+patterns that silently dropped the tracked README). Candidate permanent home: a repo
+validator that recomputes the mirrored block from `.agent/state/collaboration/.gitignore`
+and fails on divergence, per `validators-must-recompute-not-just-record`.
+`[captured: 2026-09-12 | source: napkin.md, PR #101 review]`
+trigger-condition: next divergence between the two files, or the next config-expert pass.
+status: pending.
+
+### Container-anchored gap registers under-count
+
+The 12 September gap register was built by reading main where the inherited PRs pointed,
+so the three gaps no PR covered surfaced only incidentally. Candidate permanent home: a
+pattern under `.agent/memory/active/patterns/` (audit-method-under-counts family) stating
+that a defect register derived from candidate fixes is bounded by the candidates, and a
+doctrine-clause walk is the independent second pass. `[captured: 2026-09-12 | source:
+plan checkpoint, parallax pass]` trigger-condition: a second register built from
+candidates, or the C07/C08 doctrine walk. status: pending.
+
+### A script cited as evidence must be shown exiting non-zero on a failing input
+
+Three recurrences in one session (zsh scripts with no propagation; `echo "push rc=$?"`;
+a brace group piped into `tee`, which runs in a subshell so the failure counter never
+reached `exit`), the last inside the commit that named the class. Candidate permanent
+home: a rule under `read-diagnostic-artefacts-in-full`'s family: before a script's output
+is cited as evidence, run it once on an input known to fail and record the non-zero exit.
+`[captured: 2026-09-13 | source: napkin.md, PR #101 Codex P1]` trigger-condition: the next
+script whose output is cited as evidence, or the next consolidation pass. status: pending.
+
+### Postinstall writes a machine-local path into the shared git config
+
+`registerSemanticMergeDriver` in `agent-tools/src/bootstrap/bootstrap.ts` ran
+`git config --local` from whichever checkout ran `pnpm install`; in a linked worktree
+that writes the shared `.git/config`, so the last install won and a removed disposable
+worktree left every checkout's merge driver dead. Cured on main by
+[PR #103](https://github.com/EngraphCode/castr/pull/103) (`8a53cc78`, 20 September): the
+stored command is the constant `node agent-tools/dist/src/bin/semantic-merge-driver.js
+%O %A %B %P`, correct because git runs a merge driver with cwd at the merged checkout's
+top level (measured on git 2.50.1). Candidate permanent homes: an amendment to
+`no-machine-local-paths` naming shared git config as a surface, and a PDR-049 level-3
+promotion record now that the driver is proven out of process. `[captured: 2026-09-13 |
+source: napkin.md, evidence regeneration; cure recorded 2026-09-20]` trigger-condition:
+fired 20 September (the cure landed on main). status: due.
+
 ### Retrospective proposals, 20 September 2026 (value-proof arc)
 
 Source record:

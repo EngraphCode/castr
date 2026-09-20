@@ -3,7 +3,7 @@ title: Castr documentation correction and fidelity repair
 status: active
 lane: active
 created: 2026-09-06
-last_updated: 2026-09-10
+last_updated: 2026-09-20
 owner_directive: >-
   Implement the owner-approved comprehensive documentation correction and fidelity
   repair: split PR #81, correct all documents, repair all known in-scope fidelity
@@ -109,10 +109,12 @@ atomic plan is in completion staging after all six final-template native returns
 10 September. PR #92 corrected the premature closeout; PR #93 delivered the final
 evidence/lifecycle record as `07ebdb2322ae52bd0627c2f6d36bf42970260a4e`. Q-06 is
 delivered through PR #98 at merge `0c3d4bdc42ed9483672f9f86423904e3ba3f04bd`;
-source PR #14 then closed without merge with its recovery branch retained. Q-07 and
-PR #21 are the next recorded source-PR transition. The reproduced M4 filesystem-I/O
-test defect remains an outstanding part of Q-07; this record does not claim the
-rest of PR #21 has been reverified. The broader C05 family retains its other
+source PR #14 then closed without merge with its recovery branch retained. The next
+landing is Q-33 (PRs #101 and #102 on main), then the disposition phase (Q-34, Q-13)
+and the revised repair plan (Q-32); the hygiene-gate gap with the Q-07 relocation cure
+is the first repair after Q-32, per §Terminal state and priorities. The reproduced M4
+filesystem-I/O test defect is that gap's observed
+instance; this record does not claim the rest of PR #21 has been reverified. The broader C05 family retains its other
 obligations. Q-09 is complete: PR #90 delivered the #28
 preservation record before #28 closed, PRs #94/#95 delivered PR #10's surviving
 validator and exact machine-state boundary, and #10 closed while its recovery branch
@@ -189,7 +191,9 @@ workstream with separate custody; coordinate expensive aggregate runs across bot
 Preserve existing drafts and source custody; resume them when their delivery slot
 opens.
 The [9 September prerequisite sequence](#9-september-q-22-prerequisite-sequence)
-supersedes the initial next-action ordering below this step-back. Its displaced
+supersedes the initial next-action ordering below this step-back, and the
+[12 September value-proof sequence](#12-september-value-proof-sequence) supersedes
+the container ordering for inherited PRs and dirty worktrees. Its displaced
 paragraph is [conserved verbatim](../archive/correction-sequencing-2026-09-06.md#9-september-pr86-merge-and-q22-continuation).
 No acceptance, gate or review condition is weakened.
 
@@ -260,6 +264,251 @@ acceptance or certify an unexecuted behavioural proof.
 | `principles.md` equates fail-fast with `.parse()` everywhere.                                                                                    | C07 reconciles that proposition across current surfaces: a proof asserting structured rejection is compatible with absolute strictness. Product admission must still fail actionably.                                                                                                                                                            |
 | Sonar main analysis `9605deb3-6bb1-4acd-a16f-70e65c3dc36d` at `6c3b18f0` reports 400 open issues, plus five removed historical rows.             | C09 owns per-issue reconciliation of the captured 405-key census with existing C05/C08 carriers. The security reviewer inspected selected classes, leaving 344 rows individually unadjudicated. Counts and a green new-code gate are not semantic proof; no issue was administratively suppressed. Current PR findings stay with their shepherd. |
 | Dependabot #74 adds `GHSA-4mjr-xmp4-gh2g` for `qs`, alongside #73.                                                                               | Existing QS1 dependency-currency custody owns verified resolution and aggregate proof. Neither alert is closed by this oracle or Sonar review.                                                                                                                                                                                                   |
+
+## 12 September value-proof sequence
+
+Owner direction, 12 September 2026 (verbatim substance): the open PRs and dirty
+worktrees may or may not be of value; the goal is not to merge them, the goal is to
+preserve value, and value must be proven first. Work merges only when it furthers
+the vision and the goal of the repository. Every PR must be fully green and clean
+before merge. Bypassing checks is prohibited in any environment that can run them.
+Analysis and intelligence, not brute force.
+
+This section supersedes the container-by-container ordering that the delivery
+ledger and the 9 September sequence implied for inherited PRs and dirty worktrees.
+Q-22's prerequisites and every original queue acceptance are unchanged.
+
+### Terminal state and priorities
+
+The terminal state of this sequence is zero open inherited PRs, zero dirty worktrees
+and zero unpushed work. Two named exceptions carry their own end: #81 stays open until
+C09 closes it, and #23's branch is retained after its PR closes, per the 26 August
+ruling. A retained recovery branch is history, not preserved value: nothing on a
+branch is safe. Zero is reached by proving value and preserving it on main, and
+otherwise by closing or discarding; it is never reached by merging containers or by
+deleting unproven ones. Every container leaves the estate through one of the exits
+the proof contract below records.
+
+The order of work, which every other record points to rather than restates:
+
+0. Owner instruction, 13 September: before further estate work, cure the bootstrap
+   merge-driver defect (`registerSemanticMergeDriver` writes the installing checkout's
+   absolute path into the shared `.git/config`, so a removed disposable worktree leaves
+   every checkout's driver dead) in its own PR from current main, red test first, with
+   no machine-local path stored. It is independent of PR #101 and does not wait for it.
+   Delivered: [PR #103](https://github.com/EngraphCode/castr/pull/103), merged as
+   `8a53cc78` on 20 September; every checkout now builds its own driver.
+1. Land PR #101, which carries this section: until it merges, the plan on main lacks
+   the sequence. This includes the review findings on the measurement scripts and
+   the regenerated evidence. The retrospective PR #102 lands after it.
+2. Owner priority, 20 September: bring the open PR count to zero and resolve every
+   piece of lingering and orphaned work before repairing defects. Each inherited PR
+   closes only through its recorded disposition (ledger §Source PR dispositions; the
+   [20 September review](#20-september-review)'s §12 table): for every unique delta,
+   one of a reproduced current gap with its selected cure, already landed with exact
+   evidence, superseded with a reason, or an unresolved investigation routed to its
+   owning queue row. A claimed gap that is not yet cured closes its PR through the
+   register transfer §Unit of work and proof contract defines; the register row, not
+   the PR, then carries it, and its cure lands under item 4. #81 keeps its C09
+   exception. #11 closes when its residual delta against Q-02 is recorded; #23
+   closes with its branch retained after the per-delta comparison (Q-13);
+   `custody-corrections` and `operation-security-empty` are discarded; the
+   `fixture-reproduction` files are discarded; the stash in §Unpushed work is dropped or
+   landed when [Q-018](../../memory/operational/open-questions.md) is answered.
+3. Produce the revised, dependency-ordered repair plan the
+   [20 September review](#20-september-review) asks for, in this plan, with the
+   review as its input: corrected baseline, evidence collection, the required-CI
+   tranche, cure slices, proof record shape and completion criteria. It resolves the
+   landing-rule conflict that section records.
+4. Cure the defects on main from the gap register in the order §Order and limits
+   records, one integrating PR at a time, each with its red test on unpatched main.
+   The first landing is the hygiene-gate row's red test with the Q-07 relocation
+   cure; #21 closes in item 2 through the register transfer, and Q-07 resolves its
+   register row.
+5. Q-22 and the remaining C-outcomes exactly as the parent queue records them; the
+   9 September prerequisite sequence still governs Q-22 alone.
+
+### Unit of work and proof contract
+
+The unit of work is a **gap** between current main and the doctrine in
+[principles.md](../../directives/principles.md), [VISION.md](../../directives/VISION.md)
+and [IDENTITY.md](../../IDENTITY.md): content lost, invalid or partial output,
+non-deterministic output, a swallowed or degraded error, a widened type, a silent
+ignore. Inherited PRs and worktrees are evidence about gaps, never units of delivery.
+
+A gap is proven when a failing test on unpatched main names it in doctrine terms
+(principles.md §Testing Standards, TDD steps 1 and 2). Proof and preservation land
+together: the red test and its cure in one PR, green and clean, merged by merge
+commit. The cure must match current doctrine, not the doctrine of the branch it was
+taken from, and must not add escape hatches (`as`, `any`, `!`, `Record<string, unknown>`,
+`Object.*`, `Reflect.*`, check-disabling directives) even where main already carries them.
+A container's code is at most a reference for the green step. A claimed gap for
+which no failing test can be constructed is unproven; its container closes with the
+record "no witness constructible", which names the scope investigated, the reason no
+witness exists, any counterevidence, and how documentation or Practice claims in the
+container were treated; failing to devise a test is not proof that the claim is false.
+For documentation-only content, where no test can
+witness the gap, the proof is the owner's approval of the text, sought explicitly for
+that text; "applies cleanly" is not approval, and unapproved documentation content is
+unproven value.
+
+The red test's assertion is derived from the doctrine clause, the format
+specification, or an independent oracle (the TypeScript compiler for emitted types,
+the installed Zod runtime for emitted schemas, AJV for JSON Schema projections, a
+second generation run for determinism), never from a container's own output: a test
+that merely asserts the candidate's output fails on main for any change and proves
+nothing. Every rejection-shaped test is shown to bite by at least one wrong-cure
+mutant before it counts. "Applies cleanly" and "doctrine-current" are independent
+properties of a hunk: the July branches predate the August and September rulings on
+object admission, the Zod version contract and the integer contract, so each borrowed
+hunk is checked against current doctrine before reuse. A container's closure record
+names which of its review-thread rationales the cure adopted or rejected, so settled
+reasoning is not re-litigated.
+
+Consequences for containers: a source PR closes only when every gap it claims is
+either proven and cured on main, recorded as unprovable, ruled not wanted by the
+owner, or transferred to the gap register: a row on main naming the gap, the source
+branch and head that carry the candidate, and the red-test obligation under its owning
+queue row. Under the owner's 20 September priority the register on main, not an open
+PR, is the custody surface for an unproven gap, and the source branch is retained until
+its row resolves. A red test on a branch preserves nothing. A branch is deleted only
+when no claimed gap remains unresolved and no documentation claim survives; otherwise
+it is retained. A dirty worktree is emptied by the same route or discarded at owner
+word.
+
+### Gap register, 12 September
+
+Evidence level is `observation` (read directly on main) until the red test exists.
+Sources are candidates for the green step, not authority.
+
+| Gap on main                                                                                                                                                                                                                                                                                                                                    | Doctrine                                                                                                       | Evidence level                                                                                                                                                                                                                                                                                                | Candidate source                                                                                                                                                                                                                                                                           |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Zod parser drops unrecognised chained methods silently; `.or()` and `.array()` shorthands unparsed (`.and()` is parsed on `21e23229` as a chained intersection)                                                                                                                                                                                | Fail-fast; input completeness rule 1                                                                           | observation                                                                                                                                                                                                                                                                                                   | #13                                                                                                                                                                                                                                                                                        |
+| Parser rejects explicit `.catchall()` and writer always emits `strictObject`, contradicting IDENTITY.md's carried explicit `additionalProperties`                                                                                                                                                                                              | No content loss; IDENTITY.md                                                                                   | observation                                                                                                                                                                                                                                                                                                   | #27 source slice                                                                                                                                                                                                                                                                           |
+| JSON Schema `$ref` siblings, draft-07 `additionalItems`, content keywords not carried round trip                                                                                                                                                                                                                                               | No content loss; roadmap JSON Schema commitment                                                                | observation                                                                                                                                                                                                                                                                                                   | #16, requires re-derivation against Q-04                                                                                                                                                                                                                                                   |
+| Wildcard response statuses `1XX`..`5XX` lost at endpoint projection                                                                                                                                                                                                                                                                            | No content loss                                                                                                | observation                                                                                                                                                                                                                                                                                                   | #17                                                                                                                                                                                                                                                                                        |
+| Endpoint response projection sends numeric successes other than `200`–`204`/`2XX` (such as `206`) into errors and parses `4XX`/`5XX` keys with `parseInt` to `4`/`5`; MCP response classification uses `200 <= status < 300` and so disagrees with the endpoint projection; the `defaultStatusBehavior` option is accepted and read by nothing | Fail-fast, no content loss, validate external boundaries; OpenAPI Responses Object range and default semantics | source-confirmed by the 20 September review; the ignored option verified firsthand on 20 September. The 12 September row that stood here claimed main excludes default-only operations with a warning; that was false (main maps every operation and the snapshot test retains the endpoint) and is withdrawn | #17 for the projection and validation hunks, re-derived; the ignored option is removed or given behaviour under the CLI row; `docs/DEFAULT-RESPONSE-BEHAVIOR.md` is corrected to describe what exists, and no ADR reversing a behaviour is needed because there is no behaviour to reverse |
+| Component names starting with a digit emit invalid TypeScript and `maybePretty` returns the unformatted source                                                                                                                                                                                                                                 | Invalid output must throw                                                                                      | observation, reproduced with #26 applied                                                                                                                                                                                                                                                                      | #18 identity slice cures the producer, #26 removes the swallow                                                                                                                                                                                                                             |
+| Bundle metadata embeds wall-clock time and cwd                                                                                                                                                                                                                                                                                                 | Deterministic output                                                                                           | observation, downgraded: no writer, renderer or context path reads `capturedAt`; whether it reaches any written output or persisted IR is unverified                                                                                                                                                          | #15 bundle commit only if the red test shows the values reach an output or persisted artifact; otherwise the row is "no witness constructible"                                                                                                                                             |
+| TypeScript writer widens enum, const and type-array literals to `string`; `null` type-array members mis-rendered                                                                                                                                                                                                                               | No invented widening                                                                                           | observation                                                                                                                                                                                                                                                                                                   | #15 literal commits                                                                                                                                                                                                                                                                        |
+| MCP validation errors leave `expected` and `received` empty                                                                                                                                                                                                                                                                                    | Helpful error messages                                                                                         | observation                                                                                                                                                                                                                                                                                                   | #15                                                                                                                                                                                                                                                                                        |
+| Capability traversal skips `patternProperties`, `propertyNames`, `if`/`then`/`else`, `contains`                                                                                                                                                                                                                                                | Strict everywhere: unsupported semantics pass silently                                                         | observation                                                                                                                                                                                                                                                                                                   | #12                                                                                                                                                                                                                                                                                        |
+| Two `isRecord` guards with different semantics; the one in `type-utils/types.ts` rejects `{}` and is imported by 16 product files; `isCastrSchema` duplicates                                                                                                                                                                                  | Single source of truth; an empty properties map is a valid object                                              | observation; the non-empty variant is the one in use                                                                                                                                                                                                                                                          | #20 as reference only: each of the 16 callers is re-derived for whether it relied on non-emptiness before the guards are unified                                                                                                                                                           |
+| CLI maps invalid option values to `undefined` silently; several accepted options are ignored                                                                                                                                                                                                                                                   | Validate external boundaries; fail loud                                                                        | observation                                                                                                                                                                                                                                                                                                   | #17 for value validation; option removal is fresh work: client-era options leave per VISION, every other ignored option is removed and returns only as a tested feature                                                                                                                    |
+| Committed normalised fixtures differ from the writer's output; `validation-parity` imports the stale `petstore-3.0/zod.js`                                                                                                                                                                                                                     | Deterministic output; run twice and compare                                                                    | observation from the fixture-reproduction worktree                                                                                                                                                                                                                                                            | Q-22 regeneration with the integer contract; principles.md settles the direction: `bigint` and `z.int64()` for TypeScript and Zod, fail fast for JSON Schema                                                                                                                               |
+| Missing hygiene gate: in-process test suites can import `node:fs`, `node:child_process` and read `process.env`                                                                                                                                                                                                                                 | Testing principle 5, enforced not reviewed                                                                     | observation                                                                                                                                                                                                                                                                                                   | none; a lint restriction on those imports in in-process test globs, not the #21 scanner                                                                                                                                                                                                    |
+| 87 product files use `Object.*` or `Reflect.*`                                                                                                                                                                                                                                                                                                 | Type discipline                                                                                                | observation                                                                                                                                                                                                                                                                                                   | the Q-14 lint lane at the Q-12 split; fresh cures must not add instances                                                                                                                                                                                                                   |
+| Recursive catchall emission fails fast in the #27 source                                                                                                                                                                                                                                                                                       | Pair model rule 4: an implementation gap, not an impossibility                                                 | observation                                                                                                                                                                                                                                                                                                   | none yet; land the honest error with the admission, queue the implementation                                                                                                                                                                                                               |
+
+### Container map, 12 September
+
+Measured on disposable copies of `origin/main` at `21e23229`: the container's `lib/`
+diff applied with `git apply --3way`, then its own tests and `tsc --noEmit`. A green
+result proves the container is self-consistent on today's main. It does not prove the
+gap or the cure; only the red test does.
+
+| Container                                     | Gaps claimed                             | Measured state                                                                                                                                                                                                                                                                                                      | Route                                                                                                                                                                                                                                                                                                                                     |
+| --------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| #12                                           | traversal                                | applies clean; 74 unit tests and type-check green in the retained output; no snapshot run is retained, and the 12 September "full snapshot suite" claim is withdrawn                                                                                                                                                | red test, cure from source re-derived without `Object.*`/`Reflect.*`, close                                                                                                                                                                                                                                                               |
+| #13                                           | Zod fail-fast and shorthands             | applies clean; 150 tests green                                                                                                                                                                                                                                                                                      | red tests per slice; the catchall rejection hunk is stale doctrine and is not taken                                                                                                                                                                                                                                                       |
+| #15                                           | bundle determinism, literals, MCP errors | applies clean; 136 tests green; 9 integration snapshots move to literal unions                                                                                                                                                                                                                                      | three red tests, three PRs                                                                                                                                                                                                                                                                                                                |
+| #17                                           | wildcards, CLI validation                | applies clean; 104 tests green; snapshot operationId count 137 to 116                                                                                                                                                                                                                                               | red tests for wildcards, the response projection and CLI validation; no exclusion path exists to remove (corrected 20 September)                                                                                                                                                                                                          |
+| #18                                           | identity, extension skipping, security   | 18-file identity subset applies clean and is green together with #26; security slice conflicts with Q-03 in 6 files                                                                                                                                                                                                 | red test for digit-leading names; security residual only if a red test for document-level `security: []` fails on main                                                                                                                                                                                                                    |
+| #20                                           | single `isRecord`                        | one import conflict plus one Q-03 import to repoint                                                                                                                                                                                                                                                                 | red test for `{}` as record                                                                                                                                                                                                                                                                                                               |
+| #26                                           | swallowed formatter failure              | applies clean; exposes the producer defect                                                                                                                                                                                                                                                                          | lands after the identity cure                                                                                                                                                                                                                                                                                                             |
+| #27                                           | explicit `additionalProperties`          | 80 of 81 lib files apply; one function conflicts where main has a newer partial `writeAdditionalProperties`                                                                                                                                                                                                         | red tests for admission, retention and emission; the 68,000-line fixture deletion is justified separately or not taken                                                                                                                                                                                                                    |
+| #16                                           | JSON Schema keywords                     | 13 files conflict with Q-04                                                                                                                                                                                                                                                                                         | red tests first; cure written fresh against the current parser                                                                                                                                                                                                                                                                            |
+| #11                                           | fidelity harness                         | applies clean, tests green                                                                                                                                                                                                                                                                                          | Q-02's runner covers the harness; closes only after the residual delta against that runner and its oracle/mutant coverage carry a recorded disposition, per the ledger's retained acceptance                                                                                                                                              |
+| #21                                           | logger, runner, scanner                  | logger landed in #100; the Q-07 worktree E2E test passes 12/12, which is post-application state and not proof                                                                                                                                                                                                       | #21 closes in the disposition phase through the register transfer (item 2); its register row resolves under Q-07 when the red test on unpatched main (the in-process runner reads the filesystem and `process.env`, caught by the lint restriction row) lands with the relocation cure; the scanner is superseded by the lint restriction |
+| #23                                           | Practice transplant                      | 21 files conflict; main is ahead on shared parts                                                                                                                                                                                                                                                                    | no product gap; closes only after the unique Practice deltas are compared with current Practice and the extraction or retirement evidence is recorded, per the ledger; the branch is retained per the 26 August parity ruling                                                                                                             |
+| #81                                           | documentation source                     | 9 of 136 records applied                                                                                                                                                                                                                                                                                            | stays open until C09; the `07-test-hygiene.md` numbering defect is a two-line fix on main                                                                                                                                                                                                                                                 |
+| q07-zod-fixture-runner                        | runner FS I/O in process                 | LOST between 13 and 20 September: the worktree lived under the system temp directory, the temp purge removed its `.git` file and all six dirty files, and only empty directories remain (registration now prunable); the 12 September inventory row in git history at `f8a744c2` is the only record of what it held | re-derive the E2E relocation from PR #21's runner test under the lint-restriction red test; nothing to recover from disk                                                                                                                                                                                                                  |
+| adr-conservation                              | Q-08 C04a                                | applies clean; deletes the directive ADR-045 copy without reconciling its unique content                                                                                                                                                                                                                            | reconcile 045 first, then PR                                                                                                                                                                                                                                                                                                              |
+| adr-navigation, planning-authority            | Q-08 C04b; dangling ADR-117 reference    | apply clean                                                                                                                                                                                                                                                                                                         | PR each                                                                                                                                                                                                                                                                                                                                   |
+| vision-claims                                 | Q-14 C06 doctrine                        | applies clean; refined successor of the #81 copies                                                                                                                                                                                                                                                                  | PR with owner approval of the doctrine text                                                                                                                                                                                                                                                                                               |
+| api-contract, local-entry, local-api-examples | C03b/c documentation truth               | fail to apply; PR #85 moved the targets                                                                                                                                                                                                                                                                             | after the CLI option removal and #17, one docs PR re-derived from the three                                                                                                                                                                                                                                                               |
+| custody-corrections, operation-security-empty | none; content already on main            | code files equal main                                                                                                                                                                                                                                                                                               | discard at owner word                                                                                                                                                                                                                                                                                                                     |
+| fixture-reproduction                          | stale fixtures                           | generated, unformatted, carries the undecided integer output                                                                                                                                                                                                                                                        | record under Q-22; discard the files at owner word                                                                                                                                                                                                                                                                                        |
+
+### Unpushed work, 13 September
+
+The third class the terminal state counts. Measured on 13 September in the primary
+checkout; the ledger's "no local branch carries a commit absent from origin" line
+covers branches only, so the stash is listed here as the class that measurement
+missed.
+
+| Item                                | Measured state                                                                                                                                                                         | Exit                                                                                                                                                                                                                                                                                                      |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `stash@{0}` on main at `e025d233`   | Five added lines in `.codex/config.toml`: `web_search`, `sandbox_mode` and `[sandbox_workspace_write] network_access`; none of them on main; no product content                        | Open as [Q-018](../../memory/operational/open-questions.md): the owner ruled on 13 September that Codex needs code execution and network access in some contexts and that this is not an owner decision; the question is which surface carries a context-dependent capability. Not dropped until answered |
+| Local branches without an upstream  | 27, including the source-PR branches and the `worktree-wf_*` branches; `git log --branches --not --remotes` is empty, so every commit is on `origin`                                   | None required for safety; local deletion at owner word only                                                                                                                                                                                                                                               |
+| Worktree registrations              | 37 registered on 20 September; two prunable: `castr-q07-zod-fixture-runner` and Codex's `castr-q07-test-isolation`, both under the system temp directory with their directories purged | Prune at owner word; nothing on disk to preserve                                                                                                                                                                                                                                                          |
+| Worktrees under the system temp dir | Any worktree under the system temp directory is purged by the OS after days of inactivity; that is how the q07 worktree's six dirty files were lost                                    | Never place a worktree with unpushed work under the system temp directory; move any that exist                                                                                                                                                                                                            |
+
+### 20 September review
+
+An owner-commissioned deep review of `main` at `21e23229` and PR #101 at `f8a744c2`,
+prepared by Codex, is posted on
+[PR #101](https://github.com/EngraphCode/castr/pull/101#issuecomment-5750407866). It is
+the next planning input on this thread and it states the owner's requested outcome:
+known defects in the required contract are exercised by required CI, and CI is red while
+they remain. That is not what §Unit of work and proof contract says: this section lands
+the red test with its cure and keeps every PR green. The review asks the revised plan to
+say where the honest failing baseline lives and how it reaches a repaired, mergeable
+candidate. The conflict is open and is resolved by the revised, dependency-ordered repair
+plan the review asks for, item 3 of §Terminal state and priorities; until then the
+landing rule above stands as written and is not a reason to weaken or postpone any
+established regression.
+
+Corrections this review forced in this section, made on 20 September: the default-only
+register row (false observation, withdrawn); the #12 snapshot claim; the #11 and #23
+closure routes, which now require the ledger's recorded dispositions; the "no witness
+constructible" record's required contents; the evidence README's isolation claim; and
+six further defects in the measurement scripts, fixed with failing probes first. Its
+compiler and CI findings (§§2–10 of the review) are not in the register yet; the revised
+plan carries them.
+
+### Parallax checkpoint, 12 September
+
+Parallax core depth, same-context emulated execution, software-engineering profile;
+the audit pass is self-review and not independent assurance. Frames considered:
+the gap ledger (unit is a doctrine gap; adopted), container salvage (unit is a PR;
+rejected because it ports stale doctrine and counts as a proxy), a doctrine-clause
+walk (unit is a clause of principles.md; not executed, see the coverage gap), consumer
+incidence (a gap matters only if a real input hits it; constrained by the owner's
+ruling that usefulness is settled and no usefulness gate is introduced), and knowledge
+preservation (review-thread rationale; folded into the closure-record clause above).
+Bridge claims: green-with-patch supports only "self-consistent on main"; a red test
+supports "gap exists" only when its assertion is doctrine- or oracle-derived; 13
+product-code commits since July support "hunks apply", not "doctrine unchanged".
+Two register rows were downgraded by defeater probes: the `isRecord` unification has
+16 callers to re-derive, and the bundle timestamp has no observed path to output.
+Declared coverage gap: the register is anchored on where the containers pointed; a
+clause-by-clause walk of the doctrine against main has not been done, and C07/C08 are
+its home. Status: provisional. Reopen if a red test can only be written from a
+container's output, if a cure requires a doctrine change, or if the owner reverses a
+recorded determination.
+
+### Order and limits
+
+Content loss first, then invalid output hidden, then determinism and widening, then
+the gaps no container covers. One integrating PR at a time with at most one prepared
+candidate. Every PR carries its red test, specialist review per family, and merges by
+merge commit only when current-head checks, reviews and ruleset conditions hold.
+
+Determinations from the decision lenses, recorded so they are not re-asked: the warned
+claimed exclusion of default-only operations was a false observation, withdrawn on 20 September (the projection and the ignored option are the gaps); fresh cures add no escape hatches;
+the hygiene gate is a lint restriction; the int64 direction follows principles.md's
+own example; #81 stays open until C09; #23's branch is retained. Owner gates that
+remain: discarding the two obsolete worktrees and the regenerated fixture files;
+approving the vision doctrine text; naming any removed CLI option wanted as a feature.
+
+Acceptance for this sequence: every register row has a red test merged with its cure
+or a recorded "no witness constructible"; every inherited PR is closed with that
+record, #81 through C09; every dirty worktree is emptied or discarded at owner word;
+no unpushed work remains, the stash included; the ledger and this section agree with
+main. That is the terminal state §Terminal state and priorities names. Evidence from the 12 September analysis is tracked under
+[`research/inherited-estate-2026-09-12/`](../../research/inherited-estate-2026-09-12/README.md);
+the napkin carries the narrative.
 
 ## Fidelity repair families and describing surfaces
 

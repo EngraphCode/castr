@@ -23,6 +23,12 @@ unrelated compiler repairs after its own surviving substance is accounted for.
 
 ## Correction successors
 
+- **Q-31 complete (terminal-state item 0):** [PR #103](https://github.com/EngraphCode/castr/pull/103)
+  merged on 20 September 2026 as `8a53cc78`, reviewed head `b2023e45`. Sixteen checks
+  green, six threads settled, two review rounds each answered in one push, Copilot's
+  three under-bar overview notes routed to the thread record's follow-ups. The
+  semantic-merge driver is registered by its path within the checkout; the shared git
+  config holds no machine-local path.
 - **C01 complete at custody acceptance, with a historical deviation recorded:** [PR #82](https://github.com/EngraphCode/castr/pull/82)
   merged on 6 September 2026 at `b14caedefffe07d7f7b05a6ab2cf2877eb3bbe93`, head
   `78c20a5e10aac3e27a1f99e9abd484e74571c2e2`. All 16 checks passed; paired
@@ -174,7 +180,9 @@ records. PR #87 merged as
 `c1e73c1a`, PR #92 as `8deca63f`, PR #93 as `07ebdb23`, PR #94 as `e70adb23`, and
 PR #95 as `5243e816`, and PR #98 as `0c3d4bdc`. The remaining source PRs close
 only when their recorded extraction or supersession conditions are verified.
-PR #21/Q-07 is the next recorded source-PR transition. Thirteen inherited source
+PR #21/Q-07 is the next recorded source-PR transition, under the value-proof
+sequence: #21 closes in the disposition phase through the register transfer, and its
+register row resolves when the hygiene-gate red test on unpatched main lands with its cure. Thirteen inherited source
 PRs were open at the live 10 September check after #14 closed. The following
 6 September check and review states are historical observations, not fresh merge
 readiness.
@@ -253,3 +261,38 @@ not authorise another shepherd to resolve review or merge conditions.
 | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [#87](https://github.com/EngraphCode/castr/pull/87), `4326876a9e67320a4580481f615ca7121a220e9c` | Open; 16 successful checks; four unresolved review threads in the 9 September full harvest, including owner questions on two P1 warrants. | Separately shepherded JSON Schema roadmap and interoperability research; C09 reconciles its direction and C06/C07 overlap against main. Broader graph intentions do not implicitly expand this commission. | Its shepherd must settle the owner questions and all review findings, verify current-head conditions and record the actual merge or surviving-value disposition. Root must compare its integrated doctrine before extracting prepared vision work. |
 | [#88](https://github.com/EngraphCode/castr/pull/88), `f4f89fbcf80191397fdaba02bb16190823b1eecb` | Merged at 17:41:47 UTC as `bd115294`; 16/16 checks successful, 19/19 threads resolved, Sonar zero issues and exact-head Copilot no issue. | Delivered C05 Cricket platform reviewer-contract tooling. The second parent is the exact reviewed head; independent specialists close the explicit Codex-quota evidence gap.                               | PR #91 subsequently delivered the repository installation as `af840d9b`; the completed atomic plan linked above retains final I2 evidence and lifecycle acceptance.                                                                                |
+
+## Measured state of the inherited estate: 12 September 2026
+
+Owner direction of 12 September: the goal is to preserve proven value, not to merge
+containers. The [value-proof sequence](active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence)
+owns the gap register, the proof contract and the container map, and its
+[terminal state and priorities](active/castr-documentation-and-fidelity-correction.md#terminal-state-and-priorities)
+name the end of this table: zero open inherited PRs, zero dirty worktrees, zero
+unpushed work, reached by proof and preservation or by closure and discard. The rows
+above keep their original acceptance and evidence conditions. The following facts were measured
+on disposable copies of `origin/main` at `21e23229`. The scripts and their outputs
+are tracked under [`research/inherited-estate-2026-09-12/`](../research/inherited-estate-2026-09-12/README.md);
+the napkin carries the narrative.
+
+- Of the 475 commits from `61e30973` (18 July, the shared base of #12, #13, #15, #16, #17,
+  #18 and #21) to `main` at `21e23229`, 13 touched `lib/src`, changing 63 files:
+  `git rev-list --count 61e30973..21e23229`, the same with `-- lib/src`, and
+  `git diff --name-only 61e30973 21e23229 -- lib/src | wc -l`. From `4be99dae` (6 July,
+  the base of #11 and #27) the counts are 478, 15 and 66.
+- #12, #13, #15, #17 and #26 apply cleanly to `lib/` on main, pass the changed test files
+  that `verify-pr.sh` selects from the unit, `tests-transforms` and `tests-snapshot` suites
+  under their own vitest configs, and type-check. Characterisation, generated and E2E
+  suites are not run by that script, so this is selected-test evidence, never
+  suite-complete self-consistency. #18's identity subset
+  passes the same selection; #20 needs one import repointed; #27 applies except one
+  function; #16 conflicts in 13 files with Q-04.
+- PR #26 is MERGEABLE and BEHIND, not conflicting; the other twelve are CONFLICTING.
+- No local branch carries a commit absent from `origin`. That measurement covers
+  branches only: one stash on main (`stash@{0}` at `e025d233`, five lines of Codex
+  sandbox settings) is unpushed work and is inventoried in the sequence's
+  [unpushed-work class](active/castr-documentation-and-fidelity-correction.md#unpushed-work-13-september).
+- The eleven dirty worktrees and their path counts match the 12 September handover;
+  `castr-operation-security-empty`'s three code files equal main.
+- These are self-consistency facts. A container's value is proven only by a failing
+  test on unpatched main, per the value-proof sequence.

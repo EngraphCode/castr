@@ -1,0 +1,10 @@
+===== pr12 base=61e30973 branch=fix/remediation-lk1-capability-guards 16:16:56
+patch: 5 files
+apply rc=0; conflicted files: 
+apply errors: 0
+--- unit tests: src/schema-processing/compatibility/integer-target-capabilities.unit.test.ts src/schema-processing/compatibility/item-schema-target-capabilities.unit.test.ts 
+ Test Files  2 passed (2)
+      Tests  74 passed (74)
+--- type-check
+type-check rc=0 errors=0
+===== done 16:17:00
