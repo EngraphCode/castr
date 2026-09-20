@@ -294,6 +294,8 @@ The order of work, which every other record points to rather than restates:
    absolute path into the shared `.git/config`, so a removed disposable worktree leaves
    every checkout's driver dead) in its own PR from current main, red test first, with
    no machine-local path stored. It is independent of PR #101 and does not wait for it.
+   Delivered: [PR #103](https://github.com/EngraphCode/castr/pull/103), merged as
+   `8a53cc78` on 20 September; every checkout now builds its own driver.
 1. Land PR #101, which carries this section: until it merges, the plan on main lacks
    the sequence. This includes the review findings on the measurement scripts and
    the regenerated evidence.

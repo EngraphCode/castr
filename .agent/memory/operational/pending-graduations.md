@@ -175,11 +175,15 @@ script whose output is cited as evidence, or the next consolidation pass. status
 
 ### Postinstall writes a machine-local path into the shared git config
 
-`registerSemanticMergeDriver` in `agent-tools/src/bootstrap/bootstrap.ts` runs
+`registerSemanticMergeDriver` in `agent-tools/src/bootstrap/bootstrap.ts` ran
 `git config --local` from whichever checkout ran `pnpm install`; in a linked worktree
-that writes the shared `.git/config`, so the last install wins and a removed disposable
-worktree leaves every checkout's merge driver dead. Owner instruction 13 September: cure
-it first on resume, red test first. Candidate permanent home once cured: an amendment to
-`no-machine-local-paths` naming shared git config as a surface, or a validator that
-the armed driver path resolves. `[captured: 2026-09-13 | source: napkin.md, evidence
-regeneration]` trigger-condition: the cure landing on main. status: pending.
+that writes the shared `.git/config`, so the last install won and a removed disposable
+worktree left every checkout's merge driver dead. Cured on main by
+[PR #103](https://github.com/EngraphCode/castr/pull/103) (`8a53cc78`, 20 September): the
+stored command is the constant `node agent-tools/dist/src/bin/semantic-merge-driver.js
+%O %A %B %P`, correct because git runs a merge driver with cwd at the merged checkout's
+top level (measured on git 2.50.1). Candidate permanent homes: an amendment to
+`no-machine-local-paths` naming shared git config as a surface, and a PDR-049 level-3
+promotion record now that the driver is proven out of process. `[captured: 2026-09-13 |
+source: napkin.md, evidence regeneration; cure recorded 2026-09-20]` trigger-condition:
+fired 20 September (the cure landed on main). status: due.

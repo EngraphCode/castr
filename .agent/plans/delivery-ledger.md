@@ -23,6 +23,12 @@ unrelated compiler repairs after its own surviving substance is accounted for.
 
 ## Correction successors
 
+- **Q-31 complete (terminal-state item 0):** [PR #103](https://github.com/EngraphCode/castr/pull/103)
+  merged on 20 September 2026 as `8a53cc78`, reviewed head `b2023e45`. Sixteen checks
+  green, six threads settled, two review rounds each answered in one push, Copilot's
+  three under-bar overview notes routed to the thread record's follow-ups. The
+  semantic-merge driver is registered by its path within the checkout; the shared git
+  config holds no machine-local path.
 - **C01 complete at custody acceptance, with a historical deviation recorded:** [PR #82](https://github.com/EngraphCode/castr/pull/82)
   merged on 6 September 2026 at `b14caedefffe07d7f7b05a6ab2cf2877eb3bbe93`, head
   `78c20a5e10aac3e27a1f99e9abd484e74571c2e2`. All 16 checks passed; paired

@@ -106,3 +106,18 @@ the Codex project-config precedence and trust rules verified against the vendor
 documentation (`verify-vendor-call-shapes-at-plan-author-time`). Owning artefact: the
 value-proof sequence's unpushed-work table; the stash stays until this is answered.
 Status: open.
+
+### Q-019: Which surface installs agent tooling in a worktree that a harness creates
+
+`Captured: 2026-09-20 | source: napkin.md (PR #103 cure), thread record follow-ups`
+
+Since PR #103 every checkout runs its own `agent-tools/dist` build for memory-file merges,
+and a checkout without a build halts such merges with a module error naming its own
+missing driver. Worktrees created by an agent harness are never installed by the harness;
+16 of the 36 registered worktrees had no build at the 20 September close. Open question:
+which surface owns the install (a git worktree hook, a harness-side setup step, a repo
+script the team prompts name, or a validator that refuses memory-path merges in an
+uninstalled checkout), and how a successor tells an uninstalled worktree from a corrupt
+build. Shapes every multi-worktree session; not cheaply answerable now because it needs
+the harness worktree lifecycle verified against vendor documentation. Owning artefact:
+the castr-correction thread record's routed follow-ups. Status: open.

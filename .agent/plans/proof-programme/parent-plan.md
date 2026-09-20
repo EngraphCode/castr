@@ -7,7 +7,7 @@ todos:
     status: completed
   - id: Q-31
     content: 'Bootstrap merge-driver cure (owner instruction 13 September; terminal-state item 0): register the semantic-merge driver by its path within the checkout, red test first, own PR from main'
-    status: in_progress
+    status: completed
     depends_on: [Q-00]
   - id: Q-32
     content: 'Revised dependency-ordered repair plan asked for by the 20 September review (terminal-state item 2), written into the active correction plan with the review as its input'

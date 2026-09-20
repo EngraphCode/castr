@@ -53,17 +53,23 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-Current priority (20 September 2026 close): first, by owner instruction, cure the
-bootstrap merge-driver defect in its own PR from current main, red test first (the
-[thread record](threads/castr-correction.next-session.md) carries the brief); then
-land [PR #101](https://github.com/EngraphCode/castr/pull/101), which carries the
-value-proof sequence and its priority order, when it is green and clean, and reconcile
-the retrospective [PR #102](https://github.com/EngraphCode/castr/pull/102) against it;
-then write the revised, dependency-ordered repair plan that the owner-commissioned
+Current priority (20 September 2026 second close): the bootstrap merge-driver cure is on
+main through [PR #103](https://github.com/EngraphCode/castr/pull/103) (`8a53cc78`); every
+checkout builds its own driver, so run `pnpm install` in a worktree before merging memory
+files there. Owner priority, 20 September: bring the open PR count to zero through the PR
+lifecycle (the OCE `pr-lifecycle` and `proportionality` skills), resolve every piece of
+lingering and orphaned work, then repair the known Castr defects. In order: land
+[PR #101](https://github.com/EngraphCode/castr/pull/101), which carries the value-proof
+sequence and its priority order, when its current-head wave is settled; reconcile the
+retrospective [PR #102](https://github.com/EngraphCode/castr/pull/102) against it by hand
+union of the two memory files and merge it; close the twelve inherited PRs and #81 through
+their recorded dispositions; then the dirty worktrees, the stash (Q-018), the prunable
+registrations and the branches; then the revised, dependency-ordered repair plan the
+owner-commissioned
 [20 September review](https://github.com/EngraphCode/castr/pull/101#issuecomment-5750407866)
 asks for; then the hygiene-gate red test on unpatched main, with the Q-07 relocation
-re-derived from PR #21 because the worktree that held it was purged from the system temp directory.
-The stash question is open as Q-018; nothing is dropped. The
+re-derived from PR #21 because the worktree that held it was purged from the system temp
+directory. The
 [priority order](../../plans/active/castr-documentation-and-fidelity-correction.md#terminal-state-and-priorities)
 is stated once, there. The history below is retained as dated evidence.
 
@@ -99,7 +105,7 @@ continuation instructions are [preserved verbatim](../../plans/archive/correctio
 
 ## Deep consolidation status
 
-due — 20 September 2026 close: PR #102 adds six fast-lane rows and the first slow-lane row on its own branch; on this branch five pending-graduation candidates wait (local-host
+due — 20 September 2026 second close: the postinstall register row's trigger fired (PR #103 on main) and this session adds Q-019 and a napkin section on the cure and the PR lifecycle; PR #102 adds six fast-lane rows and the first slow-lane row on its own branch; on this branch five pending-graduation candidates wait (local-host
 hook-bypass prohibition, prettier-ignore recomputation validator, container-anchored
 register pattern, evidence scripts shown failing first, postinstall writing the shared
 git config), the owner rulings of 12 and 13 September live in the napkin and distilled

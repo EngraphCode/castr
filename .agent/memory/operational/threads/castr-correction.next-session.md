@@ -7,22 +7,31 @@
   of the value-proof sequence. Zero open inherited PRs, zero dirty worktrees, zero
   unpushed work, reached by proof and preservation or by closure and discard.
 - Controlling queue: [parent plan](../../../plans/proof-programme/parent-plan.md#current-execution-state).
-- Next acceptance: the [Q-07 brief](../../../plans/proof-programme/parent-plan.md#slice-briefs),
-  now the hygiene-gate gap: its failing test on unpatched main with the lint
-  restriction and the relocation cure; #21 closes when its claimed gaps are exhausted.
+- Next acceptance: land PR #101 and PR #102, then close the inherited PRs (owner
+  priority, 20 September). The next code slice is Q-32 and then the
+  [Q-07 brief](../../../plans/proof-programme/parent-plan.md#slice-briefs), the
+  hygiene-gate gap: its failing test on unpatched main with the lint restriction and the
+  relocation cure; #21 closes when its claimed gaps are exhausted.
 - Governing sequence for every inherited PR and dirty worktree: the
   [12 September value-proof sequence](../../../plans/active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence).
   Containers are evidence about gaps; a gap is proven only by a failing test on
   unpatched main, and proof lands with its cure in one green-and-clean PR.
-- Live state at the 20 September close: PR #101 (branch
-  `claude/value-proof-sequence-2026-09-12`) carries the sequence, the priority order,
-  the unpushed-work inventory, the corrected premises and the measurement evidence
-  regenerated after six further script repairs; its round 4 thread is answered; its
-  [reconstructed REVIEW-TALLY](https://github.com/EngraphCode/castr/pull/101#issuecomment-5750596280)
-  records budget exceeded at round 3; the wave on the new head was not observed at the
-  close. Not merged. The retrospective on the arc is
-  [PR #102](https://github.com/EngraphCode/castr/pull/102), also unmerged; its
-  `napkin.md` and `pending-graduations.md` edits need a union merge with this branch's.
+- Live state at the 20 September second close (Candle weaves Residue, a4c7fb):
+  terminal-state item 0 is delivered. PR #103 (branch
+  `claude/bootstrap-merge-driver-relative-2026-09-20` from main `21e23229`) registers the
+  semantic-merge driver by its path within the checkout,
+  `node agent-tools/dist/src/bin/semantic-merge-driver.js %O %A %B %P`: pure derivation
+  unit-tested, registration integration-tested against scripted git fakes, five
+  out-of-process E2E cases, two review rounds each answered in one push, merged as
+  `8a53cc78` at 20:41Z. PR #101 (this branch) carries the sequence, the priority
+  order, the corrected premises and the regenerated evidence; its rounds 4 wave, 5 and 6
+  were answered contemporaneously, one push each, and the round 6 push (`wt-evidence.sh`
+  aborts when `git status` fails; Q-13 depends on Q-32) also carries this handoff. It
+  waits for its wave, a branch update against main and a merge commit. PR #102
+  (retrospective) is CLEAN at `db78c9be` with rounds 1 and 2 answered; it lands after
+  #101 by a hand union of `napkin.md` and `pending-graduations.md` against #101's merged
+  versions, never by the server-side branch update, then merges. Open PRs at the close:
+  these three, the twelve inherited PRs and #81.
 - Loss event, found 20 September: the `castr-q07-zod-fixture-runner` worktree lived under
   `the system temp directory`; the temp purge removed its `.git` file and all six dirty files between
   13 and 20 September. The 12 September inventory row (git history, `f8a744c2`) is the
@@ -36,23 +45,45 @@
   plan. Its correction that main excludes no default-only operations is verified and
   applied; its compiler and CI findings are not yet in the register.
 - Owner instructions at the 13 September close, in force for the next session:
-  1. First action on resume: cure the bootstrap merge-driver defect
-     (`agent-tools/src/bootstrap/bootstrap.ts`, `registerSemanticMergeDriver` writes the
-     installing checkout's absolute path into the shared `.git/config`) under
-     principles.md, testing-strategy.md and validation-strategy.md: red test first, the
-     pure derivation unit-tested in process with no FS or git I/O, Light assurance tier,
-     no machine-local path stored. Own PR from current main; independent of #101.
+  1. Delivered: the bootstrap merge-driver cure is PR #103, merged as `8a53cc78`, red
+     test first, the pure derivation unit-tested with no FS or git I/O, no machine-local
+     path stored. Every checkout now needs its own `agent-tools/dist` build for
+     memory-file merges: 16 of the 36 registered worktrees had none at the close and
+     halt on a memory-path merge with a module error naming their own missing driver
+     until `pnpm install` runs there.
   2. The stash is not the owner's decision and "least privilege" is not "never": Codex
      needs to run code and reach the network in some contexts. The question is which
      surface carries a context-dependent capability; it is
      [Q-018](../open-questions.md) and stays open. Do not drop the stash.
-- Next safe step, in order: (a) the bootstrap cure above, in its own PR from main;
-  (b) merge #101 when green and clean, re-fetching the wave on its current head first,
-  and reconcile PR #102 against it (union of two memory files); (c) the revised repair
-  plan the 20 September review asks for, written into the active plan; (d) the
-  hygiene-gate red test on unpatched main with the Q-07 relocation re-derived from
-  PR #21, since the worktree that held it is gone. Everything else follows the priority
-  order in the plan.
+- Next safe step, in order, under the owner priority stated 20 September (open PR count
+  to zero through the PR lifecycle, every piece of lingering and orphaned work resolved,
+  then the known Castr defects): (a) settle and merge PR #101 (fetch the wave on its
+  current head, disposition each finding, update the branch against main, merge with a
+  merge commit), then sync PR #102 by hand union and merge it; (b) the twelve inherited
+  PRs and #81, each closed through its recorded disposition (ledger §Source PR
+  dispositions; the 20 September review's §12 table) or its proven parts extracted, one
+  landing slot at a time; (c) the ten dirty worktrees, the stash (Q-018 stays open), the
+  prunable temp-directory registrations and the branches, per §Terminal state item 4;
+  (d) the revised repair plan (Q-32), then the hygiene-gate red test (Q-07) with the
+  relocation re-derived from PR #21. Use the OCE `pr-lifecycle` and `proportionality`
+  skills for every PR (owner instruction, 20 September).
+- Follow-ups routed from PR #103's review and this session's measurements, each for its
+  own PR: (1) the registration's readback covers the registering checkout only; either
+  enumerate every linked worktree's effective binding or qualify the "arms every linked
+  worktree" clause in CONTRIBUTING, the semantic-merge skill and the registration TSDoc;
+  (2) a refused name-key write after a successful driver-key write reports "not armed"
+  while the tripwire is armed, so read the driver key back before reporting; (3) a
+  failed readback drops git's stderr; (4) the `.gitattributes` mapping covers
+  `.agent/memory/**/*.md` only, so the JSON registers under `.agent/state/collaboration/`
+  still line-merge; (5) `verify-pr.sh` re-arms the driver on every exit path in the old
+  absolute-path shape and retires with its containers once #101 lands; (6) two team
+  prompts under `.agent/prompts/agentic-engineering/` require `pnpm install && pnpm build`
+  in a worktree for gates and now also for memory merges, and harness-created worktrees
+  are never installed (Q-019); (7) `resolveRepoRoot` reads the ambient project-directory
+  variable unless `projectDir: undefined` is passed, a hazard for bootstrap code run from
+  a worktree. Estate facts: nine temp-directory worktree registrations are prunable
+  skeletons; the shell profile exports a GitHub token into every child process, so rotate
+  it if any transcript leaves the machine.
 - Completed transition: the Q-09 brief plus the
   [source PR table](../../../plans/delivery-ledger.md#source-pr-dispositions).
 - PR custody and next delivery action: [delivery ledger](../../../plans/delivery-ledger.md).
@@ -105,8 +136,9 @@ this discovery for the architectural repair; no implementation is claimed here.
 
 ## Participating agent identities
 
-| Agent                 | Platform | Model            | Session prefix | Agent UUID                           | Role                                    | First session | Last session |
-| --------------------- | -------- | ---------------- | -------------- | ------------------------------------ | --------------------------------------- | ------------- | ------------ |
-| Bora seeks Turbulence | codex    | gpt-6-astra      | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd             | 2026-09-06    | 2026-09-10   |
-| Coal weaves Pumice    | claude   | claude-fable-5-1 | f67c69         | d0dfc3a1-ed69-535c-96bd-03c07648c274 | handover analysis, value-proof sequence | 2026-09-12    | 2026-09-20   |
-| Foxglove weaves Acorn | codex    | gpt-6-astra      | 01a088         | a6955478-7b8e-59e9-870e-dcef0d6e81cd | final Cricket I2 proof                  | 2026-09-10    | 2026-09-10   |
+| Agent                 | Platform | Model            | Session prefix | Agent UUID                           | Role                                      | First session | Last session |
+| --------------------- | -------- | ---------------- | -------------- | ------------------------------------ | ----------------------------------------- | ------------- | ------------ |
+| Bora seeks Turbulence | codex    | gpt-6-astra      | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd               | 2026-09-06    | 2026-09-10   |
+| Coal weaves Pumice    | claude   | claude-fable-5-1 | f67c69         | d0dfc3a1-ed69-535c-96bd-03c07648c274 | handover analysis, value-proof sequence   | 2026-09-12    | 2026-09-20   |
+| Foxglove weaves Acorn | codex    | gpt-6-astra      | 01a088         | a6955478-7b8e-59e9-870e-dcef0d6e81cd | final Cricket I2 proof                    | 2026-09-10    | 2026-09-10   |
+| Candle weaves Residue | claude   | claude-fable-5-1 | a4c7fb         | 6803f4ef-dcc2-5305-a2c8-b82944f21b0f | bootstrap merge-driver cure, PR lifecycle | 2026-09-20    | 2026-09-20   |
