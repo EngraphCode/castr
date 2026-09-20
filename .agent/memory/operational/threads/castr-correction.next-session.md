@@ -28,7 +28,7 @@
   through a closing keyword in a #101 commit message; its closure record and #11's
   per-delta record are in the research README's closure records, and #11 closes when
   this record is on main. Open PRs at this close: #11, #12, #13, #15, #16, #17, #18, #20,
-  #23, #26, #27 and #81, twelve in all.
+  #23, #26, #27 and #81, twelve in all; after PR #104 and this record, #23 and #81 only.
 - Loss event, found 20 September: the `castr-q07-zod-fixture-runner` worktree lived under
   `the system temp directory`; the temp purge removed its `.git` file and all six dirty files between
   13 and 20 September. The 12 September inventory row (git history, `f8a744c2`) is the

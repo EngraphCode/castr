@@ -139,6 +139,162 @@ known-violation baselines and the timeout widening stay excluded. A closing keyw
 commit text is a hazard this record names: describe closures in the plan's words
 ("closes in the disposition phase") only in files, never in a commit subject or body.
 
+### PR #26 disposition, 20 September 2026
+
+Head `dc9adddf`, base `b62d73ab`; two files, `lib/src/shared/maybe-pretty.ts` and its test.
+One delta: `maybePretty` throws (with the offending source and the formatter error as
+`cause`) instead of returning the unformatted input, and drops the `plugins` option
+through `omit` rather than destructuring. On main at `0ad80a41` the function still
+returns the input from its `catch`. The gap register row "Component names starting with
+a digit emit invalid TypeScript and `maybePretty` returns the unformatted source" names
+#26 as the source of the swallow's cure and the #18 identity slice as the producer's.
+Disposition: a claimed uncured gap, transferred to that register row (source branch
+`fix/remediation-lk2-maybe-pretty` at `dc9adddf`; red-test obligation: a generated
+source Prettier cannot parse must make generation fail, under item 4). #26 closes
+without merge with its branch retained.
+
+### PR #20 disposition, 20 September 2026
+
+Head `9e29c4df`, base `b62d73ab`; thirty-two files. Its two new test files were run
+against unpatched main at `0ad80a41` (copied in, run, removed):
+
+- `lib/tests-transforms/__tests__/fidelity-empty-properties.integration.test.ts`
+  (`pnpm exec vitest run --config vitest.transforms.config.ts <file>`): both cases fail,
+  `deserializeIR(serializeIR(buildIR(document)))` throws `Invalid CastrDocument structure`
+  for an object schema whose `properties` is `{}` with `additionalProperties: false`. A
+  reproduced current gap: an empty properties map is a valid object (register row "Two
+  `isRecord` guards with different semantics", doctrine column) and IR persistence must
+  round-trip it.
+- `lib/src/shared/openapi/version.unit.test.ts` (`pnpm exec vitest run <file>`): six of
+  seven pass; `detectOpenApiPreflightSchemaVersion` accepts an array carrying an
+  `openapi` property because `version.ts` keeps a local `isRecord` that admits arrays.
+  A reproduced current gap of the same family.
+
+The remaining deltas (the `isRecord` unification across sixteen callers, the
+`UnknownRecord` type, the MCP inline-schema and parameter guard rewrites, the circular
+and preflight validator simplifications, the snapshot changes) are the register row's
+"#20 as reference only" material: each caller is re-derived for whether it relied on
+non-emptiness before the guards are unified, under item 4. Disposition: two claimed
+gaps transferred to that register row with the red tests as retained evidence (source
+branch `fix/remediation-le-single-source-guards` at `9e29c4df`; the test files are on
+that branch and the commands above reproduce them); the rest is reference material.
+#20 closes without merge with its branch retained.
+
+### Register transfers for the seven code containers, 20 September 2026
+
+The gap register of 12 September was built from these containers, so every claimed gap
+already has a row naming its container as source. Each record below lists the row (or
+rows) the container transfers to, the probe evidence measured on unpatched main at
+`0ad80a41` (the table above), and the deltas that are reference material rather than
+claimed gaps. Each PR closes without merge with its branch retained at the head named;
+the register row, not the PR, then carries the gap, and item 4 lands the red test with
+its cure.
+
+- **PR #12** (`7f4d23d6`, six files): transfers to the traversal row ("Capability
+  traversal skips `patternProperties`, `propertyNames`, `if`/`then`/`else`, `contains`").
+  Probe: its new unit suite fails four of five cases on main; the assertions name the
+  candidate's own error text, so the retained evidence is the behaviour (an unsupported
+  `itemSchema` position must throw), not the message. Reference material: the
+  contextual-diagnostics wording. Branch `fix/remediation-lk1-capability-guards`.
+- **PR #13** (`a18d2943`, twenty-six files): transfers to the Zod row ("Zod parser drops
+  unrecognised chained methods silently; `.or()` and `.array()` shorthands unparsed").
+  Probe: both new fail-fast suites are red on main (57 of 58 cases), because main still
+  admits constructs it should reject; the assertions are doctrine-shaped (rejection of
+  the unrecognised input) and count as retained evidence. Reference material: the
+  blanket catchall rejection, which the ledger already rules out under the ratified
+  value semantics (Q-05 owns the nested-loss repair). Branch
+  `fix/remediation-lc-zod-parser-whitelist`.
+- **PR #15** (`529a7a70`, twenty-five files): transfers to three rows (bundle metadata
+  embedding time and cwd, subject to that row's red-test condition; TypeScript literal
+  widening and `null` type-array members; MCP validation errors with empty `expected`
+  and `received`). Probe: its new integration suite is red on main (three of three),
+  asserting `string | null` members, doctrine-shaped. Reference material: the nine
+  integration snapshots that move to literal unions. Branch
+  `fix/remediation-lkbatch-micro-fixes`.
+- **PR #16** (`f94065e4`, forty-two files): transfers to the JSON Schema row ("`$ref`
+  siblings, draft-07 `additionalItems`, content keywords not carried round trip"), whose
+  source column already requires re-derivation against Q-04 (nested booleans landed
+  there; thirteen files conflict). Probe: four new suites are red on main on sibling
+  and content keywords (doctrine-shaped); `json-schema-2020-12-fields.unit.test.ts`
+  fails on a helper main lacks and the transforms suite on a fixture the branch adds,
+  so both are re-run with their companions before they count. Reference material:
+  the omitted-additional-properties policy, which the ledger replaces. Branch
+  `fix/remediation-lf-json-schema-fidelity`.
+- **PR #17** (`de4abf4d`, twenty-seven files): transfers to three rows (wildcard
+  statuses lost at projection; numeric successes other than `200`–`204`/`2XX` sent to
+  the error branch; CLI options mapped to `undefined` silently). Probe: three new
+  suites are red on main (16 of 40 cases), doctrine-shaped on status projection and
+  option validation. Reference material: the old primary-response selection and the
+  unused options, which the 20 September review §9 corrects. Branch
+  `fix/remediation-lh-endpoints-mcp-cli`.
+- **PR #18** (`9c93ccaa`, fifty-five files): the security slice is landed (grouped
+  requirements and anonymous access through Q-03 and PR #50; the operation-level
+  `security: []` repair through PR #86) with the ledger as evidence; the identity
+  slice transfers to the digit-names row ("Component names starting with a digit emit
+  invalid TypeScript", whose source column names this slice for the producer). Probe:
+  the operations suite is red on main because an `x-` extension under a path item is
+  read as a path (doctrine-shaped, extension skipping); the helpers suite asserts the
+  candidate's rename entries (reference only); the specification-extensions suite and
+  the transforms suite need a module and a fixture the branch adds. Branch
+  `fix/remediation-ld-security-and-names`.
+- **PR #27** (`a48eced8`, one hundred and four files): transfers to the
+  `additionalProperties` row ("Parser rejects explicit `.catchall()` and writer always
+  emits `strictObject`") and to the recursive-catchall row, whose source column already
+  says the honest error lands with the admission. Probe: its new unit suite could not
+  be placed because its directory does not exist on main; it is re-run inside the
+  branch's own directory before it counts. Reference material: the fixture rewrite,
+  which the review §12 says to justify individually, and the rejected recursive
+  catchalls. Branch `feat/explicit-additional-properties-rebased`.
+
+With #20 and #26 above, nine containers transfer; #11 and #21 are recorded above; #23
+is Q-13; #81 keeps its C09 exception. Every branch is retained.
+
+### Red-test probes of the seven code containers' new test files, 20 September 2026
+
+Each test file the container adds (none of them exists on main) was copied onto
+unpatched main at `0ad80a41`, run under its own vitest config, and removed. "Red on main"
+means the file's assertions fail on main; whether an assertion derives from doctrine or
+from the candidate's own output is read per test in each container's closure record,
+so this table is evidence about behaviour, not yet a disposition. An import or fixture
+error means the test depends on a module or fixture the container also adds and is
+re-run with them before it counts.
+
+| PR  | New test file                                                                                   | Result on unpatched main                                 | First failure                                                                                                 |
+| --- | ----------------------------------------------------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| #12 | `lib/src/schema-processing/compatibility/item-schema-target-capabilities.unit.test.ts`          | red; Tests 4 failed                                      | 1 passed (5)                                                                                                  |
+| #13 | `lib/src/schema-processing/parsers/zod/composition/zod-parser.fail-fast.unit.test.ts`           | red; Tests 35 failed (35)                                | AssertionError: expected [ { type: 'schema', name: 'S', …(2) } ] to have a length of +0 but got 1             |
+| #13 | `lib/src/schema-processing/parsers/zod/types/zod-parser.fail-fast.unit.test.ts`                 | red; Tests 22 failed                                     | 1 passed (23)                                                                                                 |
+| #15 | `lib/src/schema-processing/writers/typescript/type-writer.null-type-member.integration.test.ts` | red; Tests 3 failed (3)                                  | AssertionError: expected 'import { z } from "zod"; // Type Defi…' to contain 'alpha: string                   |
+| #16 | `lib/src/schema-processing/parsers/json-schema/json-schema-parser.ref-siblings.unit.test.ts`    | red; Tests 23 failed                                     | 7 passed (30)                                                                                                 |
+| #16 | `lib/src/schema-processing/parsers/openapi/builder.core.ref-siblings.unit.test.ts`              | red; Tests 3 failed                                      | 1 passed (4)                                                                                                  |
+| #16 | `lib/src/schema-processing/writers/openapi/schema/openapi-writer.schema.fidelity.unit.test.ts`  | red; Tests 6 failed                                      | 1 passed (7)                                                                                                  |
+| #16 | `lib/src/schema-processing/writers/shared/json-schema-2020-12-fields.unit.test.ts`              | red; Tests 5 failed (5)                                  | TypeError: isThenBranchStaticallyUnreachable is not a function                                                |
+| #16 | `lib/src/schema-processing/writers/shared/json-schema-fields.unit.test.ts`                      | red; Tests 7 failed                                      | 3 passed (10)                                                                                                 |
+| #16 | `lib/tests-transforms/__tests__/fidelity-json-schema-keywords.integration.test.ts`              | red; Tests 13 failed (13)                                | Error: ENOENT: no such file or directory, open 'lib/tests-transforms/**fixtures**/edge-cases/draft-07-nested- |
+| #17 | `lib/src/cli/helpers.test.ts`                                                                   | red; Tests 4 failed                                      | 2 passed (6)                                                                                                  |
+| #17 | `lib/src/schema-processing/context/endpoints/template-context.status-codes.unit.test.ts`        | red; Tests 9 failed                                      | 22 passed (31)                                                                                                |
+| #17 | `lib/src/schema-processing/context/template-context.default-status.unit.test.ts`                | red; Tests 3 failed (3)                                  | AssertionError: expected [ 'logoutUser', 'listUsers' ] to deeply equal [ 'listUsers' ]                        |
+| #18 | `lib/src/schema-processing/parsers/openapi/operations/builder.operations.unit.test.ts`          | red; Tests 2 failed (2)                                  | AssertionError: expected [ '/users', 'x-router' ] to deeply equal [ '/users' ]                                |
+| #18 | `lib/src/schema-processing/writers/typescript/helpers.unit.test.ts`                             | red; Tests 5 failed (5)                                  | Error: generated helper does not embed the safeSchemaName-derived rename entries                              |
+| #18 | `lib/src/shared/openapi/specification-extensions.unit.test.ts`                                  | import or fixture error; Tests no tests                  | Error: Cannot find module './specification-extensions.js' imported from lib/src/shared/openapi/specification- |
+| #18 | `lib/tests-transforms/__tests__/fidelity-security-and-names.integration.test.ts`                | import or fixture error; Tests 16 failed (16)            | Error: Failed to load OpenAPI document (lib/tests-transforms/**fixtures**/edge-cases/security-and-group.yaml) |
+| #27 | `lib/src/schema-processing/writers/zod/__tests__/recursive-catchall.unit.test.ts`               | red; no run: the target directory does not exist on main |                                                                                                               |
+
+Reading of the first failures: #13's fail-fast suites fail because main still accepts
+unrecognised Zod constructs it should reject (register row "Zod parser drops
+unrecognised chained methods silently"); #16's `$ref`-sibling and keyword suites fail
+because main drops sibling keywords and content keywords (register row "JSON Schema
+`$ref` siblings, draft-07 `additionalItems`, content keywords not carried round trip"),
+except `json-schema-2020-12-fields.unit.test.ts`, which fails on a helper main lacks;
+#17's suites fail on wildcard statuses and default-status projection (register row
+"Wildcard response statuses `1XX`..`5XX` lost at endpoint projection" and the
+default-status finding of the 20 September review §9); #18's operations suite fails
+because an `x-` extension under a path item is read as a path (register row on
+extension skipping), while its helpers suite asserts the candidate's own rename
+entries; #15's suite fails on `string | null` type members; #12's suite asserts the
+candidate's error text, and its behaviour (throwing on unsupported `itemSchema`) is the
+register's traversal row. #27's suite needs its directory created before it can run.
+
 ## Disposition inventories in progress
 
 ### PR #23 preliminary delta inventory (measured 20 September 2026, head 5fa82e88, base 35efaa45)
