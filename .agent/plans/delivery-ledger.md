@@ -181,8 +181,8 @@ records. PR #87 merged as
 PR #95 as `5243e816`, and PR #98 as `0c3d4bdc`. The remaining source PRs close
 only when their recorded extraction or supersession conditions are verified.
 PR #21/Q-07 is the next recorded source-PR transition, under the value-proof
-sequence: the hygiene-gate red test on unpatched main lands with its cure first, and
-#21 closes only when its claimed gaps are exhausted. Thirteen inherited source
+sequence: #21 closes in the disposition phase through the register transfer, and its
+register row resolves when the hygiene-gate red test on unpatched main lands with its cure. Thirteen inherited source
 PRs were open at the live 10 September check after #14 closed. The following
 6 September check and review states are historical observations, not fresh merge
 readiness.

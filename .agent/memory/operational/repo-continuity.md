@@ -62,8 +62,8 @@ lingering and orphaned work, then repair the known Castr defects. In order: land
 [PR #101](https://github.com/EngraphCode/castr/pull/101), which carries the value-proof
 sequence and its priority order, when its current-head wave is settled; reconcile the
 retrospective [PR #102](https://github.com/EngraphCode/castr/pull/102) against it by hand
-union of the two memory files and merge it; close the twelve inherited PRs and #81 through
-their recorded dispositions; then the dirty worktrees, the stash (Q-018), the prunable
+union of the two memory files and merge it; close the twelve inherited PRs through their
+recorded dispositions, with #81 keeping its C09 exception; then the dirty worktrees, the stash (Q-018), the prunable
 registrations and the branches; then the revised, dependency-ordered repair plan the
 owner-commissioned
 [20 September review](https://github.com/EngraphCode/castr/pull/101#issuecomment-5750407866)

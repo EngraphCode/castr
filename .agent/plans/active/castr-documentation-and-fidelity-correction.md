@@ -321,7 +321,8 @@ The order of work, which every other record points to rather than restates:
 4. Cure the defects on main from the gap register in the order §Order and limits
    records, one integrating PR at a time, each with its red test on unpatched main.
    The first landing is the hygiene-gate row's red test with the Q-07 relocation
-   cure; #21 closes when its claimed gaps are exhausted.
+   cure; #21 closes in item 2 through the register transfer, and Q-07 resolves its
+   register row.
 5. Q-22 and the remaining C-outcomes exactly as the parent queue records them; the
    9 September prerequisite sequence still governs Q-22 alone.
 

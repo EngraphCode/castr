@@ -11,7 +11,8 @@
   priority, 20 September). The next code slice is Q-32 and then the
   [Q-07 brief](../../../plans/proof-programme/parent-plan.md#slice-briefs), the
   hygiene-gate gap: its failing test on unpatched main with the lint restriction and the
-  relocation cure; #21 closes when its claimed gaps are exhausted.
+  relocation cure; #21 closes in the disposition phase through the register transfer,
+  and Q-07 resolves its register row.
 - Governing sequence for every inherited PR and dirty worktree: the
   [12 September value-proof sequence](../../../plans/active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence).
   Containers are evidence about gaps; a gap is proven only by a failing test on
@@ -60,9 +61,9 @@
   then the known Castr defects): (a) settle and merge PR #101 (fetch the wave on its
   current head, disposition each finding, update the branch against main, merge with a
   merge commit), then sync PR #102 by hand union and merge it; (b) the twelve inherited
-  PRs and #81, each closed through its recorded disposition (ledger §Source PR
+  PRs, each closed through its recorded disposition (ledger §Source PR
   dispositions; the 20 September review's §12 table) or its proven parts extracted, one
-  landing slot at a time; (c) the ten dirty worktrees, the stash (Q-018 stays open), the
+  landing slot at a time, while #81 keeps its C09 exception; (c) the ten dirty worktrees, the stash (Q-018 stays open), the
   prunable temp-directory registrations and the branches, per §Terminal state item 2;
   (d) the revised repair plan (Q-32), then the hygiene-gate red test (Q-07) with the
   relocation re-derived from PR #21. Use the OCE `pr-lifecycle` and `proportionality`

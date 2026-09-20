@@ -31,7 +31,17 @@ for wt in "$@"; do
       R?|?R|C?|?C) IFS= read -r -d '' origin ;;
     esac
     base_blob=$(git rev-parse -q --verify "$BASE:$f" 2>/dev/null || true)
-    if [[ -n "$base_blob" && -f "$wt/$f" && "$(git hash-object "$wt/$f")" == "$base_blob" ]]; then eq=Y; else eq=n; fi
+    base_mode=$(git ls-tree "$BASE" -- "$f" 2>/dev/null | cut -d' ' -f1)
+    # A symlink is compared as git stores it (its target string, mode 120000), never by
+    # the bytes it points at, so a link can equal main only where main has that link.
+    if [[ -L "$wt/$f" ]]; then
+      wt_blob=$(printf '%s' "$(readlink "$wt/$f")" | git hash-object --stdin); wt_link=1
+    elif [[ -f "$wt/$f" ]]; then
+      wt_blob=$(git hash-object "$wt/$f"); wt_link=0
+    else
+      wt_blob=""; wt_link=0
+    fi
+    if [[ -n "$base_blob" && "$wt_blob" == "$base_blob" && ( ( "$base_mode" == 120000 && $wt_link -eq 1 ) || ( "$base_mode" != 120000 && $wt_link -eq 0 ) ) ]]; then eq=Y; else eq=n; fi
     if [[ -n "$base_blob" ]]; then
       if git diff --quiet "$head" "$BASE" -- "$f" 2>/dev/null; then mc=same; else mc=CHANGED; fi
     else

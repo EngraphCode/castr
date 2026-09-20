@@ -90,7 +90,7 @@ todos:
     status: completed
     depends_on: [Q-00]
   - id: Q-07
-    content: 'Hygiene-gate gap: failing test on unpatched main for in-process suites that import node:fs or node:child_process or read process.env, cured by the lint restriction with the #21 relocation; close #21 when its claimed gaps are exhausted'
+    content: 'Hygiene-gate gap: failing test on unpatched main for in-process suites that import node:fs or node:child_process or read process.env, cured by the lint restriction with the #21 relocation; resolves the register row that #21 transfers to in Q-34'
     status: pending
     depends_on: [Q-00, Q-31, Q-32]
   - id: Q-08
@@ -203,9 +203,11 @@ manifest, removed the root declaration and Knip suppression, and updated the
 lockfile without changing the resolved version. Reviewed head `5d9bc962` merged
 as `0c3d4bdc`; the merge commit's second parent and tree match that reviewed
 head. PR #14 then closed without merge with its source branch retained. The next
-landing is the hygiene-gate gap from the value-proof register (its failing test on
-unpatched main with the Q-07 relocation cure); #21 closes when its claimed gaps are
-exhausted, per the sequence's priority order.
+landing is Q-33 (PRs #101 and #102 on main), then the disposition phase (Q-34 and
+Q-13) and the revised repair plan (Q-32); the hygiene-gate gap from the value-proof
+register (Q-07: its failing test on unpatched main with the relocation cure) is the
+first repair after Q-32, and #21's register row resolves with it, per the sequence's
+priority order.
 The broader C05 family retains its other documented obligations. Q-09 is complete:
 PR #90 delivered the #28 preservation record before #28 closed, PRs #94 and #95
 delivered PR #10's surviving validator and machine-state boundary, and #10 closed
