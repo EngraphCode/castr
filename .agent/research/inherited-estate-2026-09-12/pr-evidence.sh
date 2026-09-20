@@ -32,12 +32,14 @@ pinned_for() {
 for n in 11 12 13 15 16 17 18 20 21 23 26 27 81; do
   read -r b head <<< "$(pinned_for "$n")"
   git cat-file -e "$head^{commit}" || { echo "PR #$n: pinned head $head is not in this repository" >&2; exit 1; }
-  live=$(gh pr view "$n" --json headRefOid -q .headRefOid)
-  local_=$(git rev-parse "$b")
+  # The pinned computation needs only the pinned objects. The live GitHub head and the
+  # local branch are drift indicators and are reported as unavailable when absent.
+  live=$(gh pr view "$n" --json headRefOid -q .headRefOid 2>/dev/null) || live=unavailable
+  local_=$(git rev-parse -q --verify "$b" 2>/dev/null) || local_=absent
   base=$(git merge-base "$BASE" "$head")
   echo "################ PR #$n  branch=$b  head=${head:0:8} local=${local_:0:8} live=${live:0:8} base=${base:0:8} commits=$(git rev-list --count "$base".."$head")"
-  if [[ "$live" != "$head" ]]; then echo "  DRIFT: live GitHub head differs from the pinned head"; fi
-  if [[ "$local_" != "$head" ]]; then echo "  DRIFT: local branch differs from the pinned head"; fi
+  if [[ "$live" == unavailable ]]; then echo "  live GitHub head unavailable (no gh access); drift against GitHub not measured"; elif [[ "$live" != "$head" ]]; then echo "  DRIFT: live GitHub head differs from the pinned head"; fi
+  if [[ "$local_" == absent ]]; then echo "  local branch $b absent; drift against the local branch not measured"; elif [[ "$local_" != "$head" ]]; then echo "  DRIFT: local branch differs from the pinned head"; fi
   echo "--- commits"; git log --format='  %h %s' "$base".."$head"
   echo "--- cherry (- = patch already on main)"
   git cherry "$BASE" "$head" | awk '{print "  "$1" "substr($2,1,8)}' | sort | uniq -c | awk '{print "  "$2" x"$1}'

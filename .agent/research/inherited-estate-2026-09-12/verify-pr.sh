@@ -12,7 +12,30 @@ label=$1; base=$2; head=$3
 V=$S/v-$label; log=$S/verify-$label.txt
 failures=0
 
-git -C "$R" worktree add --detach -q "$V" "$BASE"
+# Every exit path re-arms the semantic-merge driver from the primary checkout, because
+# the disposable worktree's install writes its own path into the shared .git/config
+# (bootstrap defect, recorded in the plan). A failed re-arm is itself a failure.
+# shellcheck disable=SC2329 # invoked from the EXIT trap below
+rearm() {
+  if ! (cd "$R" && pnpm run postinstall >/dev/null 2>&1); then
+    echo "re-arm of the merge driver failed in $R" >&2
+    return 1
+  fi
+}
+trap 'rc=$?; rearm || exit 1; exit $rc' EXIT
+
+if [[ -e "$V" ]]; then
+  echo "refusing to reuse existing destination $V" >&2
+  exit 1
+fi
+if ! git -C "$R" worktree add --detach -q "$V" "$BASE"; then
+  echo "worktree add failed for $V" >&2
+  exit 1
+fi
+if [[ "$(git -C "$V" rev-parse HEAD)" != "$BASE" || -n "$(git -C "$V" status --porcelain)" ]]; then
+  echo "worktree $V is not a clean checkout of $BASE" >&2
+  exit 1
+fi
 if ! (cd "$V" && pnpm install --frozen-lockfile --offline >/dev/null 2>&1); then
   echo "install failed in $V" >&2
   exit 1
@@ -61,11 +84,6 @@ run_vitest() {
   if [[ $rc -ne 0 ]]; then failures=$((failures + 1)); fi
   echo "===== done $(date '+%H:%M:%S') failures=$failures"
 } > "$log" 2>&1
-
-# The disposable worktree's install ran the repository postinstall, which writes the
-# semantic-merge driver path into the shared .git/config; re-arm it from the main
-# checkout so removing the worktree does not leave every checkout with a dead driver.
-(cd "$R" && pnpm run postinstall >/dev/null 2>&1) || echo "re-arm of the merge driver failed in $R" >&2
 
 cat "$log"
 exit "$failures"

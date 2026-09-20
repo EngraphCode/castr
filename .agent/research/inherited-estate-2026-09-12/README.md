@@ -14,7 +14,11 @@ unpatched main does that.
 
 All scripts are Bash. They resolve the repository from `git rev-parse --show-toplevel`,
 measure against `$BASE`, which defaults to the recorded main revision above, and write
-to `$SCRATCH`, defaulting to a fresh `mktemp -d`. None writes to the repository.
+to `$SCRATCH`, defaulting to a fresh `mktemp -d`. They do write shared Git state:
+`verify-pr.sh` registers a worktree, its install writes the merge-driver path into the
+shared `.git/config` (re-armed from the primary checkout on every exit path), and
+`git merge-tree --write-tree` writes Git objects. Merge-conflict output can depend on
+the merge-driver build as well as the pinned commits.
 
 - `pr-evidence.sh`: for each open source PR, measured at the head SHA recorded on
   12 September and pinned in the script, the merge-base, commit list, `git cherry`
@@ -47,9 +51,13 @@ to `$SCRATCH`, defaulting to a fresh `mktemp -d`. None writes to the repository.
 - `pr-evidence.txt`: the mechanical evidence for all 13 PRs, regenerated on
   13 September by `pr-evidence.sh` at the pinned heads; no drift from the 12 September
   heads was reported, and the conflict lists match the 12 September run.
-- `wt-evidence.txt`: the mechanical evidence for the 11 worktrees, produced on
-  12 September before untracked directories were expanded; the `castr-local-entry`
-  row shows `examples/` as one entry (one file, identical to main).
+- `wt-evidence.txt`: the mechanical evidence for 10 worktrees, regenerated on
+  20 September after the three inventory repairs (content equality for untracked files,
+  rename records, counts against HEAD). The 12 September output for all 11, with the
+  `castr-local-entry` `examples/` directory as one row, is in git history at
+  `f8a744c2`. The eleventh worktree, `castr-q07-zod-fixture-runner`, was unreadable on
+  20 September: it lived under the system temp directory, and the temp purge had removed its `.git`
+  file and its six dirty files.
 - `verify-<label>.txt`: one per probed PR (11, 12, 13, 15, 16, 17, 18, 20, 26, 27).
   `verify-pr16.txt`, `verify-pr18.txt` and `verify-pr27.txt` were regenerated on
   13 September by `verify-pr.sh` at the pinned heads; the other seven were produced by
