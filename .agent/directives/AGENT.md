@@ -139,6 +139,10 @@ Domain experts (castr schema surface):
 
 - Husky is the live repo-local hook runner.
 - `pnpm install` triggers the repo `prepare` step, which activates Husky locally.
+- `pnpm install` also runs the root `postinstall`, which builds `agent-tools/dist` and binds the
+  `engraph-semantic-merge` git driver for the whole repository; each checkout runs its own build, so
+  a linked worktree that has not run `pnpm install` halts merges on `.agent/memory/**/*.md` with a
+  module-resolution error until it is installed.
 - `pre-commit` (hardened 2026-07-03, owner-directed) auto-formats staged files with Prettier and
   refreshes the Git index, then runs the blocking gate chain: markdownlint on staged Markdown,
   `secrets:scan`, `repo-validators:check`, `knip`, `depcruise`, the `madge` circular/orphan pair,
