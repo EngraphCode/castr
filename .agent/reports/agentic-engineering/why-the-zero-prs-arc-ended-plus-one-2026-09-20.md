@@ -294,4 +294,77 @@ eyes at is any sentence in this record where a judgement is not followed by its 
 
 ## Addenda
 
-None yet. New understanding amends this record here, additively.
+New understanding amends this record here, additively. The text above is as first
+committed in `498fc8c3`.
+
+### Addendum 1, 20 September 2026, 15:40 UTC: an independent review existed and I had not read it
+
+At 14:27 UTC on 20 September, three minutes before this retrospective was commissioned,
+a deep review prepared by Codex at the owner's request was posted to PR #101
+([comment](https://github.com/EngraphCode/castr/pull/101#issuecomment-5750407866)). It
+reviewed `main` at `21e23229` and PR #101 at `f8a744c2`, read-only. The owner pointed me
+to it while this record's gate was running. My §Sources says I consulted the PR's
+comments; I had filtered them for a tally and read none. My sentence "Not available: any
+independent reviewer's read of this arc" was therefore false when written. It stands
+above, uncorrected, because this record amends additively.
+
+What the review changes in this record:
+
+- **A register row I labelled "observation" is false.** The 12 September gap register
+  says default-only operations are "excluded from generated output with a warning", and
+  my decision-lens pass then ruled that exclusion a defect and planned an ADR to reverse
+  it. The review says `main` excludes nothing. Verified firsthand on 20 September:
+  `defaultStatusBehavior` is declared, parsed by the CLI and passed into the generation
+  options, and nothing under `lib/src` reads it; no exclusion or warning path exists; the
+  snapshot test retains the endpoint in both modes. I had read the documented policy and
+  recorded it as behaviour read "directly on main". That is a fourteenth substitution
+  for §Meta root, documentation for behaviour, and the most expensive kind: a false
+  observation that a later determination was built on. The real defects there are an
+  ignored option and the response projection.
+- **Three more claims of mine outran their evidence**, each found by the reviewer, none
+  by me: the container map says #12's full snapshot suite was green while the retained
+  `verify-pr12.txt` shows 74 unit tests and the type-check only; the evidence README says
+  "None writes to the repository" while the scripts register worktrees, write shared
+  config, re-arm through the primary checkout and write Git objects; and "#11 has no gap;
+  close" and "#23 has no product gap; close" contradict the acceptance the delivery
+  ledger retains for both.
+- **The evidence scripts have six further defects** beyond the four rounds counted
+  above, three reproduced by the reviewer in a disposable fixture (untracked-file
+  equality, rename records misparsed, staged-only changes omitted from the "vs HEAD"
+  count) and three found at source level (worktree creation failure not stopping
+  `verify-pr.sh`, merge-driver restoration not failure-safe, pinned reproduction depending
+  on local branch names and live GitHub access). The 5, 3, 1 series in §Counterfactual
+  test measured what one bot chose to raise per round, not what remained. The
+  probe-first segment lowered findings on the code it touched; it did not make the
+  scripts reliable. Proposal R4's falsifier reads "valid finding in its first round"; a
+  deeper reviewer is a better instrument than a first round, and R4's expected effect is
+  weakened accordingly.
+- **The review challenges the proof contract itself.** The owner's requested outcome,
+  stated at its head, is that known defects in the required contract are exercised by
+  required CI and CI is red while they remain. The value-proof sequence says the red
+  test and its cure land together and every PR is green. The review asks the repair plan
+  to say where the honest failing baseline lives and how it reaches a repaired, mergeable
+  candidate. That is a decision about the plan, outside this record's scope; it is noted
+  here because it bears on R1: PR #101's "last push" now has to carry corrected premises
+  and corrected closure claims, not only the round 4 fix, or be superseded by the revised
+  plan the review asks for.
+
+What it does not change: the causal stack. The review is the external observer the
+13 September wrap said the recursion could not supply, and what it caught is the class
+that wrap named. The stack's claim that the estate's independent instruments were never
+dispatched is strengthened: the one independent read the arc received came from outside
+the session, a week later, at the owner's initiative.
+
+### Addendum 2, 20 September 2026, 15:50 UTC: a fourth exit-status masking, while landing this record
+
+The command that wrote this record's commit message was chained with `&&` after a
+`grep -c` that exits 1 when it counts zero matches, so the message file was never
+written. My "validation" of the message then grepped the checker's output for warning
+words and printed "clean" for a file that did not exist; the checker itself exits 2 on a
+missing file, and I had discarded its status. The commit failed loudly on the missing
+file, with nothing half-committed. The rerun validates by exit status and includes a
+negative probe. This is the fourth instance of the class this record counts three of,
+and it supports the record's one firm conclusion about it: what stopped it was a
+mechanism that fails closed (`git commit -F` on a missing file), not the author's
+awareness of the class, which was as high as it can be while writing a retrospective
+about it.
