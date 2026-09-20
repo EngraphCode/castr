@@ -111,15 +111,28 @@ rather than hiding it behind a silent auto-merge.
 
 ## Conflict-time tripwire
 
-castr wires a `.gitattributes` merge driver (`engraph-semantic-merge`) over the
-`merge_class`-bearing memory/state paths. On a merge/rebase/cherry-pick conflict in one of
-those files the driver FAILS LOUD (non-zero, leaves the file unmerged) with a message
-routing here, instead of letting git produce a silently-corrupting line-merge. The driver
-cannot perform the concept-merge (git cannot, and neither can a script) — it converts a
-silent corruption into a loud halt. The driver is registered per-checkout by the
-`postinstall` bootstrap (git merge-driver config is not committable); a fresh clone that
-has not run `pnpm install` falls back to git's default line-merge, so the human discipline
-above remains the backstop.
+castr wires a `.gitattributes` merge driver (`engraph-semantic-merge`) over
+`.agent/memory/**/*.md`; the `merge_class`-bearing JSON registers under `.agent/state/` are
+not mapped and rely on the discipline above. On a merge/rebase/cherry-pick conflict in one of
+those files the driver FAILS LOUD (non-zero, leaves the file unmerged) with a message routing
+here, instead of letting git produce a silently-corrupting line-merge. The driver cannot
+perform the concept-merge (git cannot, and neither can a script) — it converts a silent
+corruption into a loud halt. The driver name is bound in git config by the `postinstall`
+bootstrap (git merge-driver config is not committable). The registered command names the
+driver by its path within the checkout, `agent-tools/dist/src/bin/semantic-merge-driver.js`:
+git runs merge drivers from the top level of the checkout being merged, so one registration
+arms every linked worktree and each checkout runs its own `agent-tools/dist` build. A
+checkout without that build halts its merges on these paths with an unmerged file and a
+module-resolution error naming that path; the unmerged file holds your side only, with no
+conflict markers, so do not stage it. Run `pnpm install` in that checkout (its `postinstall`
+builds the driver and binds it), or `pnpm --filter @engraph/agent-tools build` when the
+checkout is already installed and only `dist` was cleaned, then re-run the merge so the
+routing message fires. The command starts with `node`, so a merge launched from a client
+whose `PATH` has no `node` halts the same way. A fresh clone that has never run
+`pnpm install` has no binding and falls back to git's default line-merge, and a
+bare-repository or server-side merge (`gh pr merge`, auto-merge, `merge-tree` in a bare
+clone) never invokes any merge driver; in both cases the human discipline above is the only
+protection.
 
 ## Anti-patterns
 

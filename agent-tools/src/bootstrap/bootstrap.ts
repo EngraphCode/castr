@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { chmodSync, existsSync, readdirSync } from 'node:fs';
+import { chmodSync, existsSync, readdirSync, realpathSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 
@@ -10,10 +10,8 @@ import { resolveTrustedGit } from '../core/trusted-git.js';
 import { SEMANTIC_MERGE_DRIVER_NAME } from '../semantic-merge/semantic-merge-driver.js';
 
 import { interpretTscOutcome } from './bootstrap-helpers.js';
-import {
-  type GitSpawnRunner,
-  registerSemanticMergeDriver,
-} from './semantic-merge-driver-registration.js';
+import { createGitSpawnRunner } from './git-spawn-runner.js';
+import { registerSemanticMergeDriver } from './semantic-merge-driver-registration.js';
 
 /**
  * Install-time bootstrap, run by the root `postinstall` via `tsx`.
@@ -59,51 +57,51 @@ function markExecutableArtifacts(): void {
   }
 }
 
+/** One line of diagnosis for a caught value, whatever was thrown. */
+function describeError(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
 /**
- * Arm the `engraph-semantic-merge` git merge driver for this checkout: build the
- * git seam (git by its trusted absolute path, run from the repo root), hand it to
- * the registration, and report the outcome. The decision logic and its tests live
- * in `semantic-merge-driver-registration.ts`.
+ * Arm the `engraph-semantic-merge` git merge driver: build the git seam (git by
+ * its trusted absolute path, run from the repo root), hand the registration the
+ * real filesystem, and report the outcome. The registered command is relative
+ * to the checkout, so this one registration serves every linked worktree of
+ * the repository. The decision logic and its tests live in
+ * `semantic-merge-driver-registration.ts`.
  *
- * A git binary outside the trusted locations is the documented git-less case:
- * reported loudly, not fatal to the install.
+ * A git binary outside the trusted locations is the documented git-less case
+ * and an environmental registration failure is reported loudly; neither is
+ * fatal to the install. An `invalid` outcome (the built driver is missing after
+ * a successful build, or the repo root is not the top level git reports) is a
+ * corrupt build and fails the install, matching the missing-compiler case.
  */
 function armSemanticMergeDriver(): void {
   let gitBinary: string;
   try {
     gitBinary = resolveTrustedGit();
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : String(error);
-    writeErrorLine(`[bootstrap-agent-tools] ${message} — semantic-merge tripwire not armed`);
+    writeErrorLine(
+      `[bootstrap-agent-tools] ${describeError(error)} — semantic-merge tripwire not armed`,
+    );
     return;
   }
-  const runGit: GitSpawnRunner = (args) => {
-    const result = spawnSync(gitBinary, [...args], {
-      cwd: repoRoot,
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'inherit'],
-    });
-    return {
-      error: result.error,
-      signal: result.signal,
-      status: result.status,
-      stdout: typeof result.stdout === 'string' ? result.stdout : '',
-    };
-  };
 
   const outcome = registerSemanticMergeDriver({
-    driverBinPath: path.join(agentToolsDir, 'dist', 'src', 'bin', 'semantic-merge-driver.js'),
-    runGit,
+    repoRoot,
+    runGit: createGitSpawnRunner({ gitBinary, cwd: repoRoot }),
+    realpath: realpathSync,
+    exists: existsSync,
   });
   switch (outcome.kind) {
     case 'armed':
       writeLine(
-        `[bootstrap-agent-tools] armed git merge driver ${SEMANTIC_MERGE_DRIVER_NAME} for ${repoRoot}`,
+        `[bootstrap-agent-tools] armed git merge driver ${SEMANTIC_MERGE_DRIVER_NAME} for the repository at ${repoRoot} (all linked worktrees)`,
       );
       return;
     case 'skipped-not-a-work-tree':
       writeLine(
-        '[bootstrap-agent-tools] not a git work tree — skipped semantic-merge driver config',
+        `[bootstrap-agent-tools] not a git work tree (git exited ${outcome.status}) — skipped semantic-merge driver config`,
       );
       return;
     case 'failed':
@@ -111,7 +109,20 @@ function armSemanticMergeDriver(): void {
         `[bootstrap-agent-tools] ${outcome.reason} — semantic-merge tripwire not armed`,
       );
       return;
+    case 'invalid':
+      writeErrorLine(
+        `[bootstrap-agent-tools] ${outcome.reason} — the build is not usable; failing the install`,
+      );
+      break;
+    default: {
+      const exhaustive: never = outcome;
+      writeErrorLine(
+        `[bootstrap-agent-tools] unhandled registration outcome ${JSON.stringify(exhaustive)} — semantic-merge tripwire not armed`,
+      );
+      return;
+    }
   }
+  process.exit(1);
 }
 
 function main(): void {
