@@ -12,9 +12,12 @@ unpatched main does that.
 
 ## Scripts
 
-All scripts are Bash. They resolve the repository from `git rev-parse --show-toplevel`,
-measure against `$BASE`, which defaults to the recorded main revision above, and write
-to `$SCRATCH`, defaulting to a fresh `mktemp -d`. They do write shared Git state:
+All scripts are Bash. They resolve the repository from `git rev-parse --show-toplevel`
+and measure against `$BASE`, which defaults to the recorded main revision above.
+`verify-pr.sh` writes its worktree, patch and logs under `$SCRATCH`, defaulting to a
+fresh `mktemp -d`; `pr-evidence.sh` and `wt-evidence.sh` write their reports to stdout,
+and `wt-evidence.sh` keeps one `mktemp` listing file that it removes on exit. They do
+write shared Git state:
 `verify-pr.sh` registers a worktree, its install writes the merge-driver path into the
 shared `.git/config` (re-armed from the primary checkout on every exit path), and
 `git merge-tree --write-tree` writes Git objects. Merge-conflict output can depend on
@@ -72,10 +75,13 @@ conflicts, both recorded in the napkin entry for the day.
 
 ## What the scripts do not cover
 
-- `verify-pr.sh` runs only the changed in-process tests under the default vitest config.
-  Characterisation, generated, snapshot and E2E suites changed by a source PR are not
-  executed: `verify-pr27.txt` lists 20 test files and vitest reports 18. Its output is
-  selected-test evidence for the applied `lib/` patch, never a suite-complete run.
+- `verify-pr.sh` runs the changed test files from three in-process suites: unit tests
+  under the default vitest config, `tests-transforms` under `vitest.transforms.config.ts`
+  and `tests-snapshot` under `vitest.snapshot.config.ts`. Characterisation, generated and
+  E2E suites changed by a source PR are not executed: `verify-pr27.txt` lists 20 test
+  files and vitest reports 18. Its output is selected-test evidence for the applied
+  `lib/` patch, never a suite-complete run. Both revisions must be present as objects;
+  the script aborts before creating anything when one is missing.
 - `pr-evidence.sh` needs every pinned head present as an object. The heads are unmerged
   pull-request commits, so a fresh clone fetches each before running:
   `git fetch origin refs/pull/<n>/head` for every PR number in the script, then

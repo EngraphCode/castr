@@ -12,6 +12,15 @@ label=$1; base=$2; head=$3
 V=$S/v-$label; log=$S/verify-$label.txt
 failures=0
 
+# Both revisions must be present as objects before anything is created or diffed: the
+# PR heads are unmerged pull-request commits that a fresh clone does not carry.
+for rev in "$base" "$head"; do
+  if ! git -C "$R" cat-file -e "$rev^{commit}" 2>/dev/null; then
+    echo "revision $rev is not in this repository (fetch the PR head first: git fetch origin refs/pull/<n>/head)" >&2
+    exit 1
+  fi
+done
+
 # Every exit path re-arms the semantic-merge driver from the primary checkout, because
 # the disposable worktree's install writes its own path into the shared .git/config
 # (bootstrap defect, recorded in the plan). A failed re-arm is itself a failure.
@@ -59,7 +68,9 @@ run_vitest() {
 # the exit status; a pipeline into tee would run it in a subshell and always exit 0.
 {
   echo "===== $label base=$base head=${head:0:8} main=${BASE:0:8} $(date '+%H:%M:%S')"
-  git -C "$R" diff --binary "$base" "$head" -- lib ':!lib/tests-snapshot/integration/__snapshots__' > "$S/$label.patch"
+  rc=0
+  git -C "$R" diff --binary "$base" "$head" -- lib ':!lib/tests-snapshot/integration/__snapshots__' > "$S/$label.patch" || rc=$?
+  if [[ $rc -ne 0 ]]; then echo "patch generation FAILED rc=$rc"; failures=$((failures + 1)); fi
   echo "patch: $(grep -c '^diff --git' "$S/$label.patch") files"
   rc=0
   git -C "$V" apply --3way --index "$S/$label.patch" > "$S/$label.apply.log" 2>&1 || rc=$?

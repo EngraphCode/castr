@@ -298,20 +298,27 @@ The order of work, which every other record points to rather than restates:
    `8a53cc78` on 20 September; every checkout now builds its own driver.
 1. Land PR #101, which carries this section: until it merges, the plan on main lacks
    the sequence. This includes the review findings on the measurement scripts and
-   the regenerated evidence.
-2. Produce the revised, dependency-ordered repair plan the
+   the regenerated evidence. The retrospective PR #102 lands after it.
+2. Owner priority, 20 September: bring the open PR count to zero and resolve every
+   piece of lingering and orphaned work before repairing defects. Each inherited PR
+   closes only through its recorded disposition (ledger §Source PR dispositions; the
+   [20 September review](#20-september-review)'s §12 table): for every unique delta,
+   one of a reproduced current gap with its selected cure, already landed with exact
+   evidence, superseded with a reason, or an unresolved investigation routed to its
+   owning queue row. #11 closes when its residual delta against Q-02 is recorded; #23
+   closes with its branch retained after the per-delta comparison (Q-13);
+   `custody-corrections` and `operation-security-empty` are discarded; the
+   `fixture-reproduction` files are discarded; the stash in §Unpushed work is dropped or
+   landed when [Q-018](../../memory/operational/open-questions.md) is answered.
+3. Produce the revised, dependency-ordered repair plan the
    [20 September review](#20-september-review) asks for, in this plan, with the
    review as its input: corrected baseline, evidence collection, the required-CI
    tranche, cure slices, proof record shape and completion criteria. It resolves the
    landing-rule conflict that section records.
-3. Cure the defects on main from the gap register in the order §Order and limits
+4. Cure the defects on main from the gap register in the order §Order and limits
    records, one integrating PR at a time, each with its red test on unpatched main.
    The first landing is the hygiene-gate row's red test with the Q-07 relocation
    cure; #21 closes when its claimed gaps are exhausted.
-4. Zero out the residue as gaps resolve or at owner word: #11 closes with no gap
-   (Q-02 covers it); #23 closes with its branch retained; `custody-corrections` and
-   `operation-security-empty` are discarded; the `fixture-reproduction` files are
-   discarded; the stash in §Unpushed work is dropped or landed.
 5. Q-22 and the remaining C-outcomes exactly as the parent queue records them; the
    9 September prerequisite sequence still governs Q-22 alone.
 

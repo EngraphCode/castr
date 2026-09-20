@@ -94,7 +94,7 @@ todos:
   - id: Q-13
     content: 'PR #23 disposition: compare every unique Practice delta of #23 with the current estate and record extraction or retirement per delta in the closure record, then close #23 and retain its branch per the 26 August parity ruling; no product gap is claimed'
     status: pending
-    depends_on: [Q-00, Q-32]
+    depends_on: [Q-00]
   - id: Q-10
     content: 'Tranche 00 support-contract schema + planning-state validator (per report section 5.1 shape rules)'
     status: pending

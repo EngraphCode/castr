@@ -31,7 +31,7 @@
   (retrospective) is CLEAN at `db78c9be` with rounds 1 and 2 answered; it lands after
   #101 by a hand union of `napkin.md` and `pending-graduations.md` against #101's merged
   versions, never by the server-side branch update, then merges. Open PRs at the close:
-  these three, the twelve inherited PRs and #81.
+  #101, #102, the twelve inherited PRs and #81, fifteen in all.
 - Loss event, found 20 September: the `castr-q07-zod-fixture-runner` worktree lived under
   `the system temp directory`; the temp purge removed its `.git` file and all six dirty files between
   13 and 20 September. The 12 September inventory row (git history, `f8a744c2`) is the
