@@ -2,6 +2,24 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-09-20 (ten containers closed through the register — Candle weaves Residue / a4c7fb, part 3)
+
+- **Landed: PR #104 (`SHA:11715614`) at 22:20Z and PR #105 (`SHA:902a9e0f`) at 22:48Z.**
+  #11 closed without merge at 22:20:54Z through its per-delta residual record (PR #104);
+  the nine code containers (#12, #13, #15, #16, #17, #18, #20, #26, #27) closed without
+  merge between 22:48:36Z and 22:48:55Z through the register transfer (PR #105). All ten
+  branches are retained. Open: #23 (Q-13) and #81 (its C09 exception).
+- **Probe pattern that produced the evidence:** copy each container's new test files onto
+  unpatched main, run each under its own vitest config, classify (red on doctrine,
+  candidate-shaped, missing module or fixture), remove. Fifteen of eighteen files were red
+  on main; #20's two suites reproduced two gaps no register row had a red test for.
+- **Validator catch (mine):** vitest's failure lines carry absolute paths; pasting them into
+  the README tripped the machine-local-path validator at pre-commit. Scrub tool output to
+  repo-relative paths before it enters a tracked file.
+- **Owner question routed, not decided:** #23's branch-only substance is a worker agent
+  class with its validators and four PDRs; whether main wants that class is a doctrine
+  reading for the owner, recorded in the preliminary inventory.
+
 ## 2026-09-20 (three merges and a records-PR treadmill — Candle weaves Residue / a4c7fb, part 2)
 
 - **Landed: PR #103 (`SHA:8a53cc78`), PR #102 (`SHA:8ca0db05`), PR #101 (`SHA:0ad80a41`).** The cured
