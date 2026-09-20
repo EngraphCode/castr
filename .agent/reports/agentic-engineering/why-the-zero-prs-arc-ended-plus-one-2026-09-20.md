@@ -295,7 +295,8 @@ eyes at is any sentence in this record where a judgement is not followed by its 
 ## Addenda
 
 New understanding amends this record here, additively. The text above is as first
-committed in `498fc8c3`.
+committed in `498fc8c3`, except two review corrections made inline and recorded with
+their original wording in Addendum 3.
 
 ### Addendum 1, 20 September 2026 (committed 14:47 UTC in `b2b83624`): an independent review existed and I had not read it
 
@@ -368,3 +369,21 @@ and it supports the record's one firm conclusion about it: what stopped it was a
 mechanism that fails closed (`git commit -F` on a missing file), not the author's
 awareness of the class, which was as high as it can be while writing a retrospective
 about it.
+
+### Addendum 3, 20 September 2026 (round 4 of this PR's review): two inline corrections, originals quoted
+
+Two passages above were corrected in place at reviewers' request rather than amended
+here, which the provenance sentence did not admit until this addendum. The originals:
+
+- §Proposals, row R6, falsifier column, as first committed: "Falsifier: none worth
+  stating; it is a factual correction." Replaced in `62bfde90` (round 1) by a behavioural
+  falsifier: a deep close after the correction lands still routes to the upstream
+  reference.
+- §Sources and method, first sentence, as first committed: "Reconstructed from primary
+  sources at 2026-09-20T14:35Z to 15:10Z, never from recall". Replaced in `ba2cd49e`
+  (round 3) by a range ending at 14:46Z, bounded by the commit that carries the record,
+  because the original end time was impossible.
+
+The register rows R2 and R8 in `pending-graduations.md` were also reworded during the
+review; they are routed proposals, not this record's text, and the register carries its
+own history.
