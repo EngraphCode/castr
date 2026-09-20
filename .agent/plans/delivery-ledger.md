@@ -274,9 +274,12 @@ the napkin carries the narrative.
   `git rev-list --count 61e30973..21e23229`, the same with `-- lib/src`, and
   `git diff --name-only 61e30973 21e23229 -- lib/src | wc -l`. From `4be99dae` (6 July,
   the base of #11 and #27) the counts are 478, 15 and 66.
-- #12, #13, #15, #17 and #26 apply cleanly to main and pass their own tests and
-  type-check; #18's identity subset does too; #20 needs one import repointed; #27
-  applies except one function; #16 conflicts in 13 files with Q-04.
+- #12, #13, #15, #17 and #26 apply cleanly to `lib/` on main, pass the changed in-process
+  tests that `verify-pr.sh` selects under the default vitest config, and type-check.
+  Characterisation, generated, snapshot and E2E suites are not run by that script, so this
+  is selected-test evidence, never suite-complete self-consistency. #18's identity subset
+  passes the same selection; #20 needs one import repointed; #27 applies except one
+  function; #16 conflicts in 13 files with Q-04.
 - PR #26 is MERGEABLE and BEHIND, not conflicting; the other twelve are CONFLICTING.
 - No local branch carries a commit absent from `origin`. That measurement covers
   branches only: one stash on main (`stash@{0}` at `e025d233`, five lines of Codex

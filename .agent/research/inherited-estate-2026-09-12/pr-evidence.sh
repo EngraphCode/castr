@@ -31,7 +31,7 @@ pinned_for() {
 
 for n in 11 12 13 15 16 17 18 20 21 23 26 27 81; do
   read -r b head <<< "$(pinned_for "$n")"
-  git cat-file -e "$head^{commit}" || { echo "PR #$n: pinned head $head is not in this repository" >&2; exit 1; }
+  git cat-file -e "$head^{commit}" || { echo "PR #$n: pinned head $head is not in this repository (fetch it first: git fetch origin refs/pull/$n/head)" >&2; exit 1; }
   # The pinned computation needs only the pinned objects. The live GitHub head and the
   # local branch are drift indicators and are reported as unavailable when absent.
   live=$(gh pr view "$n" --json headRefOid -q .headRefOid 2>/dev/null) || live=unavailable

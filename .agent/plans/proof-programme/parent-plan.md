@@ -5,6 +5,14 @@ todos:
   - id: Q-00
     content: 'Owner walk W-0: ratify the ballot (T00a charter, standing authorisations, sequencing reconciliation)'
     status: completed
+  - id: Q-31
+    content: 'Bootstrap merge-driver cure (owner instruction 13 September; terminal-state item 0): register the semantic-merge driver by its path within the checkout, red test first, own PR from main'
+    status: in_progress
+    depends_on: [Q-00]
+  - id: Q-32
+    content: 'Revised dependency-ordered repair plan asked for by the 20 September review (terminal-state item 2), written into the active correction plan with the review as its input'
+    status: pending
+    depends_on: [Q-31]
   - id: Q-01
     content: 'Loop readiness: fresh-container hook chain green unattended + Routine mechanism proven end to end'
     status: completed
@@ -76,7 +84,7 @@ todos:
   - id: Q-07
     content: 'Hygiene-gate gap: failing test on unpatched main for in-process suites that import node:fs or node:child_process or read process.env, cured by the lint restriction with the #21 relocation; close #21 when its claimed gaps are exhausted'
     status: pending
-    depends_on: [Q-00]
+    depends_on: [Q-00, Q-31, Q-32]
   - id: Q-08
     content: 'ADR estate integrity (mechanical): delete the .agent/directives ADR duplicates (reconcile content into docs/ first), repoint referrers, reconcile both indexes, repair IDENTITY.md link'
     status: pending
@@ -84,7 +92,7 @@ todos:
     content: 'PR closure wave 1: #10 and #28 patch-equivalence verification and closure'
     status: completed
   - id: Q-13
-    content: 'PR #23 disposition: close #23 with its closure record and retain its branch, per the 26 August parity ruling; no product gap is claimed'
+    content: 'PR #23 disposition: compare every unique Practice delta of #23 with the current estate and record extraction or retirement per delta in the closure record, then close #23 and retain its branch per the 26 August parity ruling; no product gap is claimed'
     status: pending
     depends_on: [Q-00]
   - id: Q-10

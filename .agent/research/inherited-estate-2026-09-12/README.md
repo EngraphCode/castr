@@ -69,3 +69,15 @@ the merge-driver build as well as the pinned commits.
 Two later probes are not scripted: the PR #18 identity-slice subset (an 18-file
 pathspec of the same diff) and the manual resolution of PR #20's and PR #27's single
 conflicts, both recorded in the napkin entry for the day.
+
+## What the scripts do not cover
+
+- `verify-pr.sh` runs only the changed in-process tests under the default vitest config.
+  Characterisation, generated, snapshot and E2E suites changed by a source PR are not
+  executed: `verify-pr27.txt` lists 20 test files and vitest reports 18. Its output is
+  selected-test evidence for the applied `lib/` patch, never a suite-complete run.
+- `pr-evidence.sh` needs every pinned head present as an object. The heads are unmerged
+  pull-request commits, so a fresh clone fetches each before running:
+  `git fetch origin refs/pull/<n>/head` for every PR number in the script, then
+  `git cat-file -e <pinned head>` confirms the object. The script aborts naming the missing
+  object and that command; it does not fetch on its own.
