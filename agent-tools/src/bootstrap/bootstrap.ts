@@ -32,7 +32,10 @@ import { registerSemanticMergeDriver } from './semantic-merge-driver-registratio
  * @packageDocumentation
  */
 
-const repoRoot = resolveRepoRoot(import.meta.url);
+// The checkout being installed is the one this file lives in: the ambient
+// project-directory variable a hook harness sets must not redirect the build
+// and the driver registration to another checkout.
+const repoRoot = resolveRepoRoot(import.meta.url, { projectDir: undefined });
 const agentToolsDir = path.join(repoRoot, 'agent-tools');
 
 /** Set the executable bit on every compiled CLI entry, mirroring the build script. */
@@ -70,8 +73,8 @@ function describeError(error: unknown): string {
  * the repository. The decision logic and its tests live in
  * `semantic-merge-driver-registration.ts`.
  *
- * A git binary outside the trusted locations is the documented git-less case
- * and an environmental registration failure is reported loudly; neither is
+ * A git binary outside the trusted locations, a git that refuses the probe, and
+ * any other environmental registration failure are reported loudly; none is
  * fatal to the install. An `invalid` outcome (the built driver is missing after
  * a successful build, or the repo root is not the top level git reports) is a
  * corrupt build and fails the install, matching the missing-compiler case.
@@ -96,12 +99,7 @@ function armSemanticMergeDriver(): void {
   switch (outcome.kind) {
     case 'armed':
       writeLine(
-        `[bootstrap-agent-tools] armed git merge driver ${SEMANTIC_MERGE_DRIVER_NAME} for the repository at ${repoRoot} (all linked worktrees)`,
-      );
-      return;
-    case 'skipped-not-a-work-tree':
-      writeLine(
-        `[bootstrap-agent-tools] not a git work tree (git exited ${outcome.status}) — skipped semantic-merge driver config`,
+        `[bootstrap-agent-tools] armed git merge driver ${SEMANTIC_MERGE_DRIVER_NAME} in the local config of the repository at ${repoRoot}`,
       );
       return;
     case 'failed':

@@ -17,6 +17,8 @@ import type { SpawnOutcome } from './bootstrap-helpers.js';
 export interface GitSpawnResult extends SpawnOutcome {
   /** Captured stdout, empty when the process produced none or never started. */
   readonly stdout: string;
+  /** Captured stderr, empty when the process produced none or never started. */
+  readonly stderr: string;
 }
 
 /** Runs `git <args>` inside the checkout the runner is bound to; never throws. */
@@ -32,7 +34,7 @@ export interface CreateGitSpawnRunnerOptions {
 
 /**
  * Build a runner that spawns the given git binary in the given checkout with
- * stdout captured and stderr passed through to the caller's stderr.
+ * stdout and stderr captured, so a refusal can be reported with git's own words.
  *
  * @param options - The git binary and the checkout.
  * @returns A runner reporting the spawn outcome and stdout for each call.
@@ -42,7 +44,7 @@ export function createGitSpawnRunner(options: CreateGitSpawnRunnerOptions): GitS
     const result = spawnSync(options.gitBinary, [...args], {
       cwd: options.cwd,
       encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'inherit'],
+      stdio: ['ignore', 'pipe', 'pipe'],
     });
     return {
       error: result.error,
@@ -52,6 +54,7 @@ export function createGitSpawnRunner(options: CreateGitSpawnRunnerOptions): GitS
       // spawn that never started (for example ENOENT) yields `undefined` at
       // runtime. The guard keeps `stdout: string` an honest contract.
       stdout: typeof result.stdout === 'string' ? result.stdout : '',
+      stderr: typeof result.stderr === 'string' ? result.stderr : '',
     };
   };
 }

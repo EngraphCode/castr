@@ -156,13 +156,11 @@ export type RegistrationOutcome =
       readonly entries: readonly DriverConfigEntry[];
     }
   | {
-      readonly kind: 'skipped-not-a-work-tree';
-      /** git's exit status for the work-tree probe. */
-      readonly status: number;
-    }
-  | {
       readonly kind: 'failed';
-      /** An environmental failure: git never ran, a write was refused, or a shadow wins. */
+      /**
+       * An environmental failure: git never ran, refused the probe (no work tree,
+       * dubious ownership, unreadable metadata), refused a write, or a shadow wins.
+       */
       readonly reason: string;
     }
   | {
@@ -201,18 +199,22 @@ function parseScopedValues(stdout: string): readonly { scope: string; value: str
  * the registered command is checkout-relative, so one registration arms them
  * all; each write replaces every existing value of its key, so a stray
  * duplicate cannot make a later install fail; and the effective driver value
- * is read back afterwards, so a value supplied from any other scope (for
- * example a worktree-scoped shadow under `extensions.worktreeConfig`) is a
- * failure, never a recorded success.
+ * is read back afterwards in the checkout the seam is bound to, so a value
+ * supplied there from any other scope (for example a worktree-scoped shadow
+ * under `extensions.worktreeConfig`) is a failure, never a recorded success.
+ * The readback covers that one checkout: a worktree-scoped value written by
+ * hand in a sibling worktree still wins in that sibling, and the registration
+ * does not enumerate siblings.
  *
- * Outcomes: a directory git does not recognise as a work tree is skipped (a
- * non-git environment is not a fatal install error; the semantic-merge skill's
- * human discipline remains the backstop). A git that never started, a refused
- * config write, or a shadowing scope is `failed`: environmental, reported
- * loudly, not fatal to the install. A missing built driver or a repository root
- * that is not the checkout git reports is `invalid`: the caller treats it as a
- * corrupt build and fails the install, because leaving the driver unbound would
- * let memory files line-merge silently.
+ * Outcomes: a git that never started, a git that refused the probe (no work
+ * tree, dubious ownership, unreadable metadata: git's own words are carried
+ * in the reason), a refused config write, or a shadowing scope is `failed`:
+ * environmental, reported loudly, not fatal to the install, and the
+ * semantic-merge skill's human discipline remains the backstop. A missing
+ * built driver or a repository root that is not the checkout git reports is
+ * `invalid`: the caller treats it as a corrupt build and fails the install,
+ * because leaving the driver unbound would let memory files line-merge
+ * silently.
  *
  * @param options - The repository root and the git and filesystem seams.
  * @returns The classified outcome; every non-armed kind carries its reason.
@@ -226,9 +228,13 @@ export function registerSemanticMergeDriver(
     return { kind: 'failed', reason: probeFailure };
   }
   if (probe.status !== 0) {
-    return { kind: 'skipped-not-a-work-tree', status: probe.status ?? 1 };
+    return {
+      kind: 'failed',
+      reason: `git rev-parse --show-toplevel exited with code ${probe.status ?? 'null'}: ${probe.stderr.trim()}`,
+    };
   }
-  const worktreeTopLevel = probe.stdout.trim();
+  // Only git's line terminator is stripped; a top level ending in a space is a valid name.
+  const worktreeTopLevel = probe.stdout.replace(/\r?\n$/u, '');
   if (worktreeTopLevel === '') {
     return { kind: 'failed', reason: 'git rev-parse --show-toplevel printed no path' };
   }
@@ -264,7 +270,7 @@ export function registerSemanticMergeDriver(
     if (write.status !== 0) {
       return {
         kind: 'failed',
-        reason: `git config ${key} exited with code ${write.status ?? 'null'}`,
+        reason: `git config ${key} exited with code ${write.status ?? 'null'}: ${write.stderr.trim()}`,
       };
     }
   }

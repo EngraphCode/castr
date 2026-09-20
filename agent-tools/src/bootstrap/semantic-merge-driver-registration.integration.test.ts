@@ -16,14 +16,25 @@ import {
 // which config entries reach git and how each outcome is classified.
 
 const top = '/checkout';
-const ok: GitSpawnResult = { error: undefined, signal: null, status: 0, stdout: '' };
+const ok: GitSpawnResult = {
+  error: undefined,
+  signal: null,
+  status: 0,
+  stdout: '',
+  stderr: '',
+};
 const topLevelReported: GitSpawnResult = { ...ok, stdout: `${top}\n` };
-const refused: GitSpawnResult = { ...ok, status: 128 };
+const refused: GitSpawnResult = {
+  ...ok,
+  status: 128,
+  stderr: 'fatal: detected dubious ownership in repository\n',
+};
 const neverStarted: GitSpawnResult = {
   error: new Error('spawnSync git ENOENT'),
   signal: null,
   status: null,
   stdout: '',
+  stderr: '',
 };
 
 function expectedEntries(): readonly DriverConfigEntry[] {
@@ -87,7 +98,7 @@ describe('registerSemanticMergeDriver', () => {
     ]);
   });
 
-  it('skips with the exit status, writing nothing, when git reports no work tree', () => {
+  it("fails with git's own words, writing nothing, when git refuses the probe", () => {
     const { runGit, calls } = scriptedGit([refused]);
 
     const outcome = registerSemanticMergeDriver({
@@ -97,8 +108,31 @@ describe('registerSemanticMergeDriver', () => {
       exists: present,
     });
 
-    expect(outcome).toStrictEqual({ kind: 'skipped-not-a-work-tree', status: 128 });
+    expect(outcome).toStrictEqual({
+      kind: 'failed',
+      reason: expect.stringContaining('dubious ownership'),
+    });
+    expect(outcome).toStrictEqual({ kind: 'failed', reason: expect.stringContaining('128') });
     expect(configWrites(calls)).toStrictEqual([]);
+  });
+
+  it('keeps a top level that ends in a space, stripping only the line terminator', () => {
+    const spaced = '/check out ';
+    const { runGit } = scriptedGit([
+      { ...ok, stdout: `${spaced}\n` },
+      ok,
+      ok,
+      { ...ok, stdout: `local\t${expectedEntries()[0]?.[1] ?? ''}\n` },
+    ]);
+
+    const outcome = registerSemanticMergeDriver({
+      repoRoot: spaced,
+      runGit,
+      realpath: identity,
+      exists: present,
+    });
+
+    expect(outcome.kind).toBe('armed');
   });
 
   it('fails loudly, writing nothing, when git never started for the probe', () => {

@@ -13,9 +13,10 @@
  *
  * The driver name is bound in git config by the agent-tools `postinstall`
  * bootstrap (see `../bootstrap/semantic-merge-driver-registration.ts`): the
- * registered command names the built `src/bin/semantic-merge-driver.ts` wrapper,
- * which imports this module, by its path within the checkout, so each checkout
- * runs its own build and one registration serves every linked worktree. A
+ * registered command names `agent-tools/dist/src/bin/semantic-merge-driver.js`
+ * (the build of `src/bin/semantic-merge-driver.ts`, which imports this module)
+ * by its path within the checkout, so each checkout runs its own build and one
+ * registration serves every linked worktree. A
  * fresh, un-installed clone has no binding and falls back to git's default
  * line-merge, so the human discipline in the skill remains the backstop.
  *
