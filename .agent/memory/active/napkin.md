@@ -2,6 +2,44 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-09-20 (PR #101 premise corrections, round 4, loss event — Coal weaves Pumice / f67c69)
+
+- **LOSS EVENT: the `castr-q07-zod-fixture-runner` worktree, under the system temp directory, lost its
+  `.git` file and all six dirty files to the macOS temp purge between 13 and 20 September.**
+  Directories remain, empty; registration is prunable. The 12 September inventory row (git
+  history at `f8a744c2`) is the only record; the 143-line untracked E2E test was never
+  committed and is gone. Bounded: re-derivable from PR #21's runner test. Mistake class
+  (mine, shared with whoever created it there): unpushed work in a purge-scheduled
+  directory, counted as "untouched" in two closeouts without checking where it lived.
+  `candidate:` a validator that fails when any registered worktree with a dirty tree sits
+  under the system temp directory (`$TMPDIR` or its root). Corollary already visible on 13 September: my own
+  scratchpad lives there and was purged too.
+- **Owner instruction (verbatim substance): "update the 101 branch as appropriate, then
+  prepare for a handoff, then stop all processes."** Done as: premise corrections forced by
+  the 20 September review (default-only row withdrawn; #12 snapshot claim withdrawn; #11
+  and #23 closure routes tied to the ledger's dispositions; "no witness constructible"
+  contents; README isolation claim), the round 4 fix plus the five further script defects
+  the review found, each with a failing probe first, the worktree inventory regenerated
+  over the ten readable worktrees, a reconstructed REVIEW-TALLY with budget-exceeded at
+  round 3 and the class cure, and a §20 September review subsection carrying the open
+  landing-rule conflict to the revised plan.
+- **The 20 September review is Codex-authored under the owner's account** (its own head
+  says so). Read in full. Its owner-stated outcome (known defects exercised by required
+  CI; CI red while they remain) conflicts with this sequence's "red test with cure, every
+  PR green"; recorded as open, owned by the revised plan, not resolved by me.
+- **Probe results for the script repairs:** untracked identical file `eq=n` → `eq=Y`
+  (castr-local-entry `examples/local-user.json`, blob-equal to main); staged rename in a
+  disposable worktree misparsed as two records → one record with origin; modified tracked
+  control still `eq=n` with `+1/-0`; verify-pr refuses a pre-existing destination before
+  any mutation (marker intact, no worktree registered) and re-arms the merge driver on
+  every exit path via an EXIT trap; pr-evidence runs with no `gh` on PATH, exit 0, 13
+  "unavailable" lines. Regenerated `wt-evidence.txt`: 10 worktrees, 99 rows, 5 `eq=Y`.
+- **Zsh again:** an unquoted `$list` of newline-separated paths stays one argument in zsh;
+  the script's "not a git repository" was that, not the script. Run such loops under
+  `bash -c`.
+- **Retrospective PR #102 is on a branch from main;** its napkin section and register rows
+  will need a union merge with this branch's when the second of the two lands.
+
 ## 2026-09-13 (records-clarity pass and PR #101 third wave — Coal weaves Pumice / f67c69)
 
 - **Owner question: do the records make the goal clear (PRs, dirty worktrees, unpushed

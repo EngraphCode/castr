@@ -53,14 +53,17 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-Current priority (13 September 2026 close): first, by owner instruction, cure the
+Current priority (20 September 2026 close): first, by owner instruction, cure the
 bootstrap merge-driver defect in its own PR from current main, red test first (the
 [thread record](threads/castr-correction.next-session.md) carries the brief); then
 land [PR #101](https://github.com/EngraphCode/castr/pull/101), which carries the
-value-proof sequence and its priority order, when it is green and clean; then the
-hygiene-gate red test on unpatched main with the Q-07 relocation cure; then the
-register in its recorded order. The stash question is open as Q-018; nothing is
-dropped. The
+value-proof sequence and its priority order, when it is green and clean, and reconcile
+the retrospective [PR #102](https://github.com/EngraphCode/castr/pull/102) against it;
+then write the revised, dependency-ordered repair plan that the owner-commissioned
+[20 September review](https://github.com/EngraphCode/castr/pull/101#issuecomment-5750407866)
+asks for; then the hygiene-gate red test on unpatched main, with the Q-07 relocation
+re-derived from PR #21 because the worktree that held it was purged from the system temp directory.
+The stash question is open as Q-018; nothing is dropped. The
 [priority order](../../plans/active/castr-documentation-and-fidelity-correction.md#terminal-state-and-priorities)
 is stated once, there. The history below is retained as dated evidence.
 
@@ -96,7 +99,7 @@ continuation instructions are [preserved verbatim](../../plans/archive/correctio
 
 ## Deep consolidation status
 
-due — 13 September 2026 close: five pending-graduation candidates now wait (local-host
+due — 20 September 2026 close: PR #102 adds six fast-lane rows and the first slow-lane row on its own branch; on this branch five pending-graduation candidates wait (local-host
 hook-bypass prohibition, prettier-ignore recomputation validator, container-anchored
 register pattern, evidence scripts shown failing first, postinstall writing the shared
 git config), the owner rulings of 12 and 13 September live in the napkin and distilled
