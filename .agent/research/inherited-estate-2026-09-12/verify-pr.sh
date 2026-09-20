@@ -94,7 +94,7 @@ run_vitest() {
   sed 's/\x1b\[[0-9;]*m//g' "$S/$label.tsc.log" | head -6
   if [[ $rc -ne 0 ]]; then failures=$((failures + 1)); fi
   echo "===== done $(date '+%H:%M:%S') failures=$failures"
-} > "$log" 2>&1
+} > "$log" 2>&1 || { echo "report $log could not be written" >&2; failures=$((failures + 1)); }
 
-cat "$log"
+cat "$log" || failures=$((failures + 1))
 exit "$failures"

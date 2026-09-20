@@ -305,7 +305,10 @@ The order of work, which every other record points to rather than restates:
    [20 September review](#20-september-review)'s §12 table): for every unique delta,
    one of a reproduced current gap with its selected cure, already landed with exact
    evidence, superseded with a reason, or an unresolved investigation routed to its
-   owning queue row. #11 closes when its residual delta against Q-02 is recorded; #23
+   owning queue row. A claimed gap that is not yet cured closes its PR through the
+   register transfer §Unit of work and proof contract defines; the register row, not
+   the PR, then carries it, and its cure lands under item 4. #81 keeps its C09
+   exception. #11 closes when its residual delta against Q-02 is recorded; #23
    closes with its branch retained after the per-delta comparison (Q-13);
    `custody-corrections` and `operation-security-empty` are discarded; the
    `fixture-reproduction` files are discarded; the stash in §Unpushed work is dropped or
@@ -360,11 +363,15 @@ names which of its review-thread rationales the cure adopted or rejected, so set
 reasoning is not re-litigated.
 
 Consequences for containers: a source PR closes only when every gap it claims is
-either proven and cured on main, recorded as unprovable, or ruled not wanted by the
-owner. A red test on a branch preserves nothing; until the cure is merged the source
-PR stays open as the custody surface for that gap. Its branch is deleted only when no
-claimed gap remains unresolved and no documentation claim survives; otherwise it is
-retained. A dirty worktree is emptied by the same route or discarded at owner word.
+either proven and cured on main, recorded as unprovable, ruled not wanted by the
+owner, or transferred to the gap register: a row on main naming the gap, the source
+branch and head that carry the candidate, and the red-test obligation under its owning
+queue row. Under the owner's 20 September priority the register on main, not an open
+PR, is the custody surface for an unproven gap, and the source branch is retained until
+its row resolves. A red test on a branch preserves nothing. A branch is deleted only
+when no claimed gap remains unresolved and no documentation claim survives; otherwise
+it is retained. A dirty worktree is emptied by the same route or discarded at owner
+word.
 
 ### Gap register, 12 September
 

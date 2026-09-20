@@ -4,7 +4,8 @@
 # Untracked directories are expanded to every file inside them. Renames and copies
 # consume both porcelain records. Equality with main compares the working file's blob
 # with the pinned base blob, so untracked files are compared by content. The line
-# count is measured against HEAD, so staged-only changes are counted. The porcelain
+# count is measured against HEAD, so staged-only changes are counted; a path dirty in both
+# the index and the working tree reports the index blob separately. The porcelain
 # listing is written to a file and checked before it is parsed, so a status failure
 # aborts the run instead of presenting an empty inventory.
 set -euo pipefail
@@ -41,6 +42,15 @@ for wt in "$@"; do
     else
       ins=$(git -C "$wt" diff --numstat HEAD -- "$f" ${origin:+"$origin"} | awk '{i+=$1; d+=$2} END{printf "+%d/-%d", i, d}')
     fi
-    echo "  $st | eq=$eq | main=$mc | $ins | $f${origin:+ <- $origin}"
+    # When both columns are dirty the index holds a blob of its own; report it separately
+    # so a working tree that has drifted back to main cannot hide staged work.
+    staged=""
+    if [[ "${st:0:1}" != " " && "${st:0:1}" != "?" && "${st:1:1}" != " " ]]; then
+      index_blob=$(git -C "$wt" rev-parse -q --verify ":$f" 2>/dev/null || true)
+      if [[ -n "$base_blob" && -n "$index_blob" && "$index_blob" == "$base_blob" ]]; then ieq=Y; else ieq=n; fi
+      sins=$(git -C "$wt" diff --cached --numstat HEAD -- "$f" | awk '{i+=$1; d+=$2} END{printf "+%d/-%d", i, d}')
+      staged=" | index: eq=$ieq $sins"
+    fi
+    echo "  $st | eq=$eq | main=$mc | $ins | $f${origin:+ <- $origin}$staged"
   done < "$listing"
 done

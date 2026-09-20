@@ -9,10 +9,18 @@ todos:
     content: 'Bootstrap merge-driver cure (owner instruction 13 September; terminal-state item 0): register the semantic-merge driver by its path within the checkout, red test first, own PR from main'
     status: completed
     depends_on: [Q-00]
-  - id: Q-32
-    content: 'Revised dependency-ordered repair plan asked for by the 20 September review (terminal-state item 2), written into the active correction plan with the review as its input'
-    status: pending
+  - id: Q-33
+    content: 'Land PR #101 (the value-proof sequence and its priority order) and PR #102 (the retrospective) on main through settled waves and merge commits (terminal-state item 1)'
+    status: in_progress
     depends_on: [Q-31]
+  - id: Q-34
+    content: "Inherited PR and orphaned-work dispositions (terminal-state item 2): per-delta records for #11, #12, #13, #15, #16, #17, #18, #20, #21, #26 and #27 and for the dirty worktrees, each closing through the proof contract's register transfer; #81 keeps its C09 exception; #23 is Q-13"
+    status: pending
+    depends_on: [Q-33]
+  - id: Q-32
+    content: 'Revised dependency-ordered repair plan asked for by the 20 September review (terminal-state item 3), written into the active correction plan with the review as its input'
+    status: pending
+    depends_on: [Q-31, Q-13, Q-34]
   - id: Q-01
     content: 'Loop readiness: fresh-container hook chain green unattended + Routine mechanism proven end to end'
     status: completed
@@ -94,7 +102,7 @@ todos:
   - id: Q-13
     content: 'PR #23 disposition: compare every unique Practice delta of #23 with the current estate and record extraction or retirement per delta in the closure record, then close #23 and retain its branch per the 26 August parity ruling; no product gap is claimed'
     status: pending
-    depends_on: [Q-00]
+    depends_on: [Q-00, Q-33]
   - id: Q-10
     content: 'Tranche 00 support-contract schema + planning-state validator (per report section 5.1 shape rules)'
     status: pending
