@@ -11,10 +11,14 @@
  * alternative — git's default 3-way LINE merge — is exactly the silent corruption
  * PDR-049 forbids. This converts that silent corruption into a loud halt.
  *
- * Registered per-checkout by the agent-tools `postinstall` bootstrap (git
- * merge-driver config is not committable); a fresh, un-installed clone falls back
- * to git's default line-merge, so the human discipline in the skill remains the
- * backstop.
+ * The driver name is bound in git config by the agent-tools `postinstall`
+ * bootstrap (see `../bootstrap/semantic-merge-driver-registration.ts`): the
+ * registered command names `agent-tools/dist/src/bin/semantic-merge-driver.js`
+ * (the build of `src/bin/semantic-merge-driver.ts`, which imports this module)
+ * by its path within the checkout, so each checkout runs its own build and one
+ * registration serves every linked worktree. A
+ * fresh, un-installed clone has no binding and falls back to git's default
+ * line-merge, so the human discipline in the skill remains the backstop.
  *
  * @packageDocumentation
  */

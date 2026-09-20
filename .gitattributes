@@ -6,9 +6,19 @@
 # `engraph-semantic-merge` driver, which FAILS LOUD and routes to the
 # semantic-merge skill instead of producing a silent line-merge.
 #
-# The driver is REGISTERED per-checkout by the agent-tools `postinstall`
-# bootstrap (`merge.engraph-semantic-merge.driver` — git merge-driver config is
-# not committable). On a fresh clone that has not run `pnpm install`, git falls
-# back to its default merge for these paths, so the human discipline in
+# The driver name is bound in git config (`merge.engraph-semantic-merge.driver`,
+# not committable) by the agent-tools `postinstall` bootstrap. The registered
+# command names the driver by its path within the checkout: git runs merge
+# drivers from the top level of the checkout being merged, so one registration
+# arms every worktree of the repository and each checkout runs its own build.
+# A checkout whose `agent-tools/dist` is not built halts its merges on these
+# paths with an unmerged file and a module-resolution error naming that path.
+# Run `pnpm install` in that checkout (its postinstall builds and binds the
+# driver), or `pnpm --filter @engraph/agent-tools build` when the checkout is
+# already installed and only `dist` was cleaned. The command starts with
+# `node`, so a client whose PATH has no `node` halts the same way. A fresh
+# clone that has never run `pnpm install` has no binding and falls back to
+# git's default merge, and a bare-repository or server-side merge never
+# invokes any merge driver, so the human discipline in
 # `.agent/skills/semantic-merge/SKILL-CANONICAL.md` remains the backstop.
 .agent/memory/**/*.md merge=engraph-semantic-merge

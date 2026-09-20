@@ -16,6 +16,11 @@ Install these before running the quality gate or pushing:
   (`gitleaks detect`). A missing executable fails verification. CI provides
   its own pinned gitleaks; local development requires the executable too.
 
+- **Every checkout builds its own agent tooling.** `pnpm install` runs a `postinstall` that
+  builds `agent-tools/dist` and binds the semantic-merge git driver for the repository; a
+  linked worktree that has not run `pnpm install` halts merges touching
+  `.agent/memory/**/*.md` with a module-resolution error until it is installed.
+
 ## First contributor action
 
 Follow the [local usage walkthrough](docs/USAGE.md): install with the frozen
