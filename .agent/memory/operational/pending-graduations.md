@@ -165,8 +165,10 @@ PDR-130:
   as container salvage after the amendment lands. trigger-condition: the next `wrap` or
   `session-handoff` edit. status: pending.
 - **R6, correct the wrap skill's sentence that this estate has no retrospective skill.**
-  The skill arrived in `3bdabb3c` on 24 August 2026. trigger-condition: the next `wrap`
-  edit. status: pending.
+  The skill arrived in `3bdabb3c` on 24 August 2026. Effect: the next deep close routes
+  to the local retrospective skill. Falsifier: a deep close after the correction lands
+  still routes to the upstream reference. trigger-condition: the next `wrap` edit.
+  status: pending.
 - **R7, a scoped owner instruction is recorded with its scope.** Target: the napkin skill's
   owner-ruling capture shape. Effect: zero recorded scope generalisations in the next three
   sessions on the thread. Falsifier: one recurs with the capture discipline in force.
@@ -192,8 +194,10 @@ in substance in the napkin entry for that session, that rejects a closure claim 
 recorded something other than the stated count (a commit, a push, a PR, a document, a
 container) as reaching the goal; the measurement source is the napkin entries of the
 arc's sessions, counted by the reviewer at the review date and listed in the review note.
-Prediction: proxy-class corrections fall from 8 in the baseline arc to 2 or fewer per
-comparable arc. Falsifier: two comparable arcs with 5 or more proxy-class corrections while
-the measure is present at the closure points. Source: the retrospective record above,
-§Meta root.
+Prediction: every comparable arc completed by the review date, with the measure present
+at its closure points, records 2 or fewer proxy-class corrections (the baseline arc
+recorded 8); the review promotes on that observation. Falsifier, its complement: any such
+arc records 3 or more, and the review records a kill. No comparable arc completed by the
+review date means the review is deferred to the next one, with that recorded. Source: the
+retrospective record above, §Meta root.
 `[captured: 2026-09-20]` review-date: 2026-12-20. status: open.
