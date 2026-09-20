@@ -14,7 +14,7 @@ todos:
     status: in_progress
     depends_on: [Q-31]
   - id: Q-34
-    content: "Inherited PR and orphaned-work dispositions (terminal-state item 2): per-delta records for #11, #12, #13, #15, #16, #17, #18, #20, #21, #26 and #27 and for the dirty worktrees, each closing through the proof contract's register transfer; #81 keeps its C09 exception; #23 is Q-13"
+    content: "Inherited PR and orphaned-work dispositions (terminal-state item 2): per-delta records for #11, #12, #13, #15, #16, #17, #18, #20, #21, #26 and #27 and for the dirty worktrees, each closing through the proof contract's applicable disposition per delta (landed with exact evidence, superseded with a reason, discarded at owner word, or, for a claimed uncured gap only, the register transfer); #81 keeps its C09 exception; #23 is Q-13"
     status: pending
     depends_on: [Q-33]
   - id: Q-32

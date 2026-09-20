@@ -35,20 +35,26 @@ for wt in "$@"; do
     # A symlink is compared as git stores it (its target string, mode 120000), never by
     # the bytes it points at, so a link can equal main only where main has that link.
     if [[ -L "$wt/$f" ]]; then
-      wt_blob=$(printf '%s' "$(readlink "$wt/$f")" | git hash-object --stdin); wt_link=1
+      wt_blob=$(printf '%s' "$(readlink "$wt/$f")" | git hash-object --stdin); wt_mode=120000
     elif [[ -f "$wt/$f" ]]; then
-      wt_blob=$(git hash-object "$wt/$f"); wt_link=0
+      wt_blob=$(git hash-object "$wt/$f")
+      if [[ -x "$wt/$f" ]]; then wt_mode=100755; else wt_mode=100644; fi
     else
-      wt_blob=""; wt_link=0
+      wt_blob=""; wt_mode=""
     fi
-    if [[ -n "$base_blob" && "$wt_blob" == "$base_blob" && ( ( "$base_mode" == 120000 && $wt_link -eq 1 ) || ( "$base_mode" != 120000 && $wt_link -eq 0 ) ) ]]; then eq=Y; else eq=n; fi
+    # Equality is git equality: the same blob under the same mode, so an executable bit or
+    # a link-versus-file change on unchanged bytes never reads as already on main.
+    if [[ -n "$base_blob" && "$wt_blob" == "$base_blob" && "$wt_mode" == "$base_mode" ]]; then eq=Y; else eq=n; fi
     if [[ -n "$base_blob" ]]; then
       if git diff --quiet "$head" "$BASE" -- "$f" 2>/dev/null; then mc=same; else mc=CHANGED; fi
     else
       if git cat-file -e "$head:$f" 2>/dev/null; then mc=DELETED-on-main; else mc=new; fi
     fi
-    if [[ "$st" == "??" ]]; then
-      ins="+$(wc -l < "$wt/$f" | tr -d ' ')"
+    if [[ "$st" == "??" && -L "$wt/$f" ]]; then
+      ins="link -> $(readlink "$wt/$f")"
+    elif [[ "$st" == "??" ]]; then
+      # git's own count, so an unterminated last line counts and a binary reads as "-".
+      ins="+$({ git diff --no-index --numstat /dev/null "$wt/$f" || true; } | awk '{print $1}')"
     else
       ins=$(git -C "$wt" diff --numstat HEAD -- "$f" ${origin:+"$origin"} | awk '{i+=$1; d+=$2} END{printf "+%d/-%d", i, d}')
     fi
