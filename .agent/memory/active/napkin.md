@@ -10,9 +10,10 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   napkin sections, the value-proof sequence, the terminal state and priority order, the
   owner's instruction to cure the bootstrap merge-driver defect first, and open question
   Q-018. `main`'s thread record still routes to "PR #21 salvage"; that framing is
-  superseded on that branch. PR #101 is green on 16 of 16 checks and blocked by one
-  unresolved Codex thread on `wt-evidence.sh` that arrived five minutes after the
-  13 September close.
+  superseded on that branch. At the time of this record (14:50Z) PR #101 was green on 16
+  of 16 checks and blocked by one unresolved Codex thread on `wt-evidence.sh` that
+  arrived five minutes after the 13 September close; the PR's REVIEW-TALLY comment
+  carries its live state.
 - **READ SECOND: an owner-commissioned Codex deep review of `main` and PR #101 was posted
   to PR #101 on 20 September at 14:27 UTC**
   ([comment](https://github.com/EngraphCode/castr/pull/101#issuecomment-5750407866)). It is

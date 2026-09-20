@@ -138,11 +138,13 @@ which carries each proposal's warrant in full. `[captured: 2026-09-20 | source:
 retrospective record]` Fast-lane rows, each with its expected effect and falsifier per
 PDR-130:
 
-- **R2, a review response that adds new code re-opens the PDR-132 second-story check.**
-  Target: `pr-lifecycle` triage step. Effect: plan-class and record-class PRs on the
-  castr-correction thread settle within the two-round budget. Falsifier: two such PRs
-  exceed the budget with their evidence shipped separately. trigger-condition: the next
-  `pr-lifecycle` edit, or the next review finding that asks for new tooling. status: pending.
+- **R2, a review response that adds new code re-runs the PDR-132 second-story check at
+  the threshold.** Target: `pr-lifecycle` triage step. Separation follows only when that
+  check identifies a distinct story; size thresholds stay warnings, never blocks, per
+  PDR-132. Effect: plan-class and record-class PRs on the castr-correction thread settle
+  within the two-round budget. Falsifier: two such PRs exceed the budget with their
+  evidence shipped separately. trigger-condition: the next `pr-lifecycle` edit, or the
+  next review finding that asks for new tooling. status: pending.
 - **R3, opening or driving a PR loads `pr-lifecycle` mechanically.** Target: a validator
   that fails a push when the branch's open PR has no REVIEW-TALLY comment. Effect: every PR
   born after it carries a tally from first triage. Falsifier: tallies exist and median
@@ -198,6 +200,7 @@ Prediction: every comparable arc completed by the review date, with the measure 
 at its closure points, records 2 or fewer proxy-class corrections (the baseline arc
 recorded 8); the review promotes on that observation. Falsifier, its complement: any such
 arc records 3 or more, and the review records a kill. No comparable arc completed by the
-review date means the review is deferred to the next one, with that recorded. Source: the
-retrospective record above, §Meta root.
+review date is a kill on absent evidence, recorded as such; the concept may be proposed
+again with its measure when an arc completes. Source: the retrospective record above,
+§Meta root.
 `[captured: 2026-09-20]` review-date: 2026-12-20. status: open.

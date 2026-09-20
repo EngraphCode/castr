@@ -32,7 +32,7 @@ applied, because the PR was driven without loading the PR skill that carries the
 
 ## Sources and method
 
-Reconstructed from primary sources at 2026-09-20T14:35Z to 15:10Z, never from recall:
+Reconstructed from primary sources between 2026-09-20T14:35Z and 14:46Z (the commit that carries this record, `498fc8c3`, is dated 14:46:28Z), never from recall:
 `git log` on the PR branch; the GitHub API for PR #101 (reviews, review threads, checks,
 comments); the session transcript (owner messages with instants, per-turn tool counts);
 the 12 and 13 September napkin sections on the PR branch; PDR-130, PDR-132, the
