@@ -2,6 +2,67 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-09-20 (value-proof arc retrospective — Coal weaves Pumice / f67c69)
+
+- **READ FIRST if you branched from `main`: the live state of the castr-correction thread
+  is on [PR #101](https://github.com/EngraphCode/castr/pull/101)'s branch
+  `claude/value-proof-sequence-2026-09-12`, not here.** It carries the 12 and 13 September
+  napkin sections, the value-proof sequence, the terminal state and priority order, the
+  owner's instruction to cure the bootstrap merge-driver defect first, and open question
+  Q-018. `main`'s thread record still routes to "PR #21 salvage"; that framing is
+  superseded on that branch. PR #101 is green on 16 of 16 checks and blocked by one
+  unresolved Codex thread on `wt-evidence.sh` that arrived five minutes after the
+  13 September close.
+- **READ SECOND: an owner-commissioned Codex deep review of `main` and PR #101 was posted
+  to PR #101 on 20 September at 14:27 UTC**
+  ([comment](https://github.com/EngraphCode/castr/pull/101#issuecomment-5750407866)). It is
+  addressed to "the coding agent that will plan the fixes". Its head states the owner's
+  requested outcome: known defects in the required contract are exercised by required CI,
+  and CI is red while they remain. That challenges the value-proof sequence's "red test and
+  cure land together, every PR green", and it asks for one revised, dependency-ordered
+  repair plan in the existing active plan. It lists CI proof gaps (vacuous parity
+  assertions, generated-code lint pointed at ignored files and failing open, a "runtime"
+  suite that checks structure), compiler defects with witnesses, six further defects in
+  PR #101's evidence scripts, and corrections to PR #101's claims. Treat it as the next
+  planning input on this thread. I have read it in full and acted on none of it beyond the
+  retrospective addendum.
+- **Correction (mine), verified firsthand 20 September:** the gap-register row "default-only
+  operations excluded from generated output with a warning" is false. `defaultStatusBehavior`
+  is declared, parsed by the CLI and passed into generation options, and nothing under
+  `lib/src` reads it; no exclusion or warning path exists; the snapshot test retains the
+  endpoint in both modes. I recorded a documented policy as behaviour "read directly on
+  main", and a decision-lens determination and a planned ADR were built on it. The row, the
+  determination in the plan's §Order and limits, and the ADR plan on PR #101's branch all
+  need correcting; the real defects are an ignored option and the response projection.
+- **Fourth exit-status masking, while landing the retrospective:** a message file was never
+  written because its `cat >` was chained after a `grep -c` that exits 1 on zero matches, and
+  my check grepped the checker's output for warning words, so it printed "clean" for a
+  missing file. `git commit -F` failed loudly. Validate by exit status; probe the negative.
+- **Retrospective landed at owner word:**
+  [why-the-zero-prs-arc-ended-plus-one-2026-09-20.md](../../reports/agentic-engineering/why-the-zero-prs-arc-ended-plus-one-2026-09-20.md).
+  Mechanism named: nearest-proxy closure. Process finding: PR #101 opened at 6 files and
+  237 lines, one review response grew it to 12 files and 1,558 lines of untested evidence
+  scripts, 9 of 9 findings from round 2 onward landed there, and the PDR-132 round budget,
+  review tally and structural step-back were never applied because `pr-lifecycle` was
+  never loaded. Proposals R2 to R7 are in pending-graduations; R8 is the first slow-lane
+  row; R1 (freeze PR #101's scope, one last probe-first push, then merge) is a decision
+  for the next session on the thread.
+- **Mistake (mine), caught while writing the record:** my first draft said every finding
+  "from then on" landed on the scripts; Copilot's three round 1 threads arrived two minutes
+  after the scripts entered. The data supports "from round 2 onward". Same class the
+  record names, inside the record.
+- **Merge note for whoever lands second:** this entry and the pending-graduations rows were
+  written on a branch from `main`, so `napkin.md` and `pending-graduations.md` will each
+  need a semantic merge (a union) against PR #101's versions.
+- **Practice/tooling feedback:** the hook policy blocked two of my commands on
+  20 September. A scratch-repository probe was refused as `git commit -n` (it held
+  `git commit -q` twice and `sort -rn` later in the pipeline); a commit-and-push line was
+  refused as `git add -u` (it held `git add -- <explicit paths>` and `git push -u` later on
+  the line). Inference from two instances: the matcher tests for the flag anywhere on the
+  command line after the verb, across `&&` and pipe segments and inside bundled short
+  flags. `hook-policy-substring-discipline` is the rule it falls under. First block not
+  worked around; second re-run with the push as its own command.
+
 ## 2026-08-31 (PR #72 disposition: scorer harvested and closed — same session, part 11; Dolphin binds Trench / 013aPY)
 
 - **Correction (mine): "the scorer does not exist / was never built" was wrong.** It was

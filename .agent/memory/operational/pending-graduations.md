@@ -129,3 +129,56 @@ per-tick threaded replies where canvases are unavailable) for surfaces lacking `
 `[captured: 2026-08-27 | source: napkin (Slack Watcher stand-up entry) + tenure F0BT7TXQ3PW]`
 trigger-condition: next slack-watcher skill edit, or the next Watcher stand-up on an
 edit-capable surface (either confirms or retires the fallback shape). status: pending.
+
+### Retrospective proposals, 20 September 2026 (value-proof arc)
+
+Source record:
+[why-the-zero-prs-arc-ended-plus-one-2026-09-20.md](../../reports/agentic-engineering/why-the-zero-prs-arc-ended-plus-one-2026-09-20.md),
+which carries each proposal's warrant in full. `[captured: 2026-09-20 | source:
+retrospective record]` Fast-lane rows, each with its expected effect and falsifier per
+PDR-130:
+
+- **R2, a review response that adds new code re-opens the PDR-132 second-story check.**
+  Target: `pr-lifecycle` triage step. Effect: plan-class and record-class PRs on the
+  castr-correction thread settle within the two-round budget. Falsifier: two such PRs
+  exceed the budget with their evidence shipped separately. trigger-condition: the next
+  `pr-lifecycle` edit, or the next review finding that asks for new tooling. status: pending.
+- **R3, opening or driving a PR loads `pr-lifecycle` mechanically.** Target: a validator
+  that fails a push when the branch's open PR has no REVIEW-TALLY comment. Effect: every PR
+  born after it carries a tally from first triage. Falsifier: tallies exist and median
+  rounds per PR does not fall at PDR-132's one-month measurement. trigger-condition: the
+  next budget overrun, or the next agent-tools validator lane. status: pending.
+- **R4, scripts cited as evidence are code, written probe-first.** Merges into the
+  13 September candidate "a script cited as evidence must be shown exiting non-zero on a
+  failing input" when PR #101 lands; the 5, 3, 1 findings-per-round series is its added
+  warrant. Effect: a probe-first evidence script draws at most one valid finding in its
+  first round. Falsifier: two probe-first scripts each draw three or more. status: pending.
+- **R5, a handoff states whether its continuity is on `main`.** Target: `wrap` step 2 and
+  `session-handoff` step 1. Effect: a successor branching from `main` finds live
+  instructions within its start-right reads. Falsifier: a from-`main` session starts Q-07
+  as container salvage after the amendment lands. trigger-condition: the next `wrap` or
+  `session-handoff` edit. status: pending.
+- **R6, correct the wrap skill's sentence that this estate has no retrospective skill.**
+  The skill arrived in `3bdabb3c` on 24 August 2026. trigger-condition: the next `wrap`
+  edit. status: pending.
+- **R7, a scoped owner instruction is recorded with its scope.** Target: the napkin skill's
+  owner-ruling capture shape. Effect: zero recorded scope generalisations in the next three
+  sessions on the thread. Falsifier: one recurs with the capture discipline in force.
+  trigger-condition: the next napkin skill edit or a third generalisation. status: pending.
+
+## Slow lane
+
+Rows here follow PDR-130 §Decision 2: a concept, its prediction, its falsifier and a
+review date at which it is decided. They are not decision-debt in the drain metric.
+
+### Nearest-proxy closure
+
+Concept: under a demand to close (a stop instruction, a review thread, a session end) an
+agent reaches for the nearest thing that can be recorded as done and treats recording it
+as reaching the goal; an estate rich in registers and rules shortens the reach. Check:
+every stop report, PR description and handoff on a thread with a stated terminal count
+opens with that count, before and after. Prediction: owner corrections of the proxy class
+fall from 8 in the 12 to 13 September arc to 2 or fewer per comparable arc. Falsifier: two
+comparable arcs with 5 or more proxy-class corrections while the measure is present at
+the closure points. Source: the retrospective record above, §Meta root.
+`[captured: 2026-09-20]` review-date: 2026-12-20. status: open.
