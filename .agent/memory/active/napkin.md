@@ -45,8 +45,11 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   scripts, 9 of 9 findings from round 2 onward landed there, and the PDR-132 round budget,
   review tally and structural step-back were never applied because `pr-lifecycle` was
   never loaded. Proposals R2 to R7 are in pending-graduations; R8 is the first slow-lane
-  row; R1 (freeze PR #101's scope, one last probe-first push, then merge) is a decision
-  for the next session on the thread.
+  row. R1 as first written (freeze PR #101's scope, one last probe-first push, then merge)
+  is superseded by Addendum 1: the deep review posted on PR #101 at 14:27 UTC found six
+  further script defects and false premises, so the push that lands PR #101 carries the
+  corrected premises and closure claims or the PR is superseded. The next session on the
+  thread decides which, with that review as its input.
 - **Mistake (mine), caught while writing the record:** my first draft said every finding
   "from then on" landed on the scripts; Copilot's three round 1 threads arrived two minutes
   after the scripts entered. The data supports "from round 2 onward". Same class the

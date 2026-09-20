@@ -150,9 +150,15 @@ PDR-130:
   next budget overrun, or the next agent-tools validator lane. status: pending.
 - **R4, scripts cited as evidence are code, written probe-first.** Merges into the
   13 September candidate "a script cited as evidence must be shown exiting non-zero on a
-  failing input" when PR #101 lands; the 5, 3, 1 findings-per-round series is its added
-  warrant. Effect: a probe-first evidence script draws at most one valid finding in its
-  first round. Falsifier: two probe-first scripts each draw three or more. status: pending.
+  failing input" when PR #101 lands. Warrant, revised by the record's Addendum 1: the 5, 3,
+  1 findings-per-round series measured what one bot raised per round, not what remained;
+  the deep review of 20 September found six further defects in the same scripts, three
+  reproduced in a disposable fixture. The probe-first segment lowered findings on the code
+  it touched and did not make the scripts reliable. Effect: a probe-first evidence script
+  carries no exit-status or inventory-correctness defect that a deep review can reproduce
+  in a disposable fixture. Falsifier: the next deep review of a probe-first evidence script
+  reproduces one such defect. status: re-evaluate against the next deep review before
+  graduation.
 - **R5, a handoff states whether its continuity is on `main`.** Target: `wrap` step 2 and
   `session-handoff` step 1. Effect: a successor branching from `main` finds live
   instructions within its start-right reads. Falsifier: a from-`main` session starts Q-07
@@ -177,8 +183,17 @@ Concept: under a demand to close (a stop instruction, a review thread, a session
 agent reaches for the nearest thing that can be recorded as done and treats recording it
 as reaching the goal; an estate rich in registers and rules shortens the reach. Check:
 every stop report, PR description and handoff on a thread with a stated terminal count
-opens with that count, before and after. Prediction: owner corrections of the proxy class
-fall from 8 in the 12 to 13 September arc to 2 or fewer per comparable arc. Falsifier: two
-comparable arcs with 5 or more proxy-class corrections while the measure is present at
-the closure points. Source: the retrospective record above, §Meta root.
+opens with that count, before and after. Comparison set, fixed before observations
+accumulate: a comparable arc is a run of consecutive sessions on one thread that carries a
+stated terminal count in its plan, spanning at least three sessions or two PRs, and ending
+at an owner-declared stop or a merge; the 12 to 13 September arc on the castr-correction
+thread is the baseline. A proxy-class correction is an owner message, recorded verbatim or
+in substance in the napkin entry for that session, that rejects a closure claim because it
+recorded something other than the stated count (a commit, a push, a PR, a document, a
+container) as reaching the goal; the measurement source is the napkin entries of the
+arc's sessions, counted by the reviewer at the review date and listed in the review note.
+Prediction: proxy-class corrections fall from 8 in the baseline arc to 2 or fewer per
+comparable arc. Falsifier: two comparable arcs with 5 or more proxy-class corrections while
+the measure is present at the closure points. Source: the retrospective record above,
+§Meta root.
 `[captured: 2026-09-20]` review-date: 2026-12-20. status: open.
