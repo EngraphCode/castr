@@ -269,7 +269,11 @@ on disposable copies of `origin/main` at `21e23229`. The scripts and their outpu
 are tracked under [`research/inherited-estate-2026-09-12/`](../research/inherited-estate-2026-09-12/README.md);
 the napkin carries the narrative.
 
-- Of the 475 commits between the July source-PR bases and main, 13 touched `lib/src`.
+- Of the 475 commits from `61e30973` (18 July, the shared base of #12, #13, #15, #16, #17,
+  #18 and #21) to `main` at `21e23229`, 13 touched `lib/src`, changing 63 files:
+  `git rev-list --count 61e30973..21e23229`, the same with `-- lib/src`, and
+  `git diff --name-only 61e30973 21e23229 -- lib/src | wc -l`. From `4be99dae` (6 July,
+  the base of #11 and #27) the counts are 478, 15 and 66.
 - #12, #13, #15, #17 and #26 apply cleanly to main and pass their own tests and
   type-check; #18's identity subset does too; #20 needs one import repointed; #27
   applies except one function; #16 conflicts in 13 files with Q-04.
