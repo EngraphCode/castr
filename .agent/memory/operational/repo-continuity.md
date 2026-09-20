@@ -53,7 +53,7 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-Current priority (20 September 2026 third close): PRs #103 (the bootstrap merge-driver
+Current priority (20 September 2026 fourth close): PRs #103 (the bootstrap merge-driver
 cure, `SHA:8a53cc78`), #102 (the retrospective, `SHA:8ca0db05`) and #101 (the value-proof sequence
 and its priority order, `SHA:0ad80a41`) are on main; every checkout builds its own driver, so
 run `pnpm install` in a worktree before merging memory files there. Owner priority,

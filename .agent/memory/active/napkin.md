@@ -4,9 +4,11 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-09-20 (ten containers closed through the register — Candle weaves Residue / a4c7fb, part 3)
 
-- **Landed: PR #104 (`SHA:11715614`) and PR #105 (`SHA:902a9e0f`).** #11 and the nine code
-  containers closed without merge at 22:48Z with their records on main and branches
-  retained. Open: #23 (Q-13) and #81 (its C09 exception).
+- **Landed: PR #104 (`SHA:11715614`) at 22:20Z and PR #105 (`SHA:902a9e0f`) at 22:48Z.**
+  #11 closed without merge at 22:20:54Z through its per-delta residual record (PR #104);
+  the nine code containers (#12, #13, #15, #16, #17, #18, #20, #26, #27) closed without
+  merge between 22:48:36Z and 22:48:55Z through the register transfer (PR #105). All ten
+  branches are retained. Open: #23 (Q-13) and #81 (its C09 exception).
 - **Probe pattern that produced the evidence:** copy each container's new test files onto
   unpatched main, run each under its own vitest config, classify (red on doctrine,
   candidate-shaped, missing module or fixture), remove. Fifteen of eighteen files were red

@@ -7,12 +7,13 @@
   of the value-proof sequence. Zero open inherited PRs, zero dirty worktrees, zero
   unpushed work, reached by proof and preservation or by closure and discard.
 - Controlling queue: [parent plan](../../../plans/proof-programme/parent-plan.md#current-execution-state).
-- Next acceptance: land PR #101 and PR #102, then close the inherited PRs (owner
-  priority, 20 September). The next code slice is Q-32 and then the
+- Next acceptance: #23's Q-13 doctrine reading (one owner question, recorded in the
+  research README's preliminary inventory) and #81's C09 exception are the two open
+  PRs; then the dirty worktrees, the stash (Q-018) and the registrations at owner word;
+  then the revised repair plan (Q-32) and the
   [Q-07 brief](../../../plans/proof-programme/parent-plan.md#slice-briefs), the
   hygiene-gate gap: its failing test on unpatched main with the lint restriction and the
-  relocation cure; #21 closes in the disposition phase through the register transfer,
-  and Q-07 resolves its register row.
+  relocation cure, which resolves the register row #21 transferred to.
 - Governing sequence for every inherited PR and dirty worktree: the
   [12 September value-proof sequence](../../../plans/active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence).
   Containers are evidence about gaps; a gap is proven only by a failing test on
