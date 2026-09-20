@@ -63,7 +63,7 @@
   PRs and #81, each closed through its recorded disposition (ledger §Source PR
   dispositions; the 20 September review's §12 table) or its proven parts extracted, one
   landing slot at a time; (c) the ten dirty worktrees, the stash (Q-018 stays open), the
-  prunable temp-directory registrations and the branches, per §Terminal state item 4;
+  prunable temp-directory registrations and the branches, per §Terminal state item 2;
   (d) the revised repair plan (Q-32), then the hygiene-gate red test (Q-07) with the
   relocation re-derived from PR #21. Use the OCE `pr-lifecycle` and `proportionality`
   skills for every PR (owner instruction, 20 September).
