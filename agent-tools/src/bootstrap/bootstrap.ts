@@ -5,10 +5,15 @@ import path from 'node:path';
 
 import { resolveRepoRoot } from '../core/repo-root.js';
 import { writeLine, writeErrorLine } from '../core/terminal-output.js';
+import { resolveTrustedGit } from '../core/trusted-git.js';
 
 import { SEMANTIC_MERGE_DRIVER_NAME } from '../semantic-merge/semantic-merge-driver.js';
 
 import { interpretTscOutcome } from './bootstrap-helpers.js';
+import {
+  type GitSpawnRunner,
+  registerSemanticMergeDriver,
+} from './semantic-merge-driver-registration.js';
 
 /**
  * Install-time bootstrap, run by the root `postinstall` via `tsx`.
@@ -55,49 +60,58 @@ function markExecutableArtifacts(): void {
 }
 
 /**
- * Register the `engraph-semantic-merge` git merge driver in the local repo config
- * (LC2 stage-2). git merge-driver config lives in `.git/config` and is NOT
- * committable, so it must be (re-)established per checkout at install time. The
- * `.gitattributes` map (committed) points the `merge_class` memory/state paths at
- * this driver name; without the config the driver name is unbound and git falls
- * back to its default line-merge — so this registration is what makes the
- * conflict-time tripwire actually FIRE.
+ * Arm the `engraph-semantic-merge` git merge driver for this checkout: build the
+ * git seam (git by its trusted absolute path, run from the repo root), hand it to
+ * the registration, and report the outcome. The decision logic and its tests live
+ * in `semantic-merge-driver-registration.ts`.
  *
- * Idempotent (`git config` overwrites the same key) and guarded: a non-git or
- * git-less environment is not a fatal install error — the human discipline in the
- * semantic-merge skill remains the backstop.
+ * A git binary outside the trusted locations is the documented git-less case:
+ * reported loudly, not fatal to the install.
  */
-function registerSemanticMergeDriver(): void {
-  const insideWorkTree = spawnSync('git', ['rev-parse', '--is-inside-work-tree'], {
-    cwd: repoRoot,
-    stdio: 'ignore',
-  });
-  if (insideWorkTree.status !== 0) {
-    writeLine('[bootstrap-agent-tools] not a git work tree — skipped semantic-merge driver config');
+function armSemanticMergeDriver(): void {
+  let gitBinary: string;
+  try {
+    gitBinary = resolveTrustedGit();
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    writeErrorLine(`[bootstrap-agent-tools] ${message} — semantic-merge tripwire not armed`);
     return;
   }
-
-  const driverBin = path.join(agentToolsDir, 'dist', 'src', 'bin', 'semantic-merge-driver.js');
-  const settings: readonly (readonly [string, string])[] = [
-    [
-      `merge.${SEMANTIC_MERGE_DRIVER_NAME}.name`,
-      'engraph concept-preserving memory/state merge (refuse-and-route)',
-    ],
-    [`merge.${SEMANTIC_MERGE_DRIVER_NAME}.driver`, `node "${driverBin}" %O %A %B %P`],
-  ];
-  for (const [key, value] of settings) {
-    const result = spawnSync('git', ['config', '--local', key, value], {
+  const runGit: GitSpawnRunner = (args) => {
+    const result = spawnSync(gitBinary, [...args], {
       cwd: repoRoot,
-      stdio: 'inherit',
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'inherit'],
     });
-    if (result.status !== 0) {
-      writeErrorLine(
-        `[bootstrap-agent-tools] failed to set git config ${key} — semantic-merge tripwire not armed`,
+    return {
+      error: result.error,
+      signal: result.signal,
+      status: result.status,
+      stdout: typeof result.stdout === 'string' ? result.stdout : '',
+    };
+  };
+
+  const outcome = registerSemanticMergeDriver({
+    driverBinPath: path.join(agentToolsDir, 'dist', 'src', 'bin', 'semantic-merge-driver.js'),
+    runGit,
+  });
+  switch (outcome.kind) {
+    case 'armed':
+      writeLine(
+        `[bootstrap-agent-tools] armed git merge driver ${SEMANTIC_MERGE_DRIVER_NAME} for ${repoRoot}`,
       );
       return;
-    }
+    case 'skipped-not-a-work-tree':
+      writeLine(
+        '[bootstrap-agent-tools] not a git work tree — skipped semantic-merge driver config',
+      );
+      return;
+    case 'failed':
+      writeErrorLine(
+        `[bootstrap-agent-tools] ${outcome.reason} — semantic-merge tripwire not armed`,
+      );
+      return;
   }
-  writeLine(`[bootstrap-agent-tools] armed git merge driver ${SEMANTIC_MERGE_DRIVER_NAME}`);
 }
 
 function main(): void {
@@ -135,7 +149,7 @@ function main(): void {
   }
 
   markExecutableArtifacts();
-  registerSemanticMergeDriver();
+  armSemanticMergeDriver();
   writeLine('[bootstrap-agent-tools] built agent-tools/dist');
 }
 

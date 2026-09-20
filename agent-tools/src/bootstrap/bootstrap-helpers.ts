@@ -8,8 +8,8 @@
  * @packageDocumentation
  */
 
-/** The relevant fields of a `child_process.spawnSync` result for the tsc run. */
-export interface TscSpawnOutcome {
+/** The relevant fields of a `child_process.spawnSync` result: did the process run to a normal exit? */
+export interface SpawnOutcome {
   /** A spawn-level error (e.g. the binary could not be started). */
   readonly error: Error | undefined;
   /** The signal that terminated the process, or `null` if it exited normally. */
@@ -46,7 +46,7 @@ export interface TscOutcomeVerdict {
  * // { failed: true, exitCode: 1, reason: 'tsc was killed by signal SIGKILL' }
  * ```
  */
-export function interpretTscOutcome(outcome: TscSpawnOutcome): TscOutcomeVerdict {
+export function interpretTscOutcome(outcome: SpawnOutcome): TscOutcomeVerdict {
   if (outcome.error !== undefined) {
     return { failed: true, exitCode: 1, reason: `failed to start tsc: ${outcome.error.message}` };
   }
