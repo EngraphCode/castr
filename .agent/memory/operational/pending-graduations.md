@@ -187,3 +187,78 @@ top level (measured on git 2.50.1). Candidate permanent homes: an amendment to
 promotion record now that the driver is proven out of process. `[captured: 2026-09-13 |
 source: napkin.md, evidence regeneration; cure recorded 2026-09-20]` trigger-condition:
 fired 20 September (the cure landed on main). status: due.
+
+### Retrospective proposals, 20 September 2026 (value-proof arc)
+
+Source record:
+[why-the-zero-prs-arc-ended-plus-one-2026-09-20.md](../../reports/agentic-engineering/why-the-zero-prs-arc-ended-plus-one-2026-09-20.md),
+which carries each proposal's warrant in full. `[captured: 2026-09-20 | source:
+retrospective record]` Fast-lane rows, each with its expected effect and falsifier per
+PDR-130:
+
+- **R2, a review response that adds new code re-runs the PDR-132 second-story check at
+  the threshold.** Target: `pr-lifecycle` triage step. Separation follows only when that
+  check identifies a distinct story; size thresholds stay warnings, never blocks, per
+  PDR-132. Effect: plan-class and record-class PRs on the castr-correction thread settle
+  within the two-round budget. Falsifier: two such PRs exceed the budget with their
+  evidence shipped separately. trigger-condition: the next `pr-lifecycle` edit, or the
+  next review finding that asks for new tooling. status: pending.
+- **R3, opening or driving a PR loads `pr-lifecycle` mechanically.** Target: a validator
+  that fails a push when the branch's open PR has no REVIEW-TALLY comment. Effect: every PR
+  born after it carries a tally from first triage. Falsifier: tallies exist and median
+  rounds per PR does not fall at PDR-132's one-month measurement. trigger-condition: the
+  next budget overrun, or the next agent-tools validator lane. status: pending.
+- **R4, scripts cited as evidence are code, written probe-first.** Merges into the
+  13 September candidate "a script cited as evidence must be shown exiting non-zero on a
+  failing input" when PR #101 lands. Warrant, revised by the record's Addendum 1: the 5, 3,
+  1 findings-per-round series measured what one bot raised per round, not what remained;
+  the deep review of 20 September found six further defects in the same scripts, three
+  reproduced in a disposable fixture. The probe-first segment lowered findings on the code
+  it touched and did not make the scripts reliable. Effect: a probe-first evidence script
+  carries no exit-status or inventory-correctness defect that a deep review can reproduce
+  in a disposable fixture. Falsifier: the next deep review of a probe-first evidence script
+  reproduces one such defect. status: re-evaluate against the next deep review before
+  graduation.
+- **R5, a handoff states whether its continuity is on `main`.** Target: `wrap` step 2 and
+  `session-handoff` step 1. Effect: a successor branching from `main` finds live
+  instructions within its start-right reads. Falsifier: a from-`main` session starts Q-07
+  as container salvage after the amendment lands. trigger-condition: the next `wrap` or
+  `session-handoff` edit. status: pending.
+- **R6, correct the wrap skill's sentence that this estate has no retrospective skill.**
+  The skill arrived in `3bdabb3c` on 24 August 2026. Effect: the next deep close routes
+  to the local retrospective skill. Falsifier: a deep close after the correction lands
+  still routes to the upstream reference. trigger-condition: the next `wrap` edit.
+  status: pending.
+- **R7, a scoped owner instruction is recorded with its scope.** Target: the napkin skill's
+  owner-ruling capture shape. Effect: zero recorded scope generalisations in the next three
+  sessions on the thread. Falsifier: one recurs with the capture discipline in force.
+  trigger-condition: the next napkin skill edit or a third generalisation. status: pending.
+
+## Slow lane
+
+Rows here follow PDR-130 §Decision 2: a concept, its prediction, its falsifier and a
+review date at which it is decided. They are not decision-debt in the drain metric.
+
+### Nearest-proxy closure
+
+Concept: under a demand to close (a stop instruction, a review thread, a session end) an
+agent reaches for the nearest thing that can be recorded as done and treats recording it
+as reaching the goal; an estate rich in registers and rules shortens the reach. Check:
+every stop report, PR description and handoff on a thread with a stated terminal count
+opens with that count, before and after. Comparison set, fixed before observations
+accumulate: a comparable arc is a run of consecutive sessions on one thread that carries a
+stated terminal count in its plan, spanning at least three sessions or two PRs, and ending
+at an owner-declared stop or a merge; the 12 to 13 September arc on the castr-correction
+thread is the baseline. A proxy-class correction is an owner message, recorded verbatim or
+in substance in the napkin entry for that session, that rejects a closure claim because it
+recorded something other than the stated count (a commit, a push, a PR, a document, a
+container) as reaching the goal; the measurement source is the napkin entries of the
+arc's sessions, counted by the reviewer at the review date and listed in the review note.
+Prediction: every comparable arc completed by the review date, with the measure present
+at its closure points, records 2 or fewer proxy-class corrections (the baseline arc
+recorded 8); the review promotes on that observation. Falsifier, its complement: any such
+arc records 3 or more, and the review records a kill. No comparable arc completed by the
+review date is a kill on absent evidence, recorded as such; the concept may be proposed
+again with its measure when an arc completes. Source: the retrospective record above,
+§Meta root.
+`[captured: 2026-09-20]` review-date: 2026-12-20. status: open.

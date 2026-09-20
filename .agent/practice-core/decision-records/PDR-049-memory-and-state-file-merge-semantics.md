@@ -4,7 +4,7 @@ pdr_kind: governance
 
 # PDR-049: Memory and State File Merge Semantics
 
-**Status**: Accepted
+**Status**: Accepted (amended 2026-09-20)
 **Date**: 2026-05-06
 **Related**:
 [PDR-014](PDR-014-consolidation-and-knowledge-flow-discipline.md)
@@ -253,10 +253,21 @@ and both remain optional, to be promoted under evidence:
 3. **Codify plus custom merge drivers.** Register per-class git merge
    drivers in `.gitattributes` and host-local git config that
    auto-apply the union semantic with duplicate-key checking. Cost:
-   driver authoring, per-checkout `git config` bootstrap, ongoing
-   maintenance as schemas evolve. Promote when the cost of manual
+   driver authoring, a per-repository `git config` bootstrap plus a build
+   in each checkout, ongoing maintenance as schemas evolve. Promote when the cost of manual
    resolution exceeds the cost of driver maintenance — typically after
    evidence at N≥3 hosts or N≥5 collisions on a single host.
+
+   _Registration shape (amended 2026-09-20)._ A git merge driver runs with
+   the working directory at the top level of the checkout being merged, and
+   linked worktrees share one local git config. Register the driver command
+   as a path relative to the checkout top level: one registration then arms
+   every worktree of the repository, and each checkout runs its own build. A
+   checkout without the built driver halts on those paths, naming the driver
+   it lacks. The stored command must resolve in every checkout and on every
+   machine that shares the config, so it is never an absolute path.
+   Bare-repository and server-side merges never invoke a merge driver, so the
+   codified semantics above remain the only protection there.
 
 The staircase is intentional. Driver-level automation is harder to
 audit than declarative doctrine; doctrine is the layer where the
@@ -342,3 +353,14 @@ repo-continuity index. The PDR was written _before_ the merge resolution
 to ensure the resolution follows the doctrine rather than the doctrine
 being shaped to ratify the resolution after the fact — the
 authoring-discipline rule from PDR-047.
+
+## Amendment Log
+
+- **2026-09-20** (Accepted; Candle weaves Residue / claude / claude-fable-5-1):
+  **registration shape for the merge-driver investment level.** §Investment
+  Staircase option 3 gains the clause that a driver command is registered as a
+  path relative to the checkout top level, that one registration then arms
+  every linked worktree while each checkout runs its own build, and that
+  bare-repository and server-side merges never invoke a merge driver. The
+  option's cost line names a per-repository bootstrap plus a per-checkout
+  build. Underlying decision unchanged.

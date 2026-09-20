@@ -16,6 +16,10 @@ export default defineConfig({
     globals: true,
     environment: 'node',
     setupFiles: [resolve(dirname(fileURLToPath(import.meta.url)), 'test.setup.no-network.ts')],
+    // Composition-root isolation for the git-driven E2E fixtures: child git
+    // processes inherit this environment, so a host's global or system git
+    // config (hooksPath, templates, merge drivers) cannot change their results.
+    env: { GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_SYSTEM: '/dev/null' },
     passWithNoTests: false,
     include: ['e2e-tests/**/*.e2e.test.ts'],
     exclude: ['node_modules', 'dist', 'coverage'],
