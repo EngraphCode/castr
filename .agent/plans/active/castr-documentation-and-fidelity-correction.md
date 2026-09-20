@@ -300,8 +300,8 @@ The order of work, which every other record points to rather than restates:
    `8a53cc78` on 20 September; every checkout now builds its own driver.
 1. Land PR #101, which carries this section: until it merges, the plan on main lacks
    the sequence. This includes the review findings on the measurement scripts and
-   the regenerated evidence. The retrospective PR #102 lands after it. Delivered:
-   PR #102 merged as `8ca0db05` and PR #101 as `0ad80a41` on 20 September.
+   the regenerated evidence. Delivered on 20 September: the retrospective PR #102
+   merged first as `8ca0db05` at 21:35Z, then PR #101 as `0ad80a41` at 21:56Z.
 2. Owner priority, 20 September: bring the open PR count to zero and resolve every
    piece of lingering and orphaned work before repairing defects. Each inherited PR
    closes only through its recorded disposition (ledger §Source PR dispositions; the

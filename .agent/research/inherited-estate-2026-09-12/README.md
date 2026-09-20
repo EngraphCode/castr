@@ -64,11 +64,11 @@ the merge-driver build as well as the pinned commits.
 - `verify-<label>.txt`: one per probed PR (11, 12, 13, 15, 16, 17, 18, 20, 26, 27).
   `verify-pr16.txt`, `verify-pr18.txt` and `verify-pr27.txt` were regenerated on
   13 September by `verify-pr.sh` at the pinned heads; the other seven were produced by
-  the 12 September zsh predecessor. The two formats differ: the predecessor's header
-  starts with `branch=` and its footer has no `failures=` field, while the current
-  script's header reads `head=... main=...` and its footer carries the failure count.
-  The seven older outputs are historical evidence, not reproducible by the current
-  script byte for byte.
+  the 12 September zsh predecessor. The two formats differ. The predecessor's header is
+  `===== <label> base=<sha> branch=<name> <time>` and its footer `===== done <time>`;
+  the current script's header is `===== <label> base=<sha> head=<sha> main=<sha> <time>`
+  and its footer `===== done <time> failures=<n>`. The seven older outputs are
+  historical evidence, not reproducible by the current script byte for byte.
   Each records the patch file count, apply result and conflicted files, the test files
   run with their vitest summary (pass and fail counts per run), and the type-check
   result.

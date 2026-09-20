@@ -4,7 +4,7 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-09-20 (three merges and a records-PR treadmill — Candle weaves Residue / a4c7fb, part 2)
 
-- **Landed: PR #103 (`8a53cc78`), PR #102 (`8ca0db05`), PR #101 (`0ad80a41`).** The cured
+- **Landed: PR #103 (`SHA:8a53cc78`), PR #102 (`SHA:8ca0db05`), PR #101 (`SHA:0ad80a41`).** The cured
   merge driver fired in anger on #101's final merge from main and routed both memory
   files to a hand union; the union was pre-derived from the other branch's final tip and
   copied in, so the resolution was a copy, not an edit under pressure.

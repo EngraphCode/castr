@@ -19,9 +19,9 @@
   unpatched main, and proof lands with its cure in one green-and-clean PR.
 - Live state at the 20 September third close (Candle weaves Residue, a4c7fb): three PRs
   landed on main through the lifecycle. PR #103 (the bootstrap merge-driver cure) merged
-  as `8a53cc78` at 20:41Z; PR #102 (the retrospective) as `8ca0db05` at 21:35Z; PR #101
+  as `SHA:8a53cc78` at 20:41Z; PR #102 (the retrospective) as `SHA:8ca0db05` at 21:35Z; PR #101
   (the value-proof sequence, its priority order, the corrected premises, the regenerated
-  evidence and this record's previous close) as `0ad80a41` at 21:56Z after twelve review
+  evidence and this record's previous close) as `SHA:0ad80a41` at 21:56Z after twelve review
   rounds, the last six on a records-class PR past its budget. The cured merge driver
   fired in anger on #101's final merge from main, routing `napkin.md` and
   `pending-graduations.md` to a hand union. PR #21 was closed by GitHub at 21:56:03Z
