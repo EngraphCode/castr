@@ -351,10 +351,11 @@ Doctrine class: the PR's `## Owner approval` quotes the 20 and 21 September ruli
 verbatim as the authority for retracting the 26 August retention of #23's branch.
 Proof (repo-safe): `pnpm repo-validators:check` and `pnpm check` exit 0;
 `rg -n "at owner word|routed to an owning row|transferred to the gap
-register|branch is retained|register transfer" .agent/plans/active
-.agent/plans/delivery-ledger.md .agent/research` returns only the dated reversal
-paragraph; `gh pr list --state open --json number --jq 'map(.number)|sort'`
-equals the set of ledger rows whose status cell begins "Open".
+register|branch is retained|register transfer" -g '!unmerged-work-to-main-or-deleted.md'
+.agent/plans/active .agent/plans/delivery-ledger.md .agent/research` returns only
+the dated reversal paragraph (this plan quotes the phrases it retracts); `gh pr list --state open --json number --jq 'map(.number)|sort'`
+equals the set of source-PR table rows whose status cell begins "Open" plus #81,
+whose row is its own section of the ledger.
 
 ## Workstream W1 — the eleven code containers (product; one PR per todo)
 
