@@ -2,36 +2,83 @@
 
 ## Continuation route
 
-- Order of work: the
+- Order of work: the fifth-close bullet below is the authority until the replacement plan
+  lands. The correction plan's
   [terminal state and priorities](../../../plans/active/castr-documentation-and-fidelity-correction.md#terminal-state-and-priorities)
-  of the value-proof sequence. Zero open inherited PRs, zero dirty worktrees, zero
-  unpushed work, reached by proof and preservation or by closure and discard.
+  items 2 and 4, and the register-transfer clause of its proof contract, are suspended
+  by the owner's rulings recorded there and are corrected by that plan's first landing.
+  The end state is unchanged: zero open PRs, zero dirty worktrees, zero unpushed work,
+  every delta merged to main or deleted.
 - Controlling queue: [parent plan](../../../plans/proof-programme/parent-plan.md#current-execution-state).
-- Next acceptance: #23's Q-13 doctrine reading (one owner question, recorded in the
-  research README's preliminary inventory) and #81's C09 exception are the two open
-  PRs; then the dirty worktrees, the stash (Q-018) and the registrations at owner word;
-  then the revised repair plan (Q-32) and the
-  [Q-07 brief](../../../plans/proof-programme/parent-plan.md#slice-briefs), the
-  hygiene-gate gap: its failing test on unpatched main with the lint restriction and the
-  relocation cure, which resolves the register row #21 transferred to.
+- Next acceptance: the plan the next session creates from the fifth-close bullet below,
+  then its first landing.
 - Governing sequence for every inherited PR and dirty worktree: the
   [12 September value-proof sequence](../../../plans/active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence).
-  Containers are evidence about gaps; a gap is proven only by a failing test on
-  unpatched main, and proof lands with its cure in one green-and-clean PR.
-- Live state at the 20 September third close (Candle weaves Residue, a4c7fb): three PRs
-  landed on main through the lifecycle. PR #103 (the bootstrap merge-driver cure) merged
-  as `SHA:8a53cc78` at 20:41Z; PR #102 (the retrospective) as `SHA:8ca0db05` at 21:35Z; PR #101
-  (the value-proof sequence, its priority order, the corrected premises, the regenerated
-  evidence and this record's previous close) as `SHA:0ad80a41` at 21:56Z after twelve review
-  rounds, the last six on a records-class PR past its budget. The cured merge driver
-  fired in anger on #101's final merge from main, routing `napkin.md` and
-  `pending-graduations.md` to a hand union. PR #21 was closed by GitHub at 21:56:03Z
-  through a closing keyword in a #101 commit message; its closure record and #11's
-  per-delta record are in the research README's closure records, and #11 closes when
-  this record is on main. Open PRs at this close: #11, #12, #13, #15, #16, #17, #18, #20,
-  #23, #26, #27 and #81, twelve in all. After PR #104 (`SHA:11715614`) and PR #105 (`SHA:902a9e0f`)
-  landed their records, #11 and the nine code containers closed without merge with their
-  branches retained; open at the fourth close: #23 (Q-13) and #81 (its C09 exception).
+  Containers are evidence about gaps; a gap in product code is proven only by a failing
+  test on unpatched main, and proof lands with its cure in one green-and-clean PR;
+  documentation-only content is proven by the owner's explicit approval of the text,
+  sought in its PR. That sequence's container-closure clauses are suspended (see the
+  fifth-close bullet).
+- Live state at the 20 September fifth close (Candle weaves Residue, a4c7fb), the input
+  for the plan the next session creates and works strictly to:
+  Owner rulings at the fifth close, verbatim substance, in force for every future session:
+  (1) "closing the PR by closing the PR achieves nothing, it's the WORK that matters...
+  work that exists only on a branch and not in a PR or merged is at risk, work that we
+  don't want needn't be on a branch... what you have done is kicked the can down the road
+  while making it harder to know what we do and do not have." (2) "nothing is dealt with,
+  and absolutely purge the idea that work can be routed to a bucket of later, whatever
+  that bucket is called." (3) "never disable or skip a check of any kind." (4)
+  "post-compaction you will create a plan, you will work strictly to that plan, and you
+  will not invent outs for yourself."
+  State: main is `SHA:8a9b55a4`. Thirteen PRs are open: #11, #12, #13, #15, #16, #17, #18,
+  #20, #21, #26 and #27, reopened at 23:2xZ after ruling (1) reversed the closures of
+  this day, plus #23 and #81. No branch was deleted; no work was landed from any of
+  them. PRs #103 (`SHA:8a53cc78`), #102 (`SHA:8ca0db05`), #101 (`SHA:0ad80a41`), #104
+  (`SHA:11715614`), #105 (`SHA:902a9e0f`) and #106 (`SHA:8a9b55a4`) merged today; the
+  first three carry real work, the last three carry records.
+  False state on main that the plan corrects before anything else: the proof contract's
+  "transferred to the gap register" clause (correction plan §Unit of work and proof
+  contract, the "Consequences for containers" paragraph) and item 2's "closes its PR
+  through the register transfer" sentence are retracted to the 12 September wording (a
+  source PR closes only when every claimed gap is cured on main, disproven, or ruled
+  unwanted); queue row Q-34's wording follows; the delivery ledger's live-status cells
+  for the eleven PRs above say closed while the PRs are open; the research README's
+  closure records describe closures that did not stand. The measurements in those
+  records stand: the per-delta tables, the probe table (fifteen of eighteen new test
+  files from seven containers are red on unpatched main), and #20's two red suites.
+  Defect chain found by applying #26's formatter fail-fast to main (three failures:
+  `maybe-pretty.test.ts` "returns input on syntax error", the snapshot
+  `name-with-special-characters`, the characterisation case "schema names that are
+  JavaScript reserved words"): `builder.schemas.ts:107` stores `toIdentifier(name)` as
+  the IR component name while every `$ref` keeps the wire name, so
+  `typescript/index.ts:116,137` miss the component and skip the declaration silently,
+  `zod/index.ts:129` and `type-writer/core.ts:28` emit the reference verbatim
+  (`safeSchemaName` only suffixes built-in globals; the type writer projects nothing),
+  `maybe-pretty.ts` swallows the invalid output, the inline snapshot enshrines
+  `response: 1Name-With-Special---Characters,` with empty declaration sections,
+  `markdown/index.ts:128` swallows a malformed reference into `Ref`, and
+  `openapi-writer.components.ts:74` writes components under the mangled IR name, a
+  wire-name loss on the OpenAPI round trip. `toIdentifier` already yields valid symbols
+  (`_1_Name_With_Special_Characters`, `class_`); no unit test covers
+  `identifier-utils.ts`. Doctrine: the IR carries the wire name; rendering makes valid
+  symbols through one projection with a fail-fast injectivity check; a dangling
+  reference throws; a snapshot changes only where its expectation is the defect, with
+  the diff reviewed. PR #18's identity slice is a reference for these seams, derived
+  independently.
+  Constraints the plan works under: TDD with the failing test first; one gate at a time;
+  one landing per PR carrying its proof (for product code the red test on unpatched
+  main and its cure; for documentation-only content the text with the owner's approval
+  sought explicitly in the PR); every check
+  runs and passes, none skipped, disabled, loosened or updated away; every delta of
+  every open PR is landed on main or deleted with the reason in the commit, and a branch
+  is deleted when nothing on it remains; no routing verbs anywhere; the OCE
+  `pr-lifecycle` and `proportionality` skills; the probe method (copy a container's new
+  test files onto unpatched main, run, remove) as the way to see what a container proves.
+  Housekeeping: an empty local branch `claude/fail-fast-formatter-2026-09-21` sits at
+  main with no commits; the tree was returned to main's content by writing the file
+  forward. No process of this session remains; a Codex watcher from 10 September
+  (Bora seeks Turbulence, pid on this host) still runs from the
+  `castr-correction-custody` worktree and is not this session's.
 - Loss event, found 20 September: the `castr-q07-zod-fixture-runner` worktree lived under
   `the system temp directory`; the temp purge removed its `.git` file and all six dirty files between
   13 and 20 September. The 12 September inventory row (git history, `f8a744c2`) is the
@@ -55,20 +102,12 @@
      needs to run code and reach the network in some contexts. The question is which
      surface carries a context-dependent capability; it is
      [Q-018](../open-questions.md) and stays open. Do not drop the stash.
-- Next safe step, in order, under the owner priority stated 20 September (open PR count
-  to zero through the PR lifecycle, every piece of lingering and orphaned work resolved,
-  then the known Castr defects): (a) done: PRs #101, #102 and #103 are on main; (b) the
-  remaining inherited PRs (#23 under Q-13, #81 under its C09 exception), each closed through its recorded disposition (ledger §Source PR
-  dispositions; the 20 September review's §12 table) or its proven parts extracted, one
-  landing slot at a time: #23's Q-13 doctrine reading needs the owner's answer to one
-  question (does main want a worker agent class beside the reviewer class?), recorded in
-  the preliminary inventory; #81 keeps its C09 exception; (c) the ten dirty worktrees, the stash (Q-018 stays open), the
-  prunable temp-directory registrations and the branches, per §Terminal state item 2;
-  (d) the revised repair plan (Q-32), then the hygiene-gate red test (Q-07) with the
-  relocation re-derived from PR #21. Use the OCE `pr-lifecycle` and `proportionality`
-  skills for every PR (owner instruction, 20 September).
-- Follow-ups routed from PR #103's review and this session's measurements, each for its
-  own PR: (1) the registration's readback covers the registering checkout only; either
+- Next safe step: create the plan (an executable repo plan) from the fifth-close bullet,
+  with the owner's four rulings as its constraints, and work strictly to it. Its first
+  landing corrects the false state on main named there; every later landing takes one
+  container or one defect to main or to deletion.
+- Defects in the merge-driver registration found by PR #103's review, each landed or
+  deleted by the plan, none routed: (1) the registration's readback covers the registering checkout only; either
   enumerate every linked worktree's effective binding or qualify the "arms every linked
   worktree" clause in CONTRIBUTING, the semantic-merge skill and the registration TSDoc;
   (2) a refused name-key write after a successful driver-key write reports "not armed"

@@ -53,22 +53,16 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-Current priority (20 September 2026 fourth close): PRs #103 (the bootstrap merge-driver
-cure, `SHA:8a53cc78`), #102 (the retrospective, `SHA:8ca0db05`) and #101 (the value-proof sequence
-and its priority order, `SHA:0ad80a41`) are on main; every checkout builds its own driver, so
-run `pnpm install` in a worktree before merging memory files there. Owner priority,
-20 September: bring the open PR count to zero through the PR lifecycle (the OCE
-`pr-lifecycle` and `proportionality` skills), resolve every piece of lingering and
-orphaned work, then repair the known Castr defects. Ten inherited PRs closed without merge on
-20 September with their records on main (PR #104 `SHA:11715614`, PR #105 `SHA:902a9e0f`) and their
-branches retained; open: #23 (Q-13) and #81 (its C09 exception). In order: #23's Q-13 doctrine reading (one owner
-question recorded in the research README's preliminary inventory) and #81's C09 exception;
-then the dirty worktrees, the stash (Q-018), the prunable registrations and the branches;
-then the revised, dependency-ordered repair plan the owner-commissioned
-[20 September review](https://github.com/EngraphCode/castr/pull/101#issuecomment-5750407866)
-asks for (Q-32); then the hygiene-gate red test on unpatched main (Q-07), with the
-relocation re-derived from PR #21 because the worktree that held it was purged from the
-system temp directory. The
+Current priority (20 September 2026 fifth close): the owner ruled that closing a PR is not
+dealing with its work, that no work is routed to any bucket of later, that no check is
+ever skipped or disabled, and that the next session creates a plan and works strictly to
+it. Thirteen PRs are open (#11, #12, #13, #15, #16, #17, #18, #20, #21, #26, #27, #23,
+#81); every delta on them is landed on main with its proof (a red test on unpatched main for
+product code; the owner's explicit approval, sought in the PR, for documentation-only
+content) or deleted with its reason.
+The [thread record](threads/castr-correction.next-session.md)'s fifth-close bullet holds
+the plan's inputs: the rulings, the false state on main to correct first, the defect
+chain the formatter fail-fast exposed, and the constraints. The
 [priority order](../../plans/active/castr-documentation-and-fidelity-correction.md#terminal-state-and-priorities)
 is stated once, there. The history below is retained as dated evidence.
 
