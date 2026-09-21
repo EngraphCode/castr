@@ -50,6 +50,10 @@ export type CastrSchemaContext =
  */
 export interface IRComponentSchemaContext {
   contextType: 'component';
+  /**
+   * The component's wire name, verbatim from `#/components/schemas/{name}`;
+   * the emitted symbol is derived from it at emission, never stored here.
+   */
   name: string;
   schema: CastrSchema;
   metadata: CastrSchemaNode;

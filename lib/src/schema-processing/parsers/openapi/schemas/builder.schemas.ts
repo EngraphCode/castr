@@ -77,17 +77,16 @@ export function buildCastrSchemas(components: ComponentsObject | undefined): IRC
   return irComponents;
 }
 
-import { toIdentifier } from '../../../../shared/utils/identifier-utils.js';
-
 /**
  * Build component schema context (from `#/components/schemas/{name}`).
  *
  * Component schemas are NEVER optional - they define types, not instances.
  *
- * @param name - Component name
+ * @param name - The component's wire name (the key under `#/components/schemas`), stored verbatim and never projected to an identifier
  * @param schema - OpenAPI schema object
  * @param doc - Full OpenAPI document (for reference resolution)
  * @returns Component schema context
+ * @internal
  */
 export function buildComponentSchema(
   name: string,
@@ -104,7 +103,7 @@ export function buildComponentSchema(
 
   return {
     contextType: 'component',
-    name: toIdentifier(name),
+    name,
     schema: irSchema,
     metadata: irSchema.metadata,
   };

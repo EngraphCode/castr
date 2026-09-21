@@ -1,0 +1,64 @@
+openapi: 3.1.0
+info:
+  title: Awkward component names
+  version: 1.0.0
+  description: >-
+    Component keys that are legal OpenAPI but not JavaScript identifiers: a
+    leading digit with separators, a reserved word, a dotted name and a
+    built-in global and a primitive type keyword. Generated code must declare
+    and reference every one of them with a valid symbol.
+paths:
+  /things:
+    get:
+      operationId: listThings
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wrapper'
+        default:
+          description: Failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    1Name-With-Special---Characters:
+      type: string
+    class:
+      type: object
+      properties:
+        id:
+          type: string
+      required:
+        - id
+    Basic.Thing:
+      $ref: '#/components/schemas/class'
+    string:
+      type: string
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+    Wrapper:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/1Name-With-Special---Characters'
+        kind:
+          $ref: '#/components/schemas/class'
+        thing:
+          $ref: '#/components/schemas/Basic.Thing'
+        err:
+          $ref: '#/components/schemas/Error'
+        text:
+          $ref: '#/components/schemas/string'
+      required:
+        - name
+        - kind

@@ -6,14 +6,18 @@ import { addValidationHelpers, addSchemaRegistryHelper } from './helpers.js';
 import { writeZodSchema } from '../zod/index.js';
 import { writeTypeDefinition } from './type-writer/index.js';
 import type { CastrDocument, CastrSchemaContext, CastrSchemaComponent } from '../../ir/index.js';
-import { parseComponentRef } from '../../../shared/ref-resolution.js';
 import { safeSchemaName } from '../../../shared/utils/identifier-utils.js';
+import {
+  assertEmittedReferencesDeclared,
+  assertSchemaReferencesResolve,
+  buildSchemaComponentsMap,
+  requireSchemaComponent,
+} from './schema-components.js';
 import { assertDocumentSupportsIntegerTargetCapabilities } from '../../compatibility/integer-target-capabilities.js';
 import { assertDocumentSupportsItemSchemaTargetCapabilities } from '../../compatibility/item-schema-target-capabilities.js';
 
 export { writeTypeDefinition } from './type-writer/index.js';
 
-const COMPONENT_TYPE_SCHEMA = 'schema';
 const TEMPLATE_SCHEMAS_ONLY = 'schemas-only';
 
 function getSortedGroupEntries(groupNames: Record<string, string>): [string, string][] {
@@ -51,6 +55,7 @@ export function writeTypeScript(context: TemplateContext): string {
   const ir = requireIr(context, 'TypeScript writer');
   assertDocumentSupportsIntegerTargetCapabilities(ir, 'TypeScript');
   assertDocumentSupportsItemSchemaTargetCapabilities(ir, 'TypeScript');
+  assertSchemaReferencesResolve(ir);
 
   const project = new Project({ useInMemoryFileSystem: true });
   const sourceFile = project.createSourceFile('generated.ts', '', { overwrite: true });
@@ -91,14 +96,12 @@ function addComponentsToSourceFile(
   sourceFile: SourceFile,
   context: TemplateContext,
   ir: CastrDocument,
-  schemaNames: string[],
+  schemaNames: readonly string[],
 ): void {
-  const componentsMap = new Map<string, CastrSchemaComponent>();
-  ir.components.forEach((c) => {
-    if (c.type === COMPONENT_TYPE_SCHEMA) {
-      componentsMap.set(c.name, c);
-    }
-  });
+  const componentsMap = buildSchemaComponentsMap(ir);
+  assertEmittedReferencesDeclared(
+    schemaNames.map((ref) => requireSchemaComponent(componentsMap, ref)),
+  );
 
   addTypeDefinitions(sourceFile, schemaNames, componentsMap);
   addZodSchemas(sourceFile, schemaNames, componentsMap, context);
@@ -106,54 +109,47 @@ function addComponentsToSourceFile(
 
 function addTypeDefinitions(
   sourceFile: SourceFile,
-  schemaNames: string[],
-  componentsMap: Map<string, CastrSchemaComponent>,
+  schemaNames: readonly string[],
+  componentsMap: ReadonlyMap<string, CastrSchemaComponent>,
 ): void {
   sourceFile.addStatements('// Type Definitions');
   schemaNames.forEach((ref) => {
-    const { componentName } = parseComponentRef(ref);
-    const component = componentsMap.get(componentName);
-    if (component) {
-      const safeName = safeSchemaName(component.name);
-      sourceFile.addTypeAlias({
-        name: safeName,
-        isExported: true,
-        type: writeTypeDefinition(component.schema),
-      });
-    }
+    const component = requireSchemaComponent(componentsMap, ref);
+    sourceFile.addTypeAlias({
+      name: safeSchemaName(component.name),
+      isExported: true,
+      type: writeTypeDefinition(component.schema),
+    });
   });
 }
 
 function addZodSchemas(
   sourceFile: SourceFile,
-  schemaNames: string[],
-  componentsMap: Map<string, CastrSchemaComponent>,
+  schemaNames: readonly string[],
+  componentsMap: ReadonlyMap<string, CastrSchemaComponent>,
   context: TemplateContext,
 ): void {
   sourceFile.addStatements('// Zod Schemas');
   schemaNames.forEach((ref) => {
-    const { componentName } = parseComponentRef(ref);
-    const component = componentsMap.get(componentName);
-    if (component) {
-      const safeName = safeSchemaName(component.name);
-      const schemaContext: CastrSchemaContext = {
-        contextType: 'component',
-        name: safeName,
-        schema: component.schema,
-        metadata: component.metadata,
-      };
+    const component = requireSchemaComponent(componentsMap, ref);
+    const safeName = safeSchemaName(component.name);
+    const schemaContext: CastrSchemaContext = {
+      contextType: 'component',
+      name: component.name,
+      schema: component.schema,
+      metadata: component.metadata,
+    };
 
-      sourceFile.addVariableStatement({
-        declarationKind: VariableDeclarationKind.Const,
-        isExported: true,
-        declarations: [
-          {
-            name: safeName,
-            initializer: writeZodSchema(schemaContext, context.options),
-          },
-        ],
-      });
-    }
+    sourceFile.addVariableStatement({
+      declarationKind: VariableDeclarationKind.Const,
+      isExported: true,
+      declarations: [
+        {
+          name: safeName,
+          initializer: writeZodSchema(schemaContext, context.options),
+        },
+      ],
+    });
   });
 }
 
@@ -251,10 +247,11 @@ export function writeIndexFile(groupNames: Record<string, string>): string {
 /**
  * Generate common file for grouped output.
  */
-export function writeCommonFile(context: TemplateContext, schemaNames: string[]): string {
+export function writeCommonFile(context: TemplateContext, schemaNames: readonly string[]): string {
   const ir = requireIr(context, 'TypeScript common writer');
   assertDocumentSupportsIntegerTargetCapabilities(ir, 'TypeScript');
   assertDocumentSupportsItemSchemaTargetCapabilities(ir, 'TypeScript');
+  assertSchemaReferencesResolve(ir);
 
   const project = new Project({ useInMemoryFileSystem: true });
   const sourceFile = project.createSourceFile('common.ts', '', { overwrite: true });

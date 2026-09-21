@@ -9,7 +9,6 @@ import { toUpper } from 'lodash-es';
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
 
 const SCHEMA_TYPE_ARRAY = 'array';
-const FALLBACK_REF_NAME = 'Ref';
 
 /**
  * Generate Markdown documentation from IR.
@@ -18,6 +17,7 @@ const FALLBACK_REF_NAME = 'Ref';
  *
  * @param ir - The CastrDocument to generate documentation for
  * @returns Markdown string
+ * @throws `Error` when a parameter or response schema carries a `$ref` that cannot be parsed
  */
 export function writeMarkdown(ir: CastrDocument): string {
   const lines: string[] = [];
@@ -120,13 +120,17 @@ function writeEnums(ir: CastrDocument, lines: string[]): void {
   }
 }
 
+/**
+ * The name shown for a schema: a reference's wire component name, else its type.
+ *
+ * @param schema - The schema to name
+ * @returns The wire component name or a type label
+ * @throws `Error` when `schema.$ref` cannot be parsed as a component reference
+ * @internal
+ */
 function getTypeName(schema: CastrSchema): string {
   if (schema.$ref) {
-    try {
-      return parseComponentRef(schema.$ref).componentName;
-    } catch {
-      return FALLBACK_REF_NAME;
-    }
+    return parseComponentRef(schema.$ref).componentName;
   }
   if (schema.type) {
     return getTypeFromTypeField(schema.type, schema.items);

@@ -125,3 +125,20 @@ When adding new fixtures:
    - `lint-validation.gen.test.ts`
    - `runtime-validation.gen.test.ts`
 4. Ensure all 4 validation types pass
+
+### 7. awkward-names (Component identity)
+
+**Path:** `examples/openapi/v3.1/awkward-component-names.yaml`
+
+**Coverage:**
+
+- A component key with a leading digit and separators (`1Name-With-Special---Characters`)
+- A reserved word (`class`)
+- A dotted name (`Basic.Thing`) that is itself a `$ref`
+- A built-in global (`Error`) referenced in type and value position
+- A primitive type keyword (`string`), which TypeScript rejects as a type-alias name
+
+**Why selected:** Every key is legal OpenAPI and none is a JavaScript identifier. The
+TypeScript parser and type-checker in this suite are the independent oracle that the
+generator declares each component and references it with the same valid symbol; a
+snapshot regenerated from the generator cannot prove that.

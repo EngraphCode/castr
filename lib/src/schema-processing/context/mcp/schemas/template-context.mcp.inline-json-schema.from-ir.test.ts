@@ -47,6 +47,40 @@ describe('inlineJsonSchemaRefsFromIR', () => {
     });
   });
 
+  test('resolves a component by its wire name, not by an identifier projection of it', () => {
+    const ir = createMockCastrDocument({
+      components: [createSchemaComponent('1Name-With-Special---Characters', { type: 'string' })],
+    });
+
+    const viaDefinitions = inlineJsonSchemaRefsFromIR(
+      { $ref: '#/definitions/1Name-With-Special---Characters' },
+      ir,
+    );
+    const viaComponents = inlineJsonSchemaRefsFromIR(
+      { $ref: '#/components/schemas/1Name-With-Special---Characters' },
+      ir,
+    );
+
+    expect(viaDefinitions).toEqual({ type: 'string' });
+    expect(viaComponents).toEqual({ type: 'string' });
+  });
+
+  test('keeps two components apart whose wire names project to one identifier', () => {
+    const ir = createMockCastrDocument({
+      components: [
+        createSchemaComponent('a-b', { type: 'string' }),
+        createSchemaComponent('a_b', { type: 'number' }),
+      ],
+    });
+
+    expect(inlineJsonSchemaRefsFromIR({ $ref: '#/definitions/a-b' }, ir)).toEqual({
+      type: 'string',
+    });
+    expect(inlineJsonSchemaRefsFromIR({ $ref: '#/definitions/a_b' }, ir)).toEqual({
+      type: 'number',
+    });
+  });
+
   test('inlines #/definitions/ refs from IR components', () => {
     const ir = createMockCastrDocument({
       components: [
