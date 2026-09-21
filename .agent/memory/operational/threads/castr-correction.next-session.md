@@ -2,16 +2,19 @@
 
 ## Continuation route
 
-- Order of work: the fifth-close bullet below is the authority until the replacement plan
-  lands. The correction plan's
+- Order of work: the executable plan
+  [unmerged-work-to-main-or-deleted](../../../plans/active/unmerged-work-to-main-or-deleted.md)
+  (landed with its W0-1), which the fifth-close bullet below fed. The correction plan's
   [terminal state and priorities](../../../plans/active/castr-documentation-and-fidelity-correction.md#terminal-state-and-priorities)
   items 2 and 4, and the register-transfer clause of its proof contract, are suspended
   by the owner's rulings recorded there and are corrected by that plan's first landing.
   The end state is unchanged: zero open PRs, zero dirty worktrees, zero unpushed work,
   every delta merged to main or deleted.
 - Controlling queue: [parent plan](../../../plans/proof-programme/parent-plan.md#current-execution-state).
-- Next acceptance: the plan the next session creates from the fifth-close bullet below,
-  then its first landing.
+- Next acceptance: the executable plan
+  [unmerged-work-to-main-or-deleted](../../../plans/active/unmerged-work-to-main-or-deleted.md)
+  is the authority; its W0-1 (truth on main) is this PR, then its todos in listed
+  order, one PR each.
 - Governing sequence for every inherited PR and dirty worktree: the
   [12 September value-proof sequence](../../../plans/active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence).
   Containers are evidence about gaps; a gap in product code is proven only by a failing

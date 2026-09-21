@@ -95,9 +95,18 @@ conflicts, both recorded in the napkin entry for the day.
 ## Closure records
 
 Per-delta dispositions for inherited PRs, recorded here before each PR closes
-(correction plan §Terminal state item 2; every unique delta is landed with exact
-evidence, superseded with a reason, discarded at owner word, unresolved and routed to an
-owning row, or, for a claimed uncured gap only, transferred to the gap register).
+(correction plan §Terminal state item 2). Since the owner's ruling of 20 September every
+unique delta has exactly two end states: merged to main through a green-and-clean PR, or
+deleted with its reason recorded on main; "superseded" and "reference" are reasons for
+deletion, never states.
+
+Reversed on 20 September 2026: the owner ruled the same evening that closing a PR is
+not dealing with its work and that no work is routed to any bucket of later, so the
+eleven closures below were reopened and the "register transfer" and "routed"
+dispositions no longer stand. The measurements in these records (per-delta tables,
+the probe table, #20's red suites) stand as evidence; every delta reaches main or is
+deleted under the
+[unmerged-work plan](../../plans/active/unmerged-work-to-main-or-deleted.md).
 
 ### PR #11 residual delta against main (measured 20 September 2026)
 
@@ -122,8 +131,8 @@ Unresolved investigation routed: the 20 September review §2.1 names a vacuous p
 (transform helpers return when a fixture key is absent) that Q-02's runner does not touch;
 it is owned by the revised repair plan (Q-32), not by #11.
 
-Closure: #11 closes without merge when this record is on main; its branch is retained as
-history, not preserved value.
+Closure: #11 closes at the unmerged-work plan's W1-20, when its one remaining delta (the
+spec-invalid-document rejection) is landed or deleted; its branch is deleted then.
 
 ### PR #21 closure, 20 September 2026
 
@@ -257,7 +266,7 @@ its cure.
   catchalls. Branch `feat/explicit-additional-properties-rebased`.
 
 With #20 and #26 above, nine containers transfer; #11 and #21 are recorded above; #23
-is Q-13; #81 keeps its C09 exception. Every branch is retained.
+is W2-1; #81 closes at W2-8. Every branch is deleted at its closing todo.
 
 ### Red-test probes of the seven code containers' new test files, 20 September 2026
 
@@ -310,9 +319,9 @@ register's traversal row. #27's suite needs its directory created before it can 
 ### PR #23 preliminary delta inventory (measured 20 September 2026, head 5fa82e88, base 35efaa45)
 
 Sixty files. Twenty-six are absent from main by path; thirty-four exist on main with main
-ahead of the branch. Per unique delta the closure record must state one of: reproduced
-current gap with selected cure, already landed with exact evidence, superseded with a
-reason, or unresolved investigation routed to an owning row. Mechanical findings so far:
+ahead of the branch. Per unique delta the closing PR (unmerged-work plan W2-1) records
+one of two end states, merged to main or deleted with its reason (already on main,
+present in the Practice home, or no consumer on main). Mechanical findings so far:
 
 - Moved, present on main: the concept-exploration skill (now under
   `.agent/skills/cognition/`); the statusline thread's substance (58 referencing files).

@@ -1,7 +1,7 @@
 ---
 title: Every piece of unmerged work reaches main or is deleted
-status: current
-lane: current
+status: active
+lane: active
 created: 2026-09-21
 last_updated: 2026-09-21
 owner_directive: >-
@@ -17,7 +17,7 @@ owner_directive: >-
 todos:
   - id: W0-1
     content: Truth on main — every third-state passage named below is replaced with the two end states, the eleven ledger cells say open with their landing todo, Q-34 and Q-07 are reworded, this plan moves to active/; proved by the validators, the aggregate gate and the vocabulary grep
-    status: pending
+    status: in_progress
     depends_on: []
   - id: W1-01
     content: Identity chain — IR keeps wire names, one identifier projection with a fail-fast injectivity check, dangling reference throws, formatter throws, markdown fallback removed, OpenAPI writer keys by wire name; #26 closes and its branch is deleted (sources #26, #18 identity slice)

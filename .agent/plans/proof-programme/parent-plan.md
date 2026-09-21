@@ -14,7 +14,7 @@ todos:
     status: completed
     depends_on: [Q-31]
   - id: Q-34
-    content: "Inherited PR and orphaned-work dispositions (terminal-state item 2): per-delta records for #11, #12, #13, #15, #16, #17, #18, #20, #21, #26 and #27 and for the dirty worktrees, each closing through the proof contract's applicable disposition per delta (landed with exact evidence, superseded with a reason, discarded at owner word, or, for a claimed uncured gap only, the register transfer); #81 keeps its C09 exception; #23 is Q-13"
+    content: "Inherited PR and orphaned-work end states (terminal-state item 2): every delta of #11, #12, #13, #15, #16, #17, #18, #20, #21, #26, #27, #23 and #81, of every branch, of every dirty worktree and of the stash is merged to main or deleted with its reason, under the executable plan unmerged-work-to-main-or-deleted (its todos W0-1 to W5-1); the register transfers recorded on 20 September were reversed by the owner on the same day"
     status: in_progress
     depends_on: [Q-33]
   - id: Q-32
@@ -90,7 +90,7 @@ todos:
     status: completed
     depends_on: [Q-00]
   - id: Q-07
-    content: 'Hygiene-gate gap: failing test on unpatched main for in-process suites that import node:fs or node:child_process or read process.env, cured by the lint restriction with the #21 relocation; resolves the register row that #21 transfers to in Q-34'
+    content: 'Hygiene-gate gap: failing test on unpatched main for in-process suites that import node:fs or node:child_process or read process.env, cured by the lint restriction with the #21 relocation; landed as the unmerged-work plan's W1-18 and W1-19'
     status: pending
     depends_on: [Q-00, Q-31, Q-32]
   - id: Q-08
