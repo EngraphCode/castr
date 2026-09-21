@@ -57,7 +57,9 @@ Current priority (20 September 2026 fifth close): the owner ruled that closing a
 dealing with its work, that no work is routed to any bucket of later, that no check is
 ever skipped or disabled, and that the next session creates a plan and works strictly to
 it. Thirteen PRs are open (#11, #12, #13, #15, #16, #17, #18, #20, #21, #26, #27, #23,
-#81); every delta on them is landed on main behind a red test or deleted with its reason.
+#81); every delta on them is landed on main with its proof (a red test on unpatched main for
+product code; the owner's explicit approval, sought in the PR, for documentation-only
+content) or deleted with its reason.
 The [thread record](threads/castr-correction.next-session.md)'s fifth-close bullet holds
 the plan's inputs: the rulings, the false state on main to correct first, the defect
 chain the formatter fail-fast exposed, and the constraints. The

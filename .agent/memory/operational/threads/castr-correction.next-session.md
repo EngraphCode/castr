@@ -2,17 +2,23 @@
 
 ## Continuation route
 
-- Order of work: the
+- Order of work: the fifth-close bullet below is the authority until the replacement plan
+  lands. The correction plan's
   [terminal state and priorities](../../../plans/active/castr-documentation-and-fidelity-correction.md#terminal-state-and-priorities)
-  of the value-proof sequence. Zero open inherited PRs, zero dirty worktrees, zero
-  unpushed work, reached by proof and preservation or by closure and discard.
+  items 2 and 4, and the register-transfer clause of its proof contract, are suspended
+  by the owner's rulings recorded there and are corrected by that plan's first landing.
+  The end state is unchanged: zero open PRs, zero dirty worktrees, zero unpushed work,
+  every delta merged to main or deleted.
 - Controlling queue: [parent plan](../../../plans/proof-programme/parent-plan.md#current-execution-state).
 - Next acceptance: the plan the next session creates from the fifth-close bullet below,
   then its first landing.
 - Governing sequence for every inherited PR and dirty worktree: the
   [12 September value-proof sequence](../../../plans/active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence).
-  Containers are evidence about gaps; a gap is proven only by a failing test on
-  unpatched main, and proof lands with its cure in one green-and-clean PR.
+  Containers are evidence about gaps; a gap in product code is proven only by a failing
+  test on unpatched main, and proof lands with its cure in one green-and-clean PR;
+  documentation-only content is proven by the owner's explicit approval of the text,
+  sought in its PR. That sequence's container-closure clauses are suspended (see the
+  fifth-close bullet).
 - Live state at the 20 September fifth close (Candle weaves Residue, a4c7fb), the input
   for the plan the next session creates and works strictly to:
   Owner rulings at the fifth close, verbatim substance, in force for every future session:
@@ -60,7 +66,9 @@
   the diff reviewed. PR #18's identity slice is a reference for these seams, derived
   independently.
   Constraints the plan works under: TDD with the failing test first; one gate at a time;
-  one landing per PR carrying the red test on unpatched main and its cure; every check
+  one landing per PR carrying its proof (for product code the red test on unpatched
+  main and its cure; for documentation-only content the text with the owner's approval
+  sought explicitly in the PR); every check
   runs and passes, none skipped, disabled, loosened or updated away; every delta of
   every open PR is landed on main or deleted with the reason in the commit, and a branch
   is deleted when nothing on it remains; no routing verbs anywhere; the OCE
