@@ -14,7 +14,7 @@
 - Next acceptance: the executable plan
   [unmerged-work-to-main-or-deleted](../../../plans/active/unmerged-work-to-main-or-deleted.md)
   is the authority; its W0-1 (truth on main) is this PR, then its todos in listed
-  order, one PR per todo except W2-6's six directory PRs.
+  order, one PR per todo except W2-6's seven group PRs.
 - Governing sequence for every inherited PR and dirty worktree: the
   [12 September value-proof sequence](../../../plans/active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence).
   Containers are evidence about gaps; a gap in product code is proven only by a failing

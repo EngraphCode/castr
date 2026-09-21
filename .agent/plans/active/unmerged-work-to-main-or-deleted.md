@@ -302,11 +302,14 @@ worktree remove --force` after the record lands, never emptied file by file.
    process is not removed until that is resolved (W4-5 resolves the one known
    case).
 10. **Owner-decision PRs do not hold the plan.** W0-1, W1-13, W1-17, W2-1,
-    W2-3, W2-4, W2-5, W2-8 and W4-3 carry doctrine-class content and seek the owner's
-    answer on their PRs, recorded as the `## Owner approval` section. Every other todo continues meanwhile. After
-    48 hours without an answer the agent pings on the comms log and the PR
-    (`ping-before-escalate`), and escalates per that rule after a further 48
-    hours; W5-1 waits for the answer, and the plan records the wait.
+    W2-3, W2-4, W2-5, W2-8 and W4-3 carry doctrine-class content. Every owner
+    decision is raised as a decision card (`AskUserQuestion` or the host's
+    equivalent, one decision per card, recommendation first) at the moment it
+    exists, and the blocked-on-owner alert goes to the owner's mobile channel at
+    once (`owner-attention-at-action-moments`); the PR body carries the owner's
+    quoted answer under `## Owner approval`. A ruling the owner has already
+    given is applied, not re-asked. Every other todo continues meanwhile; W5-1
+    waits for the answer, and the plan records the wait.
 
 ## Workstream W0 — truth on main (records; one PR, this plan's first landing)
 
@@ -677,8 +680,9 @@ scope is created in `current/` as this todo's deliverable; this plan moves to
 
 - **AC1 (repo-safe)** the W5-1 commands return the values shown.
 - **AC2 (repo-safe)** every PR of this plan carries the line `Plan:
-unmerged-work-to-main-or-deleted todo <id>` in its body and exactly one proof
-  heading: `## Red run on unpatched main` (a product cure), `## No witness
+unmerged-work-to-main-or-deleted todo <id>` in its body and every proof
+  heading its content requires, at least one (a mixed-class PR such as W1-13,
+  W1-17, W2-4 or W2-5 carries both the red run and the owner approval): `## Red run on unpatched main` (a product cure), `## No witness
 constructible` (a deletion on the no-witness route, carrying the four
   contents), `## Owner approval` (doctrine class), or `## Validator proof`
   (mechanical class: the validator's report or gate run that proves the repair,
