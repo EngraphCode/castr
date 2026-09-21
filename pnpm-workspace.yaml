@@ -60,8 +60,8 @@ overrides:
   # - qs via express + body-parser in the @modelcontextprotocol/sdk chain
   #   (GHSA-4mjr-xmp4-gh2g, GHSA-x5fp-wj9c-mxmx); consumers declare ^6
   # - js-yaml 4.x via cosmiconfig in the commitlint chain
-  #   (GHSA-2883-xcg3-v3hh); scoped to the 4.x line because knip and
-  #   agent-tools resolve 5.x, which is not affected
+  #   (GHSA-2883-xcg3-v3hh); scoped to the 4.x line because
+  #   markdownlint-cli2 resolves 5.x, which is not affected
   # - smol-toml via markdownlint-cli2 (GHSA-7w5x-hrqm-74c2); consumers
   #   declare 1.x
   hono: '^4.13.5'
