@@ -104,45 +104,26 @@ describe('writers/typescript component identity', () => {
     );
   });
 
-  it('throws on a property reference to a component the document does not carry', () => {
-    const ir = createMockCastrDocument({
-      components: [
-        component(
-          'Wrapper',
-          required({
-            type: 'object',
-            properties: new CastrSchemaProperties({
-              gone: required({ $ref: '#/components/schemas/Gone' }),
+  it.each(['#/components/schemas/Gone', '#/x-ext/425563c/components/schemas/Gone'])(
+    'throws on a property reference to a component the document does not carry: %s',
+    (danglingRef) => {
+      const ir = createMockCastrDocument({
+        components: [
+          component(
+            'Wrapper',
+            required({
+              type: 'object',
+              properties: new CastrSchemaProperties({ gone: required({ $ref: danglingRef }) }),
             }),
-          }),
-        ),
-      ],
-    });
+          ),
+        ],
+      });
 
-    expect(() => writeTypeScript(contextFor(ir, ['#/components/schemas/Wrapper']))).toThrow(
-      '"#/components/schemas/Gone"',
-    );
-  });
-
-  it('throws on an x-ext reference to a component the document does not carry', () => {
-    const ir = createMockCastrDocument({
-      components: [
-        component(
-          'Wrapper',
-          required({
-            type: 'object',
-            properties: new CastrSchemaProperties({
-              gone: required({ $ref: '#/x-ext/425563c/components/schemas/Gone' }),
-            }),
-          }),
-        ),
-      ],
-    });
-
-    expect(() => writeTypeScript(contextFor(ir, ['#/components/schemas/Wrapper']))).toThrow(
-      '"#/x-ext/425563c/components/schemas/Gone"',
-    );
-  });
+      expect(() => writeTypeScript(contextFor(ir, ['#/components/schemas/Wrapper']))).toThrow(
+        `"${danglingRef}"`,
+      );
+    },
+  );
 
   it('keeps a union member that references a component named like a primitive', () => {
     const ir = createMockCastrDocument({
