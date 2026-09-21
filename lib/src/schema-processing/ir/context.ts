@@ -51,8 +51,10 @@ export type CastrSchemaContext =
 export interface IRComponentSchemaContext {
   contextType: 'component';
   /**
-   * The component's wire name, verbatim from `#/components/schemas/{name}`;
-   * the emitted symbol is derived from it at emission, never stored here.
+   * The name this schema is emitted under. For a document component it is the
+   * wire name, verbatim from `#/components/schemas/{name}`; the endpoint writer
+   * also builds contexts for inline request and response schemas under names it
+   * assigns. The emitted symbol is derived at emission, never stored here.
    */
   name: string;
   schema: CastrSchema;

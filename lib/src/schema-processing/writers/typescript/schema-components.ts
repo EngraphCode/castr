@@ -16,19 +16,6 @@ const COMPONENT_TYPE_SCHEMA = 'schema';
 const SCHEMAS_REF_TYPE = 'schemas';
 const KNOWN_NAMES_SHOWN = 10;
 
-/**
- * Symbols the TypeScript writer declares itself; no component may emit one of them.
- * @internal
- */
-export const TYPESCRIPT_WRITER_RESERVED_SYMBOLS: readonly string[] = [
-  'z',
-  'endpoints',
-  'mcpTools',
-  'validateRequest',
-  'validateResponse',
-  'buildSchemaRegistry',
-];
-
 function isSchemaComponent(component: IRComponent): component is CastrSchemaComponent {
   return component.type === COMPONENT_TYPE_SCHEMA;
 }
@@ -37,20 +24,22 @@ function isSchemaComponent(component: IRComponent): component is CastrSchemaComp
  * Index a document's schema components by wire name, exactly as `$ref` targets
  * name them, and fail fast when a wire name is repeated, when two wire names
  * would emit the same symbol, or when a component would take a symbol the
- * writer declares itself.
+ * generated file declares.
  *
  * @param ir - The document whose components are about to be emitted
+ * @param declaredSymbols - The symbols this generated file declares besides its components
  * @returns The schema components keyed by wire name
  * @throws `Error` when component names collide under the projection or with a reserved symbol
  * @internal
  */
 export function buildSchemaComponentsMap(
   ir: CastrDocument,
+  declaredSymbols: readonly string[],
 ): ReadonlyMap<string, CastrSchemaComponent> {
   const schemaComponents = ir.components.filter(isSchemaComponent);
   assertDistinctSafeSchemaNames(
     schemaComponents.map((component) => component.name),
-    TYPESCRIPT_WRITER_RESERVED_SYMBOLS,
+    declaredSymbols,
   );
   const componentsMap = new Map<string, CastrSchemaComponent>();
   for (const component of schemaComponents) {

@@ -138,7 +138,7 @@ When adding new fixtures:
 - A built-in global (`Error`) referenced in type and value position
 - A primitive type keyword (`string`), which TypeScript rejects as a type-alias name
 
-**Why selected:** Every key is legal OpenAPI and none is a JavaScript identifier. The
+**Why selected:** Every key is legal OpenAPI and none can be emitted unchanged as a symbol. The
 TypeScript parser and type-checker in this suite are the independent oracle that the
 generator declares each component and references it with the same valid symbol; a
 snapshot regenerated from the generator cannot prove that.

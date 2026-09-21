@@ -266,8 +266,8 @@ const inlineJsonSchemaFromIR = (
  * @param cache - Optional cache for resolved schemas
  * @param stack - Optional stack for circular reference detection
  * @returns JSON Schema with `#/definitions/{name}`, `#/components/schemas/{name}` and
- *   `#/x-ext/{hash}/components/schemas/{name}` refs inlined by wire name; external refs and
- *   cycle-breaking refs are returned unchanged
+ *   `#/x-ext/{hash}/components/schemas/{name}` refs inlined by wire name; a ref to another
+ *   document and a cycle-breaking ref are returned unchanged
  *
  * @example
  * ```typescript

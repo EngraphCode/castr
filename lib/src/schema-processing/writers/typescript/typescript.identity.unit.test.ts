@@ -20,13 +20,18 @@ function component(name: string, schema: CastrSchema): CastrSchemaComponent {
   return { type: 'schema', name, schema, metadata: schema.metadata };
 }
 
-function contextFor(ir: CastrDocument, sortedSchemaNames: readonly string[]): TemplateContext {
+function contextFor(
+  ir: CastrDocument,
+  sortedSchemaNames: readonly string[],
+  options?: TemplateContext['options'],
+): TemplateContext {
   return {
     sortedSchemaNames: [...sortedSchemaNames],
     endpoints: [],
     endpointsGroups: {},
     mcpTools: [],
     _ir: ir,
+    ...(options === undefined ? {} : { options }),
   };
 }
 
@@ -145,11 +150,47 @@ describe('writers/typescript component identity', () => {
 
   it('throws when a component would take a symbol the generated file declares', () => {
     const ir = createMockCastrDocument({
+      components: [component('buildSchemaRegistry', required({ type: 'string' }))],
+    });
+
+    expect(() =>
+      writeTypeScript(
+        contextFor(ir, ['#/components/schemas/buildSchemaRegistry'], { withSchemaRegistry: true }),
+      ),
+    ).toThrow('"buildSchemaRegistry"');
+  });
+
+  it('throws when a component would take the symbol of the zod import', () => {
+    const ir = createMockCastrDocument({
+      components: [component('z', required({ type: 'string' }))],
+    });
+
+    expect(() => writeTypeScript(contextFor(ir, ['#/components/schemas/z']))).toThrow('"z"');
+  });
+
+  it('emits a component whose name matches a declaration this file does not make', () => {
+    const ir = createMockCastrDocument({
       components: [component('endpoints', required({ type: 'string' }))],
     });
 
-    expect(() => writeTypeScript(contextFor(ir, ['#/components/schemas/endpoints']))).toThrow(
-      '"endpoints"',
+    const output = writeTypeScript(contextFor(ir, ['#/components/schemas/endpoints']));
+
+    expect(output).toContain('export type endpoints = string');
+    expect(output).toContain('export const endpoints = z.string()');
+  });
+
+  it('emits a helper-named component when the schemas-only template suppresses the helper', () => {
+    const ir = createMockCastrDocument({
+      components: [component('buildSchemaRegistry', required({ type: 'string' }))],
+    });
+
+    const output = writeTypeScript(
+      contextFor(ir, ['#/components/schemas/buildSchemaRegistry'], {
+        template: 'schemas-only',
+        withSchemaRegistry: true,
+      }),
     );
+
+    expect(output).toContain('export const buildSchemaRegistry = z.string()');
   });
 });
