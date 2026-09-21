@@ -6,28 +6,30 @@ import { addValidationHelpers, addSchemaRegistryHelper } from './helpers.js';
 import { writeZodSchema } from '../zod/index.js';
 import { writeTypeDefinition } from './type-writer/index.js';
 import type { CastrDocument, CastrSchemaContext, CastrSchemaComponent } from '../../ir/index.js';
-import { parseComponentRef } from '../../../shared/ref-resolution.js';
 import { safeSchemaName } from '../../../shared/utils/identifier-utils.js';
+import {
+  assertEmittedReferencesDeclared,
+  assertSchemaReferencesResolve,
+  buildSchemaComponentsMap,
+  requireSchemaComponent,
+} from './schema-components.js';
+import {
+  COMPONENTS_ONLY_PLAN,
+  ENDPOINTS_SYMBOL,
+  MCP_TOOLS_SYMBOL,
+  ZOD_IMPORT_SYMBOL,
+  declaredSymbolsOf,
+  planEmission,
+} from './emission-plan.js';
 import { assertDocumentSupportsIntegerTargetCapabilities } from '../../compatibility/integer-target-capabilities.js';
 import { assertDocumentSupportsItemSchemaTargetCapabilities } from '../../compatibility/item-schema-target-capabilities.js';
 
 export { writeTypeDefinition } from './type-writer/index.js';
 
-const COMPONENT_TYPE_SCHEMA = 'schema';
-const TEMPLATE_SCHEMAS_ONLY = 'schemas-only';
-
 function getSortedGroupEntries(groupNames: Record<string, string>): [string, string][] {
   return Object.entries(groupNames).sort(([leftApiName], [rightApiName]) =>
     leftApiName.localeCompare(rightApiName),
   );
-}
-
-/**
- * Whether the effective template is schemas-only.
- * When true, the writer suppresses endpoints, MCP tools, and helpers.
- */
-function isSchemasOnly(context: TemplateContext): boolean {
-  return context.options?.template === TEMPLATE_SCHEMAS_ONLY;
 }
 
 function requireIr(context: TemplateContext, consumer: string): CastrDocument {
@@ -51,18 +53,26 @@ export function writeTypeScript(context: TemplateContext): string {
   const ir = requireIr(context, 'TypeScript writer');
   assertDocumentSupportsIntegerTargetCapabilities(ir, 'TypeScript');
   assertDocumentSupportsItemSchemaTargetCapabilities(ir, 'TypeScript');
+  assertSchemaReferencesResolve(ir);
 
   const project = new Project({ useInMemoryFileSystem: true });
   const sourceFile = project.createSourceFile('generated.ts', '', { overwrite: true });
 
-  addImports(sourceFile);
-  addSchemasAndTypes(sourceFile, context, ir);
+  const plan = planEmission(context);
 
-  // Schemas-only template: suppress all non-schema output
-  if (!isSchemasOnly(context)) {
+  addImports(sourceFile);
+  addSchemasAndTypes(sourceFile, context, ir, declaredSymbolsOf(plan));
+  if (plan.endpoints) {
     addEndpointsArray(sourceFile, context);
+  }
+  if (plan.mcpTools) {
     addMcpToolsArray(sourceFile, context);
-    addHelpers(sourceFile, context);
+  }
+  if (plan.validationHelpers) {
+    addValidationHelpers(sourceFile);
+  }
+  if (plan.schemaRegistry) {
+    addSchemaRegistryHelper(sourceFile);
   }
 
   return sourceFile.getFullText();
@@ -71,7 +81,7 @@ export function writeTypeScript(context: TemplateContext): string {
 function addImports(sourceFile: SourceFile): void {
   sourceFile.addImportDeclaration({
     moduleSpecifier: 'zod',
-    namedImports: ['z'],
+    namedImports: [ZOD_IMPORT_SYMBOL],
   });
 }
 
@@ -79,26 +89,26 @@ function addSchemasAndTypes(
   sourceFile: SourceFile,
   context: TemplateContext,
   ir: CastrDocument,
+  declaredSymbols: readonly string[],
 ): void {
   if (context.sortedSchemaNames.length === 0) {
     return;
   }
 
-  addComponentsToSourceFile(sourceFile, context, ir, context.sortedSchemaNames);
+  addComponentsToSourceFile(sourceFile, context, ir, context.sortedSchemaNames, declaredSymbols);
 }
 
 function addComponentsToSourceFile(
   sourceFile: SourceFile,
   context: TemplateContext,
   ir: CastrDocument,
-  schemaNames: string[],
+  schemaNames: readonly string[],
+  declaredSymbols: readonly string[],
 ): void {
-  const componentsMap = new Map<string, CastrSchemaComponent>();
-  ir.components.forEach((c) => {
-    if (c.type === COMPONENT_TYPE_SCHEMA) {
-      componentsMap.set(c.name, c);
-    }
-  });
+  const componentsMap = buildSchemaComponentsMap(ir, declaredSymbols);
+  assertEmittedReferencesDeclared(
+    schemaNames.map((ref) => requireSchemaComponent(componentsMap, ref)),
+  );
 
   addTypeDefinitions(sourceFile, schemaNames, componentsMap);
   addZodSchemas(sourceFile, schemaNames, componentsMap, context);
@@ -106,62 +116,51 @@ function addComponentsToSourceFile(
 
 function addTypeDefinitions(
   sourceFile: SourceFile,
-  schemaNames: string[],
-  componentsMap: Map<string, CastrSchemaComponent>,
+  schemaNames: readonly string[],
+  componentsMap: ReadonlyMap<string, CastrSchemaComponent>,
 ): void {
   sourceFile.addStatements('// Type Definitions');
   schemaNames.forEach((ref) => {
-    const { componentName } = parseComponentRef(ref);
-    const component = componentsMap.get(componentName);
-    if (component) {
-      const safeName = safeSchemaName(component.name);
-      sourceFile.addTypeAlias({
-        name: safeName,
-        isExported: true,
-        type: writeTypeDefinition(component.schema),
-      });
-    }
+    const component = requireSchemaComponent(componentsMap, ref);
+    sourceFile.addTypeAlias({
+      name: safeSchemaName(component.name),
+      isExported: true,
+      type: writeTypeDefinition(component.schema),
+    });
   });
 }
 
 function addZodSchemas(
   sourceFile: SourceFile,
-  schemaNames: string[],
-  componentsMap: Map<string, CastrSchemaComponent>,
+  schemaNames: readonly string[],
+  componentsMap: ReadonlyMap<string, CastrSchemaComponent>,
   context: TemplateContext,
 ): void {
   sourceFile.addStatements('// Zod Schemas');
   schemaNames.forEach((ref) => {
-    const { componentName } = parseComponentRef(ref);
-    const component = componentsMap.get(componentName);
-    if (component) {
-      const safeName = safeSchemaName(component.name);
-      const schemaContext: CastrSchemaContext = {
-        contextType: 'component',
-        name: safeName,
-        schema: component.schema,
-        metadata: component.metadata,
-      };
+    const component = requireSchemaComponent(componentsMap, ref);
+    const safeName = safeSchemaName(component.name);
+    const schemaContext: CastrSchemaContext = {
+      contextType: 'component',
+      name: component.name,
+      schema: component.schema,
+      metadata: component.metadata,
+    };
 
-      sourceFile.addVariableStatement({
-        declarationKind: VariableDeclarationKind.Const,
-        isExported: true,
-        declarations: [
-          {
-            name: safeName,
-            initializer: writeZodSchema(schemaContext, context.options),
-          },
-        ],
-      });
-    }
+    sourceFile.addVariableStatement({
+      declarationKind: VariableDeclarationKind.Const,
+      isExported: true,
+      declarations: [
+        {
+          name: safeName,
+          initializer: writeZodSchema(schemaContext, context.options),
+        },
+      ],
+    });
   });
 }
 
 function addEndpointsArray(sourceFile: SourceFile, context: TemplateContext): void {
-  if (context.endpoints.length === 0) {
-    return;
-  }
-
   sourceFile.addStatements('// Endpoints');
 
   sourceFile.addVariableStatement({
@@ -169,7 +168,7 @@ function addEndpointsArray(sourceFile: SourceFile, context: TemplateContext): vo
     isExported: true,
     declarations: [
       {
-        name: 'endpoints',
+        name: ENDPOINTS_SYMBOL,
         initializer: (writer) => {
           writer
             .write('[')
@@ -189,10 +188,6 @@ function addEndpointsArray(sourceFile: SourceFile, context: TemplateContext): vo
 }
 
 function addMcpToolsArray(sourceFile: SourceFile, context: TemplateContext): void {
-  if (!context.mcpTools || context.mcpTools.length === 0) {
-    return;
-  }
-
   sourceFile.addStatements('// MCP Tools');
 
   sourceFile.addVariableStatement({
@@ -200,7 +195,7 @@ function addMcpToolsArray(sourceFile: SourceFile, context: TemplateContext): voi
     isExported: true,
     declarations: [
       {
-        name: 'mcpTools',
+        name: MCP_TOOLS_SYMBOL,
         initializer: (writer) => {
           writer
             .write('[')
@@ -219,16 +214,6 @@ function addMcpToolsArray(sourceFile: SourceFile, context: TemplateContext): voi
       },
     ],
   });
-}
-
-function addHelpers(sourceFile: SourceFile, context: TemplateContext): void {
-  if (context.options?.withValidationHelpers) {
-    addValidationHelpers(sourceFile);
-  }
-
-  if (context.options?.withSchemaRegistry) {
-    addSchemaRegistryHelper(sourceFile);
-  }
 }
 
 /**
@@ -251,10 +236,11 @@ export function writeIndexFile(groupNames: Record<string, string>): string {
 /**
  * Generate common file for grouped output.
  */
-export function writeCommonFile(context: TemplateContext, schemaNames: string[]): string {
+export function writeCommonFile(context: TemplateContext, schemaNames: readonly string[]): string {
   const ir = requireIr(context, 'TypeScript common writer');
   assertDocumentSupportsIntegerTargetCapabilities(ir, 'TypeScript');
   assertDocumentSupportsItemSchemaTargetCapabilities(ir, 'TypeScript');
+  assertSchemaReferencesResolve(ir);
 
   const project = new Project({ useInMemoryFileSystem: true });
   const sourceFile = project.createSourceFile('common.ts', '', { overwrite: true });
@@ -265,7 +251,13 @@ export function writeCommonFile(context: TemplateContext, schemaNames: string[])
     return sourceFile.getFullText();
   }
 
-  addComponentsToSourceFile(sourceFile, context, ir, schemaNames);
+  addComponentsToSourceFile(
+    sourceFile,
+    context,
+    ir,
+    schemaNames,
+    declaredSymbolsOf(COMPONENTS_ONLY_PLAN),
+  );
 
   return sourceFile.getFullText();
 }

@@ -45,7 +45,11 @@ export interface CastrSchemaComponent {
   type: 'schema';
 
   /**
-   * Component name from `#/components/{type}/{name}`.
+   * Component name from `#/components/{type}/{name}`, held verbatim as it
+   * appears on the wire and never projected to a JavaScript identifier.
+   * Every `$ref` target and every IR lookup keys on this string; the
+   * projection to an emitted symbol happens only at emission, in
+   * `safeSchemaName`.
    */
   name: string;
 

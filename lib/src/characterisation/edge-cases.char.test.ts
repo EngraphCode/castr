@@ -232,7 +232,12 @@ describe('Characterisation: Edge Cases', () => {
       });
 
       expect(result).toBeTruthy();
-      expect(extractContent(result)).not.toContain('as unknown as');
+      const content = extractContent(result);
+      expect(content).not.toContain('as unknown as');
+      // Reserved words become valid symbols and the declarations are emitted.
+      expect(content).toMatch(/export const class_\s*=/);
+      expect(content).toMatch(/export const function_\s*=/);
+      expect(content).toMatch(/response: class_\b/);
     });
   });
 

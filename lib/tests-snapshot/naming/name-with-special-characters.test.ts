@@ -91,41 +91,58 @@ test('name-with-special-characters', async () => {
   expect(result.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
     // Type Definitions
+    export type _1_Name_With_Special_Characters = string;
     // Zod Schemas
+    export const _1_Name_With_Special_Characters = z.string();
     // Endpoints
     export const endpoints = [
-            {
-                method: "get",
-                path: "/name-with-special-characters",
-                requestFormat: "json",
-                parameters: [
-                ],
-                response: 1Name-With-Special---Characters,
-                errors: [
-                ],
-                responses: {
-                    200: {
-                        schema: 1Name-With-Special---Characters,
-                        description: "OK"
-                    }
-                },
-                request: {},
+      {
+        method: "get",
+        path: "/name-with-special-characters",
+        requestFormat: "json",
+        parameters: [],
+        response: _1_Name_With_Special_Characters,
+        errors: [],
+        responses: {
+          200: {
+            schema: _1_Name_With_Special_Characters,
+            description: "OK",
+          },
+        },
+        request: {},
+        alias: "nameWithSPecialCharacters",
+      },
+    ] as const;
     // MCP Tools
-                alias: "nameWithSPecialCharacters"
-            }
-        ] as const;
     export const mcpTools = [
-            {
-                tool: {name: "name_with_s_pecial_characters", description: "GET /name-with-special-characters", inputSchema: {type: "object", additionalProperties: false}, outputSchema: {type: "object", properties: {value: {type: "string"}}}, annotations: {readOnlyHint: true, destructiveHint: false, idempotentHint: false}},
-                httpOperation: {
-                    method: "get",
-                    path: "/name-with-special-characters",
-                    originalPath: "/name-with-special-characters",
-                    operationId: "nameWithSPecialCharacters"
-                },
-                security: {isPublic: true, usesGlobalSecurity: false, requirementSets: []}
-            }
-        ] as const;
+      {
+        tool: {
+          name: "name_with_s_pecial_characters",
+          description: "GET /name-with-special-characters",
+          inputSchema: { type: "object", additionalProperties: false },
+          outputSchema: {
+            type: "object",
+            properties: { value: { type: "string" } },
+          },
+          annotations: {
+            readOnlyHint: true,
+            destructiveHint: false,
+            idempotentHint: false,
+          },
+        },
+        httpOperation: {
+          method: "get",
+          path: "/name-with-special-characters",
+          originalPath: "/name-with-special-characters",
+          operationId: "nameWithSPecialCharacters",
+        },
+        security: {
+          isPublic: true,
+          usesGlobalSecurity: false,
+          requirementSets: [],
+        },
+      },
+    ] as const;
     "
   `);
 });

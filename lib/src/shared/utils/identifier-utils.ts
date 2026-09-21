@@ -120,30 +120,107 @@ const BUILTIN_GLOBALS = new Set([
 ]);
 
 /**
- * Make a schema name safe by adding 'Schema' suffix if it would shadow
- * a JavaScript built-in global.
+ * Names that are valid identifiers and neither reserved words nor built-in
+ * globals, but that TypeScript still rejects as a type-alias name (the
+ * primitive type keywords) or as a binding in a module (`arguments`, `eval`).
+ * @internal
+ */
+const UNNAMEABLE_TYPE_ALIASES = new Set([
+  'string',
+  'number',
+  'boolean',
+  'object',
+  'symbol',
+  'bigint',
+  'any',
+  'unknown',
+  'never',
+  'arguments',
+  'eval',
+]);
+
+/**
+ * Project a component's wire name to the symbol emitted for it.
  *
- * Unlike toIdentifier, this function does NOT transform the name in any
- * other way — it only adds a suffix for built-in globals.
+ * This is the single projection from the IR's wire names (the keys under
+ * `#/components/schemas`, preserved verbatim in the IR) to the identifiers
+ * written into generated TypeScript and Zod. It composes {@link toIdentifier}
+ * (a valid identifier, reserved words suffixed) with a `Schema` suffix for
+ * names that would shadow a JavaScript built-in global or that TypeScript
+ * cannot use as a type-alias or module-binding name (`string`, `eval`). Every site that emits
+ * a component's declaration or a reference to it uses this function and
+ * nothing else, so the two agree; the projection is idempotent on its own
+ * output. It is one-way: a wire name is not recoverable from its symbol, so
+ * component identity survives OpenAPI → IR → OpenAPI, not a trip through
+ * generated TypeScript.
  *
- * @param name - Schema name to check
- * @returns Safe schema name (with 'Schema' suffix if needed)
+ * @param name - The component's wire name
+ * @returns The identifier emitted for that component
  *
  * @example
  * ```typescript
- * safeSchemaName('Error');       // 'ErrorSchema'
- * safeSchemaName('Date');        // 'DateSchema'
- * safeSchemaName('User');        // 'User' (unchanged)
- * safeSchemaName('Basic.Thing'); // 'Basic.Thing' (unchanged)
+ * safeSchemaName('User');                            // 'User'
+ * safeSchemaName('Error');                           // 'ErrorSchema'
+ * safeSchemaName('1Name-With-Special---Characters'); // '_1_Name_With_Special_Characters'
+ * safeSchemaName('class');                           // 'class_'
+ * safeSchemaName('Basic.Thing');                     // 'Basic_Thing'
  * ```
  *
- * @public
+ * @see {@link assertDistinctSafeSchemaNames} for the collision check a document runs before emission
+ * @internal
  */
 export function safeSchemaName(name: string): string {
-  if (BUILTIN_GLOBALS.has(name)) {
-    return `${name}Schema`;
+  const identifier = toIdentifier(name);
+  if (BUILTIN_GLOBALS.has(identifier) || UNNAMEABLE_TYPE_ALIASES.has(identifier)) {
+    return `${identifier}Schema`;
   }
-  return name;
+  return identifier;
+}
+
+/**
+ * Assert that a document's component wire names project to distinct symbols
+ * that collide with none of the writer's own generated declarations.
+ *
+ * Two wire names such as `a-b` and `a_b` both project to `a_b`; a repeated
+ * wire name declares one symbol twice; a component named `endpoints` collides
+ * with the generated endpoints array. Each would emit invalid TypeScript, so
+ * generation fails fast here instead.
+ *
+ * @param names - Every schema component wire name the document will emit
+ * @param reservedSymbols - Symbols the writer declares itself, which no component may take
+ * @throws `Error` naming the colliding wire names (or the reserved symbol) and the shared symbol
+ *
+ * @internal
+ */
+export function assertDistinctSafeSchemaNames(
+  names: readonly string[],
+  reservedSymbols: readonly string[] = [],
+): void {
+  const wireNameBySymbol = new Map<string, string>();
+  const reserved = new Set(reservedSymbols);
+  for (const name of names) {
+    const symbol = safeSchemaName(name);
+    if (reserved.has(symbol)) {
+      throw new Error(
+        `Component name "${name}" emits the symbol "${symbol}", which the generated ` +
+          'file already declares. Rename the component.',
+      );
+    }
+    const existing = wireNameBySymbol.get(symbol);
+    if (existing === name) {
+      throw new Error(
+        `Component name "${name}" is carried twice; one declaration would silently replace ` +
+          'the other. A document names each component once.',
+      );
+    }
+    if (existing !== undefined) {
+      throw new Error(
+        `Component names "${existing}" and "${name}" both emit the symbol "${symbol}". ` +
+          'Rename one of them so every generated declaration is distinct.',
+      );
+    }
+    wireNameBySymbol.set(symbol, name);
+  }
 }
 
 /**
@@ -197,7 +274,7 @@ export function isValidJsIdentifier(name: string): boolean {
  * toIdentifier('User');                // 'User' (unchanged)
  * toIdentifier('IsActive');            // 'IsActive' (unchanged)
  * toIdentifier('perform-search_Body'); // 'perform_search_Body'
- * toIdentifier('123test');             // '_123test'
+ * toIdentifier('123test');             // '_123_test'
  * toIdentifier('class');               // 'class_'
  * ```
  *

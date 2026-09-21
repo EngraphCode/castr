@@ -22,4 +22,18 @@ describe('buildComponentSchema', () => {
     // Component schemas should NEVER be optional
     expect(result.metadata.zodChain.presence).toBe('');
   });
+
+  test('keeps the wire name of a component whose name is not a valid identifier', () => {
+    const doc: OpenAPIDocument = {
+      openapi: '3.1.0',
+      info: { title: 'Test', version: '1.0.0' },
+      paths: {},
+    };
+
+    expect(
+      buildComponentSchema('1Name-With-Special---Characters', { type: 'string' }, doc).name,
+    ).toBe('1Name-With-Special---Characters');
+    expect(buildComponentSchema('class', { type: 'string' }, doc).name).toBe('class');
+    expect(buildComponentSchema('Basic.Thing', { type: 'string' }, doc).name).toBe('Basic.Thing');
+  });
 });

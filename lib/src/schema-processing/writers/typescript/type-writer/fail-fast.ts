@@ -14,6 +14,7 @@
 import type { CastrSchema } from '../../../ir/index.js';
 import { getIntegerSemantics } from '../../../ir/index.js';
 import { parseComponentRef } from '../../../../shared/ref-resolution.js';
+import { safeSchemaName } from '../../../../shared/utils/identifier-utils.js';
 
 /**
  * Reject genuinely impossible 2020-12 object keywords.
@@ -152,7 +153,9 @@ function resolveRefTypeString(schema: CastrSchema): string | undefined {
     return undefined;
   }
   const { componentName } = parseComponentRef(schema.$ref);
-  return componentName;
+  // The emitted symbol, never the wire name: a component named `string` emits
+  // `stringSchema` and must not deduplicate against the primitive `string`.
+  return safeSchemaName(componentName);
 }
 
 function resolveCompositionTypeString(schema: CastrSchema): string | undefined {

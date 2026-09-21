@@ -19,6 +19,7 @@ import { createTempDir, cleanupTempDir, writeTempFile, removeTempFile } from './
  * - non-oauth: References ($ref) and security metadata extraction
  * - multi-file: External $ref resolution across multiple files with x-ext vendor extension
  * - api-examples: Constraints (enum, patterns, min/max, formats, examples)
+ * - awkward-names: Component keys that are not JavaScript identifiers
  */
 describe('Generated Code - Lint Validation', () => {
   const fixtures = [
@@ -51,6 +52,12 @@ describe('Generated Code - Lint Validation', () => {
       name: 'api-examples',
       path: 'examples/openapi/v3.0/api-with-examples.yaml',
       reason: 'Constraints (enum, patterns, min/max, formats, examples)',
+    },
+    {
+      name: 'awkward-names',
+      path: 'examples/openapi/v3.1/awkward-component-names.yaml',
+      reason:
+        'Component keys that are not JavaScript identifiers (leading digit, reserved word, dotted, built-in global)',
     },
   ];
 

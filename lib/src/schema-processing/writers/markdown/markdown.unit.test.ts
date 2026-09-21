@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { prepareOpenApiDocument } from '../../../shared/prepare-openapi-document.js';
 import { getZodClientTemplateContext } from '../../context/index.js';
 import { writeMarkdown } from './index.js';
+import { createMockCastrDocument, createMockCastrSchema } from '../../ir/index.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -29,5 +30,28 @@ describe('Markdown Writer', () => {
     expect(markdown).toContain('- `X`');
     expect(markdown).toContain('- `O`');
     expect(markdown).toContain('- `.`');
+  });
+
+  it('throws on a response reference it cannot resolve instead of writing a placeholder', () => {
+    const ir = createMockCastrDocument({
+      operations: [
+        {
+          operationId: 'getThing',
+          method: 'get',
+          path: '/thing',
+          parameters: [],
+          parametersByLocation: { query: [], path: [], header: [], cookie: [] },
+          responses: [
+            {
+              statusCode: '200',
+              description: 'OK',
+              schema: createMockCastrSchema({ $ref: '#/not/a/component/ref' }),
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(() => writeMarkdown(ir)).toThrow(/#\/not\/a\/component\/ref/);
   });
 });
