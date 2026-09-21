@@ -206,8 +206,7 @@ states, chosen by doctrine, never by convenience:
   ledger row that records the deletion, so every deletion is visible to the owner
   at review.
 
-There is no third state. No delta is routed, transferred, retained, parked,
-pending or "at owner word". A decision only the owner can make (doctrine text; a
+There is no third state. A decision only the owner can make (doctrine text; a
 removed option wanted back as a feature) is put to the owner in a PR; merge is
 the yes, close is the no, and a closed PR's delta is deleted. A question the
 owner has said is not theirs is answered by the agent with its verdict in the PR.
@@ -678,12 +677,15 @@ scope is created in `current/` as this todo's deliverable; this plan moves to
 
 - **AC1 (repo-safe)** the W5-1 commands return the values shown.
 - **AC2 (repo-safe)** every PR of this plan carries the line `Plan:
-unmerged-work-to-main-or-deleted todo <id>` in its body; `gh pr list --state
-merged --limit 200 --search "unmerged-work-to-main-or-deleted in:body" --json body`
-  counts the bodies carrying `## Red run on unpatched main` equal to the product
-  todos marked done, and the bodies carrying `## Owner approval` equal to the
-  doctrine-class todos marked done (W0-1, W1-13, W1-17, W2-1, W2-3, W2-4, W2-5,
-  W2-8).
+unmerged-work-to-main-or-deleted todo <id>` in its body and exactly one proof
+  heading: `## Red run on unpatched main` (a product cure), `## No witness
+constructible` (a deletion on the no-witness route, carrying the four
+  contents), or `## Owner approval` (doctrine class). `gh pr list --state all
+--limit 200 --search "unmerged-work-to-main-or-deleted in:body" --json
+number,state,body`: every merged body carries one heading; every closed
+  unmerged body is a doctrine-class PR the owner declined, whose todo is marked
+  done with the deletion reason in its ledger row. A merged plan PR without a
+  heading, or a closed plan PR without a ledger deletion row, fails AC2.
 - **AC3 (repo-safe)** the delivery ledger's source-PR table status column uses
   the closed vocabulary "Merged as `<sha>`" or "Closed after `<todo>`" for every
   row of this plan's PRs, and `rg -n "at owner word|routed to an owning
