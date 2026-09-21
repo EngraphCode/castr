@@ -2,19 +2,49 @@
 
 ## Continuation route
 
-- Order of work: the executable plan
-  [unmerged-work-to-main-or-deleted](../../../plans/active/unmerged-work-to-main-or-deleted.md)
-  (landed with its W0-1), which the fifth-close bullet below fed. The correction plan's
-  [terminal state and priorities](../../../plans/active/castr-documentation-and-fidelity-correction.md#terminal-state-and-priorities)
-  items 2 and 4, and the register-transfer clause of its proof contract, are suspended
-  by the owner's rulings recorded there and are corrected by that plan's first landing.
-  The end state is unchanged: zero open PRs, zero dirty worktrees, zero unpushed work,
-  every delta merged to main or deleted.
-- Controlling queue: [parent plan](../../../plans/proof-programme/parent-plan.md#current-execution-state).
-- Next acceptance: the executable plan
-  [unmerged-work-to-main-or-deleted](../../../plans/active/unmerged-work-to-main-or-deleted.md)
-  is the authority; its W0-1 (truth on main) is this PR, then its todos in listed
-  order, one PR per todo except W2-6's seven group PRs.
+State at the 21 September 2026 deep close (Poppy calls Topsoil, bf551f). Verify each line
+against the live repository before acting.
+
+- **Destination:** [the specification](../../../../docs/SPECIFICATION.md), draft 0.2.0,
+  status `draft-awaiting-owner-ratification`. It is the only description of Castr's
+  destination. The owner: "this work has drifted and drifted and now I think we need a
+  destination that can only change with process and agreement"; "approval happens locally,
+  only I or mantagen can approve". No agent merges a change to it. Who mantagen is and how a
+  local approval is recorded are not known to the agent that wrote this: ask the owner.
+- **Course:** [castr-course.md](../../../plans/active/castr-course.md): RATIFY, then MOVE
+  (Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces, early;
+  all wiring and the removal of every other description of the destination happen once,
+  there, with no tombstones; this repository is then archived), then MEASURE, then PLOT.
+  Its RATIFY section lists what the owner settles first.
+- **Evidence:** [the specification review record](../../../research/castr-specification-review-2026-09-21.md)
+  keeps what six reviewers measured (the Oak API specification's feature inventory, its
+  eight `allOf` sites that accept no value, the consumer's code-generation contract, Zod
+  4.5.4's behaviour, and the list of documents that disagree with the specification).
+- **Open pull requests:** #109 (component identity; branch
+  `claude/w1-01-identity-chain-2026-09-21`; review round 1 cured in `SHA:31d12bd2`, five
+  threads answered and resolved, Copilot re-requested; it merges when green and clean, two
+  rounds at most) and the pull request that carries this record and the specification
+  (branch `claude/castr-destination-spec-2026-09-21`; the owner ratifies locally; agents do
+  not merge it).
+- **Written off on 21 September 2026 by owner ruling:** every dirty worktree and orphaned
+  branch, and pull requests #11–#13, #15–#18, #20, #21, #23, #26, #27 and #81 (closed; commits
+  reachable at `refs/pull/<n>/head`). Nothing of theirs is evaluated or recovered. The plans
+  `unmerged-work-to-main-or-deleted.md` and
+  `castr-documentation-and-fidelity-correction.md` carry `status: superseded`.
+- **Standing owner rulings that govern every session:** long-term architectural excellence
+  over short-term expediency, always; strict, everywhere, all the time; no failing test,
+  check or validator is ever tolerated ("'Red by design' is utterly unacceptable, that was
+  never true"); no work is routed to any list or future plan, under any name; green in a
+  pull request means no static-analysis issue in new code, and the specification is met
+  only while `main` has zero issues; dependency-update pull requests land on green without
+  analysis; the Practice-enhancement lane in this repository is stopped.
+- **Host:** on 21 September the machine was swap-starved with 36 worktree registrations and
+  `fseventsd` near 100% CPU; check `uptime` before running gates. A Codex comms watcher
+  started 9 September from the `castr-correction-custody` worktree was still running and
+  belongs to no live session.
+
+## History (dated evidence; none of it is live direction)
+
 - Governing sequence for every inherited PR and dirty worktree: the
   [12 September value-proof sequence](../../../plans/active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence).
   Containers are evidence about gaps; a gap in product code is proven only by a failing
@@ -178,9 +208,10 @@ this discovery for the architectural repair; no implementation is claimed here.
 
 ## Participating agent identities
 
-| Agent                 | Platform | Model            | Session prefix | Agent UUID                           | Role                                      | First session | Last session |
-| --------------------- | -------- | ---------------- | -------------- | ------------------------------------ | ----------------------------------------- | ------------- | ------------ |
-| Bora seeks Turbulence | codex    | gpt-6-astra      | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd               | 2026-09-06    | 2026-09-10   |
-| Coal weaves Pumice    | claude   | claude-fable-5-1 | f67c69         | d0dfc3a1-ed69-535c-96bd-03c07648c274 | handover analysis, value-proof sequence   | 2026-09-12    | 2026-09-20   |
-| Foxglove weaves Acorn | codex    | gpt-6-astra      | 01a088         | a6955478-7b8e-59e9-870e-dcef0d6e81cd | final Cricket I2 proof                    | 2026-09-10    | 2026-09-10   |
-| Candle weaves Residue | claude   | claude-fable-5-1 | a4c7fb         | 6803f4ef-dcc2-5305-a2c8-b82944f21b0f | bootstrap merge-driver cure, PR lifecycle | 2026-09-20    | 2026-09-20   |
+| Agent                 | Platform | Model            | Session prefix | Agent UUID                           | Role                                           | First session | Last session |
+| --------------------- | -------- | ---------------- | -------------- | ------------------------------------ | ---------------------------------------------- | ------------- | ------------ |
+| Bora seeks Turbulence | codex    | gpt-6-astra      | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd                    | 2026-09-06    | 2026-09-10   |
+| Coal weaves Pumice    | claude   | claude-fable-5-1 | f67c69         | d0dfc3a1-ed69-535c-96bd-03c07648c274 | handover analysis, value-proof sequence        | 2026-09-12    | 2026-09-20   |
+| Foxglove weaves Acorn | codex    | gpt-6-astra      | 01a088         | a6955478-7b8e-59e9-870e-dcef0d6e81cd | final Cricket I2 proof                         | 2026-09-10    | 2026-09-10   |
+| Candle weaves Residue | claude   | claude-fable-5-1 | a4c7fb         | 6803f4ef-dcc2-5305-a2c8-b82944f21b0f | bootstrap merge-driver cure, PR lifecycle      | 2026-09-20    | 2026-09-21   |
+| Poppy calls Topsoil   | claude   | claude-fable-5-1 | bf551f         | (seed-derived; not registered)       | PR closure, PR #109, destination specification | 2026-09-21    | 2026-09-21   |

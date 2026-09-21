@@ -1,9 +1,10 @@
 ---
 title: Castr documentation correction and fidelity repair
-status: active
+status: superseded
 lane: active
 created: 2026-09-06
-last_updated: 2026-09-20
+last_updated: 2026-09-21
+superseded_by: .agent/plans/active/castr-course.md
 owner_directive: >-
   Implement the owner-approved comprehensive documentation correction and fidelity
   repair: split PR #81, correct all documents, repair all known in-scope fidelity

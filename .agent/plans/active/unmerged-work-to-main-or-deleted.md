@@ -1,9 +1,10 @@
 ---
 title: Every piece of unmerged work reaches main or is deleted
-status: active
+status: superseded
 lane: active
 created: 2026-09-21
 last_updated: 2026-09-21
+superseded_by: .agent/plans/active/castr-course.md
 owner_directive: >-
   Owner, 2026-09-21: "plan dealing with all unmerged work, the end states are
   merged to main, or deleted, that is it. Do everything properly
@@ -17,12 +18,16 @@ owner_directive: >-
 todos:
   - id: W0-1
     content: Truth on main — every third-state passage named below is replaced with the two end states, the eleven ledger cells say open with their landing todo, Q-34 and Q-07 are reworded, this plan moves to active/; proved by the validators, the aggregate gate and the vocabulary grep
-    status: in_progress
+    status: done
     depends_on: []
   - id: W1-01
-    content: Identity chain — IR keeps wire names, one identifier projection with a fail-fast injectivity check, dangling reference throws, formatter throws, markdown fallback removed, OpenAPI writer keys by wire name; #26 closes and its branch is deleted (sources #26, #18 identity slice)
-    status: pending
+    content: Identity chain — IR keeps wire names, one identifier projection with a fail-fast injectivity check, dangling reference throws, markdown fallback removed, OpenAPI writer keys by wire name (source #18 identity slice)
+    status: in_progress
     depends_on: [W0-1]
+  - id: W1-01b
+    content: The formatter throws on invalid generated source with the source and the Prettier error as cause, its check-disabling directive removed; #26 closes and its branch is deleted (source #26)
+    status: pending
+    depends_on: [W1-01]
   - id: W1-02
     content: An empty properties map persists through serialize/deserialize and the version guard rejects arrays (source #20's two red suites)
     status: pending
@@ -98,7 +103,7 @@ todos:
   - id: W1-20
     content: Residual deltas of #18 (description, reference, hostile-key) and #11 (spec-invalid written document rejected at the load boundary) — each lands with its witness or is deleted with the four-content no-witness record; #11 and #18 close and their branches are deleted
     status: pending
-    depends_on: [W1-01, W1-04, W1-05, W0-1]
+    depends_on: [W1-01, W1-01b, W1-04, W1-05, W0-1]
   - id: W2-1
     content: "#23 — every absent artefact and code delta read against main and the Practice home; landed or deleted; #23 closes, its branch and worktree are removed"
     status: pending
@@ -234,7 +239,7 @@ below.
 
 | Class                                   | Items                                                                                                                                                                                                                                                                                                                                                         | Owning todos                                                            |
 | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| Open code PRs (11)                      | #11 (closes at W1-20), #12 (W1-12), #13 (W1-11), #15 (W1-16), #16 (W1-07), #17 (W1-13), #18 (W1-20), #20 (W1-03), #21 (W1-19), #26 (W1-01), #27 (W1-10)                                                                                                                                                                                                       | W1-01..W1-20                                                            |
+| Open code PRs (11)                      | #11 (closes at W1-20), #12 (W1-12), #13 (W1-11), #15 (W1-16), #16 (W1-07), #17 (W1-13), #18 (W1-20), #20 (W1-03), #21 (W1-19), #26 (W1-01b), #27 (W1-10)                                                                                                                                                                                                      | W1-01..W1-20                                                            |
 | Open documentation and Practice PRs (2) | #23 (60 files; closes at W2-1), #81 (135 files, the correction programme's frozen source; closes at W2-8)                                                                                                                                                                                                                                                     | W2-1..W2-8                                                              |
 | Records PR (1)                          | #107, merged `SHA:0835cd81` during planning                                                                                                                                                                                                                                                                                                                   | W4-6 (done)                                                             |
 | Remote branches without an open PR (7)  | `docs/remediation-program-record` (#10), `fix/remediation-lk6-ajv-draft04-dep` (#14), `feat/explicit-additional-properties-2026-04` (#28), `scratch/ruleset-probe-2026-08-26` (#61), `claude/routine-config-proof-programme-csfok2` (#72), `codex/q09-lifecycle-closeout` (#96), `routine/loop-test-kingfisher` (no PR)                                       | W4-2a, W4-2b                                                            |
@@ -374,21 +379,47 @@ aggregate gate is root `pnpm check`.
 - **W1-01 identity chain.** Measured on 2026-09-20 and re-verified on
   2026-09-21: `builder.schemas.ts:107` stores `toIdentifier(name)` as the IR
   component name while `$ref`s keep the wire name; `typescript/index.ts` skips a
-  missing component silently; `zod/index.ts` and `type-writer/core.ts` emit
-  references verbatim; `maybe-pretty.ts:21` is a bare `catch` that returns the
-  input; the `name-with-special-characters` snapshot enshrines
-  `response: 1Name-With-Special---Characters,`; `markdown/index.ts:12` falls back
-  to `Ref`; `openapi-writer.components.ts` writes components under the mangled
-  name. Red tests: `identifier-utils.unit.test.ts` (new; `toIdentifier`,
-  `safeSchemaName`, injectivity check), `maybe-pretty.test.ts` ("throws on a
-  syntax error with the source and cause"), a parser test that the IR component
-  name equals the wire name, a writer test that an unknown reference throws, an
-  OpenAPI round-trip test on a digit-leading and a reserved-word name, the
-  snapshot and characterisation cases corrected to valid output. Kept from #26:
-  the throw with `cause` and the typed `omit`. Kept from #18: the projection seam
-  and the distinct-names assertion, re-derived. Deleted: #18's `components.ts`
-  file split (reason: it served as a reference for a cure that is smaller on
-  current `main`). #26 closes; its branch is deleted.
+  missing component silently; `type-writer/core.ts` emits references verbatim
+  (so a component `Error` is declared `ErrorSchema` and referenced as `Error`,
+  which resolves to the global); the `name-with-special-characters` snapshot
+  enshrines `response: 1Name-With-Special---Characters,`; `markdown/index.ts:12`
+  falls back to `Ref`; `openapi-writer.components.ts` writes components under the
+  mangled name. Pre-execution review (2026-09-21, `code-reviewer`) added two
+  mandatory edits and one boundary: the MCP inline-schema lookups
+  (`template-context.mcp.inline-json-schema.ts:189,213`) key by `toIdentifier`
+  and would miss every wire-named component once the IR keeps wire names; the
+  dangling-reference check lives once at the TypeScript writer's component map,
+  not threaded through the Zod and type writers; the markdown writer shows the
+  wire name, never the projection. Red tests: `identifier-utils.unit.test.ts`
+  (new; `toIdentifier`, `safeSchemaName` as the projection, the injectivity
+  check), a parser test that the IR component name equals the wire name, writer
+  tests that a wire-named and a built-in-global component emit valid, consistent
+  symbols and that an unknown reference throws, an OpenAPI round-trip test on a
+  digit-leading, a reserved-word and a dotted name, a markdown test that an
+  unparsable reference throws, two MCP inline-schema tests that lookups key by
+  wire name and keep `a-b` and `a_b` apart, the snapshot regenerated with its
+  diff read, the characterisation case asserting the emitted symbols, and the
+  generated suite's `awkward-component-names.yaml` fixture, whose TypeScript
+  parse and type-check are the independent oracle (on unpatched `main` the
+  generator throws on it). The gateway wave added: a document-boundary walk
+  (`assertReferencesKnown` in `writers/typescript/schema-components.ts`) so a property-level reference to a missing component
+  throws; repeated wire names and the writer's own declaration names
+  (`endpoints`, `mcpTools`, `z`, the helper names) fail the injectivity check;
+  the schema context carries the wire name. Opened as PR #109 on 21 September 2026. Kept from #18: the
+  projection seam and the distinct-names assertion, re-derived. Deleted: #18's
+  `components.ts` file split (reason: it served as a reference for a cure that is
+  smaller on current `main`); the transforms helper's `Schema`-suffix mapping is
+  untouched (reason: it mirrors the Zod parser's input naming, not this
+  projection); `convert-schema.ts` keeps `#/definitions/<wire name>` (reason:
+  JSON Schema keys carry no identifier constraint).
+- **W1-01b the formatter.** Separate PR after W1-01, because every invalid
+  output the corpus carries surfaces the moment the formatter stops swallowing,
+  and that measurement must not hold the identity cure hostage. Red test:
+  `maybe-pretty.test.ts` "throws on a syntax error with the source and cause".
+  Kept from #26: the throw with `cause` and the typed `omit`. The file's
+  `eslint-disable-next-line` goes with it (`omit` from lodash replaces the
+  destructure). `maybePretty` is public API, so the PR body names the behaviour
+  change. #26 closes; its branch is deleted.
 - **W1-02 empty properties and the version guard.** Red tests: #20's
   `fidelity-empty-properties.integration.test.ts` and `version.unit.test.ts`,
   both red on `main` at `0ad80a41` (research README, PR #20 record). Kept: the
