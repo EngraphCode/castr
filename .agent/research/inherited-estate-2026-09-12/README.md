@@ -265,8 +265,10 @@ its cure.
   which the review §12 says to justify individually, and the rejected recursive
   catchalls. Branch `feat/explicit-additional-properties-rebased`.
 
-With #20 and #26 above, nine containers transfer; #11 and #21 are recorded above; #23
-is W2-1; #81 closes at W2-8. Every branch is deleted at its closing todo.
+Every container above reaches its end state under the unmerged-work plan: #12 at
+W1-12, #13 at W1-11, #15 at W1-16, #16 at W1-07, #17 at W1-13, #18 at W1-20, #27 at
+W1-10, #20 at W1-03, #26 at W1-01, #11 at W1-20, #21 at W1-19, #23 at W2-1, #81 at
+W2-8. Every branch is deleted at its closing todo.
 
 ### Red-test probes of the seven code containers' new test files, 20 September 2026
 

@@ -132,7 +132,7 @@ todos:
     status: pending
     depends_on: [W2-2, W2-3, W2-4, W2-5, W2-7, W0-1]
   - id: W4-1
-    content: Delete every branch, ref, worktree and registration whose content is already on main (empty diff), after a live-claim and running-process check per worktree; the `pr/<n>` refs of merged and closed PRs and the six `refs/codex/turn-diffs` refs included
+    content: Delete every branch, ref, worktree and registration whose content is already on main (empty diff), after a live-claim and running-process check per worktree; the `pr/<n>` refs of PRs already merged or closed and the six `refs/codex/turn-diffs` refs included; each later closing todo deletes its own `pr/<n>` ref
     status: pending
     depends_on: [W4-5]
   - id: W4-2a
@@ -144,7 +144,7 @@ todos:
     status: pending
     depends_on: [W1-09, W1-10]
   - id: W4-3
-    content: The stash's Codex capability lines land as a selectable profile in the repo Codex config with the least-privilege analysis in the PR body; the owner drops the stash once the branch is on origin
+    content: The stash's Codex capability lines land as a selectable profile in the repo Codex config with the least-privilege analysis in the PR body; the owner drops the stash once that PR has merged
     status: pending
     depends_on: []
   - id: W4-4
@@ -227,26 +227,27 @@ PR are judged on content before deletion.
 
 Closing an inherited PR is a consequence: the todo that exhausts a container's
 deltas closes the PR with a comment naming the landing PRs and the deletion
-record, and deletes the branch. Nothing closes ahead of its work. The closing
-todo for each open PR is in the inventory below.
+record, and deletes the branch and the local `refs/remotes/pr/<n>` ref. Nothing
+closes ahead of its work. The closing todo for each open PR is in the inventory
+below.
 
 ## Inventory (measured 2026-09-21 on `main` `SHA:0835cd81`)
 
-| Class                                   | Items                                                                                                                                                                                                                                                                                                                                                         | Owning todos                                                   |
-| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Open code PRs (11)                      | #11 (closes at W1-20), #12 (W1-12), #13 (W1-11), #15 (W1-16), #16 (W1-07), #17 (W1-13), #18 (W1-20), #20 (W1-03), #21 (W1-19), #26 (W1-01), #27 (W1-10)                                                                                                                                                                                                       | W1-01..W1-20                                                   |
-| Open documentation and Practice PRs (2) | #23 (60 files; closes at W2-1), #81 (135 files, the correction programme's frozen source; closes at W2-8)                                                                                                                                                                                                                                                     | W2-1..W2-8                                                     |
-| Records PR (1)                          | #107, merged `SHA:0835cd81` during planning                                                                                                                                                                                                                                                                                                                   | W4-6 (done)                                                    |
-| Remote branches without an open PR (7)  | `docs/remediation-program-record` (#10), `fix/remediation-lk6-ajv-draft04-dep` (#14), `feat/explicit-additional-properties-2026-04` (#28), `scratch/ruleset-probe-2026-08-26` (#61), `claude/routine-config-proof-programme-csfok2` (#72), `codex/q09-lifecycle-closeout` (#96), `routine/loop-test-kingfisher` (no PR)                                       | W4-2a, W4-2b                                                   |
-| Remote branches with an empty diff (3)  | `claude/dazzling-cannon-hix55y`, `claude/optimistic-archimedes-7es9jz`, `claude/zod-4-5-relevance-paq1yd` (24 heads on origin in all: `main`, the 13 open-PR branches, these 3 and the 7 above)                                                                                                                                                               | W4-1                                                           |
-| Local branches ahead of `main` (29)     | the 11 container branches, `docs/resonance-practice-imports`, `codex/plan-estate-refresh`, `feat/explicit-additional-properties-2026-04`, `feat/explicit-additional-properties-rebased`, `fix/remediation-lk6-ajv-draft04-dep`, `worktree-arc-bring` (an ancestor of #10's branch), the eleven `worktree-wf_*` branches (ancestors of #10's branch)           | closed with their PRs; W4-2a                                   |
-| Local branches with an empty diff (46)  | including `chore/tidy`, `tmp-lane-check`, `claude/fail-fast-formatter-2026-09-21`, the `codex/*` branches at `origin/main`, and this plan's branch once merged                                                                                                                                                                                                | W4-1                                                           |
-| `refs/remotes/pr/<n>` (15)              | fetched heads of PRs #10–#18, #20, #21, #23, #26, #27, #81                                                                                                                                                                                                                                                                                                    | W4-1 as each PR reaches its end state                          |
-| `refs/codex/turn-diffs/checkpoints` (6) | Codex turn-diff checkpoints from 9–10 September sessions                                                                                                                                                                                                                                                                                                      | W4-1 (content check against the session's PR branch or `main`) |
-| Dirty worktrees (10)                    | fixture-reproduction (30 files), local-entry (15), vision-claims (9), operation-security-empty (8), api-contract (8), adr-navigation (8), local-api-examples (7), adr-conservation (7), custody-corrections (5), planning-authority (2)                                                                                                                       | W2-2..W2-5, W4-4                                               |
-| Clean worktrees (26)                    | 9 registrations under the system temp directory whose directories are gone (prunable); 5 nested inside the repo (`.agent/worktrees/pr28-disposition`, `.claude/worktrees/{arc-bring,resonance-imports,statusline-adjust,tmp-main-env-check}`); 3 under `~/.codex/worktrees/` (one detached at `8deca63f`); 9 sibling checkouts on branches with an empty diff | W4-1                                                           |
-| Stash (1)                               | `stash@{0}`: five lines in `.codex/config.toml` (`web_search`, `sandbox_mode`, `[sandbox_workspace_write] network_access`)                                                                                                                                                                                                                                    | W4-3                                                           |
-| Orphan process (1)                      | Codex comms watcher of Bora seeks Turbulence, started 2026-09-09, running from the `castr-correction-custody` worktree; its five claims are eleven days past freshness                                                                                                                                                                                        | W4-5                                                           |
+| Class                                   | Items                                                                                                                                                                                                                                                                                                                                                         | Owning todos                                                            |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Open code PRs (11)                      | #11 (closes at W1-20), #12 (W1-12), #13 (W1-11), #15 (W1-16), #16 (W1-07), #17 (W1-13), #18 (W1-20), #20 (W1-03), #21 (W1-19), #26 (W1-01), #27 (W1-10)                                                                                                                                                                                                       | W1-01..W1-20                                                            |
+| Open documentation and Practice PRs (2) | #23 (60 files; closes at W2-1), #81 (135 files, the correction programme's frozen source; closes at W2-8)                                                                                                                                                                                                                                                     | W2-1..W2-8                                                              |
+| Records PR (1)                          | #107, merged `SHA:0835cd81` during planning                                                                                                                                                                                                                                                                                                                   | W4-6 (done)                                                             |
+| Remote branches without an open PR (7)  | `docs/remediation-program-record` (#10), `fix/remediation-lk6-ajv-draft04-dep` (#14), `feat/explicit-additional-properties-2026-04` (#28), `scratch/ruleset-probe-2026-08-26` (#61), `claude/routine-config-proof-programme-csfok2` (#72), `codex/q09-lifecycle-closeout` (#96), `routine/loop-test-kingfisher` (no PR)                                       | W4-2a, W4-2b                                                            |
+| Remote branches with an empty diff (3)  | `claude/dazzling-cannon-hix55y`, `claude/optimistic-archimedes-7es9jz`, `claude/zod-4-5-relevance-paq1yd` (24 heads on origin in all: `main`, the 13 open-PR branches, these 3 and the 7 above)                                                                                                                                                               | W4-1                                                                    |
+| Local branches ahead of `main` (29)     | the 11 container branches, `docs/resonance-practice-imports`, `codex/plan-estate-refresh`, `feat/explicit-additional-properties-2026-04`, `feat/explicit-additional-properties-rebased`, `fix/remediation-lk6-ajv-draft04-dep`, `worktree-arc-bring` (an ancestor of #10's branch), the eleven `worktree-wf_*` branches (ancestors of #10's branch)           | closed with their PRs; W4-2a                                            |
+| Local branches with an empty diff (46)  | including `chore/tidy`, `tmp-lane-check`, `claude/fail-fast-formatter-2026-09-21`, the `codex/*` branches at `origin/main`, and this plan's branch once merged                                                                                                                                                                                                | W4-1                                                                    |
+| `refs/remotes/pr/<n>` (15)              | fetched heads of PRs #10–#18, #20, #21, #23, #26, #27, #81                                                                                                                                                                                                                                                                                                    | W4-1 for PRs already merged or closed; each closing todo for its own PR |
+| `refs/codex/turn-diffs/checkpoints` (6) | Codex turn-diff checkpoints from 9–10 September sessions                                                                                                                                                                                                                                                                                                      | W4-1 (content check against the session's PR branch or `main`)          |
+| Dirty worktrees (10)                    | fixture-reproduction (30 files), local-entry (15), vision-claims (9), operation-security-empty (8), api-contract (8), adr-navigation (8), local-api-examples (7), adr-conservation (7), custody-corrections (5), planning-authority (2)                                                                                                                       | W2-2..W2-5, W4-4                                                        |
+| Clean worktrees (26)                    | 9 registrations under the system temp directory whose directories are gone (prunable); 5 nested inside the repo (`.agent/worktrees/pr28-disposition`, `.claude/worktrees/{arc-bring,resonance-imports,statusline-adjust,tmp-main-env-check}`); 3 under `~/.codex/worktrees/` (one detached at `8deca63f`); 9 sibling checkouts on branches with an empty diff | W4-1                                                                    |
+| Stash (1)                               | `stash@{0}`: five lines in `.codex/config.toml` (`web_search`, `sandbox_mode`, `[sandbox_workspace_write] network_access`)                                                                                                                                                                                                                                    | W4-3                                                                    |
+| Orphan process (1)                      | Codex comms watcher of Bora seeks Turbulence, started 2026-09-09, running from the `castr-correction-custody` worktree; its five claims are eleven days past freshness                                                                                                                                                                                        | W4-5                                                                    |
 
 The per-container measurements stand as evidence: the delivery ledger's source-PR
 table, the correction plan's gap register and container map, and the research
@@ -601,7 +602,8 @@ unknown>` is an escape hatch). #20 closes; its branch is deleted.
 ## Workstream W4 — branches, refs, worktrees, stash, processes
 
 - **W4-1 already on main.** For each remote branch, local branch,
-  `refs/remotes/pr/<n>` ref of a merged or closed PR, `refs/codex/turn-diffs`
+  `refs/remotes/pr/<n>` ref of a PR already merged or closed when W4-1 runs (the
+  refs of PRs that close later go with their closing todo), `refs/codex/turn-diffs`
   ref and clean worktree: the diff against `main` is empty (`git diff --quiet
 origin/main...<ref>`; for a detached worktree `git -C <path> diff --quiet
 origin/main HEAD` plus a clean status; for a Codex checkpoint ref, its tree
@@ -637,7 +639,9 @@ origin/main HEAD` plus a clean status; for a Codex checkpoint ref, its tree
   the five lines land. The five
   lines land that way in an engineering PR with `security-expert` in its
   reviewer set; the owner's role is the merge. The stash is dropped by the owner
-  once the branch is on origin (the hook blocks agents from `git stash drop`).
+  once that PR has merged, or, if it closes, at the deletion of its delta (the
+  hook blocks agents from `git stash drop`); a branch on origin is not an end
+  state.
 - **W4-4 delivered or regenerable worktrees.** custody-corrections and
   operation-security-empty: every dirty code file equals `main` (wt-evidence) or
   was delivered by PR #86; their plan and manifest edits were replaced by
@@ -675,7 +679,7 @@ scope is created in `current/` as this todo's deliverable; this plan moves to
 - **AC1 (repo-safe)** the W5-1 commands return the values shown.
 - **AC2 (repo-safe)** every PR of this plan carries the line `Plan:
 unmerged-work-to-main-or-deleted todo <id>` in its body; `gh pr list --state
-merged --search "unmerged-work-to-main-or-deleted in:body" --json body`
+merged --limit 200 --search "unmerged-work-to-main-or-deleted in:body" --json body`
   counts the bodies carrying `## Red run on unpatched main` equal to the product
   todos marked done, and the bodies carrying `## Owner approval` equal to the
   doctrine-class todos marked done (W0-1, W1-13, W1-17, W2-1, W2-3, W2-4, W2-5,
@@ -683,12 +687,14 @@ merged --search "unmerged-work-to-main-or-deleted in:body" --json body`
 - **AC3 (repo-safe)** the delivery ledger's source-PR table status column uses
   the closed vocabulary "Merged as `<sha>`" or "Closed after `<todo>`" for every
   row of this plan's PRs, and `rg -n "at owner word|routed to an owning
-row|transferred to the gap register|branch is retained|register transfer"
-.agent/plans/active .agent/plans/delivery-ledger.md .agent/research` returns
-  only the dated reversal paragraph.
+row|transferred to the gap register|branch is retained|register transfer" -g
+'!unmerged-work-to-main-or-deleted.md' .agent/plans/active
+.agent/plans/delivery-ledger.md .agent/research` returns only the dated reversal
+  paragraph.
 - **AC4 (repo-safe)** `pnpm check` exits 0 on `main` after the last landing, and
   `rg -n "it\.skip|describe\.skip|test\.skip|\.todo\(|eslint-disable|@ts-expect-error"
-$(git diff --name-only <plan-base>..main)` finds nothing new.
+$(git diff --name-only 0835cd81..main)` finds nothing new (`0835cd81` is the
+  `main` this plan was measured on).
 - **AC5 (repo-safe)** the W0-1 vocabulary grep returns only the dated reversal
   paragraph; the container map and unpushed-work tables of the correction plan
   name a todo of this plan in every exit cell.

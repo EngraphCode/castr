@@ -100,7 +100,7 @@ todos:
     content: 'PR closure wave 1: #10 and #28 patch-equivalence verification and closure'
     status: completed
   - id: Q-13
-    content: 'PR #23 disposition: compare every unique Practice delta of #23 with the current estate and record extraction or retirement per delta in the closure record, then close #23 and retain its branch per the 26 August parity ruling; no product gap is claimed'
+    content: 'PR #23 end state: every unique delta read against main and the Practice home, landed or deleted with its reason in the closing PR (unmerged-work plan W2-1); #23 closes and its branch is deleted, the 21 September ruling superseding the 26 August retention; no product gap is claimed'
     status: pending
     depends_on: [Q-00, Q-33]
   - id: Q-10
@@ -992,11 +992,11 @@ before #10 closed. Both recovery branches remain. The
 state and functional carriers. Pending semantic findings and Q-017 remain open in
 their permanent homes; current routes do not depend on either source branch.
 
-**Q-13 — PR #23 disposition.** Surface: close #23 with its closure record and retain its
-branch. The 26 August parity ruling settled the outcome: the wholesale transplant is
+**Q-13 — PR #23 end state.** Surface: the unmerged-work plan's W2-1 lands or deletes
+every unique delta of #23 and closes it with its branch deleted (the 21 September
+ruling supersedes the 26 August retention). The 26 August parity ruling settled the outcome: the wholesale transplant is
 stopped, main is ahead on every shared part, and the value-proof container map records no
-product gap for #23. Non-goals: no wholesale merge of the stale snapshot; no branch
-deletion. Reconciliation duty (owner card
+product gap for #23. Non-goals: no wholesale merge of the stale snapshot. Reconciliation duty (owner card
 ruling 2026-08-27, on dropping Q-19's dependency): any pr-lifecycle skill content
 extracted from PR #23 is value-extracted against the THEN-CURRENT skill canonical —
 which may already carry Q-21's merge-authority line and Q-19's tally contract — never
