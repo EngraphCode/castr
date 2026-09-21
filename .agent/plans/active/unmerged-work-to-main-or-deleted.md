@@ -120,7 +120,7 @@ todos:
     status: pending
     depends_on: [W1-08]
   - id: W2-6
-    content: Reference repair — the 171 broken internal Markdown links in main's own content repaired or their dead targets removed with reason, six PRs by directory; `.agent/practice-core` re-taken verbatim from the Practice home instead of edited (#81 C09)
+    content: Reference repair — the 171 broken internal Markdown links in main's own content repaired or their dead targets removed with reason, seven PRs by group; `.agent/practice-core` re-taken verbatim from the Practice home instead of edited (#81 C09)
     status: pending
     depends_on: [W2-2, W4-1]
   - id: W2-7
@@ -144,7 +144,7 @@ todos:
     status: pending
     depends_on: [W1-09, W1-10]
   - id: W4-3
-    content: The stash's Codex capability lines land as a selectable profile in the repo Codex config with the least-privilege analysis in the PR body; the owner drops the stash once that PR has merged
+    content: The stash's repo-default Codex capability lines are deleted with the reason, and the per-invocation surface that carries the context-dependent capability (verified against the installed CLI) is documented in `.codex/README.md`; the owner drops the stash once that PR has merged
     status: pending
     depends_on: []
   - id: W4-4
@@ -302,7 +302,7 @@ worktree remove --force` after the record lands, never emptied file by file.
    process is not removed until that is resolved (W4-5 resolves the one known
    case).
 10. **Owner-decision PRs do not hold the plan.** W0-1, W1-13, W1-17, W2-1,
-    W2-3, W2-4, W2-5 and W2-8 carry doctrine-class content and seek the owner's
+    W2-3, W2-4, W2-5, W2-8 and W4-3 carry doctrine-class content and seek the owner's
     answer on their PRs, recorded as the `## Owner approval` section. Every other todo continues meanwhile. After
     48 hours without an answer the agent pings on the comms log and the PR
     (`ping-before-escalate`), and escalates per that rule after a further 48
@@ -558,8 +558,10 @@ unknown>` is an escape hatch). #20 closes; its branch is deleted.
   taken verbatim from the Practice home (parity check in the PR body,
   `practice-core-portability`); VISION and PRACTICE-VISION reconciled from the
   vision-claims worktree and #81's hunks, castr-local text only. Doctrine class:
-  the PR asks the owner for explicit approval of the text; merge is the
-  approval. On rejection the delta is deleted and the worktree removed.
+  the PR carries a decision card asking the owner for explicit approval of the
+  text and merges only after the owner's dated words are quoted under
+  `## Owner approval`; a merge without that record is not approval. On rejection
+  the delta is deleted and the worktree removed.
 - **W2-4 API and options documentation.** Sources: the api-contract and
   local-api-examples worktrees (docs plus `cli/index.ts`,
   `generation-result.ts`, `template-context.ts`, the Zod parser README, `index.ts`,
@@ -578,7 +580,7 @@ unknown>` is an escape hatch). #20 closes; its branch is deleted.
   `.agent/practice-core` 19, `.agent/skills` 14, `.agent/memory` 14,
   `.agent/research` 8, and 10 across `.agent/directives`, `.agent/README.md`,
   `.agent/IDENTITY.md`, `.agent/prompts` and `docs/guides`. After W4-1 the count
-  is re-measured, then six PRs land in that order, one per group, each repairing
+  is re-measured, then seven PRs land in that order, one per group, each repairing
   every reference in its group or removing the dead target with reason, proof
   being the validator's report for that group empty. `.agent/practice-core` is a
   downstream copy of the Practice home (`practice-core-portability`; the owner's
@@ -626,21 +628,19 @@ origin/main HEAD` plus a clean status; for a Codex checkpoint ref, its tree
 - **W4-3 the stash.** The owner ruled on 13 September that Codex needs code
   execution and network access in some contexts and that this is not an owner
   decision; the question is which surface carries a context-dependent capability.
-  Verdict: a named, per-invocation selectable configuration in the repo's
-  `.codex/config.toml` carrying `web_search`, `sandbox_mode` and the
-  `sandbox_workspace_write.network_access` table, so the default session keeps
-  least privilege and the capability is granted only when a context selects it;
-  the user profile and the default section are rejected in the PR body with the
-  reasoning. First step of the cycle: read the installed Codex CLI's configuration
-  reference for the surface that carries a selectable profile and how the sandbox
-  table nests under it (the repo's `.codex/config.toml` carries no profile today
-  and this text is not the vendor reference), and record it in the PR body before
-  the five lines land. The five
-  lines land that way in an engineering PR with `security-expert` in its
-  reviewer set; the owner's role is the merge. The stash is dropped by the owner
-  once that PR has merged, or, if it closes, at the deletion of its delta (the
-  hook blocks agents from `git stash drop`); a branch on origin is not an end
-  state.
+  Verified on 2026-09-21 against the installed `codex-cli 0.153.4` (`codex --help`):
+  the per-invocation surfaces are `--sandbox <mode>`, `-c key=value` overrides
+  (`-c sandbox_workspace_write.network_access=true`, `-c web_search=...`) and
+  `--profile <name>`, which layers `$CODEX_HOME/<name>.config.toml` on the user
+  config; the repo's `.codex/config.toml` has no profile table and is read by
+  every session in the repo. Verdict: the stash's five lines are a repo-wide
+  default grant, so they are deleted (reason: the surface that carries a
+  context-dependent capability is the invocation or the user-home profile, never
+  the repo default), and `.codex/README.md` gains the paragraph that names those
+  surfaces and the ruling, quoted. Doctrine class (`## Owner approval` quotes the
+  13 September ruling); `security-expert` in the reviewer set. The stash is
+  dropped by the owner once that PR has merged (the hook blocks agents from
+  `git stash drop`); a branch on origin is not an end state.
 - **W4-4 delivered or regenerable worktrees.** custody-corrections and
   operation-security-empty: every dirty code file equals `main` (wt-evidence) or
   was delivered by PR #86; their plan and manifest edits were replaced by
@@ -680,7 +680,10 @@ scope is created in `current/` as this todo's deliverable; this plan moves to
 unmerged-work-to-main-or-deleted todo <id>` in its body and exactly one proof
   heading: `## Red run on unpatched main` (a product cure), `## No witness
 constructible` (a deletion on the no-witness route, carrying the four
-  contents), or `## Owner approval` (doctrine class). `gh pr list --state all
+  contents), `## Owner approval` (doctrine class), or `## Validator proof`
+  (mechanical class: the validator's report or gate run that proves the repair,
+  as in W2-2, W2-6 and W2-7); W4's cleanups carry no PR of their own, their
+  ledger rows ride the next PR of any class. `gh pr list --state all
 --limit 200 --search "unmerged-work-to-main-or-deleted in:body" --json
 number,state,body`: every merged body carries one heading; every closed
   unmerged body is a doctrine-class PR the owner declined, whose todo is marked
@@ -737,7 +740,7 @@ $(git diff --name-only 0835cd81..main)` finds nothing new (`0835cd81` is the
 - **A snapshot update hides a defect:** doctrine item 4; the reading is in the PR
   body.
 - **W1-09 and W2-6's `.agent/plans` group are the largest PRs** (about forty
-  snapshot tests; 71 link repairs): each stays one story; W2-6 is six PRs by
+  snapshot tests; 71 link repairs): each stays one story; W2-6 is seven PRs by
   group so no PR exceeds the two-round budget.
 - **Review rounds exceed the budget** on records-class PRs: the ratchet from the
   fifth close applies, disposition without diff unless the finding misdirects.
