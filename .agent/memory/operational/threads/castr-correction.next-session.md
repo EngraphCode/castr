@@ -5,13 +5,17 @@
 State at the 21 September 2026 deep close (Poppy calls Topsoil, bf551f). Verify each line
 against the live repository before acting.
 
-- **Destination:** [the specification](../../../../docs/SPECIFICATION.md), draft 0.2.0,
+- **Destination:** [the specification](../../../../docs/SPECIFICATION.md), draft 0.3.0,
   status `draft-awaiting-owner-ratification`. It is the only description of Castr's
   destination. The owner: "this work has drifted and drifted and now I think we need a
   destination that can only change with process and agreement"; "approval happens locally,
-  only I or mantagen can approve". No agent merges a change to it. Who mantagen is and how a
-  local approval is recorded are not known to the agent that wrote this: ask the owner.
-- **Course:** [castr-course.md](../../../plans/active/castr-course.md): RATIFY, then MOVE
+  only I or mantagen can approve". No agent merges a change to it. Mantagen is a human collaborator. Approval is spoken
+  locally in a working session and the agent records the words, the date and the content
+  hash in the change log (SPEC-CC-2). The owner walks the ratification checklist one
+  decision card per clause.
+- **Course:** [castr-course.md](../../../plans/active/castr-course.md): ALERTS first (`main` has
+  seven open dependency alerts and nothing else merges until they are zero, SPEC-G-1), then
+  RATIFY, then MOVE
   (Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces, early;
   all wiring and the removal of every other description of the destination happen once,
   there, with no tombstones; this repository is then archived), then MEASURE, then PLOT.

@@ -11,10 +11,14 @@ owner_directive: >-
   justify sunk cost, and course to a better place, useful functionality, and
   excellence in engineering and software design and architecture."
 todos:
+  - id: ALERTS
+    content: Dependency alerts on main reach zero through dependency-update pull requests that land without analysis; until then nothing else merges (SPEC-G-1)
+    status: pending
+    depends_on: []
   - id: RATIFY
     content: The owner ratifies the specification locally (SPEC-CC-2); the ratified file and a README pointer land on main; nothing else in this repository is wired to it
     status: pending
-    depends_on: []
+    depends_on: [ALERTS]
   - id: MOVE
     content: Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces with its history, under a boundary rule that no Castr workspace depends on a package outside Castr; the specification travels as the only description of the destination; this repository is archived
     status: pending
@@ -44,19 +48,33 @@ the target stays still. A consumer in the same repository makes the first target
 and its acceptance a workspace dependency. The specification's computed count of
 `NOT-YET-BUILT` rejections (SPEC-PR-6) is the measure of distance remaining.
 
-## RATIFY: what the owner settles first
+## RATIFY: how the specification is ratified
 
-The specification is draft 0.2.0. Before its status becomes `ratified` the owner:
+The specification is draft 0.3.0. The owner chose to walk its ratification checklist one
+decision card per clause: each card states the clause in plain language with its reason
+and its cost, and records confirm, change or strike. When the checklist is empty, the
+owner (or mantagen, a human collaborator) approves the version in their own words in a
+working session, and the agent records those words, the date and the SHA-256 of the text
+in the change log (SPEC-CC-2).
 
-1. says who mantagen is and how a local approval is recorded (SPEC-N-6, SPEC-CC-2);
-2. confirms, changes or strikes each clause on the specification's ratification checklist;
-3. confirms the value-domain reading in SPEC-P-5 (serialised values with exact numbers
-   cover everything a closed OpenAPI specification can describe; host-language objects such
-   as `z.date()` are rejected);
-4. decides the eight unsatisfiable `allOf` sites in the Oak API specification (corrected at
-   source, or carried as the never-accepting shapes they state);
-5. says whether dependency alerts follow the same two tiers as static analysis (SPEC-G-2
-   assumes they do).
+Settled by the owner on 21 September 2026 and already in the draft: the value-domain
+reading (SPEC-P-5); OpenAPI 2.0 is not read; zero open dependency alerts on `main` to
+merge (SPEC-G-1); the approval mechanism.
+
+## First work: dependency alerts to zero
+
+`main` has seven open dependency alerts (two high, five moderate, 21 September 2026), so
+under SPEC-G-1 the only pull requests that merge are the ones that cure them. They land
+without analysis. Pull request #109 (green and clean at `SHA:31d12bd2`) and the
+specification's pull request #110 merge after that. The owner granted agents permission to
+merge product pull requests that are green and clean; the permission rule is the owner's
+to add to the project settings. The specification is merged by the owner only.
+
+## The Oak API specification's unsatisfiable shapes
+
+Owner decision, 21 September 2026: the eight `allOf` sites that accept no value are fixed
+in the document at source. Castr reports each with its location and carries it faithfully
+(SPEC-PR-7); it never guesses intent.
 
 The measured evidence behind the specification is in
 [the review record](../../research/castr-specification-review-2026-09-21.md).

@@ -1,13 +1,13 @@
 ---
 title: Castr destination specification
 id: castr-specification
-version: 0.2.0
+version: 0.3.0
 status: draft-awaiting-owner-ratification
 date: 2026-09-21
 owner: Jim Cresswell
 approvers:
   - Jim Cresswell
-  - mantagen
+  - mantagen (a human collaborator)
 clause_id_scheme: >-
   SPEC-<SECTION>-<n>. Identifiers are permanent: never renumbered, never reused.
   A retired identifier is listed in the change log. Other documents cite this
@@ -161,7 +161,7 @@ where a profile decision below declares a different reading.
   Each writer emits its format at the version named in §6. A construct that version cannot
   express is a located rejection.
 
-- **SPEC-P-5 Value domain.**
+- **SPEC-P-5 Value domain.** (Reading confirmed by the owner, 21 September 2026.)
 
   > We need to be able to fully describe and carry anything that can be in a closed OpenAPI
   > specification.
@@ -181,6 +181,7 @@ where a profile decision below declares a different reading.
 | Zod              | 4                          | 4                |
 | TypeScript types | not read                   | yes              |
 
+OpenAPI 2.0 is not read: a 2.0 document receives a located rejection naming its version.
 A JSON Schema dialect change is always explicit; Castr never infers, upgrades or
 downgrades a dialect. A change to this table is a change to this document.
 
@@ -252,7 +253,9 @@ the owner names them.
 > stays green.
 
 - **SPEC-G-1 Merge green.** A pull request merges only when every test, validator and
-  check passes at its head, and static analysis reports no issue in new code.
+  check passes at its head, static analysis reports no issue in new code, and `main` has
+  zero open dependency alerts. While `main` has an open dependency alert, the only pull
+  requests that merge are the ones that cure alerts; those land without analysis.
 - **SPEC-G-2 Destination green.** This specification is met only while `main` has zero
   open static-analysis issues of any type or severity, zero security findings awaiting
   review, and zero open dependency alerts, and stays that way.
@@ -377,7 +380,6 @@ decision never defers a requirement; §9 binds the present code today.
 - **SPEC-N-3** The technique by which Zod is read (SPEC-AR-6 states the requirement).
 - **SPEC-N-4** The public surface: the entry points and their input and output types.
 - **SPEC-N-5** The scope-and-fidelity tables for the pairs of SPEC-C-1.
-- **SPEC-N-6** The mechanism that records a local approval (SPEC-CC-2).
 
 ## 13. Change control
 
@@ -388,9 +390,12 @@ decision never defers a requirement; §9 binds the present code today.
 
 - **SPEC-CC-1** This document changes only by an approved amendment: the version and the
   change log move in the same change as the text.
-- **SPEC-CC-2** Approval is given locally by Jim Cresswell or mantagen, in their own words,
-  naming the version approved. It is recorded with the content hash of the text approved,
-  so a later reader can tell which bytes were agreed.
+- **SPEC-CC-2** Approval is given locally by Jim Cresswell or mantagen, a human
+  collaborator, in their own words in a working session, naming the version approved. The
+  agent in that session records the approver's words verbatim, the date and the SHA-256 of
+  the approved text as a row of this document's change log, in the change that sets the
+  status to `ratified`. An agent never writes an approval that was not given to it in that
+  session.
 - **SPEC-CC-3** A required check fails when this document's content does not match its
   latest approved record.
 - **SPEC-CC-4** No agent merges a change to this document.
@@ -425,13 +430,14 @@ Verified against Zod 4.5.4 on 21 September 2026 by executing each construct.
 These clauses came from review on 21 September 2026 and are the owner's to confirm, change
 or strike at ratification: SPEC-PR-3, SPEC-PR-4, SPEC-PR-7, the reporting rule and the
 closure-keyword rule in SPEC-P-1, the three-part test in SPEC-P-2 and Appendix A's
-"rejected (`NOT-YET-BUILT`)" rows, the dependency-alert clause in SPEC-G-2, SPEC-G-5,
-SPEC-G-7, SPEC-AR-5, the content of the C-1 artefact list and status-key rule, the
+"rejected (`NOT-YET-BUILT`)" rows, SPEC-G-5,
+SPEC-G-7, the cure-only merge rule in SPEC-G-1, SPEC-AR-5, the content of the C-1 artefact list and status-key rule, the
 extractability condition in §10, and SPEC-CC-3.
 
 ## Change log
 
-| Version | Date       | Change                                                                                                                                                               | Approval |
-| ------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| 0.1.0   | 2026-09-21 | First draft from the owner's statements of 21 September 2026.                                                                                                        | none     |
-| 0.2.0   | 2026-09-21 | Owner decisions of the same day and six reviews folded in: sides, source-anchored proof, scope-and-fidelity tables, rejection kinds, versions, home, change control. | pending  |
+| Version | Date       | Change                                                                                                                                                                                                                                                                                | Approval |
+| ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| 0.1.0   | 2026-09-21 | First draft from the owner's statements of 21 September 2026.                                                                                                                                                                                                                         | none     |
+| 0.2.0   | 2026-09-21 | Owner decisions of the same day and six reviews folded in: sides, source-anchored proof, scope-and-fidelity tables, rejection kinds, versions, home, change control.                                                                                                                  | pending  |
+| 0.3.0   | 2026-09-21 | Owner decisions by card: mantagen is a human collaborator; approval is spoken locally and recorded by the agent with the content hash (SPEC-N-6 retired, answered by SPEC-CC-2); zero open dependency alerts on `main` to merge; SPEC-P-5 reading confirmed; OpenAPI 2.0 is not read. | pending  |
