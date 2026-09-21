@@ -124,6 +124,55 @@ describe('writers/typescript component identity', () => {
     );
   });
 
+  it('throws on an x-ext reference to a component the document does not carry', () => {
+    const ir = createMockCastrDocument({
+      components: [
+        component(
+          'Wrapper',
+          required({
+            type: 'object',
+            properties: new CastrSchemaProperties({
+              gone: required({ $ref: '#/x-ext/425563c/components/schemas/Gone' }),
+            }),
+          }),
+        ),
+      ],
+    });
+
+    expect(() => writeTypeScript(contextFor(ir, ['#/components/schemas/Wrapper']))).toThrow(
+      '"#/x-ext/425563c/components/schemas/Gone"',
+    );
+  });
+
+  it('keeps a union member that references a component named like a primitive', () => {
+    const ir = createMockCastrDocument({
+      components: [
+        component(
+          'string',
+          required({
+            type: 'object',
+            properties: new CastrSchemaProperties({ value: required({ type: 'number' }) }),
+          }),
+        ),
+        component(
+          'Either',
+          required({
+            anyOf: [
+              required({ $ref: '#/components/schemas/string' }),
+              required({ type: 'string' }),
+            ],
+          }),
+        ),
+      ],
+    });
+
+    const output = writeTypeScript(
+      contextFor(ir, ['#/components/schemas/string', '#/components/schemas/Either']),
+    );
+
+    expect(output).toContain('export type Either = stringSchema | string');
+  });
+
   it('throws when two wire names would emit one symbol', () => {
     const ir = createMockCastrDocument({
       components: [

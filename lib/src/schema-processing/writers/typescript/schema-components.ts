@@ -84,8 +84,13 @@ function parseReferenceIn(ref: string, owner: string): ParsedRef {
   }
 }
 
-function isInternalSchemaReference(parsed: ParsedRef): boolean {
-  return parsed.componentType === SCHEMAS_REF_TYPE && !parsed.isExternal;
+/**
+ * A reference that names a schema component. An x-ext reference counts: the
+ * parser stores x-ext schemas in the same wire-name component map and the
+ * writers emit them by the same projected symbol.
+ */
+function isSchemaComponentReference(parsed: ParsedRef): boolean {
+  return parsed.componentType === SCHEMAS_REF_TYPE;
 }
 
 function collectReferences(root: CastrSchema, seen: Set<CastrSchema>): string[] {
@@ -111,7 +116,7 @@ function assertReferencesKnown(
 ): void {
   for (const ref of refs) {
     const parsed = parseReferenceIn(ref, owner);
-    if (isInternalSchemaReference(parsed) && !known.has(parsed.componentName)) {
+    if (isSchemaComponentReference(parsed) && !known.has(parsed.componentName)) {
       throw new Error(
         `Schema reference "${ref}" in ${owner} names a component that is not declared there.`,
       );
@@ -120,7 +125,7 @@ function assertReferencesKnown(
 }
 
 /**
- * Assert that every internal schema reference anywhere in a document (its
+ * Assert that every schema reference, x-ext ones included, anywhere in a document (its
  * components of every type and its operations) names a schema component the
  * document carries, so a writer never emits a symbol nothing declares.
  *
