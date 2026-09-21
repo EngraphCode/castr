@@ -14,7 +14,7 @@ todos:
     status: completed
     depends_on: [Q-31]
   - id: Q-34
-    content: "Inherited PR and orphaned-work dispositions (terminal-state item 2): per-delta records for #11, #12, #13, #15, #16, #17, #18, #20, #21, #26 and #27 and for the dirty worktrees, each closing through the proof contract's applicable disposition per delta (landed with exact evidence, superseded with a reason, discarded at owner word, or, for a claimed uncured gap only, the register transfer); #81 keeps its C09 exception; #23 is Q-13"
+    content: "Inherited PR and orphaned-work end states (terminal-state item 2): every delta of #11, #12, #13, #15, #16, #17, #18, #20, #21, #26, #27, #23 and #81, of every branch, of every dirty worktree and of the stash is merged to main or deleted with its reason, under the executable plan unmerged-work-to-main-or-deleted (its todos W0-1 to W5-1); the register transfers recorded on 20 September were reversed by the owner on the same day"
     status: in_progress
     depends_on: [Q-33]
   - id: Q-32
@@ -90,7 +90,7 @@ todos:
     status: completed
     depends_on: [Q-00]
   - id: Q-07
-    content: 'Hygiene-gate gap: failing test on unpatched main for in-process suites that import node:fs or node:child_process or read process.env, cured by the lint restriction with the #21 relocation; resolves the register row that #21 transfers to in Q-34'
+    content: 'Hygiene-gate gap: failing test on unpatched main for in-process suites that import node:fs or node:child_process or read process.env, cured by the lint restriction with the #21 relocation; landed as the unmerged-work plan's W1-18 and W1-19'
     status: pending
     depends_on: [Q-00, Q-31, Q-32]
   - id: Q-08
@@ -100,7 +100,7 @@ todos:
     content: 'PR closure wave 1: #10 and #28 patch-equivalence verification and closure'
     status: completed
   - id: Q-13
-    content: 'PR #23 disposition: compare every unique Practice delta of #23 with the current estate and record extraction or retirement per delta in the closure record, then close #23 and retain its branch per the 26 August parity ruling; no product gap is claimed'
+    content: 'PR #23 end state: every unique delta read against main and the Practice home, landed or deleted with its reason in the closing PR (unmerged-work plan W2-1); #23 closes and its branch is deleted, the 21 September ruling superseding the 26 August retention; no product gap is claimed'
     status: pending
     depends_on: [Q-00, Q-33]
   - id: Q-10
@@ -992,11 +992,11 @@ before #10 closed. Both recovery branches remain. The
 state and functional carriers. Pending semantic findings and Q-017 remain open in
 their permanent homes; current routes do not depend on either source branch.
 
-**Q-13 — PR #23 disposition.** Surface: close #23 with its closure record and retain its
-branch. The 26 August parity ruling settled the outcome: the wholesale transplant is
+**Q-13 — PR #23 end state.** Surface: the unmerged-work plan's W2-1 lands or deletes
+every unique delta of #23 and closes it with its branch deleted (the 21 September
+ruling supersedes the 26 August retention). The 26 August parity ruling settled the outcome: the wholesale transplant is
 stopped, main is ahead on every shared part, and the value-proof container map records no
-product gap for #23. Non-goals: no wholesale merge of the stale snapshot; no branch
-deletion. Reconciliation duty (owner card
+product gap for #23. Non-goals: no wholesale merge of the stale snapshot. Reconciliation duty (owner card
 ruling 2026-08-27, on dropping Q-19's dependency): any pr-lifecycle skill content
 extracted from PR #23 is value-extracted against the THEN-CURRENT skill canonical —
 which may already carry Q-21's merge-authority line and Q-19's tally contract — never
