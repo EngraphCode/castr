@@ -57,7 +57,17 @@ overrides:
   #   consumers already resolve 5.x)
   # - nanoid + postcss via madge's detective chain (GHSA-2v37-7h3g-55p8,
   #   GHSA-fxqj-rqcc-2cmp); consumers declare ^3 / ^8
-  hono: '^4.12.34'
+  # - qs via express + body-parser in the @modelcontextprotocol/sdk chain
+  #   (GHSA-4mjr-xmp4-gh2g, GHSA-x5fp-wj9c-mxmx); consumers declare ^6
+  # - js-yaml 4.x via cosmiconfig in the commitlint chain
+  #   (GHSA-2883-xcg3-v3hh); scoped to the 4.x line because
+  #   markdownlint-cli2 resolves 5.x, which is not affected
+  # - smol-toml via markdownlint-cli2 (GHSA-7w5x-hrqm-74c2); consumers
+  #   declare 1.x
+  hono: '^4.13.5'
+  qs: '^6.16.0'
+  'js-yaml@4': '^4.3.2'
+  smol-toml: '^1.7.1'
   '@hono/node-server': '^1.19.15 || ^2.0.5'
   body-parser: '^2.3.0'
   ip-address: '^10.3.1'
