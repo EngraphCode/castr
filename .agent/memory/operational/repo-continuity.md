@@ -15,10 +15,10 @@ The Practice-enhancement lane in this repository is stopped.
 
 ## Active threads
 
-| Thread                                                       | Role and next step                                                                 |
-| ------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
-| [Castr correction](threads/castr-correction.next-session.md) | Ratify the specification with the owner, then measure; the route is in the record. |
-| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.     |
+| Thread                                                       | Role and next step                                                                | Latest identity                                                                                          |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [Castr correction](threads/castr-correction.next-session.md) | The owner re-assesses the course now #110 has landed; the route is in the record. | claude-code / claude-opus-5-5 / Mussel mends Buoy / #110 round-1 cure and merge / 2026-09-23             |
+| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.    | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23 |
 
 ## Paused threads and historical records
 
@@ -50,18 +50,28 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-In order: (1) the ratification walk of the specification with the owner, one decision
-card per checklist clause, then the spoken approval recorded per SPEC-CC-2; (2) MEASURE;
-(3) MOVE; (4) PLOT. The [thread record](threads/castr-correction.next-session.md)
-carries the exact state of each.
+First, the owner's re-assessment of the course (owner, 23 September 2026, after #110
+merged as `SHA:75f47abd`). Then, unless it changes the order: (1) the ratification walk
+of the specification with the owner, one decision card per checklist entry (31 at draft
+0.4.0), then the spoken approval recorded per SPEC-CC-2; (2) MEASURE; (3) MOVE; (4) PLOT.
+The [thread record](threads/castr-correction.next-session.md) carries the exact state of
+each.
 
 ## Deep consolidation status
 
-due — 20 September 2026 second close: the postinstall register row's trigger fired (PR #103 on main) and this session adds Q-019 and a napkin section on the cure and the PR lifecycle; PR #102 adds six fast-lane rows and the first slow-lane row on its own branch; on this branch five pending-graduation candidates wait (local-host
-hook-bypass prohibition, prettier-ignore recomputation validator, container-anchored
-register pattern, evidence scripts shown failing first, postinstall writing the shared
-git config), the owner rulings of 12 and 13 September live in the napkin and distilled
-entries, and Q-018 is open; not run at this closeout because the commission's C09/C10
-owns register, graduation and lifecycle reconciliation and the pass is not bounded to
-one session. Historical consolidation claims remain in the conserved source record at
-their actual scope; they do not prove this commission complete.
+due — 23 September 2026 second close: the napkin runs to about 1,490 lines across
+sessions since 27 August, the pending-graduations register holds eighteen rows (fourteen pending, one
+`due`, one owner-gated, one re-evaluate and one open), and Q-018 is open. The 20 September close named
+five candidates — the local-host hook-bypass prohibition, a prettier-ignore recomputation
+validator, the container-anchored register pattern, evidence scripts shown failing first,
+and postinstall writing the shared git config — and each lives in the register, the
+napkin or `distilled.md`. Not run at this closeout. Constraint: the owner stopped the
+Practice-enhancement lane in this repository on 21 September 2026 (the thread record's
+standing owner rulings), the course's MOVE leg carries the doctrine Castr needs into the
+new repository, and a pass over a napkin spanning four weeks and eighteen register rows
+is not bounded to one closeout. Evidence: that ruling and the counts above. Falsifier:
+the deferral was premature if the owner restarts that lane, if the re-assessment strikes
+MOVE (the buffers then have no other destination), or if one session-completion pass
+drains the `due` row and routes the napkin's September sections inside a single
+closeout; it was correct if MOVE lands with these buffers carried or consolidated in the
+new repository.

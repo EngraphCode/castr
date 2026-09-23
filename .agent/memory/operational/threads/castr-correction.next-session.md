@@ -2,8 +2,8 @@
 
 ## Continuation route
 
-State at the 23 September 2026 close (Poppy calls Topsoil, bf551f), written for a
-successor on any platform: everything that matters is here or in the files this section
+State at the second 23 September 2026 close (Mussel mends Buoy, 372325, after Poppy calls
+Topsoil's close the same morning), written for a successor on any platform: everything that matters is here or in the files this section
 names, never only in an agent's private memory. Verify each line against the live
 repository before acting.
 
@@ -17,19 +17,19 @@ repository before acting.
   in that session. Merging the specification's pull request is mechanics an agent performs
   (the drafting agent had written "no agent merges"; the owner ruled on 23 September that
   this was invented, and SPEC-CC-4 is retired).
-- **Pull request #110** carries the specification, the course plan, the review record
-  and this record. The owner chose on 23 September to leave it open at the close; the next
-  session (Mussel mends Buoy, 372325) was told to "land 110 properly, and then we will
-  re-assess". Its first review round (Copilot, 17 threads on `SHA:9b3ae0de`) was verified
-  finding by finding and cured in draft 0.4.0: every changed clause is on the ratification
-  checklist, the two superseded plans are archived, and the session-continuation prompt,
-  roadmap and practice index name the course plan as primary. One finding, a new
-  source-anchored boundary check for C-1 acceptance, was kept out of the text as a missing
-  requirement rather than a contradiction; it and the reading of a source `default` stand
-  on the ratification checklist as two decisions for the owner. The pull request's
-  `REVIEW-TALLY` comment records each disposition. It merges when green and clean; until it does, `main` does not
-  carry these records and a session that starts on `main` checks out
-  `claude/castr-destination-spec-2026-09-21` first.
+- **Pull request #110 merged on 23 September 2026** as `SHA:75f47abd` (head
+  `SHA:4080cbf8`, 16 of 16 checks, no unresolved thread, no dependency alert on `main`),
+  carrying the specification, the course plan, the review record and this record. The
+  owner's instruction was "land 110 properly, and then we will re-assess". Its one review
+  round (Copilot, 17 threads on `SHA:9b3ae0de`) was verified finding by finding and cured
+  in draft 0.4.0: every changed clause is on the ratification checklist, the two
+  superseded plans are archived, and the session-continuation prompt, roadmap and practice
+  index name the course plan as primary. One finding, a new source-anchored boundary check
+  for C-1 acceptance, was kept out of the text as a missing requirement rather than a
+  contradiction; it and the reading of a source `default` stand on the ratification
+  checklist as two decisions for the owner. The pull request's `REVIEW-TALLY` comment
+  records each disposition. The merged branch `claude/castr-destination-spec-2026-09-21`
+  is left in place; deleting it needs the owner's word.
 - **What the 23 September close deliberately left in context only:** the six reviewer
   transcripts (their measured facts are in the review record; nothing else of theirs is
   needed); the drafting reasoning behind each specification clause (the clause and its
@@ -40,9 +40,17 @@ repository before acting.
   next session re-verified only the facts the round-1 cures rest on: Zod 4.5.4's
   `z.iso.datetime()` rejects offsets and `z.lazy` is read by calling its getter (both
   executed), and Draft-07 has no vocabulary mechanism.
-- **Next owner interaction:** after #110 lands, the owner re-assesses (owner, 23 September
-  2026). The course's next leg, unless that re-assessment changes it, is the ratification
-  walk — one decision card per clause of the specification's ratification checklist, each in
+- **What the second 23 September close left in context only:** the three reviewers'
+  reports on the round-1 cures (the corrections taken are in the specification and the
+  commit messages of `SHA:ee970674`, `SHA:8c9b3c50` and `SHA:4080cbf8`; the suggestions
+  dropped, with reasons, are in the napkin's 23 September section for Mussel mends Buoy),
+  and the 17 thread replies' wording (on the pull request).
+- **Next owner interaction:** the owner re-assesses the course now that #110 has landed
+  (owner, 23 September 2026). Input prepared for it: the napkin's concept-exploration
+  entry on how one review round moved the ratification checklist from 15 entries to 31,
+  with three proposals, each with its warrant and falsifier. The course's next leg, unless
+  the re-assessment changes it, is the ratification walk — one decision card per entry of
+  the specification's ratification checklist, each in
   plain language with its reason and its cost, recording confirm, change or strike; then
   the owner's spoken approval recorded per SPEC-CC-2 and the status set to `ratified`.
 - **Course:** [castr-course.md](../../../plans/active/castr-course.md). Order, fixed by the
@@ -88,7 +96,10 @@ repository before acting.
   Practice-enhancement lane in this repository is stopped (a more advanced Practice comes
   later from the owner's other estates); the Practice is always vendor-agnostic, so
   everything that matters is written to the repository, never only to one platform's
-  memory.
+  memory; where the owner names a Director session, team members own their own work and
+  contact the Director only for a second opinion or a suspected rabbit hole (owner's word
+  of 23 September 2026 as relayed by the Director, Wick binds Temper; the owner's own
+  message that day named the Director as the route for questions).
 - **Behavioural corrections from the owner, 21 September, that a successor inherits:**
   "slow right down" — one thing at a time, one gate at a time, never parallel gates on
   this host; a permissive instruction ("dependency PRs land without analysis") is not a
@@ -96,13 +107,16 @@ repository before acting.
   consumer, and a copy-pasted test failed the static-analysis duplication gate); a record
   is never written ahead of its outcome; an owner statement naming who decides is never
   widened by the agent into a prohibition on who executes (the invented merge clause).
-- **Collaboration state:** no claims are active. Bora seeks Turbulence's five stale claims
+- **Collaboration state:** no claims are active (Mussel mends Buoy's claim on the #110
+  files closed at the merge). Bora seeks Turbulence's five stale claims
   from 9–10 September were closed on the owner's word ("Bora is gone") on 21 September. On
   arrival, register on the comms stream and arm the all-channels watcher before any edit.
 - **Host:** on 21 September the machine was swap-starved with 36 worktree registrations and
-  `fseventsd` near 100% CPU; check `uptime` before running gates. A Codex comms watcher
-  started 9 September from the `castr-correction-custody` worktree was still running and
-  belongs to no live session.
+  `fseventsd` near 100% CPU; on 23 September swap stood at 21.5 of 22.5 GB and the load
+  near the 14-core count. Check `uptime` before running gates. The Codex comms watcher
+  started 9 September from the `castr-correction-custody` worktree, which belonged to no
+  live session, was stopped on 23 September under the owner's instruction to stop all
+  processes at the close.
 
 ## History (dated evidence; none of it is live direction)
 
@@ -269,10 +283,11 @@ this discovery for the architectural repair; no implementation is claimed here.
 
 ## Participating agent identities
 
-| Agent                 | Platform | Model            | Session prefix | Agent UUID                           | Role                                           | First session | Last session |
-| --------------------- | -------- | ---------------- | -------------- | ------------------------------------ | ---------------------------------------------- | ------------- | ------------ |
-| Bora seeks Turbulence | codex    | gpt-6-astra      | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd                    | 2026-09-06    | 2026-09-10   |
-| Coal weaves Pumice    | claude   | claude-fable-5-1 | f67c69         | d0dfc3a1-ed69-535c-96bd-03c07648c274 | handover analysis, value-proof sequence        | 2026-09-12    | 2026-09-20   |
-| Foxglove weaves Acorn | codex    | gpt-6-astra      | 01a088         | a6955478-7b8e-59e9-870e-dcef0d6e81cd | final Cricket I2 proof                         | 2026-09-10    | 2026-09-10   |
-| Candle weaves Residue | claude   | claude-fable-5-1 | a4c7fb         | 6803f4ef-dcc2-5305-a2c8-b82944f21b0f | bootstrap merge-driver cure, PR lifecycle      | 2026-09-20    | 2026-09-21   |
-| Poppy calls Topsoil   | claude   | claude-fable-5-1 | bf551f         | (seed-derived; not registered)       | PR closure, PR #109, destination specification | 2026-09-21    | 2026-09-21   |
+| Agent                 | Platform    | Model            | Session prefix | Agent UUID                           | Role                                           | First session | Last session |
+| --------------------- | ----------- | ---------------- | -------------- | ------------------------------------ | ---------------------------------------------- | ------------- | ------------ |
+| Bora seeks Turbulence | codex       | gpt-6-astra      | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd                    | 2026-09-06    | 2026-09-10   |
+| Coal weaves Pumice    | claude-code | claude-fable-5-1 | f67c69         | d0dfc3a1-ed69-535c-96bd-03c07648c274 | handover analysis, value-proof sequence        | 2026-09-12    | 2026-09-20   |
+| Foxglove weaves Acorn | codex       | gpt-6-astra      | 01a088         | a6955478-7b8e-59e9-870e-dcef0d6e81cd | final Cricket I2 proof                         | 2026-09-10    | 2026-09-10   |
+| Candle weaves Residue | claude-code | claude-fable-5-1 | a4c7fb         | 6803f4ef-dcc2-5305-a2c8-b82944f21b0f | bootstrap merge-driver cure, PR lifecycle      | 2026-09-20    | 2026-09-21   |
+| Poppy calls Topsoil   | claude-code | claude-fable-5-1 | bf551f         | (seed-derived; not registered)       | PR closure, PR #109, destination specification | 2026-09-21    | 2026-09-23   |
+| Mussel mends Buoy     | claude-code | claude-opus-5-5  | 372325         | b69485ad-3a77-5c8a-b2c0-cc764d734103 | PR #110 round-1 cure and merge                 | 2026-09-23    | 2026-09-23   |

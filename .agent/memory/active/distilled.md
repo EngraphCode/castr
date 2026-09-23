@@ -108,7 +108,12 @@ High-signal learnings from the napkin belong here once they have proved worth ke
   (a python `s.replace` "fixed" a caller that lived in a different file, 2026-08-25). Before
   any replace-all on a value literal, enumerate each occurrence's semantic role first: the
   same `'1.0.0'` literal was both the IR schema stamp and the generated API's `info.version`
-  (caught by review, PR #50).
+  (caught by review, PR #50). A scripted slice anchors on a whole line and asserts the
+  anchor's count: `s.index("## Change log")` found the inline mention inside a clause
+  before the real heading and duplicated 7.7 KB of the specification (2026-09-23, caught
+  by reading the word diff). The same holds for identifiers: never type or extend a SHA
+  from memory — derive it (`git rev-parse`, the API); a typed tail made
+  `gh pr merge --match-head-commit` refuse a green pull request (2026-09-23).
 - **A compiler-behaviour claim in prose or a code comment is a claim to COMPILE before
   writing.** Two reviewers in one firing falsified my un-compiled circular-alias justification
   (interface type-argument positions are deferred — the alias is legal) and my variance prose
