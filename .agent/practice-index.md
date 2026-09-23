@@ -9,10 +9,12 @@ Local shorthand for this repo: strict and complete everywhere, all the time. Cod
 
 ## Current work
 
-The [correction plan](plans/active/castr-documentation-and-fidelity-correction.md)
-owns the interactive commission's acceptance. The [parent queue](plans/proof-programme/parent-plan.md#current-execution-state)
-owns sequencing and records the autonomous experiment's pause. PR custody lives
-in the [delivery ledger](plans/delivery-ledger.md).
+The destination is [the specification](../docs/SPECIFICATION.md), a draft awaiting the
+owner's ratification, and the [course plan](plans/active/castr-course.md) is the primary
+active plan; the [correction thread](memory/operational/threads/castr-correction.next-session.md)
+owns the next landing. The [parent queue](plans/proof-programme/parent-plan.md#current-execution-state)
+records the autonomous experiment's pause. PR custody lives in the
+[delivery ledger](plans/delivery-ledger.md).
 
 ## Directives
 

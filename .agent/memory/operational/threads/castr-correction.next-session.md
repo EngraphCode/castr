@@ -7,7 +7,7 @@ successor on any platform: everything that matters is here or in the files this 
 names, never only in an agent's private memory. Verify each line against the live
 repository before acting.
 
-- **Destination:** [the specification](../../../../docs/SPECIFICATION.md), draft 0.3.1,
+- **Destination:** [the specification](../../../../docs/SPECIFICATION.md), draft 0.4.0,
   status `draft-awaiting-owner-ratification`. It is the only description of Castr's
   destination. The owner: "this work has drifted and drifted and now I think we need a
   destination that can only change with process and agreement"; "approval happens locally,
@@ -17,12 +17,17 @@ repository before acting.
   in that session. Merging the specification's pull request is mechanics an agent performs
   (the drafting agent had written "no agent merges"; the owner ruled on 23 September that
   this was invented, and SPEC-CC-4 is retired).
-- **Open pull request #110** carries the specification, the course plan, the review record
-  and this record, at `SHA:9b3ae0de`, ready for review. The owner chose on 23 September to
-  leave it open at the close rather than merge it in that session: the next session reads
-  its check results and every review comment, cures anything real within the two-round
-  budget, and merges it when green and clean. Until it merges, `main` does not carry these
-  records; a session that starts on `main` checks out
+- **Pull request #110** carries the specification, the course plan, the review record
+  and this record. The owner chose on 23 September to leave it open at the close; the next
+  session (Mussel mends Buoy, 372325) was told to "land 110 properly, and then we will
+  re-assess". Its first review round (Copilot, 17 threads on `SHA:9b3ae0de`) was verified
+  finding by finding and cured in draft 0.4.0: every changed clause is on the ratification
+  checklist, the two superseded plans are archived, and the session-continuation prompt,
+  roadmap and practice index name the course plan as primary. One finding, a new
+  source-anchored boundary check for C-1 acceptance, was declined as a missing requirement
+  rather than a contradiction, with the reason stated to the owner. The pull request's `REVIEW-TALLY` comment
+  records each disposition. It merges when green and clean; until it does, `main` does not
+  carry these records and a session that starts on `main` checks out
   `claude/castr-destination-spec-2026-09-21` first.
 - **What the 23 September close deliberately left in context only:** the six reviewer
   transcripts (their measured facts are in the review record; nothing else of theirs is
@@ -30,9 +35,13 @@ repository before acting.
   owner quotation are the decision-sufficient compression); the exact wording of the
   decision cards (the decisions are in the specification's change log and the course
   plan). Bounds of that close's own scan: it could not see review comments that arrived on
-  #110 after `SHA:9b3ae0de`, and no measurement in the review record was re-verified.
-- **Next owner interaction, and the next session's first move:** the ratification walk
-  — one decision card per clause of the specification's ratification checklist, each in
+  #110 after `SHA:9b3ae0de`, and no measurement in the review record was re-verified. The
+  next session re-verified only the facts the round-1 cures rest on: Zod 4.5.4's
+  `z.iso.datetime()` rejects offsets and `z.lazy` is read by calling its getter (both
+  executed), and Draft-07 has no vocabulary mechanism.
+- **Next owner interaction:** after #110 lands, the owner re-assesses (owner, 23 September
+  2026). The course's next leg, unless that re-assessment changes it, is the ratification
+  walk — one decision card per clause of the specification's ratification checklist, each in
   plain language with its reason and its cost, recording confirm, change or strike; then
   the owner's spoken approval recorded per SPEC-CC-2 and the status set to `ratified`.
 - **Course:** [castr-course.md](../../../plans/active/castr-course.md). Order, fixed by the
@@ -65,7 +74,8 @@ repository before acting.
   branch, and pull requests #11–#13, #15–#18, #20, #21, #23, #26, #27 and #81 (closed; commits
   reachable at `refs/pull/<n>/head`). Nothing of theirs is evaluated or recovered. The plans
   `unmerged-work-to-main-or-deleted.md` and
-  `castr-documentation-and-fidelity-correction.md` carry `status: superseded`.
+  `castr-documentation-and-fidelity-correction.md` carry `status: superseded` and are in
+  `.agent/plans/archive/`.
 - **Standing owner rulings that govern every session:** long-term architectural excellence
   over short-term expediency, always; strict, everywhere, all the time; no failing test,
   check or validator is ever tolerated ("'Red by design' is utterly unacceptable, that was
@@ -96,7 +106,7 @@ repository before acting.
 ## History (dated evidence; none of it is live direction)
 
 - Governing sequence for every inherited PR and dirty worktree: the
-  [12 September value-proof sequence](../../../plans/active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence).
+  [12 September value-proof sequence](../../../plans/archive/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence).
   Containers are evidence about gaps; a gap in product code is proven only by a failing
   test on unpatched main, and proof lands with its cure in one green-and-clean PR;
   documentation-only content is proven by the owner's explicit approval of the text,

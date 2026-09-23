@@ -1,7 +1,7 @@
 ---
 title: Every piece of unmerged work reaches main or is deleted
 status: superseded
-lane: active
+lane: archive
 created: 2026-09-21
 last_updated: 2026-09-21
 superseded_by: .agent/plans/active/castr-course.md

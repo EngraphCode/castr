@@ -1,7 +1,7 @@
 ---
 title: Castr destination specification
 id: castr-specification
-version: 0.3.1
+version: 0.4.0
 status: draft-awaiting-owner-ratification
 date: 2026-09-23
 owner: Jim Cresswell
@@ -146,14 +146,17 @@ where a profile decision below declares a different reading.
   > transforms will be considered as a later feature if beneficial.
 
   A construct is in the declarative subset when its definition holds no function supplied
-  by the schema's author, its values are in the value domain (SPEC-P-5), and it is not a
-  conversion between an accepted value and a different produced value. Defaults and
-  stripped objects are in the subset and are carried with their two sides. Appendix A
-  classifies Zod's constructs. Everything outside the subset receives a located rejection.
+  by the schema's author other than the one Zod calls to resolve a reference (`z.lazy`, a
+  getter in an object shape), its values are in the value domain (SPEC-P-5), and the only
+  ways its produced value can differ from the accepted value are the insertion of a default
+  and the removal of unknown keys from a stripped object.
+  Defaults and stripped objects are in the subset and are carried with their two sides.
+  Appendix A classifies Zod's constructs. Everything outside the subset receives a located
+  rejection.
 
 - **SPEC-P-3 `format` asserts.** Castr reads `format` as an assertion in every format and
-  writes it as one wherever the target can assert. JSON Schema that Castr writes declares
-  the format-assertion vocabulary.
+  writes it as one wherever the target can assert. JSON Schema 2020-12 that Castr writes
+  declares the format-assertion vocabulary.
 - **SPEC-P-4 Written versions.**
 
   > Always write to the latest widely used format, in this case OpenAPI 3.2.0.
@@ -169,8 +172,7 @@ where a profile decision below declares a different reading.
   The model carries values as §3 defines them, which covers everything an OpenAPI or JSON
   Schema document can describe, with numeric bounds held exactly. A construct that
   describes a host-language object with no serialised form (a JavaScript `Date`, `bigint`,
-  `Map`, `Set`, `symbol`, `undefined`) receives a located rejection; a Zod writer emits
-  `z.iso.datetime()` for a date-time string.
+  `Map`, `Set`, `symbol`, `undefined`) receives a located rejection.
 
 ## 6. Formats and versions
 
@@ -203,7 +205,8 @@ Castr produces, from a document given as a file or as a document value:
   template, every HTTP method declared, each operation with its four parameter locations,
   its request body keyed by media type, and its responses keyed by status and then media
   type; with `operations`, `components`, `webhooks` and `$defs`;
-- the Zod 4 schemas, addressable by component name and by operation and status;
+- the Zod 4 schemas, addressable by component name and by operation, response status
+  and media type;
 - the endpoint definitions.
 
 A response status key is an exact code, one of the ranges `1XX` to `5XX`, or `default`.
@@ -271,15 +274,23 @@ the owner names them.
   independent reference validator run against the source document in the source's own
   dialect (type coercion, default insertion and property removal disabled; `format`
   asserting per SPEC-P-3); the generated Zod validator; and the same reference validator
-  run against any JSON Schema Castr generated. The proof is made on the accepted side and
-  on the produced side. The generated TypeScript type for a side and `z.input` or
-  `z.output` of the generated Zod validator for that side are mutually assignable, checked
-  by the compiler under `strict` in both directions.
+  run against any JSON Schema Castr generated. Those decisions prove the accepted side.
+  The produced side is proved for every sampled value the generated Zod validator accepts:
+  the value it returns equals the input with each default the source inserts added and, for
+  a stripped object, each unknown key removed. A Zod `.default` inserts; a JSON Schema or
+  OpenAPI `default` is an annotation (§5) and inserts nothing. The generated TypeScript
+  type for a side and `z.input` or `z.output` of the generated Zod validator for that side
+  are mutually assignable, checked by the compiler under `strict` in both directions.
 - **SPEC-G-5 The sample is adequate.** Samples are derived from the source document. For
-  every constraint a shape states there is a value that satisfies it and a value that
-  violates only it, plus the boundary values of every bounded constraint. Deleting any
-  single constraint from generated output flips at least one decision; the check reports
-  constraints caught over constraints present and fails below all of them.
+  every constraint a shape states, the sample holds a value that the shape decides
+  differently with and without it, plus the boundary values of every bounded constraint.
+  Deleting any single constraint from generated output flips at least one decision; the
+  check reports constraints caught over constraints present and fails below all of them.
+  The one exception is a constraint that the check shows, from the source itself, changes
+  nothing when deleted: by naming the constraint that implies it (such as `minimum: 0` in
+  one `allOf` branch and `minimum: 1` in another), or by showing that the shape stays
+  unsatisfiable without it (SPEC-PR-7). A failed search for a distinguishing value never
+  establishes the exception.
 - **SPEC-G-6 Generated output is exercised.** It is compiled, loaded and executed, never
   only inspected as text.
 - **SPEC-G-7 No proof is vacuous, and every proof is Castr's own.** A test that can pass
@@ -337,12 +348,17 @@ the owner names them.
 - **SPEC-AR-6 Reading runtime data structures.** Castr may import a module the operator
   points it at and read its schema objects as data. That module is trusted code supplied
   by the operator, on the footing of a build script: never fetched, never taken from a
-  document, never evaluated as a side effect of a read-only command. Where a construct's
-  meaning can only be obtained by calling the author's function, the construct is outside
-  the declarative subset and is rejected without the call. A Zod reader recovers each
-  construct with its arguments as values, the unknown-key policy, every annotation
-  wherever Zod stores it, identity and recursion, and type-level constructs the profile
-  accepts.
+  document, never evaluated as a side effect of a read-only command. Reading a `z.lazy`, a
+  getter in an object shape, or the value of a `.default` or `.prefault` means making the
+  call through which Zod exposes it; Castr makes that call because of the construct's
+  kind, and a call that throws, or that returns something other than a Zod schema where
+  one is expected, is a located rejection. A runtime read cannot tell a default given as a
+  function, which is outside the declarative subset, from one given as a value, so the
+  technique chosen for SPEC-N-3 must tell them apart. Every other construct whose meaning
+  can only be obtained by calling the author's function is outside the declarative subset
+  and is rejected without the call. A Zod reader recovers each construct with its
+  arguments as values, the unknown-key policy, every annotation wherever Zod stores it,
+  identity and recursion, and type-level constructs the profile accepts.
 - **SPEC-AR-7 The engineering standard** is test-driven development, no type-system escape
   hatches, no compatibility layers, replace and never bridge, as the repository's
   principles state them.
@@ -388,57 +404,73 @@ decision never defers a requirement; §9 binds the present code today.
 
 > Approval happens locally, only I or mantagen can approve.
 
-- **SPEC-CC-1** This document changes only by an approved amendment: the version and the
-  change log move in the same change as the text.
+- **SPEC-CC-1** From its first ratification, this document changes only by an approved
+  amendment: the version and the change log move in the same change as the text.
 - **SPEC-CC-2** Approval is given locally by Jim Cresswell or mantagen, a human
   collaborator, in their own words in a working session, naming the version approved. The
   agent in that session records the approver's words verbatim, the date and the SHA-256 of
   the approved text as a row of this document's change log, in the change that sets the
-  status to `ratified`. An agent never writes an approval that was not given to it in that
-  session.
+  status to `ratified`. The approved text is this file's bytes above the `## Change log`
+  heading as committed in that change, so the recorded hash never covers itself. An agent
+  never writes an approval that was not given to it in that session.
 - **SPEC-CC-3** A required check fails when this document's content does not match its
-  latest approved record. Merging an approved change is mechanics that any agent may
+  latest approved record. While no approved record exists, it fails if the status is
+  `ratified`. Merging an approved change is mechanics that any agent may
   perform; the approval is the record, never the merge.
 
 ## Appendix A. Zod constructs and the declarative subset
 
 Verified against Zod 4.5.4 on 21 September 2026 by executing each construct.
 
-| Construct                                                                                      | Author's code | In the value domain         | Sides agree                            | Profile                                  |
-| ---------------------------------------------------------------------------------------------- | ------------- | --------------------------- | -------------------------------------- | ---------------------------------------- |
-| `.refine`, `.superRefine`, `.check`                                                            | yes           | yes                         | yes                                    | rejected                                 |
-| `.overwrite`                                                                                   | yes           | yes                         | no                                     | rejected                                 |
-| `.transform`, `.pipe`, `z.preprocess`, `z.codec`, `z.stringbool`                               | yes           | depends                     | no                                     | rejected                                 |
-| `z.coerce.*`                                                                                   | no            | yes, except `coerce.date`   | no (input is `unknown`)                | rejected                                 |
-| `.catch`                                                                                       | function form | yes                         | no                                     | rejected                                 |
-| `.default`                                                                                     | no            | yes                         | no (optional in, present out)          | accepted, two sides                      |
-| `.prefault`                                                                                    | no            | yes                         | no                                     | rejected (`NOT-YET-BUILT`)               |
-| `.optional`, `.exactOptional`, `.nullable`, `.nullish`                                         | no            | yes, as a property of a key | yes                                    | accepted                                 |
-| `.readonly`                                                                                    | no            | yes                         | yes in types; output frozen at runtime | accepted                                 |
-| `.brand`                                                                                       | no            | yes                         | type-level only                        | rejected (`NOT-YET-BUILT`)               |
-| `z.lazy`                                                                                       | getter only   | yes                         | yes                                    | accepted: it is Zod's reference          |
-| `z.custom`, `z.instanceof`                                                                     | yes           | no                          | yes                                    | rejected                                 |
-| `z.date`, `z.bigint`, `z.map`, `z.set`, `z.undefined`, `z.void`, `z.symbol`, `z.nan`, `z.file` | no            | no                          | yes                                    | rejected (SPEC-P-5)                      |
-| `z.never`, `z.unknown`, `z.any`                                                                | no            | yes                         | yes                                    | accepted; the last two state "any value" |
-| `z.templateLiteral`                                                                            | no            | yes                         | yes                                    | accepted                                 |
-| `z.email`, `z.uuid`, `z.iso.*` and the other string formats                                    | no            | yes                         | yes                                    | accepted (SPEC-P-3)                      |
-| `.meta`, `.describe`                                                                           | no            | yes                         | yes                                    | accepted; annotations are meaning        |
-| `z.strictObject`, `z.looseObject`, `.catchall`, `z.object`                                     | no            | yes                         | `z.object` strips                      | accepted (SPEC-P-1)                      |
+| Construct                                                                                      | Author's code                                 | In the value domain         | Sides agree                            | Profile                                                           |
+| ---------------------------------------------------------------------------------------------- | --------------------------------------------- | --------------------------- | -------------------------------------- | ----------------------------------------------------------------- |
+| `.refine`, `.superRefine`, `.check`                                                            | yes                                           | yes                         | yes                                    | rejected                                                          |
+| `.overwrite`                                                                                   | yes                                           | yes                         | no                                     | rejected                                                          |
+| `.transform`, `.pipe`, `z.preprocess`, `z.codec`, `z.stringbool`                               | yes                                           | depends                     | no                                     | rejected                                                          |
+| `z.coerce.*`                                                                                   | no                                            | yes, except `coerce.date`   | no (input is `unknown`)                | rejected                                                          |
+| `.catch`                                                                                       | function form                                 | yes                         | no                                     | rejected                                                          |
+| `.default`                                                                                     | function form                                 | yes                         | no (optional in, present out)          | accepted, two sides; the function form is rejected (SPEC-AR-6)    |
+| `.prefault`                                                                                    | function form                                 | yes                         | no                                     | rejected (`NOT-YET-BUILT`)                                        |
+| `.optional`, `.exactOptional`, `.nullable`, `.nullish`                                         | no                                            | yes, as a property of a key | yes                                    | accepted                                                          |
+| `.readonly`                                                                                    | no                                            | yes                         | yes in types; output frozen at runtime | accepted                                                          |
+| `.brand`                                                                                       | no                                            | yes                         | type-level only                        | rejected (`NOT-YET-BUILT`)                                        |
+| `z.lazy`, a getter in an object shape                                                          | the getter Zod calls to resolve the reference | yes                         | yes                                    | accepted: Zod's reference, read by calling the getter (SPEC-AR-6) |
+| `z.custom`, `z.instanceof`                                                                     | yes                                           | no                          | yes                                    | rejected                                                          |
+| `z.date`, `z.bigint`, `z.map`, `z.set`, `z.undefined`, `z.void`, `z.symbol`, `z.nan`, `z.file` | no                                            | no                          | yes                                    | rejected (SPEC-P-5)                                               |
+| `z.never`, `z.unknown`, `z.any`                                                                | no                                            | yes                         | yes                                    | accepted; the last two state "any value"                          |
+| `z.templateLiteral`                                                                            | no                                            | yes                         | yes                                    | accepted                                                          |
+| `z.email`, `z.uuid`, `z.iso.*` and the other string formats                                    | no                                            | yes                         | yes                                    | accepted (SPEC-P-3)                                               |
+| `.meta`, `.describe`                                                                           | no                                            | yes                         | yes                                    | accepted; annotations are meaning                                 |
+| `z.strictObject`, `z.looseObject`, `.catchall`, `z.object`                                     | no                                            | yes                         | `z.object` strips                      | accepted (SPEC-P-1)                                               |
 
 ## Ratification checklist
 
-These clauses came from review on 21 September 2026 and are the owner's to confirm, change
-or strike at ratification: SPEC-PR-3, SPEC-PR-4, SPEC-PR-7, the reporting rule and the
-closure-keyword rule in SPEC-P-1, the three-part test in SPEC-P-2 and Appendix A's
-"rejected (`NOT-YET-BUILT`)" rows, SPEC-G-5,
-SPEC-G-7, the cure-only merge rule in SPEC-G-1, SPEC-AR-5, the content of the C-1 artefact list and status-key rule, the
-extractability condition in §10, and SPEC-CC-3.
+These clauses came from review, not from the owner's own words, and are the owner's to
+confirm, change or strike at ratification.
+
+From the six reviews of 21 September 2026: SPEC-PR-3, SPEC-PR-4, SPEC-PR-7, the reporting
+rule and the closure-keyword rule in SPEC-P-1, the three-part test in SPEC-P-2 and
+Appendix A's "rejected (`NOT-YET-BUILT`)" rows, SPEC-G-4, SPEC-G-5, SPEC-G-6, SPEC-G-7,
+the cure-only merge rule in SPEC-G-1, SPEC-AR-5, the content of the C-1 artefact list and
+status-key rule, the extractability condition in §10, and SPEC-CC-3. The review record
+names SPEC-G-4 to SPEC-G-7 as the reviewers' cure; whether the owner confirmed SPEC-G-4
+and SPEC-G-6 by decision card on 21 September is not recorded, so both are listed.
+
+From the review of pull request #110 on 23 September 2026, folded into draft 0.4.0: the
+reference-resolving function admitted in SPEC-P-2 and the third part of its test; the
+2020-12 scope of the vocabulary sentence in SPEC-P-3; the removal of the Zod call from
+SPEC-P-5; the media type in the C-1 Zod address; the produced-side proof in SPEC-G-4,
+including its reading that a JSON Schema or OpenAPI `default` inserts nothing; the
+exception rule in SPEC-G-5; the scope of SPEC-CC-1; the approved-text definition in
+SPEC-CC-2; the no-record rule in SPEC-CC-3; the calls made by kind and the SPEC-N-3
+requirement in SPEC-AR-6; and Appendix A's `.default`, `.prefault` and `z.lazy` rows.
 
 ## Change log
 
-| Version | Date       | Change                                                                                                                                                                                                                                                                                                                                    | Approval |
-| ------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| 0.1.0   | 2026-09-21 | First draft from the owner's statements of 21 September 2026.                                                                                                                                                                                                                                                                             | none     |
-| 0.2.0   | 2026-09-21 | Owner decisions of the same day and six reviews folded in: sides, source-anchored proof, scope-and-fidelity tables, rejection kinds, versions, home, change control.                                                                                                                                                                      | pending  |
-| 0.3.0   | 2026-09-21 | Owner decisions by card: mantagen is a human collaborator; approval is spoken locally and recorded by the agent with the content hash (SPEC-N-6 retired, answered by SPEC-CC-2); zero open dependency alerts on `main` to merge; SPEC-P-5 reading confirmed; OpenAPI 2.0 is not read.                                                     | pending  |
-| 0.3.1   | 2026-09-23 | SPEC-CC-4 retired. It read "No agent merges a change to this document" and was the drafting agent's invention, never an owner decision (owner, 23 September 2026: "you invented the need for me to merge, it was never real"). Approval is the spoken word recorded under SPEC-CC-2; merging is mechanics. SPEC-CC-3 clarified to say so. | pending  |
+| Version | Date       | Change                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Approval |
+| ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
+| 0.1.0   | 2026-09-21 | First draft from the owner's statements of 21 September 2026.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | none     |
+| 0.2.0   | 2026-09-21 | Owner decisions of the same day and six reviews folded in: sides, source-anchored proof, scope-and-fidelity tables, rejection kinds, versions, home, change control.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | pending  |
+| 0.3.0   | 2026-09-21 | Owner decisions by card: mantagen is a human collaborator; approval is spoken locally and recorded by the agent with the content hash (SPEC-N-6 retired, answered by SPEC-CC-2); zero open dependency alerts on `main` to merge; SPEC-P-5 reading confirmed; OpenAPI 2.0 is not read.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | pending  |
+| 0.3.1   | 2026-09-23 | SPEC-CC-4 retired. It read "No agent merges a change to this document" and was the drafting agent's invention, never an owner decision (owner, 23 September 2026: "you invented the need for me to merge, it was never real"). Approval is the spoken word recorded under SPEC-CC-2; merging is mechanics. SPEC-CC-3 clarified to say so.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | pending  |
+| 0.4.0   | 2026-09-23 | The review of pull request #110 folded in; every changed clause is on the ratification checklist. SPEC-P-2 admits the function Zod calls to resolve a reference (`z.lazy`, a getter in an object shape) and names default insertion and unknown-key stripping as the only accepted-to-produced differences; SPEC-AR-6 makes those calls, and the call that reads a default's value, by construct kind, and requires the SPEC-N-3 technique to tell a function-form default from a value; the SPEC-P-3 vocabulary sentence is scoped to 2020-12; the wrong Zod call is removed from SPEC-P-5 (bare `z.iso.datetime()` rejects offsets that `date-time` permits); the C-1 Zod address carries the media type; the SPEC-G-4 produced side is defined, reading a JSON Schema or OpenAPI `default` as an annotation that inserts nothing; SPEC-G-5 excuses a constraint only where the source shows its deletion changes nothing; SPEC-CC-1 binds from the first ratification, SPEC-CC-2 defines the hashed text and SPEC-CC-3 its no-record state; SPEC-G-4 and SPEC-G-6 are added to the checklist. | pending  |

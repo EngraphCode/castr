@@ -1,7 +1,7 @@
 ---
 title: Castr documentation correction and fidelity repair
 status: superseded
-lane: active
+lane: archive
 created: 2026-09-06
 last_updated: 2026-09-21
 superseded_by: .agent/plans/active/castr-course.md

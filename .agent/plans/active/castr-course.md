@@ -59,7 +59,7 @@ workspaces. Where Castr ends up is unchanged; only the order is.
 
 ## RATIFY: how the specification is ratified
 
-The specification is draft 0.3.1. The owner chose to walk its ratification checklist one
+The specification is draft 0.4.0. The owner chose to walk its ratification checklist one
 decision card per clause: each card states the clause in plain language with its reason
 and its cost, and records confirm, change or strike. When the checklist is empty, the
 owner (or mantagen, a human collaborator) approves the version in their own words in a

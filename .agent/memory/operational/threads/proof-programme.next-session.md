@@ -9,7 +9,7 @@ owner-confirmed on 6 September 2026. No separate Routine state is inferred.
 
 Q-30's interactive commission proceeds through the
 [correction thread](castr-correction.next-session.md), with acceptance in its
-[delivery plan](../../../plans/active/castr-documentation-and-fidelity-correction.md)
+[delivery plan](../../../plans/archive/castr-documentation-and-fidelity-correction.md)
 and PR state in the [ledger](../../../plans/delivery-ledger.md). Read these before
 work. Do not derive execution permission from historical firing or arming records.
 The former record is [conserved verbatim](../archive/correction-entry-paths-2026-09-06.md).

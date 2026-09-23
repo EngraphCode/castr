@@ -10,7 +10,7 @@ that wrote this record did not re-run the reviewers' measurements; treat each as
 reviewer's report to re-measure before building on it.
 
 "The consumer" is the Engraph Open Curriculum Ecosystem repository
-(`~/code/oak/oak-open-curriculum-ecosystem`); its paths below are relative to that
+([`EngraphCode/open-curriculum-ecosystem`](https://github.com/EngraphCode/open-curriculum-ecosystem)); its paths below are relative to that
 repository.
 
 ## The finding four reviewers shared

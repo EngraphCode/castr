@@ -59,7 +59,7 @@ passes._
 - Suggested resolution path: deliver the complete C08 resolver, classification,
   dependency policy and prohibited-import proof together.
 - Status: answered-in-place
-- Linked: [C08 of the correction plan](../../plans/active/castr-documentation-and-fidelity-correction.md#fidelity-repair-families-and-describing-surfaces)
+- Linked: [C08 of the correction plan](../../plans/archive/castr-documentation-and-fidelity-correction.md#fidelity-repair-families-and-describing-surfaces)
   and the [conserved original question](archive/q016-direction-2026-09-06.md).
 
 ### Q-017: OpenAPI 3.0 `enum:[null]` without `nullable:true` — owner semantics ruling required
