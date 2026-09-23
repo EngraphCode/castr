@@ -283,11 +283,11 @@ this discovery for the architectural repair; no implementation is claimed here.
 
 ## Participating agent identities
 
-| Agent                 | Platform | Model            | Session prefix | Agent UUID                           | Role                                           | First session | Last session |
-| --------------------- | -------- | ---------------- | -------------- | ------------------------------------ | ---------------------------------------------- | ------------- | ------------ |
-| Bora seeks Turbulence | codex    | gpt-6-astra      | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd                    | 2026-09-06    | 2026-09-10   |
-| Coal weaves Pumice    | claude   | claude-fable-5-1 | f67c69         | d0dfc3a1-ed69-535c-96bd-03c07648c274 | handover analysis, value-proof sequence        | 2026-09-12    | 2026-09-20   |
-| Foxglove weaves Acorn | codex    | gpt-6-astra      | 01a088         | a6955478-7b8e-59e9-870e-dcef0d6e81cd | final Cricket I2 proof                         | 2026-09-10    | 2026-09-10   |
-| Candle weaves Residue | claude   | claude-fable-5-1 | a4c7fb         | 6803f4ef-dcc2-5305-a2c8-b82944f21b0f | bootstrap merge-driver cure, PR lifecycle      | 2026-09-20    | 2026-09-21   |
-| Poppy calls Topsoil   | claude   | claude-fable-5-1 | bf551f         | (seed-derived; not registered)       | PR closure, PR #109, destination specification | 2026-09-21    | 2026-09-23   |
-| Mussel mends Buoy     | claude   | claude-opus-5-5  | 372325         | b69485ad-3a77-5c8a-b2c0-cc764d734103 | PR #110 round-1 cure and merge                 | 2026-09-23    | 2026-09-23   |
+| Agent                 | Platform    | Model            | Session prefix | Agent UUID                           | Role                                           | First session | Last session |
+| --------------------- | ----------- | ---------------- | -------------- | ------------------------------------ | ---------------------------------------------- | ------------- | ------------ |
+| Bora seeks Turbulence | codex       | gpt-6-astra      | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd                    | 2026-09-06    | 2026-09-10   |
+| Coal weaves Pumice    | claude-code | claude-fable-5-1 | f67c69         | d0dfc3a1-ed69-535c-96bd-03c07648c274 | handover analysis, value-proof sequence        | 2026-09-12    | 2026-09-20   |
+| Foxglove weaves Acorn | codex       | gpt-6-astra      | 01a088         | a6955478-7b8e-59e9-870e-dcef0d6e81cd | final Cricket I2 proof                         | 2026-09-10    | 2026-09-10   |
+| Candle weaves Residue | claude-code | claude-fable-5-1 | a4c7fb         | 6803f4ef-dcc2-5305-a2c8-b82944f21b0f | bootstrap merge-driver cure, PR lifecycle      | 2026-09-20    | 2026-09-21   |
+| Poppy calls Topsoil   | claude-code | claude-fable-5-1 | bf551f         | (seed-derived; not registered)       | PR closure, PR #109, destination specification | 2026-09-21    | 2026-09-23   |
+| Mussel mends Buoy     | claude-code | claude-opus-5-5  | 372325         | b69485ad-3a77-5c8a-b2c0-cc764d734103 | PR #110 round-1 cure and merge                 | 2026-09-23    | 2026-09-23   |
