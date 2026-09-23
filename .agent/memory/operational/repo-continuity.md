@@ -65,8 +65,13 @@ owner-gated and fourteen pending rows, and Q-018 is open. The 20 September close
 five candidates — the local-host hook-bypass prohibition, a prettier-ignore recomputation
 validator, the container-anchored register pattern, evidence scripts shown failing first,
 and postinstall writing the shared git config — and each lives in the register, the
-napkin or `distilled.md`. Not run at this closeout because a pass over those
-buffers is not bounded to one closeout and the owner stopped the Practice-enhancement
-lane in this repository on 21 September (the course's MOVE leg carries the doctrine Castr
-needs into the new repository). Checkable: the napkin's line count and the register's
-status rows.
+napkin or `distilled.md`. Not run at this closeout. Constraint: the owner stopped the
+Practice-enhancement lane in this repository on 21 September 2026 (the thread record's
+standing owner rulings), the course's MOVE leg carries the doctrine Castr needs into the
+new repository, and a pass over a napkin spanning four weeks and sixteen register rows
+is not bounded to one closeout. Evidence: that ruling and the counts above. Falsifier:
+the deferral was premature if the owner restarts that lane, if the re-assessment strikes
+MOVE (the buffers then have no other destination), or if one session-completion pass
+drains the `due` row and routes the napkin's September sections inside a single
+closeout; it was correct if MOVE lands with these buffers carried or consolidated in the
+new repository.
