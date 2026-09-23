@@ -65,6 +65,30 @@ function createDocument(overrides: Partial<CastrDocument> = {}): CastrDocument {
   };
 }
 
+describe('writeOpenApi component identity', () => {
+  it('writes components under their wire names, not under emitted symbols', () => {
+    const ir = buildIR({
+      openapi: '3.1.0',
+      info: { title: 'Identity', version: '1.0.0' },
+      paths: {},
+      components: {
+        schemas: {
+          '1Name-With-Special---Characters': { type: 'string' },
+          class: { type: 'object', properties: { id: { type: 'string' } } },
+          'Basic.Thing': { $ref: '#/components/schemas/class' },
+        },
+      },
+    });
+
+    const schemas = writeOpenApi(ir).components?.schemas;
+
+    expect(schemas).toHaveProperty(['1Name-With-Special---Characters']);
+    expect(schemas).toHaveProperty(['class']);
+    expect(schemas).toHaveProperty(['Basic.Thing'], { $ref: '#/components/schemas/class' });
+    expect(schemas).not.toHaveProperty(['_1_Name_With_Special_Characters']);
+  });
+});
+
 describe('writeOpenApi', () => {
   describe('document structure', () => {
     it('returns canonical OpenAPI 3.2.0 document', () => {

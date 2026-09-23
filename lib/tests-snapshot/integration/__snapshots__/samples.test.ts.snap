@@ -2180,6 +2180,124 @@ export const mcpTools = [
   },
 ] as const;
 ",
+    "v3.1/awkward-component-names": "import { z } from "zod";
+// Type Definitions
+export type _1_Name_With_Special_Characters = string;
+export type class_ = {
+  id: string;
+};
+export type Basic_Thing = class_;
+export type stringSchema = string;
+export type ErrorSchema = {
+  message: string;
+};
+export type Wrapper = {
+  err?: ErrorSchema;
+  kind: class_;
+  name: _1_Name_With_Special_Characters;
+  text?: stringSchema;
+  thing?: Basic_Thing;
+};
+// Zod Schemas
+export const _1_Name_With_Special_Characters = z.string();
+export const class_ = z.strictObject({
+  id: z.string(),
+});
+export const Basic_Thing = class_;
+export const stringSchema = z.string();
+export const ErrorSchema = z.strictObject({
+  message: z.string(),
+});
+export const Wrapper = z.strictObject({
+  err: ErrorSchema.optional(),
+  kind: class_,
+  name: _1_Name_With_Special_Characters,
+  text: stringSchema.optional(),
+  thing: Basic_Thing.optional(),
+});
+// Endpoints
+export const endpoints = [
+  {
+    method: "get",
+    path: "/things",
+    requestFormat: "json",
+    parameters: [],
+    response: Wrapper,
+    errors: [
+      {
+        status: "default",
+        schema: ErrorSchema,
+        description: "Failure",
+      },
+    ],
+    responses: {
+      200: {
+        schema: Wrapper,
+        description: "OK",
+      },
+      default: {
+        schema: ErrorSchema,
+        description: "Failure",
+      },
+    },
+    request: {},
+    alias: "listThings",
+  },
+] as const;
+// MCP Tools
+export const mcpTools = [
+  {
+    tool: {
+      name: "list_things",
+      description: "GET /things",
+      inputSchema: { type: "object", additionalProperties: false },
+      outputSchema: {
+        type: "object",
+        properties: {
+          err: {
+            type: "object",
+            properties: { message: { type: "string" } },
+            required: ["message"],
+            additionalProperties: false,
+          },
+          kind: {
+            type: "object",
+            properties: { id: { type: "string" } },
+            required: ["id"],
+            additionalProperties: false,
+          },
+          name: { type: "string" },
+          text: { type: "string" },
+          thing: {
+            type: "object",
+            properties: { id: { type: "string" } },
+            required: ["id"],
+            additionalProperties: false,
+          },
+        },
+        required: ["name", "kind"],
+        additionalProperties: false,
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get",
+      path: "/things",
+      originalPath: "/things",
+      operationId: "listThings",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+] as const;
+",
     "v3.1/non-oauth-scopes": "import { z } from "zod";
 // Endpoints
 export const endpoints = [
