@@ -2,6 +2,77 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-09-23 (landing #110 — Mussel mends Buoy / 372325, claude-opus-5-5)
+
+- **"Zero reviews" is a moment, not a state.** At about 11:07Z #110 had no review
+  threads; a Copilot review with 17 threads landed at 11:08:32Z, and my grounding report
+  told the owner "nobody has reviewed it". Re-fetch before any claim about a pull
+  request, not only at the merge instant.
+- **Verify each finding, then prefer the cure that shrinks.** All 17 findings held up
+  firsthand (executed on Zod 4.5.4: bare `z.iso.datetime()` rejects offsets and
+  `{ offset: true }` still rejects lowercase `t`/`z` and `23:59:60`; `z.lazy`, shape
+  getters and every `.default` are read through a call; the Draft-07 meta-schema has no
+  vocabulary). My first cures added requirements. Assumptions-expert showed smaller cures
+  removed the same contradictions, json-schema-expert showed my SPEC-G-4 cure was wrong
+  (a valid source may carry a default that violates its own schema, which SPEC-PR-7
+  carries), and zod-expert showed SPEC-AR-6 had to cover defaults. A pre-execution
+  assumptions review of the cure plan would have saved the second pass.
+- **Suggestions dropped with the reason stated to the owner:** Appendix A rows for
+  `.trim()` and similar calls (SPEC-P-2's test already rejects them); parameter and
+  request-body addressing for the Zod output (the endpoint definitions carry them); a
+  custom meta-schema and unknown-format rule in SPEC-P-3 (every pair's scope-and-fidelity
+  table classes each `format` before advertising). Copilot's C-1 boundary check and the
+  reading of a source `default` are on the ratification checklist as owner decisions.
+- **Anchor a scripted slice on a whole line and assert the count.** I cut the
+  specification at `s.index("## Change log")`; the first hit was the inline mention in
+  SPEC-CC-2, and 7.7 KB was duplicated. My own word diff caught it before the commit;
+  json-schema-expert had warned about that exact substring minutes earlier. Passive
+  warning, artefact gravity.
+- **Never type an identifier.** I extended a 12-character SHA prefix from memory into
+  `gh pr merge --match-head-commit`; GitHub refused with "Head branch was modified". Take
+  a SHA from `git rev-parse` or the API, every time.
+- **Owner word on the Director, 23 September 2026:** the owner named Wick binds Temper
+  (ed7b48) Director for questions. After I sent it an unrequested status report it began
+  routing my items and asking for a merge report; it then relayed the owner's word "team
+  members are responsible for their own work; the Director is for a second opinion or a
+  rabbit hole" (relayed, not heard directly). Contact a Director only for a second opinion
+  or a suspected rabbit hole.
+- **A pnpm script can install first.** After the fast-forward brought #111's lockfile
+  changes, the next `pnpm agent-tools:…` run installed dependencies, rebuilt
+  `agent-tools/dist` and re-armed the merge driver before running the command (its output
+  landed in the comms watcher's stream). Expect it after any pull that moves the
+  lockfile.
+- **Stopping a push saves a runner.** When a follow-up commit became necessary during a
+  push, I killed the pre-push hook's process group before the remote moved (checked with
+  `git ls-remote`) and pushed both commits once. The aborted `check:ci` had emptied
+  `lib/dist`; the next full run rebuilt it.
+- **The review loop grew the owner's decision load (concept-exploration output for the
+  owner's re-assessment).** Observations: one bot round on the draft moved the
+  ratification checklist from 15 entries to 31 and the specification from 444 to 492
+  lines, every cure individually right; 13 of the 17 findings, and every defect the three
+  reviewers found in my cures, sat in agent-elaborated clauses, none in the owner's
+  quoted words. Frame: a loop-dynamics problem, not a quality problem — agents elaborate
+  owner intent into precise mechanism, precision invites review, review finds edge
+  contradictions, cures add precision, and each addition is owner attention the
+  ratification walk must spend before MEASURE produces any product fact. Proposals, each
+  for the owner to take or leave at the re-assessment: (1) show the checklist split by
+  provenance with its growth from 0.1.0 to 0.4.0 — warrant: the owner sizes their own
+  decision load; falsifier: the owner reads the 31 entries and finds the walk
+  proportionate; (2) ratify first what SPEC-C-1 needs on the Oak corpus — warrant: the
+  first target is finite, and clauses such as the Draft-07 and regex-equivalence edges
+  bind only SPEC-C-2; falsifier: C-1's acceptance turns out to depend on them; (3) in
+  any later review of the draft, offer "strike the elaboration" beside "clarify it" —
+  warrant: a cure that removes text shrinks the loop; falsifier: striking loses meaning
+  the owner intended. Unresolved: whether the owner values the elaboration as the
+  foundation (SPEC-AR-2 "designed whole" may say so).
+- **Play seeds (associations, not findings):** the merge guard said "Head branch was
+  modified" when my memory had moved, not the branch — a guard message can pin an agent's
+  own confabulation on the world; the Director's reach from "answers questions" into
+  routing and reporting duties looks shaped like SPEC-CC-4's widening of who decides into
+  who executes; a review-derived clause reads like a unit of owner-attention debt.
+  Discarded at the harvest: "the near-full swap is like the near-full checklist" —
+  forced.
+
 ## 2026-09-23 (close before a model change — Poppy calls Topsoil / bf551f)
 
 - **An invented prohibition.** The owner said "approval happens locally, only I or mantagen
