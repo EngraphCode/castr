@@ -11,7 +11,7 @@ todos:
 # C05 Cricket platform parity
 
 Owner-requested bounded execution under the
-[correction commission](../../active/castr-documentation-and-fidelity-correction.md).
+[correction commission](../../archive/castr-documentation-and-fidelity-correction.md).
 Original shepherd: Moon turns Apogee, Codex gpt-6-astra, session prefix 01a076,
 identity a9c4176b-2675-5890-bf98-420f545b146e; started 6 September 2026.
 Parent plans, ledger, manifests and shared continuity remain coordinator-owned.

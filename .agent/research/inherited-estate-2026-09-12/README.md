@@ -3,7 +3,7 @@
 Tracked home for the commands and outputs behind the measured-state facts in the
 [delivery ledger](../../plans/delivery-ledger.md#measured-state-of-the-inherited-estate-12-september-2026)
 and the container map in the
-[value-proof sequence](../../plans/active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence).
+[value-proof sequence](../../plans/archive/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence).
 Base: `origin/main` at `21e232295426ac104dc1ff47b2d7543858abf4bf`.
 
 These outputs establish self-consistency of each container on that main, never the
@@ -106,7 +106,7 @@ eleven closures below were reopened and the "register transfer" and "routed"
 dispositions no longer stand. The measurements in these records (per-delta tables,
 the probe table, #20's red suites) stand as evidence; every delta reaches main or is
 deleted under the
-[unmerged-work plan](../../plans/active/unmerged-work-to-main-or-deleted.md).
+[unmerged-work plan](../../plans/archive/unmerged-work-to-main-or-deleted.md).
 
 ### PR #11 residual delta against main (measured 20 September 2026)
 

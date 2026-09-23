@@ -2,31 +2,26 @@
 
 Read [AGENT.md](../directives/AGENT.md), then use `engraph-start-right-thorough`.
 
-## Current state — 6 September 2026
+## Current state — 23 September 2026
 
-The [correction delivery plan](../plans/active/castr-documentation-and-fidelity-correction.md)
-is the primary active plan. The [proof-programme parent](../plans/proof-programme/parent-plan.md#current-execution-state)
-is the sole queue and execution authority; its Q-30 amendment governs this
-interactive commission. Start from the [correction thread](../memory/operational/threads/castr-correction.next-session.md)
-and read [delivery custody](../plans/delivery-ledger.md) before changing a branch.
+The destination is [the specification](../../docs/SPECIFICATION.md), a draft awaiting the
+owner's ratification, and the [course plan](../plans/active/castr-course.md) is the primary
+active plan. Start from the [correction thread](../memory/operational/threads/castr-correction.next-session.md),
+which carries the next step and the owner's standing rulings; the
+[continuity contract](../memory/operational/repo-continuity.md) routes every other thread.
 
-The platform-neutral autonomous-development experiment is paused and its Claude
-Routine disabled, owner-confirmed on 6 September. This is not live inspection.
-Interactive implementation and condition-based merges are authorised; scheduled
-execution is not. No published package is planned. Castr has no consumers yet;
-the owner has intended projects and usefulness is settled. Strictness, fail-fast
-behaviour and fidelity are absolute; observed failures require repair.
+On 21 September 2026 the owner wrote off every inherited worktree, orphaned branch and open
+pull request. The correction plan and the unmerged-work plan are superseded by the course
+plan and archived.
+The platform-neutral autonomous-development experiment stays paused, and the
+Practice-enhancement lane in this repository is stopped.
 
-PR #81 is frozen extraction evidence, not the branch to continue or wholesale merge.
-Use fresh worktrees/branches from current origin/main, paired documentation and
-onboarding review for docs, appropriate specialists for semantics, actual review
-tallies, intact hooks and canonical `pnpm check`. Merge small completed slices
-when current-head review/check/ruleset conditions hold.
+Every pull request follows the course plan's fixed properties of every leg and merges when
+it is green and clean under SPEC-G-1. Use fresh branches from current `origin/main`, intact
+hooks and canonical `pnpm check`.
 
-The completed loop-review record awaits lifecycle reconciliation under C09;
-its old active-directory location does not make it primary or authorise execution.
-The wholesale transplant remains stopped; distinct paused and future work remains
-at its named homes. The [roadmap](../plans/roadmap.md) routes those obligations.
+The completed loop-review record in `active/` awaits lifecycle reconciliation; its location
+does not make it primary or authorise execution.
 
 Earlier session narratives are [conserved verbatim](../memory/operational/archive/correction-entry-paths-2026-09-06.md).
 They are history, not current instructions or evidence that a present defect is fixed.

@@ -2,12 +2,12 @@
 
 ## Current execution
 
-The [proof-programme parent](proof-programme/parent-plan.md#current-execution-state)
-is the sole queue. Its Q-30 sequencing amendment authorises the interactive
-[documentation and fidelity correction](active/castr-documentation-and-fidelity-correction.md),
-the primary active delivery plan. The [delivery ledger](delivery-ledger.md) owns
-branch/PR dispositions and the [correction thread](../memory/operational/threads/castr-correction.next-session.md)
-owns the next landing.
+The destination is [the specification](../../docs/SPECIFICATION.md), a draft awaiting the
+owner's ratification. The [course plan](active/castr-course.md) is the primary active plan,
+and the [correction thread](../memory/operational/threads/castr-correction.next-session.md)
+owns the next landing. The superseded
+[documentation and fidelity correction](archive/castr-documentation-and-fidelity-correction.md)
+is archived.
 
 The platform-neutral autonomous-development experiment is paused and its Claude
 Routine disabled, owner-confirmed on 6 September 2026. Dependency eligibility
@@ -23,8 +23,7 @@ public API and CLI, without constructing an OpenAPI document.
 
 This milestone belongs to **Q-12 / Tranche 05 (JSON Schema)** in the
 [proof programme](proof-programme/parent-plan.md#slice-briefs), together with its
-value-contract foundation and public-surface proof tranches. The correction
-plan continues to own its existing in-scope fidelity repairs. The parent owns
+value-contract foundation and public-surface proof tranches. The parent owns
 execution order and promotion into concrete slices.
 
 Acceptance requires all of the following:
@@ -94,10 +93,8 @@ not a plan promotion, native graph-format commitment or change to full JSON Sche
 
 ## Retained work and lifecycle
 
-- The correction plan owns comprehensive document/finding/source-change coverage,
-  all known in-scope fidelity repairs, local workflows and its own completion.
-- The [proof programme](proof-programme/parent-plan.md) remains unfinished beyond
-  that commission; its queue and original acceptance remain authoritative.
+- The [proof programme](proof-programme/parent-plan.md) remains unfinished; its
+  queue and original acceptance remain authoritative.
 - The [loop review](active/proof-programme-loop-review.md) has completed R1–R6
   rows; C09 must verify the original evidence and stage its lifecycle completion.
   It is not the primary active plan.

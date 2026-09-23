@@ -5,9 +5,16 @@ Intermediate Representation (IR). Its existing entry points include OpenAPI
 input to generated Zod schemas and endpoint metadata, Zod source parsing, IR
 inspection and persistence, OpenAPI writing, and MCP tool projection.
 
-Castr currently has no consumers. Its owner has several intended projects and
-considers its usefulness settled. The current work verifies correctness and
-usability. No published package is currently planned; use a local checkout.
+Where Castr is going is stated once, in
+[the destination specification](./docs/SPECIFICATION.md); where any other
+document in this repository disagrees with it, the specification governs. The
+course from the present code to that destination is
+[the course plan](./.agent/plans/active/castr-course.md).
+
+Castr's first consumer is the Engraph Open Curriculum Ecosystem, which the
+specification names. The current work ratifies the specification and measures
+the present generator against it. No published package is currently planned;
+use a local checkout.
 
 ## Local quick start
 

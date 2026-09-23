@@ -37,8 +37,8 @@ todos:
     status: completed
     depends_on: [Q-00]
   - id: Q-30
-    content: 'Owner-directed interactive correction commission: split PR #81, correct the complete documentation estate and repair all known in-scope fidelity defects; acceptance and manifests in .agent/plans/active/castr-documentation-and-fidelity-correction.md'
-    status: in_progress
+    content: 'Owner-directed interactive correction commission: split PR #81, correct the complete documentation estate and repair all known in-scope fidelity defects; acceptance and manifests in .agent/plans/archive/castr-documentation-and-fidelity-correction.md'
+    status: superseded
   - id: Q-18
     content: 'Predecessor-slot attestation (loop-review OP-1a, owner-approved 2026-08-24 second decision card): routine-prompt check of recent expected slots (bounded lookback); a trace-less slot with no STOP file lands a neutral observation entry — a firing cannot distinguish an owner pause from a silent death, so the owner disambiguates from the notification — read and notified per the brief'
     status: pending
@@ -174,8 +174,9 @@ Routines. Scheduled execution must stop before provisioning, claims, bookkeeping
 queue work or PR driving. Intentionally paused intervals are neither missed nor
 failed runs, and do not change failure or zero-progress counters.
 
-**Interactive commission — Q-30 (owner-approved 6 September 2026).** Execute the
-[correction delivery plan](../active/castr-documentation-and-fidelity-correction.md)
+**Interactive commission — Q-30 (owner-approved 6 September 2026; superseded 21 September
+2026 by the [course plan](../active/castr-course.md)).** Execute the
+[correction delivery plan](../archive/castr-documentation-and-fidelity-correction.md)
 in small coherent PRs, merging each by merge commit when all current-head checks,
 reviews and ruleset conditions hold. This authorises interactive work and merges;
 it does not resume the experiment or scheduled execution. The [delivery ledger](../delivery-ledger.md)
@@ -183,9 +184,9 @@ owns PR dispositions. Q-30's acceptance checkpoints live in the delivery plan;
 this frontmatter remains the sole execution queue.
 
 The commission's interactive sequencing for every inherited PR and dirty worktree
-follows the [12 September value-proof sequence](../active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence)
+follows the [12 September value-proof sequence](../archive/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence)
 and its terminal state and priority order; the [9 September prerequisite
-sequence](../active/castr-documentation-and-fidelity-correction.md#9-september-q-22-prerequisite-sequence)
+sequence](../archive/castr-documentation-and-fidelity-correction.md#9-september-q-22-prerequisite-sequence)
 governs Q-22 alone.
 C03a, the bounded operation-security repair, and Q-22's Error-oracle prerequisite
 are delivered. PR #88 delivered C05's platform reviewer-contract tooling as `bd115294`; PR #91
@@ -260,7 +261,7 @@ tests and other correctly typed validation — that **goes green exactly when th
 true**: positive proofs, per the owner's 2026-08-22 directive, grounded in canonical OCE
 `principles.md`, `testing-strategy.md`, and `validation-strategy.md`. Every open PR's proven
 value is on main and the PR closed, every dirty worktree is emptied or discarded, and no
-unpushed work remains (the [value-proof sequence](../active/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence)
+unpushed work remains (the [value-proof sequence](../archive/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence)
 names that terminal state and its exits). The programme completes when the report's Tranche 14 certificate
 gates pass on one integrated commit for the ratified profile, or the owner closes the
 programme earlier at a narrower ratified scope.
