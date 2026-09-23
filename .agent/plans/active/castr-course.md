@@ -3,7 +3,7 @@ title: Castr course — from the present code to the specification
 status: active
 lane: active
 created: 2026-09-21
-last_updated: 2026-09-21
+last_updated: 2026-09-23
 destination: docs/SPECIFICATION.md
 owner_directive: >-
   Owner, 2026-09-21: "Before we go further we stop, and we define a destination,
@@ -13,24 +13,24 @@ owner_directive: >-
 todos:
   - id: ALERTS
     content: Dependency alerts on main reach zero through dependency-update pull requests that land without analysis; until then nothing else merges (SPEC-G-1)
-    status: pending
+    status: done
     depends_on: []
   - id: RATIFY
-    content: The owner ratifies the specification locally (SPEC-CC-2); the ratified file and a README pointer land on main; nothing else in this repository is wired to it
+    content: The owner ratifies the specification locally (SPEC-CC-2), walked one decision card per checklist clause; the ratified file lands on main
     status: pending
     depends_on: [ALERTS]
-  - id: MOVE
-    content: Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces with its history, under a boundary rule that no Castr workspace depends on a package outside Castr; the specification travels as the only description of the destination; this repository is archived
+  - id: MEASURE
+    content: The coverage table for SPEC-C-1 — what today's generator gets right on the pinned Oak corpus, scored against the source document by an independent validator, never against the libraries being replaced; a throwaway probe, nothing red enters any repository
     status: pending
     depends_on: [RATIFY]
-  - id: MEASURE
-    content: The coverage table for SPEC-C-1 — what today's generator gets right on the pinned Oak corpus, scored against the source document by an independent validator, never against the libraries being replaced; nothing red enters any repository
+  - id: MOVE
+    content: Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces, under a boundary rule that no Castr workspace depends on a package outside Castr; what travels (the code with its history, or the specification with fresh workspaces) is decided from the MEASURE table; the specification travels as the only description of the destination; this repository is archived
     status: pending
-    depends_on: [MOVE]
+    depends_on: [MEASURE]
   - id: PLOT
     content: The legs to SPEC-C-1 are written into this plan from the MEASURE table and the model design (SPEC-N-1), each with an observable exit state, and reviewed by assumptions-expert
     status: pending
-    depends_on: [MEASURE]
+    depends_on: [MOVE]
 ---
 
 # Castr course
@@ -48,9 +48,18 @@ the target stays still. A consumer in the same repository makes the first target
 and its acceptance a workspace dependency. The specification's computed count of
 `NOT-YET-BUILT` rejections (SPEC-PR-6) is the measure of distance remaining.
 
+## Order of the legs
+
+Owner decision, 21 September 2026 (recorded 23 September): MEASURE precedes MOVE. The
+measure is one session of throwaway probing and it answers the question that decides what
+is worth moving — evolve the present model, or rebuild it. If the answer is rebuild,
+carrying the present product code and its history into the new repository imports the
+clutter the owner wrote off on 21 September; the move is then the specification plus fresh
+workspaces. Where Castr ends up is unchanged; only the order is.
+
 ## RATIFY: how the specification is ratified
 
-The specification is draft 0.3.0. The owner chose to walk its ratification checklist one
+The specification is draft 0.3.1. The owner chose to walk its ratification checklist one
 decision card per clause: each card states the clause in plain language with its reason
 and its cost, and records confirm, change or strike. When the checklist is empty, the
 owner (or mantagen, a human collaborator) approves the version in their own words in a
@@ -59,16 +68,20 @@ in the change log (SPEC-CC-2).
 
 Settled by the owner on 21 September 2026 and already in the draft: the value-domain
 reading (SPEC-P-5); OpenAPI 2.0 is not read; zero open dependency alerts on `main` to
-merge (SPEC-G-1); the approval mechanism.
+merge (SPEC-G-1); the approval mechanism. Approval is the spoken word recorded under
+SPEC-CC-2; merging the specification's pull request is mechanics that an agent performs
+(owner, 23 September 2026).
 
-## First work: dependency alerts to zero
+## ALERTS: done
 
-`main` has seven open dependency alerts (two high, five moderate, 21 September 2026), so
-under SPEC-G-1 the only pull requests that merge are the ones that cure them. They land
-without analysis. Pull request #109 (green and clean at `SHA:31d12bd2`) and the
-specification's pull request #110 merge after that. The owner granted agents permission to
-merge product pull requests that are green and clean; the permission rule is the owner's
-to add to the project settings. The specification is merged by the owner only.
+`main` had seven open dependency alerts on 21 September 2026. Pull request #111 cured all
+seven with capped security floors (`SHA:fc94488f`); `main` has had zero open alerts since.
+Pull request #109, the identity-chain cure, merged after it (`SHA:8b0aa438`) at the end of
+its second review round. Nothing more goes into the present writer code: a review finding
+against the present model is cured only when it blocks a landing, otherwise dropped with
+the reason stated. Agents merge green-and-clean pull requests; the owner granted that on
+21 September 2026, and the permission rule lives in the agent's local settings, outside
+version control.
 
 ## The Oak API specification's unsatisfiable shapes
 
@@ -81,8 +94,9 @@ The measured evidence behind the specification is in
 
 ## MOVE: what travels
 
-The specification, the course plan, the review record, the product code with its history,
-and the engineering doctrine Castr needs that the new repository lacks. Every other
+The specification, the course plan, the review record, the engineering doctrine Castr
+needs that the new repository lacks, and — only if the MEASURE table says the present
+model is worth evolving — the product code with its history. Every other
 statement of Castr's destination, fidelity contract or capability list (the review record
 lists them) is left behind or rewritten to state the specification's position, once, in
 the new repository. The owner approved rewriting the contradicting passages of
@@ -133,10 +147,11 @@ before the ruling, is pull request #109.
 
 - **RATIFY:** the specification's status is `ratified`, its approval is recorded per
   SPEC-CC-2, and it is on `main`.
+- **MEASURE:** a table of construct by outcome (`exact`, `wrong output`, `rejects`,
+  `absent`, `vacuous proof`), every cell backed by a command and its output, and a
+  stated verdict: evolve the present model, or rebuild it.
 - **MOVE:** Castr's gates pass inside the new repository, the boundary rule is enforced
   by that repository's own checks, and this repository is archived.
-- **MEASURE:** a table of construct by outcome (`exact`, `wrong output`, `rejects`,
-  `absent`, `vacuous proof`), every cell backed by a command and its output.
 - **PLOT:** this file's todos name every leg to SPEC-C-1 with an observable exit state.
 - **Plan complete:** SPEC-C-1 and SPEC-C-2 are advertised and SPEC-G-2 holds.
 
@@ -149,7 +164,7 @@ repository's `.agent` machinery; recovering anything written off.
 
 - **The course drifts again.** The specification's change control is the cure; this plan
   changes freely, the destination changes only by approval.
-- **The move stalls product work.** MOVE imports the code as it is and changes nothing
-  else; redesign starts after it.
+- **The move stalls product work.** MOVE imports what MEASURE decided is worth carrying
+  and changes nothing else; redesign starts after it.
 - **The consumer's document is unsatisfiable in places.** Reported by Castr, decided by
   the owner, corrected at source.

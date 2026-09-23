@@ -8,16 +8,17 @@ Read the [thread convention](threads/README.md) before joining a thread.
 The destination is [the specification](../../../docs/SPECIFICATION.md) and the course is
 [castr-course.md](../../plans/active/castr-course.md). On 21 September 2026 the owner wrote
 off every inherited worktree, orphaned branch and open pull request, and ruled that Castr
-moves into the Engraph Open Curriculum Ecosystem repository as workspaces early in the
-course. The platform-neutral autonomous-development experiment stays paused. The
-Practice-enhancement lane in this repository is stopped.
+moves into the Engraph Open Curriculum Ecosystem repository as workspaces, after the
+present generator has been measured against the specification. `main` has zero open
+dependency alerts. The platform-neutral autonomous-development experiment stays paused.
+The Practice-enhancement lane in this repository is stopped.
 
 ## Active threads
 
-| Thread                                                       | Role and next step                                                               |
-| ------------------------------------------------------------ | -------------------------------------------------------------------------------- |
-| [Castr correction](threads/castr-correction.next-session.md) | Implement the approved correction; current slice and identity are in the record. |
-| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.   |
+| Thread                                                       | Role and next step                                                                 |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| [Castr correction](threads/castr-correction.next-session.md) | Ratify the specification with the owner, then measure; the route is in the record. |
+| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.     |
 
 ## Paused threads and historical records
 
@@ -49,10 +50,9 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-In order: (1) the owner ratifies the specification locally (the course plan's RATIFY
-section lists what is settled first; no agent merges a change to the specification);
-(2) pull request #109 (component identity) merges when green and clean; (3) MOVE;
-(4) MEASURE; (5) PLOT. The [thread record](threads/castr-correction.next-session.md)
+In order: (1) the ratification walk of the specification with the owner, one decision
+card per checklist clause, then the spoken approval recorded per SPEC-CC-2; (2) MEASURE;
+(3) MOVE; (4) PLOT. The [thread record](threads/castr-correction.next-session.md)
 carries the exact state of each.
 
 ## Deep consolidation status

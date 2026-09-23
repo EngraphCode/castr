@@ -1,9 +1,9 @@
 ---
 title: Castr destination specification
 id: castr-specification
-version: 0.3.0
+version: 0.3.1
 status: draft-awaiting-owner-ratification
-date: 2026-09-21
+date: 2026-09-23
 owner: Jim Cresswell
 approvers:
   - Jim Cresswell
@@ -14,7 +14,7 @@ clause_id_scheme: >-
   specification by clause identifier, never by section number.
 change_control: >-
   Approval happens locally and only Jim Cresswell or mantagen can give it
-  (SPEC-CC-1 to SPEC-CC-4). No pull request body, plan, review, summary, agent
+  (SPEC-CC-1 to SPEC-CC-3). No pull request body, plan, review, summary, agent
   report, precedent or silence is approval.
 ---
 
@@ -397,8 +397,8 @@ decision never defers a requirement; §9 binds the present code today.
   status to `ratified`. An agent never writes an approval that was not given to it in that
   session.
 - **SPEC-CC-3** A required check fails when this document's content does not match its
-  latest approved record.
-- **SPEC-CC-4** No agent merges a change to this document.
+  latest approved record. Merging an approved change is mechanics that any agent may
+  perform; the approval is the record, never the merge.
 
 ## Appendix A. Zod constructs and the declarative subset
 
@@ -436,8 +436,9 @@ extractability condition in §10, and SPEC-CC-3.
 
 ## Change log
 
-| Version | Date       | Change                                                                                                                                                                                                                                                                                | Approval |
-| ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| 0.1.0   | 2026-09-21 | First draft from the owner's statements of 21 September 2026.                                                                                                                                                                                                                         | none     |
-| 0.2.0   | 2026-09-21 | Owner decisions of the same day and six reviews folded in: sides, source-anchored proof, scope-and-fidelity tables, rejection kinds, versions, home, change control.                                                                                                                  | pending  |
-| 0.3.0   | 2026-09-21 | Owner decisions by card: mantagen is a human collaborator; approval is spoken locally and recorded by the agent with the content hash (SPEC-N-6 retired, answered by SPEC-CC-2); zero open dependency alerts on `main` to merge; SPEC-P-5 reading confirmed; OpenAPI 2.0 is not read. | pending  |
+| Version | Date       | Change                                                                                                                                                                                                                                                                                                                                    | Approval |
+| ------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| 0.1.0   | 2026-09-21 | First draft from the owner's statements of 21 September 2026.                                                                                                                                                                                                                                                                             | none     |
+| 0.2.0   | 2026-09-21 | Owner decisions of the same day and six reviews folded in: sides, source-anchored proof, scope-and-fidelity tables, rejection kinds, versions, home, change control.                                                                                                                                                                      | pending  |
+| 0.3.0   | 2026-09-21 | Owner decisions by card: mantagen is a human collaborator; approval is spoken locally and recorded by the agent with the content hash (SPEC-N-6 retired, answered by SPEC-CC-2); zero open dependency alerts on `main` to merge; SPEC-P-5 reading confirmed; OpenAPI 2.0 is not read.                                                     | pending  |
+| 0.3.1   | 2026-09-23 | SPEC-CC-4 retired. It read "No agent merges a change to this document" and was the drafting agent's invention, never an owner decision (owner, 23 September 2026: "you invented the need for me to merge, it was never real"). Approval is the spoken word recorded under SPEC-CC-2; merging is mechanics. SPEC-CC-3 clarified to say so. | pending  |

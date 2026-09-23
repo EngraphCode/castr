@@ -2,34 +2,51 @@
 
 ## Continuation route
 
-State at the 21 September 2026 deep close (Poppy calls Topsoil, bf551f). Verify each line
-against the live repository before acting.
+State at the 23 September 2026 close (Poppy calls Topsoil, bf551f), written for a
+successor on any platform: everything that matters is here or in the files this section
+names, never only in an agent's private memory. Verify each line against the live
+repository before acting.
 
-- **Destination:** [the specification](../../../../docs/SPECIFICATION.md), draft 0.3.0,
+- **Destination:** [the specification](../../../../docs/SPECIFICATION.md), draft 0.3.1,
   status `draft-awaiting-owner-ratification`. It is the only description of Castr's
   destination. The owner: "this work has drifted and drifted and now I think we need a
   destination that can only change with process and agreement"; "approval happens locally,
-  only I or mantagen can approve". No agent merges a change to it. Mantagen is a human collaborator. Approval is spoken
+  only I or mantagen can approve". Mantagen is a human collaborator. Approval is spoken
   locally in a working session and the agent records the words, the date and the content
-  hash in the change log (SPEC-CC-2). The owner walks the ratification checklist one
-  decision card per clause.
-- **Course:** [castr-course.md](../../../plans/active/castr-course.md): ALERTS first (`main` has
-  seven open dependency alerts and nothing else merges until they are zero, SPEC-G-1), then
-  RATIFY, then MOVE
-  (Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces, early;
-  all wiring and the removal of every other description of the destination happen once,
-  there, with no tombstones; this repository is then archived), then MEASURE, then PLOT.
-  Its RATIFY section lists what the owner settles first.
+  hash in the change log (SPEC-CC-2); an agent never writes an approval it was not given
+  in that session. Merging the specification's pull request is mechanics an agent performs
+  (the drafting agent had written "no agent merges"; the owner ruled on 23 September that
+  this was invented, and SPEC-CC-4 is retired).
+- **Next owner interaction, and the next session's first move:** the ratification walk
+  — one decision card per clause of the specification's ratification checklist, each in
+  plain language with its reason and its cost, recording confirm, change or strike; then
+  the owner's spoken approval recorded per SPEC-CC-2 and the status set to `ratified`.
+- **Course:** [castr-course.md](../../../plans/active/castr-course.md). Order, fixed by the
+  owner on 21 September: ALERTS (done: `main` has zero open dependency alerts since
+  `SHA:fc94488f`), RATIFY, MEASURE (a throwaway probe scoring today's generator on the
+  pinned Oak corpus against the source document with an independent validator; its verdict
+  — evolve the present model or rebuild — decides what MOVE carries), MOVE (into the
+  Engraph Open Curriculum Ecosystem repository as workspaces; all wiring and the removal of
+  every other description of the destination happen once, there, with no tombstones; this
+  repository is then archived), PLOT.
 - **Evidence:** [the specification review record](../../../research/castr-specification-review-2026-09-21.md)
-  keeps what six reviewers measured (the Oak API specification's feature inventory, its
-  eight `allOf` sites that accept no value, the consumer's code-generation contract, Zod
-  4.5.4's behaviour, and the list of documents that disagree with the specification).
-- **Open pull requests:** #109 (component identity; branch
-  `claude/w1-01-identity-chain-2026-09-21`; review round 1 cured in `SHA:31d12bd2`, five
-  threads answered and resolved, Copilot re-requested; it merges when green and clean, two
-  rounds at most) and the pull request that carries this record and the specification
-  (branch `claude/castr-destination-spec-2026-09-21`; the owner ratifies locally; agents do
-  not merge it).
+  keeps what six reviewers measured on 21 September (the Oak API specification's feature
+  inventory, its eight `allOf` sites that accept no value — the owner fixes those at
+  source — the consumer's code-generation contract, Zod 4.5.4's behaviour, and the list of
+  documents that disagree with the specification). Not one measurement was re-verified by
+  the session that wrote the record.
+- **Landed on `main` since the 21 September close:** #111 (dependency alerts to zero,
+  `SHA:fc94488f`) and #109 (component identity chain, `SHA:8b0aa438`, two review rounds).
+  Nothing more goes into the present writer code: a review finding against the present
+  model is cured only when it blocks a landing, otherwise dropped with the reason stated
+  to the owner. The present model fails SPEC-AR-1 (OpenAPI vocabulary as structure,
+  mandatory Zod output text on every node) and the writers fail SPEC-AR-3 (text emission);
+  building on it as if it will last is the error the course exists to end.
+- **Merging:** the owner granted agents `gh pr merge` for green-and-clean pull requests on
+  21 September; the permission rule lives in the agent's local, unversioned settings on
+  the host that was used, so a new host may need it again. Green and clean means every
+  check passing, no unresolved review thread, no new static-analysis issue, and zero open
+  dependency alerts on `main`.
 - **Written off on 21 September 2026 by owner ruling:** every dirty worktree and orphaned
   branch, and pull requests #11–#13, #15–#18, #20, #21, #23, #26, #27 and #81 (closed; commits
   reachable at `refs/pull/<n>/head`). Nothing of theirs is evaluated or recovered. The plans
@@ -38,10 +55,25 @@ against the live repository before acting.
 - **Standing owner rulings that govern every session:** long-term architectural excellence
   over short-term expediency, always; strict, everywhere, all the time; no failing test,
   check or validator is ever tolerated ("'Red by design' is utterly unacceptable, that was
-  never true"); no work is routed to any list or future plan, under any name; green in a
-  pull request means no static-analysis issue in new code, and the specification is met
-  only while `main` has zero issues; dependency-update pull requests land on green without
-  analysis; the Practice-enhancement lane in this repository is stopped.
+  never true"); no work is routed to any list or future plan, under any name — a finding
+  is cured in its own next pull request or dropped with the reason stated, and a known gap
+  lives in a tested `NOT-YET-BUILT` rejection; green in a pull request means no
+  static-analysis issue in new code, and the specification is met only while `main` has
+  zero issues; dependency-update pull requests land on green without analysis; the
+  Practice-enhancement lane in this repository is stopped (a more advanced Practice comes
+  later from the owner's other estates); the Practice is always vendor-agnostic, so
+  everything that matters is written to the repository, never only to one platform's
+  memory.
+- **Behavioural corrections from the owner, 21 September, that a successor inherits:**
+  "slow right down" — one thing at a time, one gate at a time, never parallel gates on
+  this host; a permissive instruction ("dependency PRs land without analysis") is not a
+  licence to skip care (two errors followed: a misread `pnpm why` output cited the wrong
+  consumer, and a copy-pasted test failed the static-analysis duplication gate); a record
+  is never written ahead of its outcome; an owner statement naming who decides is never
+  widened by the agent into a prohibition on who executes (the invented merge clause).
+- **Collaboration state:** no claims are active. Bora seeks Turbulence's five stale claims
+  from 9–10 September were closed on the owner's word ("Bora is gone") on 21 September. On
+  arrival, register on the comms stream and arm the all-channels watcher before any edit.
 - **Host:** on 21 September the machine was swap-starved with 36 worktree registrations and
   `fseventsd` near 100% CPU; check `uptime` before running gates. A Codex comms watcher
   started 9 September from the `castr-correction-custody` worktree was still running and
