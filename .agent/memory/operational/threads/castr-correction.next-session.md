@@ -26,9 +26,8 @@ repository before acting.
   roadmap and practice index name the course plan as primary. One finding, a new
   source-anchored boundary check for C-1 acceptance, was kept out of the text as a missing
   requirement rather than a contradiction; it and the reading of a source `default` stand
-  on the ratification checklist as two decisions for the owner. The Director (Wick binds
-  Temper, ed7b48) carries the checklist to the owner. The pull request's `REVIEW-TALLY` comment
-  records each disposition. It merges when green and clean; until it does, `main` does not
+  on the ratification checklist as two decisions for the owner. The pull request's
+  `REVIEW-TALLY` comment records each disposition. It merges when green and clean; until it does, `main` does not
   carry these records and a session that starts on `main` checks out
   `claude/castr-destination-spec-2026-09-21` first.
 - **What the 23 September close deliberately left in context only:** the six reviewer
