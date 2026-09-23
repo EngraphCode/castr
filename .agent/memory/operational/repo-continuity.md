@@ -15,10 +15,10 @@ The Practice-enhancement lane in this repository is stopped.
 
 ## Active threads
 
-| Thread                                                       | Role and next step                                                                |
-| ------------------------------------------------------------ | --------------------------------------------------------------------------------- |
-| [Castr correction](threads/castr-correction.next-session.md) | The owner re-assesses the course now #110 has landed; the route is in the record. |
-| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.    |
+| Thread                                                       | Role and next step                                                                | Latest identity                                                                                          |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [Castr correction](threads/castr-correction.next-session.md) | The owner re-assesses the course now #110 has landed; the route is in the record. | claude-code / claude-opus-5-5 / Mussel mends Buoy / #110 round-1 cure and merge / 2026-09-23             |
+| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.    | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23 |
 
 ## Paused threads and historical records
 
@@ -60,15 +60,15 @@ each.
 ## Deep consolidation status
 
 due — 23 September 2026 second close: the napkin runs to about 1,490 lines across
-sessions since 27 August, the pending-graduations register holds one `due`, one
-owner-gated and fourteen pending rows, and Q-018 is open. The 20 September close named
+sessions since 27 August, the pending-graduations register holds eighteen rows (fourteen pending, one
+`due`, one owner-gated, one re-evaluate and one open), and Q-018 is open. The 20 September close named
 five candidates — the local-host hook-bypass prohibition, a prettier-ignore recomputation
 validator, the container-anchored register pattern, evidence scripts shown failing first,
 and postinstall writing the shared git config — and each lives in the register, the
 napkin or `distilled.md`. Not run at this closeout. Constraint: the owner stopped the
 Practice-enhancement lane in this repository on 21 September 2026 (the thread record's
 standing owner rulings), the course's MOVE leg carries the doctrine Castr needs into the
-new repository, and a pass over a napkin spanning four weeks and sixteen register rows
+new repository, and a pass over a napkin spanning four weeks and eighteen register rows
 is not bounded to one closeout. Evidence: that ruling and the counts above. Falsifier:
 the deferral was premature if the owner restarts that lane, if the re-assessment strikes
 MOVE (the buffers then have no other destination), or if one session-completion pass
