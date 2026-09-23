@@ -17,6 +17,20 @@ repository before acting.
   in that session. Merging the specification's pull request is mechanics an agent performs
   (the drafting agent had written "no agent merges"; the owner ruled on 23 September that
   this was invented, and SPEC-CC-4 is retired).
+- **Open pull request #110** carries the specification, the course plan, the review record
+  and this record, at `SHA:9b3ae0de`, ready for review. The owner chose on 23 September to
+  leave it open at the close rather than merge it in that session: the next session reads
+  its check results and every review comment, cures anything real within the two-round
+  budget, and merges it when green and clean. Until it merges, `main` does not carry these
+  records; a session that starts on `main` checks out
+  `claude/castr-destination-spec-2026-09-21` first.
+- **What the 23 September close deliberately left in context only:** the six reviewer
+  transcripts (their measured facts are in the review record; nothing else of theirs is
+  needed); the drafting reasoning behind each specification clause (the clause and its
+  owner quotation are the decision-sufficient compression); the exact wording of the
+  decision cards (the decisions are in the specification's change log and the course
+  plan). Bounds of that close's own scan: it could not see review comments that arrived on
+  #110 after `SHA:9b3ae0de`, and no measurement in the review record was re-verified.
 - **Next owner interaction, and the next session's first move:** the ratification walk
   — one decision card per clause of the specification's ratification checklist, each in
   plain language with its reason and its cost, recording confirm, change or strike; then

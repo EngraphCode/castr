@@ -33,6 +33,11 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   watching the chat. I stood the heartbeat down and posted a heartbeat-end event; then, at
   a long idle, closed my claim and posted a full-pause event with a resume recipe. The
   watcher is the awareness surface and stays; the heartbeat's value is consumer-contingent.
+- **Play seed (an association, not a finding):** the invented merge clause and the
+  heartbeats emitted to an empty stream look shaped alike — guards manufactured for an
+  authority or a reader who is not there. The specification says silence is never
+  permission (SPEC-I-1); I had read silence as prohibition, the dual error. Discarded at
+  the harvest: "Dependabot's rescan delay is like commit-queue contention" — forced.
 - **Vendor-agnostic, owner's word:** "I asked you to make sure that everything that matters
   is written to the repo, I meant it, no shortcuts, the Practice is ALWAYS vendor agnostic."
   A platform's per-user memory is a duplicate, never the source.
