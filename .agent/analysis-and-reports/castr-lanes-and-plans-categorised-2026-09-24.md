@@ -24,10 +24,12 @@ whole-document run is a reading of the parser, not a measurement.
 ## 1. The answer
 
 **Castr has one live lane: the course.** Every other lane is dormant, stopped or done. On
-24 September 2026 there were no open pull requests, all three Castr Routines were disabled, and
-no agent held a claim. The correction thread carries the course, and its next leg is RATIFY.
+24 September 2026 there were no open pull requests, the 23 remote branches besides `main` were
+all in the class the owner wrote off on 21 September, all three Castr Routines were disabled,
+and no agent held a claim. The correction thread carries the course, and its next leg is RATIFY.
 
-The register (Appendix A) has 202 rows: 17 lanes, 124 plan rows covering all 137 plan Markdown
+The register (Appendix A) has 199 rows: 14 lanes (six thread records, the
+course's five legs and the three Castr Routines), 124 plan rows covering all 137 plan Markdown
 files (the 14 template files share one row), 35 proof-programme queue rows, 18 tranche rows,
 3 registers and 5 plan-shaped research files. Primary category by the course leg that would
 use each row (unit: rows; computed in Appendix B):
@@ -36,12 +38,12 @@ use each row (unit: rows; computed in Appendix B):
 | ------- | ------ | ------- | ---- | ---- | ---- | ----- |
 | A       | 3      | 5       | 2    | 21   | 1    | 32    |
 | B       | 0      | 1       | 0    | 1    | 40   | 42    |
-| C       | 0      | 0       | 4    | 0    | 0    | 4     |
-| D       | 6      | 0       | 13   | 0    | 105  | 124   |
-| Total   | 9      | 6       | 19   | 22   | 146  | 202   |
+| C       | 0      | 0       | 17   | 0    | 0    | 17    |
+| D       | 6      | 0       | 0    | 0    | 102  | 108   |
+| Total   | 9      | 6       | 19   | 22   | 143  | 199   |
 
-A row can also carry a secondary category: C is the primary category of 4 rows and
-the secondary category of 20 more.
+A row can also carry a secondary category: C is the primary category of 17 rows and
+the secondary category of 7 more.
 
 1. **A: the fundamental issues now have one owner, the specification and the course.** No
    dormant plan fixes them. What the estate still offers them is design input and evidence for
@@ -62,8 +64,9 @@ the secondary category of 20 more.
    feed MEASURE either way. If MEASURE says evolve, the B rows are work again; if it says
    rebuild, the maps are all that survives.
 3. **C: outside the course, little of the estate prepares the move.** The course's legs already
-   name what MOVE needs. §2 lists the facts the estate adds, among them that no check here
-   polices dependencies between workspaces.
+   name what MOVE needs. Most C rows are a list, a ledger or a set of notes inside an item that
+   otherwise serves none, which is why their secondary category is D. §2 lists what they add,
+   among them that no check here polices dependencies between workspaces.
 4. **D: most of the estate serves none of the three.** 19 rows still declare live
    authority they no longer have (§3). MOVE archives this repository, so D needs no per-item
    work; what D rows hold that must travel is listed under MOVE in §2.
@@ -71,7 +74,7 @@ the secondary category of 20 more.
 ### Asked of the owner
 
 Nothing. This report adds no entry to the ratification walk and disposes of nothing. Where it
-reached a verdict itself, the verdict is stated (§3, §4); tell the author which is wrong.
+reached a verdict itself, the verdict is stated (§3, §4).
 
 Everything below is reference.
 
@@ -222,7 +225,8 @@ plans (PX-1, PX-11) are still cited as authority by the parent plan, the ledger 
 **Populations.**
 
 - Lanes: the six thread records under `.agent/memory/operational/threads/`, the course's five
-  legs, and platform state read on 24 September 2026.
+  legs, and the three Castr Routines as the platform showed them on 24 September 2026. Open
+  pull requests and remote branches are context in §1, not lanes.
 - Every file matched by `find .agent/plans -name '*.md'` (137). The six CSV and JSON files in
   `.agent/plans/correction-manifests/` are evidence data for the archived correction plan, not
   plans.
@@ -233,13 +237,14 @@ plans (PX-1, PX-11) are still cited as authority by the parent plan, the ledger 
   files under `.agent/research/`. `.agent/memory/operational/tracks/` holds only its README.
 
 **Category tests.** Each row has one primary category, by its substance, and at most one
-secondary:
+secondary. A, B and C outrank D: a row whose substance serves any of them takes that category,
+and a secondary D marks that the rest of the row serves none.
 
 - **A:** its substance is the specification, the model design (SPEC-N-1 to SPEC-N-5), the proof
   standard, or evidence for MEASURE's evolve-or-rebuild verdict.
 - **B:** its substance is work on the present product code: fixing, testing or hardening it.
 - **C:** it is needed by MOVE's acceptance or its what-travels list.
-- **D:** none of these now. This includes substance the specification already carries
+- **D:** none of A, B or C now. This includes substance the specification already carries
   (`subsumed`) and substance it rules out.
 
 **Markers.**
@@ -305,7 +310,7 @@ Not taken:
 | LN-1 | Castr correction thread (`castr-correction.next-session.md`) | active                         | live    | A       | C         | carries the course; route to RATIFY                                          | RATIFY | `.agent/memory/operational/repo-continuity.md:20`                                                                                                |
 | LN-2 | Proof programme thread (`proof-programme.next-session.md`)   | active                         | dormant | D       | —         | execution paused; authority subsumed by the course                           | none   | `.agent/memory/operational/threads/proof-programme.next-session.md:5-9`                                                                          |
 | LN-3 | Consolidation Routine and Watcher thread                     | Routine ENABLED                | stopped | D       | —         | silent                                                                       | none   | `.agent/memory/operational/threads/consolidation-routine-and-watcher.next-session.md:24`; platform: Routine disabled, last run failed 2026-08-27 |
-| LN-4 | Initial Castr review thread                                  | review complete; W1–W5 pending | dormant | D       | C         | destination statement superseded by the specification; W3 contradiction list | MOVE   | `.agent/memory/operational/threads/initial-castr-review.next-session.md:23-28`                                                                   |
+| LN-4 | Initial Castr review thread                                  | review complete; W1–W5 pending | dormant | C       | D         | destination statement superseded by the specification; W3 contradiction list | MOVE   | `.agent/memory/operational/threads/initial-castr-review.next-session.md:23-28`                                                                   |
 | LN-5 | Proof-programme loop review thread                           | executed                       | done    | D       | —         | silent                                                                       | none   | `.agent/memory/operational/threads/proof-programme-review.next-session.md:13-27`                                                                 |
 | LN-6 | Practice transplant thread                                   | STOPPED; inner lanes "ACTIVE"  | stopped | D       | —         | silent                                                                       | none   | `.agent/memory/operational/threads/practice-transplant.next-session.md:3-6`, `:130`, `:155`                                                      |
 
@@ -319,16 +324,13 @@ Not taken:
 | CL-4 | MOVE — Castr into OCE as workspaces                        | pending  | live   | C       | —         | Home                                                                              | MOVE    | `.agent/plans/active/castr-course.md:26-29` |
 | CL-5 | PLOT — legs to SPEC-C-1 from MEASURE and the model design  | pending  | live   | A       | —         | N-1 to N-5, AR-2                                                                  | PLOT    | `.agent/plans/active/castr-course.md:30-33` |
 
-### Lanes: platform state
+### Lanes: Castr Routines
 
-| ID   | Item                                                       | Declared               | Actual     | Primary | Secondary | Relation to the specification                       | Leg  | Evidence                                                                      |
-| ---- | ---------------------------------------------------------- | ---------------------- | ---------- | ------- | --------- | --------------------------------------------------- | ---- | ----------------------------------------------------------------------------- |
-| PS-1 | Open pull requests                                         | none                   | none       | D       | —         | silent                                              | none | GitHub, 2026-09-24: 0 open                                                    |
-| PS-2 | 23 remote branches besides `main`                          | written off 2026-09-21 | historical | D       | —         | silent                                              | none | GitHub branch list, 2026-09-24; `.agent/plans/active/castr-course.md:127-132` |
-| PS-3 | Routine "Castr proof-programme (ADR-051)"                  | paused                 | stopped    | D       | —         | silent                                              | none | platform: disabled; last run 2026-08-26                                       |
-| PS-4 | Routine "Castr Dedicated consolidation — every three days" | disabled (platform)    | stopped    | D       | —         | silent; the thread record (LN-3) still says ENABLED | none | platform: disabled; last run failed 2026-08-27                                |
-| PS-5 | Routine "Castr Adversarial PR Evaluation"                  | none                   | stopped    | D       | —         | silent                                              | none | platform: disabled; last run 2026-08-27                                       |
-| PS-6 | Routine "OCE fork sync watch → Slack" (not a Castr lane)   | enabled                | live       | D       | —         | silent; an OCE fork watch, not a Castr lane         | none | platform: enabled, four runs each weekday                                     |
+| ID   | Item                                                       | Declared            | Actual  | Primary | Secondary | Relation to the specification                       | Leg  | Evidence                                       |
+| ---- | ---------------------------------------------------------- | ------------------- | ------- | ------- | --------- | --------------------------------------------------- | ---- | ---------------------------------------------- |
+| PS-1 | Routine "Castr proof-programme (ADR-051)"                  | paused              | stopped | D       | —         | silent                                              | none | platform: disabled; last run 2026-08-26        |
+| PS-2 | Routine "Castr Dedicated consolidation — every three days" | disabled (platform) | stopped | D       | —         | silent; the thread record (LN-3) still says ENABLED | none | platform: disabled; last run failed 2026-08-27 |
+| PS-3 | Routine "Castr Adversarial PR Evaluation"                  | none                | stopped | D       | —         | silent                                              | none | platform: disabled; last run 2026-08-27        |
 
 ### Plans: active
 
@@ -342,7 +344,7 @@ Not taken:
 
 | ID   | Item                                                                | Declared | Actual  | Primary | Secondary | Relation to the specification                                                                                      | Leg  | Evidence                                                                    |
 | ---- | ------------------------------------------------------------------- | -------- | ------- | ------- | --------- | ------------------------------------------------------------------------------------------------------------------ | ---- | --------------------------------------------------------------------------- |
-| PC-1 | `.agent/plans/current/archive-pii-scrub.md`                         | active   | dormant | D       | C         | silent; matters only if code travels with its history                                                              | MOVE | `.agent/plans/current/archive-pii-scrub.md:3`                               |
+| PC-1 | `.agent/plans/current/archive-pii-scrub.md`                         | active   | dormant | C       | D         | silent; matters only if code travels with its history                                                              | MOVE | `.agent/plans/current/archive-pii-scrub.md:3`                               |
 | PC-2 | `.agent/plans/current/zod-truth-surface-and-dependency-currency.md` | current  | dormant | A       | B         | findings support G-7 (`:95-99`); TS-1b (Q-27) contradicts G-7; TS-3 (Q-26) pre-empts N-3 against AR-6 (`:373-377`) | PLOT | `.agent/plans/current/zod-truth-surface-and-dependency-currency.md:299-307` |
 
 ### Plans: paused
@@ -353,7 +355,7 @@ Not taken:
 | PP-2 | `.agent/plans/current/paused/02-ir-fidelity-proof-harness.md`           | backlog  | dormant   | B       | A         | findings: C3 → PR-3, C2 → N-1; method (round-trip IR equality) contradicts G-7                                                              | MEASURE | `.agent/plans/current/paused/02-ir-fidelity-proof-harness.md:62`, `:83`       |
 | PP-3 | `.agent/plans/current/paused/explicit-additional-properties-support.md` | paused   | dormant   | A       | B         | goal (carry explicit and schema-valued policies) supports P-1; its "never invent" rule conflicts with P-1 reading a silent object as closed | MEASURE | `.agent/plans/current/paused/explicit-additional-properties-support.md:29-41` |
 | PP-4 | `.agent/plans/current/paused/oak-practice-transplant.md`                | stopped  | stopped   | D       | —         | silent; its "castr emits MCP tools" contradicts Not part of Castr for now                                                                   | none    | `.agent/plans/current/paused/oak-practice-transplant.md:18`                   |
-| PP-5 | `.agent/plans/current/paused/practice-equality-parity-follow-up.md`     | paused   | dormant   | D       | C         | silent; HO-1 notes on running OCE's gates in a container                                                                                    | MOVE    | `.agent/plans/current/paused/practice-equality-parity-follow-up.md:39-52`     |
+| PP-5 | `.agent/plans/current/paused/practice-equality-parity-follow-up.md`     | paused   | dormant   | C       | D         | silent; HO-1 notes on running OCE's gates in a container                                                                                    | MOVE    | `.agent/plans/current/paused/practice-equality-parity-follow-up.md:39-52`     |
 
 ### Plans: future
 
@@ -366,7 +368,7 @@ Not taken:
 | PF-5 | `.agent/plans/future/oak-code-first-openapi-generation-replacement.md` | planned         | dormant    | D       | —         | later (Capabilities: Later) (ingest needs change control)                                                            | none | `.agent/plans/future/oak-code-first-openapi-generation-replacement.md:3`   |
 | PF-6 | `.agent/plans/future/oak-wider-openapi-stack-replacement.md`           | planned         | superseded | D       | —         | subsumed by C-1 (`openapi-typescript`); REST client excluded (Not part of Castr for now)                             | none | `.agent/plans/future/oak-wider-openapi-stack-replacement.md:3`             |
 | PF-7 | `.agent/plans/future/phase-5-ecosystem-expansion.md`                   | planned         | dormant    | D       | —         | excluded (Not part of Castr for now) or later (Capabilities: Later)                                                  | none | `.agent/plans/future/phase-5-ecosystem-expansion.md:3`                     |
-| PF-8 | `.agent/plans/future/strategy-vision-estate-overhaul.md`               | strategic brief | dormant    | D       | C         | destination statement superseded by the specification; W3 contradiction list; holds the Q-012 to Q-015 verdicts      | MOVE | `.agent/plans/future/strategy-vision-estate-overhaul.md:1-12`              |
+| PF-8 | `.agent/plans/future/strategy-vision-estate-overhaul.md`               | strategic brief | dormant    | C       | D         | destination statement superseded by the specification; W3 contradiction list; holds the Q-012 to Q-015 verdicts      | MOVE | `.agent/plans/future/strategy-vision-estate-overhaul.md:1-12`              |
 | PF-9 | `.agent/plans/future/temporal-first-js-ts-date-time-doctrine.md`       | planned         | superseded | D       | —         | settled by P-5 and Not part of Castr for now                                                                         | none | `.agent/plans/future/temporal-first-js-ts-date-time-doctrine.md:3`         |
 
 ### Plans: remediation
@@ -383,14 +385,14 @@ Not taken:
 
 ### Plans: proof programme
 
-| ID   | Item                                                          | Declared | Actual     | Primary | Secondary | Relation to the specification                                                                          | Leg  | Evidence                                                        |
-| ---- | ------------------------------------------------------------- | -------- | ---------- | ------- | --------- | ------------------------------------------------------------------------------------------------------ | ---- | --------------------------------------------------------------- |
-| PG-1 | `.agent/plans/proof-programme/parent-plan.md`                 | live     | dormant    | D       | A         | execution paused; its A content subsumed by G-1 to G-7, AR-1 to AR-5, N-1 to N-5                       | none | `.agent/plans/proof-programme/parent-plan.md:135`, `:170-178`   |
-| PG-2 | `.agent/plans/proof-programme/ballot-2026-08-owner-walk.md`   | closed   | historical | D       | —         | B-01 charter superseded by the specification                                                           | none | `.agent/plans/proof-programme/ballot-2026-08-owner-walk.md:3`   |
-| PG-3 | `.agent/plans/proof-programme/incidents.md`                   | none     | historical | D       | —         | silent                                                                                                 | none | `.agent/plans/proof-programme/incidents.md:30-66`               |
-| PG-4 | `.agent/plans/proof-programme/loop-test-kingfisher-report.md` | none     | historical | D       | —         | silent                                                                                                 | none | `.agent/plans/proof-programme/loop-test-kingfisher-report.md:1` |
-| PG-5 | `.agent/plans/proof-programme/queued-decisions.md`            | none     | reference  | D       | —         | QD-12 subsumed by the Definitions' `UNEXPRESSIBLE`; QD-9 is N-1 input; QD-14 paused with the programme | none | `.agent/plans/proof-programme/queued-decisions.md:17-31`        |
-| PG-6 | `.agent/plans/proof-programme/routine-prompt.md`              | none     | dormant    | D       | —         | silent                                                                                                 | none | `.agent/plans/proof-programme/routine-prompt.md:9-23`           |
+| ID   | Item                                                          | Declared | Actual     | Primary | Secondary | Relation to the specification                                                                                            | Leg  | Evidence                                                        |
+| ---- | ------------------------------------------------------------- | -------- | ---------- | ------- | --------- | ------------------------------------------------------------------------------------------------------------------------ | ---- | --------------------------------------------------------------- |
+| PG-1 | `.agent/plans/proof-programme/parent-plan.md`                 | live     | dormant    | D       | —         | execution paused; its A content subsumed by G-1 to G-7, AR-1 to AR-5, N-1 to N-5                                         | none | `.agent/plans/proof-programme/parent-plan.md:135`, `:170-178`   |
+| PG-2 | `.agent/plans/proof-programme/ballot-2026-08-owner-walk.md`   | closed   | historical | D       | —         | B-01 charter superseded by the specification                                                                             | none | `.agent/plans/proof-programme/ballot-2026-08-owner-walk.md:3`   |
+| PG-3 | `.agent/plans/proof-programme/incidents.md`                   | none     | historical | D       | —         | silent                                                                                                                   | none | `.agent/plans/proof-programme/incidents.md:30-66`               |
+| PG-4 | `.agent/plans/proof-programme/loop-test-kingfisher-report.md` | none     | historical | D       | —         | silent                                                                                                                   | none | `.agent/plans/proof-programme/loop-test-kingfisher-report.md:1` |
+| PG-5 | `.agent/plans/proof-programme/queued-decisions.md`            | none     | reference  | D       | —         | QD-12 subsumed: under the Definitions its refusal is `NOT-YET-BUILT`; QD-9 is N-1 input; QD-14 paused with the programme | none | `.agent/plans/proof-programme/queued-decisions.md:17-31`        |
+| PG-6 | `.agent/plans/proof-programme/routine-prompt.md`              | none     | dormant    | D       | —         | silent                                                                                                                   | none | `.agent/plans/proof-programme/routine-prompt.md:9-23`           |
 
 ### Proof-programme queue rows
 
@@ -404,13 +406,13 @@ Not taken:
 | Q-05 | Q-05 placebo refinements and nested Zod loss       | pending     | dormant    | B       | —         | writer freeze; C-2 scope                                                          | none   | `.agent/plans/active/castr-course.md:80-82`                                 |
 | Q-06 | Q-06 #14 Draft-04 dependency                       | completed   | done       | B       | —         | silent                                                                            | none   | `.agent/plans/proof-programme/parent-plan.md` frontmatter                   |
 | Q-07 | Q-07 hygiene-gate gap (#21)                        | pending     | dormant    | B       | —         | stranded: #21 written off                                                         | none   | `.agent/plans/active/castr-course.md:127-132`                               |
-| Q-08 | Q-08 ADR estate integrity                          | pending     | dormant    | D       | C         | owner ruling: contradicting documents are corrected once in the new repository    | MOVE   | `.agent/research/castr-specification-review-2026-09-21.md:138-139`          |
+| Q-08 | Q-08 ADR estate integrity                          | pending     | dormant    | C       | D         | owner ruling: contradicting documents are corrected once in the new repository    | MOVE   | `.agent/research/castr-specification-review-2026-09-21.md:138-139`          |
 | Q-09 | Q-09 PR closure wave 1                             | completed   | historical | D       | —         | silent                                                                            | none   | `.agent/plans/proof-programme/parent-plan.md` frontmatter                   |
 | Q-10 | Q-10 Tranche 00 obligation inventory               | pending     | dormant    | D       | —         | subsumed by PR-6 and N-5                                                          | none   | `.agent/plans/proof-programme/parent-plan.md` frontmatter                   |
 | Q-11 | Q-11 Tranche 01 full harness                       | pending     | dormant    | D       | —         | subsumed by G-4 to G-7                                                            | none   | `.agent/plans/proof-programme/parent-plan.md` frontmatter                   |
 | Q-12 | Q-12 tranche tail 02A–14 and PR extraction         | pending     | dormant    | D       | —         | subsumed by the specification; PR extraction contradicts the 2026-09-21 write-off | none   | `.agent/plans/proof-programme/parent-plan.md:1028`                          |
 | Q-13 | Q-13 PR #23 end state                              | pending     | superseded | D       | —         | moot: #23 closed 2026-09-21                                                       | none   | `.agent/plans/active/castr-course.md:127-132`                               |
-| Q-14 | Q-14 doctrine amendment wave                       | pending     | dormant    | D       | C         | the same files MOVE rewrites, aimed at a superseded charter                       | MOVE   | `.agent/plans/active/castr-course.md:100-104`                               |
+| Q-14 | Q-14 doctrine amendment wave                       | pending     | dormant    | C       | D         | the same files MOVE rewrites, aimed at a superseded charter                       | MOVE   | `.agent/plans/active/castr-course.md:100-104`                               |
 | Q-15 | Q-15 fresh-container full-chain readiness          | pending     | dormant    | D       | —         | `.agent` machinery, a course non-goal                                             | none   | `.agent/plans/active/castr-course.md:158-161`                               |
 | Q-16 | Q-16 plan-architecture repair                      | pending     | dormant    | D       | —         | `.agent` machinery, a course non-goal                                             | none   | `.agent/plans/active/castr-course.md:158-161`                               |
 | Q-17 | Q-17 diagnostic-walker hardening                   | pending     | dormant    | B       | —         | silent                                                                            | none   | `.agent/plans/proof-programme/parent-plan.md` frontmatter                   |
@@ -446,9 +448,9 @@ Not taken:
 | PT-8  | `.agent/plans/transplant/dangling-reference-census.md`                         | none          | historical | D       | —         | silent                                                                                    | none | `.agent/plans/transplant/dangling-reference-census.md:1`                         |
 | PT-9  | `.agent/plans/transplant/first-run-friction-inventory.md`                      | open worklist | stopped    | D       | —         | silent                                                                                    | none | `.agent/plans/transplant/first-run-friction-inventory.md:14`                     |
 | PT-10 | `.agent/plans/transplant/oak-backflow/castr-feedback-2026-06-10.md`            | none          | stopped    | D       | —         | silent; Practice defects and enhancements for OCE, never delivered                        | none | `.agent/plans/transplant/oak-backflow/castr-feedback-2026-06-10.md:1-5`          |
-| PT-11 | `.agent/plans/transplant/oak-backflow/castr-innovations-ledger.md`             | none          | stopped    | D       | C         | silent; inventory of what Castr has that OCE lacks, including the schema-domain reviewers | MOVE | `.agent/plans/transplant/oak-backflow/castr-innovations-ledger.md:16-60`         |
-| PT-12 | `.agent/plans/transplant/oak-castr-delta-review-2026-07-03.md`                 | complete      | historical | D       | C         | silent; the last dated Castr↔OCE map                                                      | MOVE | `.agent/plans/transplant/oak-castr-delta-review-2026-07-03.md:3`                 |
-| PT-13 | `.agent/plans/transplant/oak-castr-gap-rescan-2026-06-28.md`                   | current       | stopped    | D       | C         | silent; its `castr_extras` list names Castr-only doctrine                                 | MOVE | `.agent/plans/transplant/oak-castr-gap-rescan-2026-06-28.md:301-312`             |
+| PT-11 | `.agent/plans/transplant/oak-backflow/castr-innovations-ledger.md`             | none          | stopped    | C       | D         | silent; inventory of what Castr has that OCE lacks, including the schema-domain reviewers | MOVE | `.agent/plans/transplant/oak-backflow/castr-innovations-ledger.md:16-60`         |
+| PT-12 | `.agent/plans/transplant/oak-castr-delta-review-2026-07-03.md`                 | complete      | historical | C       | D         | silent; the last dated Castr↔OCE map                                                      | MOVE | `.agent/plans/transplant/oak-castr-delta-review-2026-07-03.md:3`                 |
+| PT-13 | `.agent/plans/transplant/oak-castr-gap-rescan-2026-06-28.md`                   | current       | stopped    | C       | D         | silent; its `castr_extras` list names Castr-only doctrine                                 | MOVE | `.agent/plans/transplant/oak-castr-gap-rescan-2026-06-28.md:301-312`             |
 | PT-14 | `.agent/plans/transplant/oak-parity-program.md`                                | active        | stopped    | D       | —         | silent                                                                                    | none | `.agent/plans/transplant/oak-parity-program.md:3`                                |
 | PT-15 | `.agent/plans/transplant/practice-loop-closure-remediation.md`                 | current       | stopped    | D       | —         | silent                                                                                    | none | `.agent/plans/transplant/practice-loop-closure-remediation.md:3`                 |
 | PT-16 | `.agent/plans/transplant/reason-skill-parity-bring.md`                         | current       | done       | D       | —         | silent                                                                                    | none | `.agent/plans/transplant/reason-skill-parity-bring.md:3`                         |
@@ -539,8 +541,8 @@ Not taken:
 
 | ID   | Item                                       | Declared | Actual     | Primary | Secondary | Relation to the specification                                                                                                                | Leg  | Evidence                                     |
 | ---- | ------------------------------------------ | -------- | ---------- | ------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ---- | -------------------------------------------- |
-| PO-1 | `.agent/plans/roadmap.md`                  | none     | reference  | D       | C         | its "Full JSON Schema support" section restates C-2 against the specification's "only description"; on the review record's disagreement list | MOVE | `.agent/plans/roadmap.md:17-25`              |
-| PO-2 | `.agent/plans/delivery-ledger.md`          | none     | historical | D       | C         | archival record; its rows show the pull requests reopened on 20 September as "Open"                                                          | MOVE | `.agent/plans/delivery-ledger.md:207-219`    |
+| PO-1 | `.agent/plans/roadmap.md`                  | none     | reference  | C       | D         | its "Full JSON Schema support" section restates C-2 against the specification's "only description"; on the review record's disagreement list | MOVE | `.agent/plans/roadmap.md:17-25`              |
+| PO-2 | `.agent/plans/delivery-ledger.md`          | none     | historical | C       | D         | archival record; its rows show the pull requests reopened on 20 September as "Open"                                                          | MOVE | `.agent/plans/delivery-ledger.md:207-219`    |
 | PO-3 | `.agent/plans/practice-alignment-brief.md` | brief    | historical | D       | —         | silent                                                                                                                                       | none | `.agent/plans/practice-alignment-brief.md:3` |
 | PO-4 | `.agent/plans/templates/` (14 files)       | none     | reference  | D       | —         | silent                                                                                                                                       | none | `.agent/plans/templates/README.md`           |
 
@@ -549,7 +551,7 @@ Not taken:
 | ID    | Item                                                                  | Declared                | Actual  | Primary | Secondary | Relation to the specification                                      | Leg  | Evidence                                                                           |
 | ----- | --------------------------------------------------------------------- | ----------------------- | ------- | ------- | --------- | ------------------------------------------------------------------ | ---- | ---------------------------------------------------------------------------------- |
 | T-00  | Tranche 00 contract court                                             | T00a done; rest pending | dormant | D       | —         | subsumed by the specification and RATIFY                           | none | `.agent/report/castr-completeness-losslessness-proof-programme-2026-08-21.md:708`  |
-| T-01  | Tranche 01 harness, independent oracles, fixture provenance           | pending                 | dormant | D       | —         | subsumed by G-4 to G-7 and the the Definitions' Corpus             | none | `.agent/report/castr-completeness-losslessness-proof-programme-2026-08-21.md:814`  |
+| T-01  | Tranche 01 harness, independent oracles, fixture provenance           | pending                 | dormant | D       | —         | subsumed by G-4 to G-7 and the Definitions' Corpus                 | none | `.agent/report/castr-completeness-losslessness-proof-programme-2026-08-21.md:814`  |
 | T-02A | Tranche 02A fidelity foundation                                       | pending                 | dormant | D       | —         | subsumed by PR-2, AR-1, AR-2                                       | none | `.agent/report/castr-completeness-losslessness-proof-programme-2026-08-21.md:886`  |
 | T-02B | Tranche 02B value-contract and interaction-contract roots             | pending                 | dormant | A       | —         | pre-empts N-1                                                      | PLOT | `.agent/report/castr-completeness-losslessness-proof-programme-2026-08-21.md:887`  |
 | T-02C | Tranche 02C semantic facets (accepted, produced, identity, reference) | pending                 | dormant | A       | —         | subsumed by the Definitions' accepted and produced sets; N-1 input | PLOT | `.agent/report/castr-completeness-losslessness-proof-programme-2026-08-21.md:888`  |
@@ -571,9 +573,9 @@ Not taken:
 
 | ID   | Item                                                           | Declared          | Actual    | Primary | Secondary | Relation to the specification                                                                                                                        | Leg  | Evidence                                                   |
 | ---- | -------------------------------------------------------------- | ----------------- | --------- | ------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ---- | ---------------------------------------------------------- |
-| RG-1 | `.agent/memory/operational/open-questions.md` (Q-016 to Q-019) | open              | reference | D       | A         | Q-016 subsumed by AR-4 (seams open as N-2); Q-017 answered in substance by the Profile's source-meaning rule and PR-7; Q-018 and Q-019 Practice-only | none | `.agent/memory/operational/open-questions.md:50-123`       |
-| RG-2 | `.agent/memory/operational/pending-graduations.md` (18 rows)   | 14 pending        | dormant   | D       | C         | one product-doctrine row (model persistence versioning) is moot if the model is replaced; the rest Practice                                          | MOVE | `.agent/memory/operational/pending-graduations.md:106-117` |
-| RG-3 | `.agent/memory/active/napkin.md` (about 1,490 lines)           | consolidation due | dormant   | D       | C         | deferred deep consolidation names MOVE as the buffers' destination                                                                                   | MOVE | `.agent/memory/operational/repo-continuity.md:60-77`       |
+| RG-1 | `.agent/memory/operational/open-questions.md` (Q-016 to Q-019) | open              | reference | D       | —         | Q-016 subsumed by AR-4 (seams open as N-2); Q-017 answered in substance by the Profile's source-meaning rule and PR-7; Q-018 and Q-019 Practice-only | none | `.agent/memory/operational/open-questions.md:50-123`       |
+| RG-2 | `.agent/memory/operational/pending-graduations.md` (18 rows)   | 14 pending        | dormant   | C       | D         | one product-doctrine row (model persistence versioning) is moot if the model is replaced; the rest Practice                                          | MOVE | `.agent/memory/operational/pending-graduations.md:106-117` |
+| RG-3 | `.agent/memory/active/napkin.md` (about 1,490 lines)           | consolidation due | dormant   | C       | D         | deferred deep consolidation names MOVE as the buffers' destination                                                                                   | MOVE | `.agent/memory/operational/repo-continuity.md:60-77`       |
 
 ### Plan-shaped research
 
@@ -638,20 +640,20 @@ print('named but absent:', sorted(named - files) or 'none')
 ```
 
 ```text
-rows: 202
+rows: 199
 primary by leg:
    RATIFY MEASURE    MOVE    PLOT    none   total
 A       3       5       2      21       1      32
 B       0       1       0       1      40      42
-C       0       0       4       0       0       4
-D       6       0      13       0     105     124
-secondary: {'A': 13, 'B': 9, 'C': 20, '—': 160}
+C       0       0      17       0       0      17
+D       6       0       0       0     102     108
+secondary: {'A': 11, 'B': 9, 'C': 7, 'D': 13, '—': 159}
 primary by population:
-  Lanes: 17 {'A': 4, 'B': 1, 'C': 1, 'D': 11}
-  Plans: 124 {'A': 21, 'B': 30, 'C': 2, 'D': 71}
-  Proof-programme queue rows: 35 {'A': 1, 'B': 10, 'D': 24}
+  Lanes: 14 {'A': 4, 'B': 1, 'C': 2, 'D': 7}
+  Plans: 124 {'A': 21, 'B': 30, 'C': 10, 'D': 63}
+  Proof-programme queue rows: 35 {'A': 1, 'B': 10, 'C': 2, 'D': 22}
   Proof-programme tranches: 18 {'A': 5, 'B': 1, 'C': 1, 'D': 11}
-  Registers: 3 {'D': 3}
+  Registers: 3 {'C': 2, 'D': 1}
   Plan-shaped research: 5 {'A': 1, 'D': 4}
 declared live, actually not live: 19: LN-2, LN-3, LN-6, PA-3, PC-1, PC-2, PG-1, Q-34, PT-9, PT-13, PT-14, PT-15, PT-16, PT-19, PT-20, PK-13, PK-41, PX-7, PX-16
 plan Markdown files: 137; named in the register: 137
