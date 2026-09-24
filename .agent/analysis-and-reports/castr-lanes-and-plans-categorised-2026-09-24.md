@@ -11,7 +11,7 @@ against `main` at `SHA:d41c4b3e`. **Yardstick:** [the specification](../../docs/
 draft 0.4.0, and [the course](../plans/active/castr-course.md).
 
 **What this report is.** An analysis for the owner's re-assessment of the course. It moves,
-edits, archives and schedules nothing, and asks the owner for nothing.
+edits, archives and schedules nothing, and asks the owner one thing (§1).
 
 **Evidence bound.** Every plan file, thread record and register named in Appendix A was read by
 this session or its read-only inventory passes, and the load-bearing claims were re-opened
@@ -73,8 +73,16 @@ the secondary category of 7 more.
 
 ### Asked of the owner
 
-Nothing. This report adds no entry to the ratification walk and disposes of nothing. Where it
-reached a verdict itself, the verdict is stated (§3, §4).
+1. **The Zod version range, a card for the ratification walk.** The owner's ruling of
+   31 August 2026 bounds Zod input at `>=4.5 <5` and has output track the latest 4.x
+   (`.agent/plans/current/zod-truth-surface-and-dependency-currency.md:266-274`). The
+   specification's Formats and versions table says only "Zod 4", and SPEC-C-1's acceptance
+   proves the output against the Zod the consumer installs, which may be older than the latest
+   4.x. The ruling stands until the owner changes it; whether the specification restates,
+   changes or drops it is the owner's decision.
+
+The report adds nothing else to the ratification walk and disposes of nothing. Where it reached
+a verdict itself, the verdict is stated (§3, §4).
 
 Everything below is reference.
 
@@ -209,16 +217,16 @@ plans (PX-1, PX-11) are still cited as authority by the parent plan, the ledger 
 
 ## 4. Estate-held obligations the specification does not state
 
-| Obligation                                                | Where                                                                              | Verdict                                                                                                                                                                                                  |
-| --------------------------------------------------------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Zod input `>=4.5 <5`, output the latest 4.x               | `.agent/plans/current/zod-truth-surface-and-dependency-currency.md:266-274`        | No card. SPEC-C-1's acceptance in the consumer's workspaces binds the output side; the input bound concerns reading Zod, which is SPEC-C-2; the ruling's premise, no external consumers, no longer holds |
-| QD-12: the OpenAPI writer refuses boolean schemas         | `.agent/plans/proof-programme/queued-decisions.md:29`                              | Subsumed. OpenAPI 3.2 can state a boolean schema, so under the Definitions the refusal is `NOT-YET-BUILT`, never `UNEXPRESSIBLE`, and SPEC-PR-6 counts it                                                |
-| Q-017: OpenAPI 3.0 `enum: [null]` without `nullable`      | `.agent/memory/operational/open-questions.md:65`                                   | Subsumed by the Profile's rule that the source's specification governs, and by SPEC-PR-7; OpenAPI 3.0 only, so SPEC-C-1 does not depend on it                                                            |
-| QD-9: model persistence versioning                        | `.agent/plans/proof-programme/queued-decisions.md:25`                              | Input to SPEC-N-1; moot if the model is replaced                                                                                                                                                         |
-| External-reference I/O policy                             | `.agent/plans/roadmap.md:42-50`                                                    | No SPEC-C-1 dependency: the review record counts all 129 of Oak's `$ref` as local (carried forward, not re-measured)                                                                                     |
-| Hostile-input containment (T-10)                          | `.agent/report/castr-completeness-losslessness-proof-programme-2026-08-21.md:1703` | No SPEC-C-1 dependency: the corpus is the consumer's own document                                                                                                                                        |
-| Q-018, Q-019: Codex permissions and worktree installation | `.agent/memory/operational/open-questions.md:91-123`                               | Practice only                                                                                                                                                                                            |
-| QD-14: non-code slices and red-first                      | `.agent/plans/proof-programme/queued-decisions.md:31`                              | Paused with the programme; the course's "test and cure land together" covers product work                                                                                                                |
+| Obligation                                                | Where                                                                              | Verdict                                                                                                                                                                    |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Zod input `>=4.5 <5`, output the latest 4.x               | `.agent/plans/current/zod-truth-surface-and-dependency-currency.md:266-274`        | A card, the one ask in §1. The ruling stands; the specification does not restate it, and SPEC-C-1's acceptance checks the output only against the consumer's installed Zod |
+| QD-12: the OpenAPI writer refuses boolean schemas         | `.agent/plans/proof-programme/queued-decisions.md:29`                              | Subsumed. OpenAPI 3.2 can state a boolean schema, so under the Definitions the refusal is `NOT-YET-BUILT`, never `UNEXPRESSIBLE`, and SPEC-PR-6 counts it                  |
+| Q-017: OpenAPI 3.0 `enum: [null]` without `nullable`      | `.agent/memory/operational/open-questions.md:65`                                   | Subsumed by the Profile's rule that the source's specification governs, and by SPEC-PR-7; OpenAPI 3.0 only, so SPEC-C-1 does not depend on it                              |
+| QD-9: model persistence versioning                        | `.agent/plans/proof-programme/queued-decisions.md:25`                              | Input to SPEC-N-1; moot if the model is replaced                                                                                                                           |
+| External-reference I/O policy                             | `.agent/plans/roadmap.md:42-50`                                                    | No SPEC-C-1 dependency: the review record counts all 129 of Oak's `$ref` as local (carried forward, not re-measured)                                                       |
+| Hostile-input containment (T-10)                          | `.agent/report/castr-completeness-losslessness-proof-programme-2026-08-21.md:1703` | No SPEC-C-1 dependency: the corpus is the consumer's own document                                                                                                          |
+| Q-018, Q-019: Codex permissions and worktree installation | `.agent/memory/operational/open-questions.md:91-123`                               | Practice only                                                                                                                                                              |
+| QD-14: non-code slices and red-first                      | `.agent/plans/proof-programme/queued-decisions.md:31`                              | Paused with the programme; the course's "test and cure land together" covers product work                                                                                  |
 
 ## 5. Method
 
@@ -273,8 +281,10 @@ Three reviewers read the draft: `assumptions-expert`, `docs-adr-expert` and
 `architecture-expert-fred`. Each finding was checked against the cited files before it was
 taken. Taken:
 
-- Both owner asks were dropped. The Zod range is bound by SPEC-C-1's acceptance and its premise
-  has lapsed; the drift now carries a verdict.
+- The drift ask was dropped; the drift now carries a verdict. The Zod card was dropped too, as
+  covered by SPEC-C-1's acceptance, then restored after the pull request's Codex review:
+  SPEC-C-1 proves compatibility only with the consumer's installed Zod, and dropping the card
+  would have set aside a standing owner ruling.
 - The unknown-key history now includes the 16 April re-widening. PK-26 supports SPEC-P-1, PK-47
   is superseded by its own banner, and PK-45's writing is marked as contradicting SPEC-P-1.
 - Rows whose substance the specification carries became D, and the category tests now classify
