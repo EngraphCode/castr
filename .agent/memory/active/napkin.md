@@ -2,6 +2,28 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-09-24 (lane and plan categorisation — Quark stirs Latitude / 017FtN, claude-code)
+
+- **Read the platform before trusting a record of it.** The consolidation thread record says
+  its Routine is "ENABLED"; `list_triggers` showed it disabled, its last run failed on
+  27 August. Repo-continuity had only called the state unverified. Categorising a lane needs
+  the platform read, not the record.
+- **A formatter can break a parser of its output.** The report's counting script skipped
+  table separator rows by their exact spelling (`| --- `); Prettier padded them and 17
+  separators became data rows. Running the count before and after formatting and diffing
+  the outputs caught it. Parse Markdown tables by content (header text, all-dash cells).
+- **`lib/tests-transforms/__fixtures__/arbitrary/oak-api.json` is not the Oak corpus.** It is
+  an older document (26 paths, 24 schemas against 34 and 33). The name invites using it as
+  MEASURE's corpus.
+- **Cricket's redirections outweighed its verdicts.** Eight of eight returns said ON-TRACK;
+  the value was four converging redirections (one owner-facing section, one closed list of
+  asks, a register generated from data, findings held as hypotheses), all adopted before
+  writing.
+- **Practice-tool friction, for the owner's other estates:** PDR-027's thread identity row
+  requires a `model` field, and this cloud session's instructions forbid writing a model
+  identifier into any pushed file. The session left the thread records untouched rather than
+  break either; the collision needs one rule to yield.
+
 ## 2026-09-23 (landing #110 — Mussel mends Buoy / 372325, claude-opus-5-5)
 
 - **"Zero reviews" is a moment, not a state.** At about 11:07Z #110 had no review
