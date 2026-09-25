@@ -1,9 +1,9 @@
 ---
 title: Castr destination specification
 id: castr-specification
-version: 0.4.0
+version: 0.4.1
 status: draft-awaiting-owner-ratification
-date: 2026-09-23
+date: 2026-09-25
 owner: Jim Cresswell
 approvers:
   - Jim Cresswell
@@ -80,7 +80,7 @@ table in §6, and what Castr commits to is the capabilities in §7.
 | **Profile**                  | Castr's own declared decisions about how formats are read and written (§5).                                                                                                                                                                                                                                                                                                                                                   |
 | **Lossless**                 | No semantic information is lost. Notation may change; meaning may not.                                                                                                                                                                                                                                                                                                                                                        |
 | **Located rejection**        | A refusal that names the construct, where it is in the source, the format pair, and why. It has exactly one kind: `UNEXPRESSIBLE` (the target format has no way to say the meaning; permanent) or `NOT-YET-BUILT` (Castr has not built it; a defect that names its capability). It travels as a `Result` on library surfaces.                                                                                                 |
-| **Corpus**                   | The documents a capability is proved against, copied into Castr's fixtures and pinned by source commit and SHA-256.                                                                                                                                                                                                                                                                                                           |
+| **Corpus**                   | The documents a capability is proved against, copied into Castr's fixtures and pinned by SHA-256, and by source commit where the source has one; a served document records its URL and fetch time.                                                                                                                                                                                                                            |
 | **Scope-and-fidelity table** | Per directed format pair, the class of every construct kind: **carried** (the target expresses it and its own checker enforces it); **carried as structure** (it appears as type or registry structure); **carried by companion** (the target cannot enforce it, and the same run emits from the same model an artefact that does, with the constraint also visible as documentation); **unexpressible** (located rejection). |
 | **Advertised capability**    | A directed format pair or generator whose corpus passes §8 with no `NOT-YET-BUILT` rejection reachable. The README's capability table is generated from that fact.                                                                                                                                                                                                                                                            |
 | **Landed**                   | Merged on `main` through a merge-green pull request. Landing is not delivery; delivery keeps its standing definition (a named beneficiary consumes the capability).                                                                                                                                                                                                                                                           |
@@ -176,16 +176,21 @@ where a profile decision below declares a different reading.
 
 ## 6. Formats and versions
 
-| Format           | Read                       | Written          |
-| ---------------- | -------------------------- | ---------------- |
-| OpenAPI          | 3.0.x, 3.1.x, 3.2.x        | 3.2.0            |
-| JSON Schema      | Draft 2020-12 and Draft-07 | both, by request |
-| Zod              | 4                          | 4                |
-| TypeScript types | not read                   | yes              |
+| Format           | Read                            | Written               |
+| ---------------- | ------------------------------- | --------------------- |
+| OpenAPI          | 3.0.x, 3.1.x, 3.2.x             | 3.2.0                 |
+| JSON Schema      | Draft 2020-12 and Draft-07      | both, by request      |
+| Zod              | 4, at 4.5 or later (`>=4.5 <5`) | 4, the latest release |
+| TypeScript types | not read                        | yes                   |
 
 OpenAPI 2.0 is not read: a 2.0 document receives a located rejection naming its version.
 A JSON Schema dialect change is always explicit; Castr never infers, upgrades or
 downgrades a dialect. A change to this table is a change to this document.
+
+The Zod row restates the owner's ruling of 31 August 2026: "Castr has zero external
+consumers, I am happy to state the Zod input must be >= 4.5 and that Zod output will be
+latest", and "latest here means latest 4, with a tripwire to examine Zod 5 if and when it
+is released".
 
 ## 7. Capabilities
 
@@ -197,7 +202,9 @@ scope-and-fidelity table is written into this document and its corpus passes §8
 > We want OpenAPI -> Zod + TS in order to be able to replace existing libraries in OCE with
 > Castr, the Zod + TS -> MCP is already handled in OCE and it can stay that way for now.
 
-Corpus: the Oak API specification, pinned.
+Corpus: the Oak API specification, pinned: v1 first, and v0. The owner, 25 September 2026:
+"Castr needs to be able to process both Oak API specs, although the V1 spec is the higher
+priority and there is wiggle room on supporting the V0 spec if needed."
 
 Castr produces, from a document given as a file or as a document value:
 
@@ -219,7 +226,9 @@ Accepted when:
    output, and the proof of SPEC-G-4 all pass;
 2. in the consuming workspaces, `openapi-zod-client`, the `openapi-zod-client-adapter`
    package and `openapi-typescript` are removed, no string or regular-expression rewriting
-   of Castr's output remains, and their build, type-check and tests pass.
+   of Castr's output remains, and their build, type-check and tests pass. The consuming
+   workspaces install the latest Zod 4 release before this part is checked: bringing them to
+   it is part of the landing.
 
 > openapi-fetch stays for now, if we add a rest client to Castr that will be a separate
 > workspace and package later.
@@ -471,8 +480,8 @@ can be decided on its own:
 - **The reading of a source `default`.** SPEC-G-4 reads a JSON Schema or OpenAPI
   `default` as an annotation that inserts nothing into the produced value (§5). The
   consumer's present generator, `openapi-zod-client` as the Engraph Open Curriculum
-  Ecosystem configures it, emits `.default()` for a schema `default`, and the Oak API
-  specification has 14 `default` keywords; confirming this reading changes what the
+  Ecosystem configures it, emits `.default()` for a schema `default`, and each pinned Oak
+  API document has 18 `default` keywords; confirming this reading changes what the
   consumer's parsed values contain once SPEC-C-1 replaces that generator.
 - **A boundary check in C-1's acceptance, proposed and not in the text.** The review
   proposed that C-1's first acceptance part also require a check, made by Castr and read
@@ -480,6 +489,16 @@ can be decided on its own:
   output describes (address, method, identity, parameter locations and serialisation,
   request media types, response status keys and media types) matches the source. The
   owner adds it or declines it.
+
+From the review of 25 September 2026, folded into draft 0.4.1, each chosen by the owner from
+a stated option rather than in the owner's own words: the pin wording in the Corpus
+definition (SHA-256, and a source commit where the source has one; a served document records
+its URL and fetch time), and the sentence in SPEC-C-1's second acceptance part that checks it
+with the consuming workspaces on the latest Zod 4 release. One further decision from that day
+is the owner's before ratification: whether C-1's first acceptance part requires generation
+from v0 to pass. The corpus names both documents and the owner's words leave wiggle room on
+v0, while the acceptance text as written requires the whole corpus. Today the two documents
+differ in no construct; v0 is frozen, and Oak says new endpoints and fields land in v1 only.
 
 ## Change log
 
@@ -490,3 +509,4 @@ can be decided on its own:
 | 0.3.0   | 2026-09-21 | Owner decisions by card: mantagen is a human collaborator; approval is spoken locally and recorded by the agent with the content hash (SPEC-N-6 retired, answered by SPEC-CC-2); zero open dependency alerts on `main` to merge; SPEC-P-5 reading confirmed; OpenAPI 2.0 is not read.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | pending  |
 | 0.3.1   | 2026-09-23 | SPEC-CC-4 retired. It read "No agent merges a change to this document" and was the drafting agent's invention, never an owner decision (owner, 23 September 2026: "you invented the need for me to merge, it was never real"). Approval is the spoken word recorded under SPEC-CC-2; merging is mechanics. SPEC-CC-3 clarified to say so.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | pending  |
 | 0.4.0   | 2026-09-23 | The review of pull request #110 folded in; every changed clause is on the ratification checklist. SPEC-P-2 admits the function Zod calls to resolve a reference (`z.lazy`, a getter in an object shape) and names default insertion and unknown-key stripping as the only accepted-to-produced differences; SPEC-AR-6 makes those calls, and the call that reads a default's value, by construct kind, and requires the SPEC-N-3 technique to tell a function-form default from a value; the SPEC-P-3 vocabulary sentence is scoped to 2020-12; the wrong Zod call is removed from SPEC-P-5 (bare `z.iso.datetime()` rejects offsets that `date-time` permits); the C-1 Zod address carries the media type; the SPEC-G-4 produced side is defined, reading a JSON Schema or OpenAPI `default` as an annotation that inserts nothing; SPEC-G-5 excuses a constraint only where the source shows its deletion changes nothing; SPEC-CC-1 binds from the first ratification, SPEC-CC-2 defines the hashed text and SPEC-CC-3 its no-record state; SPEC-G-4 and SPEC-G-6 are added to the checklist, with two decisions the review raised for the owner: the reading of a source `default`, and a proposed C-1 boundary check. | pending  |
+| 0.4.1   | 2026-09-25 | Owner decisions of 25 September 2026. The Zod row of the Formats and versions table restates the ruling of 31 August 2026 quoted under the table (read at 4.5 or later within Zod 4, written as the latest Zod 4 release); the owner chose to restate it here rather than leave it as a ruling outside this document. The Corpus definition pins by SHA-256, and by source commit where the source has one, and a served document records its URL and fetch time. SPEC-C-1 names both Oak API documents, v1 first, in the owner's words, and checks its second acceptance part with the consuming workspaces on the latest Zod 4 release. The pin wording and the Zod 4 sentence were chosen by the owner from stated options and are on the ratification checklist, with a third decision for the owner: whether C-1's acceptance requires generation from v0 to pass. The checklist's `default` count is re-measured on the pinned documents: 18.                                                                                                                                                                                                                                                                        | pending  |

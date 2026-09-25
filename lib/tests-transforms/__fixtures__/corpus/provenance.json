@@ -1,0 +1,30 @@
+{
+  "documents": [
+    {
+      "file": "oak-curriculum-api-v1-1.0.1.json",
+      "openapi": "3.1.0",
+      "infoTitle": "Oak Curriculum API",
+      "infoVersion": "1.0.1",
+      "bytes": 184589,
+      "sha256": "ca61a52da2ee188ef71f4a097c7950da4c2683129f886bad24d5c7790bb4250e",
+      "source": {
+        "kind": "served",
+        "url": "https://open-api.thenational.academy/api/v1/swagger.json",
+        "fetchedAt": "2026-09-25T12:39:20Z"
+      }
+    },
+    {
+      "file": "oak-curriculum-api-v0-0.11.2.json",
+      "openapi": "3.1.0",
+      "infoTitle": "Oak Curriculum API",
+      "infoVersion": "0.11.2",
+      "bytes": 184716,
+      "sha256": "f1f9f66de13b843e29552f9e29a6f410358137fbb0c45320f10a01d0e12ca86c",
+      "source": {
+        "kind": "served",
+        "url": "https://open-api.thenational.academy/api/v0/swagger.json",
+        "fetchedAt": "2026-09-25T15:31:42Z"
+      }
+    }
+  ]
+}
