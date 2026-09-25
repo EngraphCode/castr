@@ -2,6 +2,30 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-09-25 (Oak corpus pin and re-measurement — Quark stirs Latitude / 017FtN, claude-code)
+
+- **Read the URL's version segment before comparing documents.** The owner's URL is
+  `/api/v1`; the consumer's cache, and the 21 September review record measured from it, are
+  `/api/v0` (its codegen entry point hard-codes the v0 URL). For half an hour I treated the
+  differences as drift in one document. They are two documents, both now pinned.
+- **State the counting method with the count (mine).** My first walker excluded the
+  children of `properties` and reported 245 closed objects against the record's 253, which I
+  presented as an unexplained method difference. A string-occurrence count reproduces every
+  figure in the record; the eight missing objects were the `allOf` members. The note's
+  appendix now carries the script and its output for both documents.
+- **A served document with no ETag or Last-Modified has only its hash.** The
+  specification's Corpus definition asks for a source commit and a SHA-256; the served v1
+  file offers the hash and a fetch time, the consumer's cached v0 offers a commit as well.
+  Pinned both, with the difference recorded in `provenance.json`.
+- **`prettier --check` on a path under `/tmp` is vacuous here.** `.prettierignore` carries
+  `tmp/`, which matches the scratchpad, so the check reports success having matched no file.
+  Check formatting on files inside the repository only. The pre-commit hook's
+  `prettier --write` would have re-indented the one-line v1 document and broken its hash;
+  the corpus files are now in `.prettierignore` and the provenance test recomputes the hash.
+- **A CONNECT 403 from the proxy is the environment's network policy, not the server.** The
+  first fetch of the Oak document was refused before leaving the session; the owner widened
+  the policy and the second fetch succeeded.
+
 ## 2026-09-24 (lane and plan categorisation — Quark stirs Latitude / 017FtN, claude-code)
 
 - **Read the platform before trusting a record of it.** The consolidation thread record says
