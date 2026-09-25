@@ -20,23 +20,17 @@ export const PROVENANCE_FILE = 'provenance.json';
 export const CORPUS_README = 'README.md';
 
 const sha256Schema = z.string().regex(/^[0-9a-f]{64}$/u);
-const commitShaSchema = z.string().regex(/^[0-9a-f]{40}$/u);
 
-/** A document fetched from the URL that serves it: its pin is the URL, the fetch time and the hash. */
+/**
+ * A document fetched from the URL that serves it: its pin is the URL, the fetch time and the
+ * hash. This is the one source kind the corpus holds. A document from another kind of source,
+ * one with a commit for instance, gets its own shape here when the first such document is
+ * pinned, never before.
+ */
 const servedSourceSchema = z.strictObject({
   kind: z.literal('served'),
   url: z.httpUrl(),
   fetchedAt: z.iso.datetime(),
-});
-
-/** A document copied from another repository's commit, which also records where that copy came from. */
-const copiedSourceSchema = z.strictObject({
-  kind: z.literal('copied'),
-  repository: z.httpUrl(),
-  repositoryCommit: commitShaSchema,
-  path: z.string().min(1),
-  upstreamUrl: z.httpUrl(),
-  upstreamCommit: commitShaSchema,
 });
 
 const pinnedDocumentSchema = z.strictObject({
@@ -47,7 +41,7 @@ const pinnedDocumentSchema = z.strictObject({
   infoVersion: z.string().min(1),
   bytes: z.int().positive(),
   sha256: sha256Schema,
-  source: z.discriminatedUnion('kind', [servedSourceSchema, copiedSourceSchema]),
+  source: z.discriminatedUnion('kind', [servedSourceSchema]),
 });
 
 function addDuplicateIssues(
@@ -99,6 +93,16 @@ export interface PinViolation {
   readonly message: string;
 }
 
+/**
+ * What the shell found at a pinned document's path: the bytes of a regular file, nothing, or
+ * something that is not a regular file (a symbolic link or a directory), whose bytes are not
+ * the bytes committed at that path.
+ */
+export type DocumentOnDisk =
+  | { readonly kind: 'file'; readonly bytes: Uint8Array }
+  | { readonly kind: 'missing' }
+  | { readonly kind: 'not-a-regular-file' };
+
 /** Exit 0: every pin matches. Exit 1: at least one pin violation. Exit 2: the record cannot be parsed. */
 export interface CorpusOutcome {
   readonly exitCode: 0 | 1 | 2;
@@ -137,18 +141,27 @@ function compareField(name: string, inDocument: string, recorded: string): reado
     : [`${name} is ${inDocument} in the document, ${recorded} recorded`];
 }
 
+/** The bytes as UTF-8 text, or nothing when they are not UTF-8: a JSON document is UTF-8 text. */
+function decodeUtf8(bytes: Uint8Array): string | undefined {
+  try {
+    return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  } catch {
+    return undefined;
+  }
+}
+
 /**
- * Check one pinned document's bytes against its record. No bytes means the document is not on
- * disk, reported alone. Otherwise the byte count is checked first and reported alone, then
+ * Check one pinned document against its record. A missing path, or one that is not a regular
+ * file, is reported alone. Otherwise the byte count is checked first and reported alone, then
  * the hash, also alone; the header fields are compared only once the bytes match, so a
  * rewrite is reported as the pin mismatch it is, never as a parse failure. Every recorded
  * document goes through here, so whether a pin is recomputed never depends on the shell.
  */
 export function checkPinnedDocument(
   document: PinnedDocument,
-  bytes: Uint8Array | undefined,
+  onDisk: DocumentOnDisk,
 ): readonly PinViolation[] {
-  if (bytes === undefined) {
+  if (onDisk.kind === 'missing') {
     return [
       {
         file: document.file,
@@ -157,6 +170,17 @@ export function checkPinnedDocument(
     ];
   }
 
+  if (onDisk.kind === 'not-a-regular-file') {
+    return [
+      {
+        file: document.file,
+        message:
+          'is not a regular file: a pinned document is the bytes committed at its path, never a link or a directory',
+      },
+    ];
+  }
+
+  const { bytes } = onDisk;
   if (bytes.byteLength !== document.bytes) {
     return [
       {
@@ -173,8 +197,9 @@ export function checkPinnedDocument(
     ];
   }
 
-  const json = parseJson(new TextDecoder().decode(bytes));
-  const header = json.ok ? documentHeaderSchema.safeParse(json.value) : undefined;
+  const text = decodeUtf8(bytes);
+  const json = text === undefined ? undefined : parseJson(text);
+  const header = json?.ok === true ? documentHeaderSchema.safeParse(json.value) : undefined;
   if (header === undefined || !header.success) {
     return [
       {

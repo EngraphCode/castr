@@ -34,15 +34,30 @@ schemas and every measured count are the same.
 Both files are one line, the bytes the server gave. `.prettierignore` excludes every
 `*.json` here except `provenance.json`, so the pre-commit formatter cannot change them, and
 `.gitattributes` marks them `-text` so no checkout converts their line endings. A changed
-byte changes the hash and fails the validator.
+byte changes the hash and fails the validator. A pinned name must be a regular file holding
+UTF-8 JSON: a symbolic link or a directory at that name fails, because its bytes are not the
+bytes committed at that path.
+
+## Licence and attribution
+
+The documents are Oak National Academy's. Oak's API documentation says the API is provided
+"for free on the Open Government License" (`https://open-api.thenational.academy/docs`, read
+25 September 2026), and the documents' own endpoint descriptions say lesson content is under
+OGL v3.0 with attribution required. The pinned documents are reproduced here under the
+[Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/):
+contains public sector information licensed under the Open Government Licence v3.0,
+© Oak National Academy. The terms page the documents cite,
+`https://open-api.thenational.academy/docs/about-oaks-api/terms`, served no content on
+25 September 2026.
 
 ## Refreshing a pin
 
 A new document is a new file and a new `provenance.json` entry, never an edit of an
 existing file. Record what the validator checks: the file name, `openapi`, `info.title`,
-`info.version`, the byte count and the SHA-256, plus the source: the URL and fetch time for
-a served document, or the repository, its commit, the path, the upstream URL and the
-upstream commit for a copied one.
+`info.version`, the byte count and the SHA-256, plus the source: the URL and fetch time.
+Served documents are the one source kind the record holds; a document from another kind of
+source, one with a commit for instance, gets its own source shape in the validator's record
+schema when the first such document is pinned.
 
 The measurements of each document, and how the pinned documents differ from the consumer's
 cached copy of 3 August 2026, are in

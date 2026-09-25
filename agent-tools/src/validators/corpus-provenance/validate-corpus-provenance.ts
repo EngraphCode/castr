@@ -7,7 +7,8 @@
  * `lib/tests-transforms/__fixtures__/corpus/provenance.json` is that record. This gate
  * recomputes each document's byte count and SHA-256 from the committed bytes, checks the
  * document's own `openapi` and `info` fields against the record, and fails on a document in
- * the directory that is not pinned, whatever its kind, or a pinned document that is not there.
+ * the directory that is not pinned, whatever its kind, a pinned document that is not there,
+ * and a pinned name that is a symbolic link or a directory rather than the bytes at its path.
  *
  * It lives here, with the other repository validators, rather than in the product test suite:
  * it proves nothing about Castr's behaviour, it proves that the fixtures are the bytes their
@@ -19,7 +20,7 @@
  * @packageDocumentation
  */
 
-import { readdirSync, readFileSync } from 'node:fs';
+import { lstatSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { isErrnoCode } from '../../core/errno.js';
@@ -33,6 +34,7 @@ import {
   parseProvenanceRecord,
   PROVENANCE_FILE,
   resolveCorpusOutcome,
+  type DocumentOnDisk,
   type ParsedProvenance,
   type PinViolation,
 } from './validate-corpus-provenance-helpers.js';
@@ -40,26 +42,37 @@ import {
 const repoRoot = resolveRepoRoot(import.meta.url);
 const corpusDirectory = path.join(repoRoot, CORPUS_DIRECTORY);
 
-function readRecord(): ParsedProvenance {
+/**
+ * What is at a path inside the corpus directory. `lstat` does not follow a symbolic link, so a
+ * link is reported as what it is rather than read through to its target.
+ */
+function readDocument(file: string): DocumentOnDisk {
+  const documentPath = path.join(corpusDirectory, file);
   try {
-    return parseProvenanceRecord(readFileSync(path.join(corpusDirectory, PROVENANCE_FILE), 'utf8'));
+    if (!lstatSync(documentPath).isFile()) {
+      return { kind: 'not-a-regular-file' };
+    }
   } catch (error) {
     if (isErrnoCode(error, 'ENOENT')) {
-      return { ok: false, error: 'the file does not exist' };
+      return { kind: 'missing' };
     }
     throw error;
   }
+  return { kind: 'file', bytes: readFileSync(documentPath) };
 }
 
-/** The document's bytes, or nothing when there is no such file: the helper reports that. */
-function readDocument(file: string): Uint8Array | undefined {
+function readRecord(): ParsedProvenance {
+  const record = readDocument(PROVENANCE_FILE);
+  if (record.kind === 'missing') {
+    return { ok: false, error: 'the file does not exist' };
+  }
+  if (record.kind === 'not-a-regular-file') {
+    return { ok: false, error: 'the path is not a regular file' };
+  }
   try {
-    return readFileSync(path.join(corpusDirectory, file));
-  } catch (error) {
-    if (isErrnoCode(error, 'ENOENT')) {
-      return undefined;
-    }
-    throw error;
+    return parseProvenanceRecord(new TextDecoder('utf-8', { fatal: true }).decode(record.bytes));
+  } catch {
+    return { ok: false, error: 'the file is not UTF-8' };
   }
 }
 

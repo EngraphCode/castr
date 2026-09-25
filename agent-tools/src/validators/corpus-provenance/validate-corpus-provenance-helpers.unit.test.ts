@@ -5,6 +5,7 @@ import {
   checkPinnedDocument,
   parseProvenanceRecord,
   resolveCorpusOutcome,
+  type DocumentOnDisk,
   type PinnedDocument,
   type ProvenanceRecord,
 } from './validate-corpus-provenance-helpers.js';
@@ -15,9 +16,16 @@ const SAME_LENGTH_TEXT = '{"openapi":"3.1.0","info":{"title":"Pinned","version":
 const SAME_LENGTH_SHA256 = '57087e5513030289832b0655546efc8093f16e7db9feb3b4866cdb252981ebdf';
 const NOT_AN_OBJECT_TEXT = '["openapi"]';
 const NOT_AN_OBJECT_SHA256 = 'b4b8c721b39bad18b770d9a943c6699141ce3c48a9907aabd9e65453831017ef';
-const COMMIT = '0123456789abcdef0123456789abcdef01234567';
+/** PINNED_TEXT with one byte of the title replaced by 0xFF, which no UTF-8 sequence contains. */
+const INVALID_UTF8_BYTES = new Uint8Array([
+  ...new TextEncoder().encode('{"openapi":"3.1.0","info":{"title":"Pinn'),
+  0xff,
+  ...new TextEncoder().encode('d","version":"1.0.0"}}'),
+]);
+const INVALID_UTF8_SHA256 = 'ceb8480ca412228e163722b8dcce9ba3578373ee497c78fe5bb52c264e9c4842';
 
 const bytesOf = (text: string): Uint8Array => new TextEncoder().encode(text);
+const onDisk = (bytes: Uint8Array): DocumentOnDisk => ({ kind: 'file', bytes });
 
 const servedDocument: PinnedDocument = {
   file: 'pinned-1.0.0.json',
@@ -33,27 +41,24 @@ const servedDocument: PinnedDocument = {
   },
 };
 
-const copiedDocument: PinnedDocument = {
-  file: 'copied-1.0.1.json',
+const secondDocument: PinnedDocument = {
+  file: 'pinned-1.0.1.json',
   openapi: '3.1.0',
   infoTitle: 'Pinned',
   infoVersion: '1.0.1',
   bytes: 63,
   sha256: SAME_LENGTH_SHA256,
   source: {
-    kind: 'copied',
-    repository: 'https://example.test/consumer',
-    repositoryCommit: COMMIT,
-    path: 'schema-cache/api-schema-original.json',
-    upstreamUrl: 'https://example.test/v0/swagger.json',
-    upstreamCommit: COMMIT,
+    kind: 'served',
+    url: 'https://example.test/v0/swagger.json',
+    fetchedAt: '2026-09-25T15:31:42Z',
   },
 };
 
-const record: ProvenanceRecord = { documents: [servedDocument, copiedDocument] };
+const record: ProvenanceRecord = { documents: [servedDocument, secondDocument] };
 
 describe('parseProvenanceRecord', () => {
-  it('accepts a record with a served and a copied document', () => {
+  it('accepts a record of served documents', () => {
     const parsed = parseProvenanceRecord(JSON.stringify(record));
 
     expect(parsed).toStrictEqual({ ok: true, record });
@@ -87,8 +92,16 @@ describe('parseProvenanceRecord', () => {
     expect(parseProvenanceRecord(JSON.stringify(local)).ok).toBe(false);
   });
 
+  it('rejects a source of a kind the record does not know', () => {
+    const copied = {
+      documents: [{ ...servedDocument, source: { kind: 'copied', repository: 'https://x.test' } }],
+    };
+
+    expect(parseProvenanceRecord(JSON.stringify(copied)).ok).toBe(false);
+  });
+
   it('rejects a record that pins the same file twice', () => {
-    const twice = { documents: [servedDocument, { ...copiedDocument, file: servedDocument.file }] };
+    const twice = { documents: [servedDocument, { ...secondDocument, file: servedDocument.file }] };
 
     expect(parseProvenanceRecord(JSON.stringify(twice)).ok).toBe(false);
   });
@@ -99,7 +112,7 @@ describe('parseProvenanceRecord', () => {
 
   it('rejects a record that pins the same bytes under two names', () => {
     const sameBytes = {
-      documents: [servedDocument, { ...copiedDocument, sha256: servedDocument.sha256 }],
+      documents: [servedDocument, { ...secondDocument, sha256: servedDocument.sha256 }],
     };
 
     expect(parseProvenanceRecord(JSON.stringify(sameBytes)).ok).toBe(false);
@@ -108,17 +121,17 @@ describe('parseProvenanceRecord', () => {
 
 describe('checkPinnedDocument', () => {
   it('returns no violation when the bytes, the hash and the header all match the record', () => {
-    expect(checkPinnedDocument(servedDocument, bytesOf(PINNED_TEXT))).toStrictEqual([]);
+    expect(checkPinnedDocument(servedDocument, onDisk(bytesOf(PINNED_TEXT)))).toStrictEqual([]);
   });
 
   it('reports the byte count, and only that, when the length differs', () => {
-    expect(checkPinnedDocument(servedDocument, bytesOf(`${PINNED_TEXT}\n`))).toStrictEqual([
+    expect(checkPinnedDocument(servedDocument, onDisk(bytesOf(`${PINNED_TEXT}\n`)))).toStrictEqual([
       { file: 'pinned-1.0.0.json', message: expect.stringMatching(/64 bytes.*63/u) },
     ]);
   });
 
   it('reports the hash, and only that, when the length matches and one byte differs', () => {
-    expect(checkPinnedDocument(servedDocument, bytesOf(SAME_LENGTH_TEXT))).toStrictEqual([
+    expect(checkPinnedDocument(servedDocument, onDisk(bytesOf(SAME_LENGTH_TEXT)))).toStrictEqual([
       { file: 'pinned-1.0.0.json', message: expect.stringMatching(/sha256/iu) },
     ]);
   });
@@ -140,22 +153,36 @@ describe('checkPinnedDocument', () => {
     ({ recorded, pattern }) => {
       const wrong = { ...servedDocument, ...recorded };
 
-      expect(checkPinnedDocument(wrong, bytesOf(PINNED_TEXT))).toStrictEqual([
+      expect(checkPinnedDocument(wrong, onDisk(bytesOf(PINNED_TEXT)))).toStrictEqual([
         { file: 'pinned-1.0.0.json', message: expect.stringMatching(pattern) },
       ]);
     },
   );
 
-  it('reports a pinned document that has no bytes on disk as missing, and checks nothing else', () => {
-    expect(checkPinnedDocument(servedDocument, undefined)).toStrictEqual([
+  it('reports a pinned document that is not on disk as missing, and checks nothing else', () => {
+    expect(checkPinnedDocument(servedDocument, { kind: 'missing' })).toStrictEqual([
       { file: 'pinned-1.0.0.json', message: expect.stringMatching(/missing/u) },
+    ]);
+  });
+
+  it('reports a pinned name that is a link or a directory, not the bytes at its path', () => {
+    expect(checkPinnedDocument(servedDocument, { kind: 'not-a-regular-file' })).toStrictEqual([
+      { file: 'pinned-1.0.0.json', message: expect.stringMatching(/not a regular file/u) },
+    ]);
+  });
+
+  it('reports pinned bytes that are not UTF-8 even when the hash and length match', () => {
+    const pinnedBytes = { ...servedDocument, sha256: INVALID_UTF8_SHA256 };
+
+    expect(checkPinnedDocument(pinnedBytes, onDisk(INVALID_UTF8_BYTES))).toStrictEqual([
+      { file: 'pinned-1.0.0.json', message: expect.stringMatching(/openapi/iu) },
     ]);
   });
 
   it('reports a pinned document whose bytes are not an OpenAPI object', () => {
     const notAnObject = { ...servedDocument, bytes: 11, sha256: NOT_AN_OBJECT_SHA256 };
 
-    expect(checkPinnedDocument(notAnObject, bytesOf(NOT_AN_OBJECT_TEXT))).toStrictEqual([
+    expect(checkPinnedDocument(notAnObject, onDisk(bytesOf(NOT_AN_OBJECT_TEXT)))).toStrictEqual([
       { file: 'pinned-1.0.0.json', message: expect.stringMatching(/openapi/iu) },
     ]);
   });
@@ -163,13 +190,13 @@ describe('checkPinnedDocument', () => {
 
 describe('checkCorpusListing', () => {
   it('returns nothing when the directory holds the recorded documents, the record and the README', () => {
-    const listing = ['README.md', 'copied-1.0.1.json', 'pinned-1.0.0.json', 'provenance.json'];
+    const listing = ['README.md', 'pinned-1.0.1.json', 'pinned-1.0.0.json', 'provenance.json'];
 
     expect(checkCorpusListing(record, listing)).toStrictEqual([]);
   });
 
   it('reports a JSON document in the directory that the record does not pin', () => {
-    const listing = ['pinned-1.0.0.json', 'copied-1.0.1.json', 'stray.json'];
+    const listing = ['pinned-1.0.0.json', 'pinned-1.0.1.json', 'stray.json'];
 
     expect(checkCorpusListing(record, listing)).toStrictEqual([
       { file: 'stray.json', message: expect.stringMatching(/not pinned/u) },
@@ -177,7 +204,7 @@ describe('checkCorpusListing', () => {
   });
 
   it('reports a document of any other kind that the record does not pin', () => {
-    const listing = ['pinned-1.0.0.json', 'copied-1.0.1.json', 'stray.yaml'];
+    const listing = ['pinned-1.0.0.json', 'pinned-1.0.1.json', 'stray.yaml'];
 
     expect(checkCorpusListing(record, listing)).toStrictEqual([
       { file: 'stray.yaml', message: expect.stringMatching(/not pinned/u) },
