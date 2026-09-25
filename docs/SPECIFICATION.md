@@ -1,9 +1,9 @@
 ---
 title: Castr destination specification
 id: castr-specification
-version: 0.4.0
+version: 0.4.1
 status: draft-awaiting-owner-ratification
-date: 2026-09-23
+date: 2026-09-25
 owner: Jim Cresswell
 approvers:
   - Jim Cresswell
@@ -176,16 +176,21 @@ where a profile decision below declares a different reading.
 
 ## 6. Formats and versions
 
-| Format           | Read                       | Written          |
-| ---------------- | -------------------------- | ---------------- |
-| OpenAPI          | 3.0.x, 3.1.x, 3.2.x        | 3.2.0            |
-| JSON Schema      | Draft 2020-12 and Draft-07 | both, by request |
-| Zod              | 4                          | 4                |
-| TypeScript types | not read                   | yes              |
+| Format           | Read                            | Written               |
+| ---------------- | ------------------------------- | --------------------- |
+| OpenAPI          | 3.0.x, 3.1.x, 3.2.x             | 3.2.0                 |
+| JSON Schema      | Draft 2020-12 and Draft-07      | both, by request      |
+| Zod              | 4, at 4.5 or later (`>=4.5 <5`) | 4, the latest release |
+| TypeScript types | not read                        | yes                   |
 
 OpenAPI 2.0 is not read: a 2.0 document receives a located rejection naming its version.
 A JSON Schema dialect change is always explicit; Castr never infers, upgrades or
 downgrades a dialect. A change to this table is a change to this document.
+
+The Zod row restates the owner's ruling of 31 August 2026: "I am happy to state the Zod
+input must be >= 4.5 and that Zod output will be latest", and "latest here means latest 4,
+with a tripwire to examine Zod 5 if and when it is released". A new Zod major is its own
+ratification, never a bump.
 
 ## 7. Capabilities
 
@@ -490,3 +495,4 @@ can be decided on its own:
 | 0.3.0   | 2026-09-21 | Owner decisions by card: mantagen is a human collaborator; approval is spoken locally and recorded by the agent with the content hash (SPEC-N-6 retired, answered by SPEC-CC-2); zero open dependency alerts on `main` to merge; SPEC-P-5 reading confirmed; OpenAPI 2.0 is not read.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | pending  |
 | 0.3.1   | 2026-09-23 | SPEC-CC-4 retired. It read "No agent merges a change to this document" and was the drafting agent's invention, never an owner decision (owner, 23 September 2026: "you invented the need for me to merge, it was never real"). Approval is the spoken word recorded under SPEC-CC-2; merging is mechanics. SPEC-CC-3 clarified to say so.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | pending  |
 | 0.4.0   | 2026-09-23 | The review of pull request #110 folded in; every changed clause is on the ratification checklist. SPEC-P-2 admits the function Zod calls to resolve a reference (`z.lazy`, a getter in an object shape) and names default insertion and unknown-key stripping as the only accepted-to-produced differences; SPEC-AR-6 makes those calls, and the call that reads a default's value, by construct kind, and requires the SPEC-N-3 technique to tell a function-form default from a value; the SPEC-P-3 vocabulary sentence is scoped to 2020-12; the wrong Zod call is removed from SPEC-P-5 (bare `z.iso.datetime()` rejects offsets that `date-time` permits); the C-1 Zod address carries the media type; the SPEC-G-4 produced side is defined, reading a JSON Schema or OpenAPI `default` as an annotation that inserts nothing; SPEC-G-5 excuses a constraint only where the source shows its deletion changes nothing; SPEC-CC-1 binds from the first ratification, SPEC-CC-2 defines the hashed text and SPEC-CC-3 its no-record state; SPEC-G-4 and SPEC-G-6 are added to the checklist, with two decisions the review raised for the owner: the reading of a source `default`, and a proposed C-1 boundary check. | pending  |
+| 0.4.1   | 2026-09-25 | The Zod row of the Formats and versions table restates the owner's ruling of 31 August 2026, quoted under the table: read at 4.5 or later within Zod 4, written as the latest Zod 4 release, a new major its own ratification. The categorisation report of 24 September 2026 raised it as a card because the table said only "Zod 4"; the owner decided on 25 September 2026: "Restate it in the specification".                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | pending  |
