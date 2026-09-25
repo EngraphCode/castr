@@ -128,7 +128,7 @@ every pin from the committed bytes; `.prettierignore` and `.gitattributes -text`
   JSON array of `{description, schema, tests[]}` validated by `test-schema.json`; the `schema` is the
   input document, `tests[].data` are instances. Also draft2019-09 78, draft6 52, draft4 43, draft3 39,
   `v1` 79 files. `remotes/` (draft7 6, draft2020-12 22 files) are served as `http://localhost:1234/…`.
-  Six test files `$ref` or `$schema` such a remote: `refRemote.json` in both dialects, draft7
+  Seven test files `$ref` or `$schema` such a remote: `refRemote.json` in each of the two dialects, draft7
   `optional/cross-draft.json`, and draft2020-12 `dynamicRef.json`, `vocabulary.json`,
   `optional/cross-draft.json` and `optional/format-assertion.json`. None of draft7's 322 groups
   declares `$schema`; a draft7 file's dialect is its path.
@@ -211,15 +211,15 @@ every pin from the committed bytes; `.prettierignore` and `.gitattributes -text`
 
 ## 6. Licence compatibility with an MIT repository, with attribution
 
-| Licence                        | Sources                                                                                                                                   | Verdict                                                           |
-| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| MIT                            | openapi-typescript, hey-api, JSON-Schema-Test-Suite, Redocly, ReadMe (except seven documents declaring their own licence), GitHub, Stripe | Yes: keep copyright + permission notice per source                |
-| CC BY-NC-SA 4.0 (API metadata) | ReadMe's `train-travel.json`, origin not stated by ReadMe                                                                                 | No: terms of the file not established; not redistributed          |
-| Apache 2.0                     | OAI spec repo, swagger-parser, SchemaStore, DigitalOcean                                                                                  | Yes: keep the Apache notice (and any NOTICE), state modifications |
-| CC BY 4.0                      | learn.openapis.org                                                                                                                        | Yes: attribution with source, licence link, changes noted         |
-| CC0 1.0                        | APIs.guru author-contributed definitions                                                                                                  | Yes, no conditions; but only for contributed ones                 |
-| "Fair use"                     | APIs.guru acquired definitions (the majority)                                                                                             | No grant: go to the `x-origin` upstream                           |
-| ISC (package.json only)        | openapi-zod-client                                                                                                                        | Unconfirmed: no LICENSE file                                      |
+| Licence                        | Sources                                                                                                                                                                                                                 | Verdict                                                           |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| MIT                            | openapi-typescript, hey-api, JSON-Schema-Test-Suite, Redocly, ReadMe (its own documents; its three Initiative-derived ones are Apache 2.0 by its `.licenses` file, and `train-travel.json` is left out), GitHub, Stripe | Yes: keep copyright + permission notice per source                |
+| CC BY-NC-SA 4.0 (API metadata) | ReadMe's `train-travel.json`, origin not stated by ReadMe                                                                                                                                                               | No: terms of the file not established; not redistributed          |
+| Apache 2.0                     | OAI spec repo, swagger-parser, SchemaStore, DigitalOcean                                                                                                                                                                | Yes: keep the Apache notice (and any NOTICE), state modifications |
+| CC BY 4.0                      | learn.openapis.org                                                                                                                                                                                                      | Yes: attribution with source, licence link, changes noted         |
+| CC0 1.0                        | APIs.guru author-contributed definitions                                                                                                                                                                                | Yes, no conditions; but only for contributed ones                 |
+| "Fair use"                     | APIs.guru acquired definitions (the majority)                                                                                                                                                                           | No grant: go to the `x-origin` upstream                           |
+| ISC (package.json only)        | openapi-zod-client                                                                                                                                                                                                      | Unconfirmed: no LICENSE file                                      |
 
 ## 7. Pinning and practical gotchas
 

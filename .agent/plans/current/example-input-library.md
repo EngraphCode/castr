@@ -142,8 +142,8 @@ Each is taken from the survey's evidence and is open to the owner to strike.
   reason to leave them out. The draft-07 set (about 736) is left out: no rule selects a
   usable subset, and the JSON-Schema-Test-Suite draft7 files give keyword coverage for
   that dialect.
-- **Test-suite files whose schemas reach the suite's server are left out.** Six files
-  `$ref` or `$schema` a `localhost:1234` remote (`refRemote.json` in both dialects,
+- **Test-suite files whose schemas reach the suite's server are left out.** Seven files
+  `$ref` or `$schema` a `localhost:1234` remote (`refRemote.json` in each of the two dialects,
   draft7 `optional/cross-draft.json`, draft2020-12 `dynamicRef.json`, `vocabulary.json`,
   `optional/cross-draft.json` and `optional/format-assertion.json`). A test-suite file's
   dialect is its recorded upstream path, since draft7's groups declare no `$schema`.
@@ -229,6 +229,55 @@ most two review rounds); EC-2 to EC-6 are independent of each other.
 - **EC-7** — the OpenAPI Initiative meta-schemas for 3.1 and 3.2
   (`src/schemas/validation/schema.yaml` on the `v3.1-dev` and `v3.2-dev` branches at the
   survey's commits). Apache 2.0 notice.
+
+## Execution contracts
+
+The plan skill's executable-plan requirements, stated here where the one-page delivery
+template omits them.
+
+- **Quality gates.** Each todo lands through the repository's own chain: the pre-commit
+  hook (format, markdownlint, secret scan, manifest keys, `repo-validators:check`, knip,
+  dependency boundaries, build, type-check, lint, tests) and the pre-push `check:ci`; a
+  tranche's focused proof is `pnpm --filter @engraph/agent-tools validate-corpus-provenance`
+  exiting 0 with its summary line, and the validator's unit tests. Milestone readiness uses
+  the canonical aggregate gate named in
+  [the quality-gates component](../templates/components/quality-gates.md). Every gate passes;
+  a failing gate means the work is not done.
+- **Proof contract.** AC-1, AC-2 and AC-3: `integration`, the validator command over the
+  committed tree, its exit status and summary line. AC-4: `unit`, the validator's unit tests
+  for the `json-schema-test-suite` header check, plus a `non-code` search showing no reader
+  of library test-suite files under `lib/`. AC-5: `non-code`, the notices file and the course
+  plan's MOVE sentence read by the reviewer. Tests for the validator's new shape are written
+  red first in EC-1 and EC-4 and land in the same commit as the code that greens them; every
+  other todo is data and notices, with the validator as its proof.
+- **Foundation alignment.** [`principles.md`](../../directives/principles.md): strict at the
+  boundary (the record schema rejects what it does not know) and the closed shape (each
+  source kind and document kind arrives with its first instance).
+  [`testing-strategy.md`](../../directives/testing-strategy.md): fixtures are reused,
+  third-party tests are not, per the Licensing and Provenance bullet; a pin check is a
+  repository validator, never a product test.
+  [`requirements.md`](../../directives/requirements.md): the formats read are OpenAPI 3.0.x
+  to 3.2.x and JSON Schema draft-07 and 2020-12, which is the library's span.
+- **Plan-body first-principles check.** The
+  [rule](../../rules/plan-body-first-principles-check.md) fires at three points: the shape
+  clause before EC-1's schema change (the validator proves the repository's pins, never a
+  vendor's behaviour); the landing-path clause before each tranche's first commit
+  (`.prettierignore`, `.gitattributes` and the secret scan must cover the new directory
+  before its bytes land); and the vendor-literal clause at every pickup (each commit hash,
+  path and licence text in this plan and the survey is re-read from the source before it is
+  pinned).
+- **Readiness reviewers.** `assumptions-expert` reviewed this plan twice before it was
+  marked current. At pickup: `security-expert` on EC-1's traversal guard, `config-expert`
+  on the ignore and attribute rules and the secret-scan step, `test-reviewer` on the
+  validator's tests, and `docs-adr-expert` on the notices file and the corpus README.
+- **Learning loop.** Each tranche's closeout writes its lesson to the napkin; the plan's
+  completion runs the consolidation workflow before the plan moves to `current/complete/`.
+- **Lifecycle triggers.** Per [the lifecycle-triggers component](../templates/components/lifecycle-triggers.md):
+  session entry through `start-right-quick`; this plan is the work-shape declaration; a
+  claim on the library directory and the validator before each tranche edits them; the
+  collaboration log on any change of direction; every session closes with `wrap`. The plan
+  moves to `active/` when EC-0 is picked up and to `current/complete/` when AC-1 to AC-5
+  are proven.
 
 ## Risks
 

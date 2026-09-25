@@ -74,6 +74,10 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   names; the API metadata is recorded as data and read only as a signal of another origin.
   And the specification's "corpus" is a defined term, the documents a capability is proved
   against: unread third-party sets are a library beside it, never in it.
+- **Harvest every surface before the cure push (pr-lifecycle, Phase 3).** On pull request
+  115 I cured Codex's two threads from the notifications that had arrived and pushed, while
+  Copilot's seven threads had landed in the same minute and were only read afterwards. One
+  push per review wave means one GraphQL harvest of all threads first, then one cure.
 
 ## 2026-09-24 (lane and plan categorisation — Quark stirs Latitude / 017FtN, claude-code)
 
