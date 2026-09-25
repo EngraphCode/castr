@@ -306,8 +306,9 @@ template omits them.
   session entry through `start-right-quick`; this plan is the work-shape declaration; a
   claim on the library directory and the validator before each tranche edits them; the
   collaboration log on any change of direction; every session closes with `wrap`. The plan
-  moves to `active/` when EC-0 is picked up and to `current/complete/` when AC-1 to AC-5
-  are proven.
+  moves to `active/` when EC-0 is picked up and to `current/complete/` when every todo is
+  done and AC-1 to AC-5 are proven: the criteria's thresholds are met before EC-3, EC-5 and
+  EC-7 land, so the todos, not the criteria alone, close the plan.
 
 ## Risks
 
