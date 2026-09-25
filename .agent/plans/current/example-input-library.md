@@ -12,7 +12,7 @@ owner_directive: >-
   it, the owner chose to plan it as its own slice.
 todos:
   - id: EC-0
-    content: docs/THIRD_PARTY_NOTICES.md is created with the CC BY 4.0 notice for the OpenAPI Initiative examples already in lib/examples/openapi (unchanged files at their commit, modified files marked) and the Oak OGL notice; the course plan's MOVE section names the corpus, the library, their validator and the notices file
+    content: ATTRIBUTION.md at the repository root (source authors by name with public references) and docs/THIRD_PARTY_NOTICES.md (licence texts) are created, covering the OpenAPI Initiative examples already in lib/examples/openapi (unchanged files at their commit, modified files marked) and the Oak documents; the course plan's MOVE section names the corpus, the library, their validator and both files
     status: pending
     depends_on: []
   - id: EC-1
@@ -150,16 +150,16 @@ Each is taken from the survey's evidence and is open to the owner to strike.
 
 ## Prerequisites
 
-- **EC-0 before EC-1 (blocking).** The notices file must exist before a record entry can
-  name its notice.
+- **EC-0 before EC-1 (blocking).** `ATTRIBUTION.md` and the notices file must exist before
+  a record entry can name its attribution and its notice.
 - **EC-1 before EC-2 to EC-6 (blocking).** The record shape and the library root must exist
   before a source is pinned.
 - **EC-5 before EC-7 (blocking).** The `json-schema` kind lands with SchemaStore, its first
   documents; the meta-schemas reuse it.
 - **The course (none).** The plan sits beside the course, not on it: its documents are
   format inputs whatever the MEASURE leg decides, and the plan touches no writer code. It
-  lands before the MOVE leg, and EC-0 adds the corpus, the library, their validator and the
-  notices file to the MOVE section's statement of what travels.
+  lands before the MOVE leg, and EC-0 adds the corpus, the library, their validator, the
+  notices file and `ATTRIBUTION.md` to the MOVE section's statement of what travels.
 
 ## Acceptance criteria (each with a proof — required)
 
@@ -168,8 +168,10 @@ Each is taken from the survey's evidence and is open to the owner to strike.
   and every library source directory in `repo-validators:check`. Todos: EC-1 to EC-7.
 - **AC-2 Every pinned document has a recorded licence and attribution.** Proof,
   `repo-safe`: the validator checks that each record entry names a section of
-  `docs/THIRD_PARTY_NOTICES.md` and that the section exists; the Oak entries name the OGL
-  section EC-0 adds. Todos: EC-0, EC-1.
+  `docs/THIRD_PARTY_NOTICES.md` (the licence text) and an entry in the root
+  `ATTRIBUTION.md` (the source's authors by name and its public reference, the canonical
+  attribution surface under the documentation-hygiene rule), and that both exist; the Oak
+  entries name the OGL section and the Oak entry EC-0 adds. Todos: EC-0, EC-1.
 - **AC-3 The library is wide.** Proof, `repo-safe`: the validator's summary line counts
   pinned library documents by kind, declared version (OpenAPI 3.0.x, with `"3.0"` counted
   as 3.0.x, 3.1.x and 3.2.x; JSON Schema draft-07 and 2020-12, a test-suite file's dialect
@@ -181,25 +183,32 @@ Each is taken from the survey's evidence and is open to the owner to strike.
   unit tests show the `json-schema-test-suite` header check reads the array shape and
   nothing inside `tests[]`; no code under `lib/` reads a library test-suite file. Todo: EC-4.
 - **AC-5 The existing OpenAPI Initiative examples are attributed, modifications marked.**
-  Proof, `repo-safe`: `docs/THIRD_PARTY_NOTICES.md` names learn.openapis.org, CC BY 4.0,
-  the commit each unchanged file matches, and each modified file as modified, which
+  Proof, `repo-safe`: `ATTRIBUTION.md` names the OpenAPI Initiative and learn.openapis.org
+  with its public reference, and `docs/THIRD_PARTY_NOTICES.md` carries CC BY 4.0, the
+  commit each unchanged file matches, and each modified file as modified, which
   CC BY 4.0 §3(a)(1)(B) requires; the course plan's MOVE section names the corpus, the
-  library, their validator and the notices file. Todo: EC-0.
+  library, their validator and both files. Todo: EC-0.
 
 ## Todos
 
 Each todo is one single-story pull request within the default review budget (PDR-132, at
 most two review rounds); EC-2 to EC-6 are independent of each other.
 
-- **EC-0** — `docs/THIRD_PARTY_NOTICES.md`: the CC BY 4.0 notice for the OpenAPI Initiative
-  examples in `lib/examples/openapi`, from the survey's comparison of 25 September 2026: 24
-  files match learn.openapis.org at its pinned commit byte for byte, `v3.1/tictactoe.yaml`
-  matches an earlier learn commit, and three are modified (`v3.0/uspto.json`, edited in
-  Castr at `SHA:d5bb5534`; `v3.0/api-with-examples.yaml` and `v3.0/uspto.yaml`, matching
-  no learn revision), marked as modified; it records that `petstore-expanded` declares
-  Apache 2.0 and `petstore` declares MIT in `info.license`. The Oak OGL notice moves here
-  from the corpus README, which links to it. One sentence in the course plan's MOVE section
-  names the corpus, the library, their validator and the notices file. No pin record changes.
+- **EC-0** — two attribution surfaces, created on first use. `ATTRIBUTION.md` at the
+  repository root, the canonical surface the documentation-hygiene rule names: each source's
+  authors by name (from its copyright line) and its public repository reference, starting
+  with the OpenAPI Initiative for `lib/examples/openapi` and Oak National Academy for the
+  corpus; every later tranche adds its source's entry. `docs/THIRD_PARTY_NOTICES.md`, the
+  file the testing strategy's licensing bullet names: the licence texts, starting with the
+  CC BY 4.0 notice for the OpenAPI Initiative examples, from the survey's comparison of
+  25 September 2026: 24 files match learn.openapis.org at its pinned commit byte for byte,
+  `v3.1/tictactoe.yaml` matches an earlier learn commit, and three are modified
+  (`v3.0/uspto.json`, edited in Castr at `SHA:d5bb5534`; `v3.0/api-with-examples.yaml` and
+  `v3.0/uspto.yaml`, matching no learn revision), marked as modified; it records that
+  `petstore-expanded` declares Apache 2.0 and `petstore` declares MIT in `info.license`. The
+  Oak OGL notice moves here from the corpus README, which links to both files. One sentence
+  in the course plan's MOVE section names the corpus, the library, their validator and both
+  files. No pin record changes.
 - **EC-1** — the record shape, red first: a `repository` source (`repository`, `commit`,
   `path`) beside `served`; a `format` (`json` or `yaml`) per entry; a `kind` per entry,
   `openapi` (checked by its `openapi` field alone) or `fragment` (checked by hash alone,
@@ -210,7 +219,9 @@ most two review rounds); EC-2 to EC-6 are independent of each other.
   of today's no-separator rule (security-expert reviews it); the corpus directory unchanged;
   a `notice` per entry naming its section in the notices file; the summary line of AC-3.
   `.prettierignore` and `.gitattributes` cover `library/**` as they cover the corpus,
-  keeping each `provenance.json` and README formatted. The first source is pinned in the
+  keeping each `provenance.json` and README formatted. Each entry's `notice` names its
+  section in the notices file and its source's entry in `ATTRIBUTION.md`, and the validator
+  checks both exist (AC-2). The first source is pinned in the
   same pull request: openapi-typescript's 14 top-level fixture files at the survey's
   commit, nine documents and five fragments, so the shape has real instances the moment it
   lands.
@@ -246,8 +257,8 @@ template omits them.
 - **Proof contract.** AC-1, AC-2 and AC-3: `integration`, the validator command over the
   committed tree, its exit status and summary line. AC-4: `unit`, the validator's unit tests
   for the `json-schema-test-suite` header check, plus a `non-code` search showing no reader
-  of library test-suite files under `lib/`. AC-5: `non-code`, the notices file and the course
-  plan's MOVE sentence read by the reviewer. Tests for the validator's new shape are written
+  of library test-suite files under `lib/`. AC-5: `non-code`, `ATTRIBUTION.md`, the notices
+  file and the course plan's MOVE sentence read by the reviewer. Tests for the validator's new shape are written
   red first in EC-1 and EC-4 and land in the same commit as the code that greens them; every
   other todo is data and notices, with the validator as its proof.
 - **Foundation alignment.** [`principles.md`](../../directives/principles.md): strict at the

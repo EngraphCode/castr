@@ -8,7 +8,8 @@ openapi-ts test suits is suitable and appropriately licensed then I have no prob
 fixtures anyway, not the tests themselves as our target behaviour may be different".
 
 Method: each git source was blobless-cloned at HEAD on 25 September 2026 (commit recorded below, that
-is the pin; DigitalOcean was not cloned and has no commit recorded here); LICENSE files were fetched raw; byte counts come from `git cat-file -s` or HTTP
+is the pin; DigitalOcean was not cloned and has no commit recorded here); LICENSE files were fetched raw
+at those commits, and every licence link below names its commit so the claim can be re-read as it was; byte counts come from `git cat-file -s` or HTTP
 `Content-Length`; per-file counts from `git ls-tree`. Counts by version inside APIs.guru and SchemaStore
 come from GitHub code search (file-level matches) and are approximate. `api.github.com`, `api.apis.guru` and `spec.openapis.org` were not reachable from the
 surveying session, so those were not used.
@@ -49,7 +50,7 @@ every pin from the committed bytes; `.prettierignore` and `.gitattributes -text`
 
 - Pin: `main` @ `d46a319ae2efab30e135ba9b223a3cffd1a67eab`, 2,418 files.
 - Licence: MIT, "Copyright (c) 2020 Drew Powers" — root `LICENSE` and `packages/openapi-typescript/LICENSE`
-  (https://raw.githubusercontent.com/openapi-ts/openapi-typescript/main/LICENSE). Copy with notice: yes.
+  (https://raw.githubusercontent.com/openapi-ts/openapi-typescript/d46a319ae2efab30e135ba9b223a3cffd1a67eab/LICENSE). Copy with notice: yes.
 - `packages/openapi-typescript/test/fixtures/`: 28 files; 14 top-level YAML files (anchors with refs,
   remote refs, path-item components, jsonschema defs, multi-line descriptions, yaml merge) plus
   `redocly*/` config trees. Of the 14, nine are documents and five are `_`-prefixed fragments that the
@@ -75,7 +76,7 @@ every pin from the committed bytes; `.prettierignore` and `.gitattributes -text`
 ### 2a. OAI/OpenAPI-Specification — https://github.com/OAI/OpenAPI-Specification
 
 - Pin: `main` @ `447c479c9c7136918e80a57a258fd6c84f369c7c`, 120 files. Licence: Apache 2.0
-  (https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/LICENSE). Copy with notice: yes.
+  (https://raw.githubusercontent.com/OAI/OpenAPI-Specification/447c479c9c7136918e80a57a258fd6c84f369c7c/LICENSE). Copy with notice: yes.
 - No `examples/` on `main` any more; README line 24 points to https://learn.openapis.org/examples/.
   What remains: `_archive_/schemas/v3.0/pass/` (the six 3.0 examples: api-with-examples, callback-example,
   link-example, petstore-expanded, petstore, uspto), `_archive_/schemas/v3.0/schema.yaml`,
@@ -89,7 +90,7 @@ every pin from the committed bytes; `.prettierignore` and `.gitattributes -text`
 ### 2b. OAI/learn.openapis.org — https://github.com/OAI/learn.openapis.org
 
 - Pin: `main` @ `bbb743ed3b7c5ed76b6e6ba9b302af38f3956c44`, 137 files. Licence: CC BY 4.0
-  ("Attribution 4.0 International", https://raw.githubusercontent.com/OAI/learn.openapis.org/main/LICENSE).
+  ("Attribution 4.0 International", https://raw.githubusercontent.com/OAI/learn.openapis.org/bbb743ed3b7c5ed76b6e6ba9b302af38f3956c44/LICENSE).
   Copying into an MIT repo: yes, with attribution (source, licence link, changes noted) kept per file
   set; it is a content licence, so record it separately from Castr's MIT.
 - `examples/`: v2.0 12 docs × json+yaml (incl. `petstore-separate/` multi-file); v3.0 6 docs; v3.1 3 docs
@@ -106,10 +107,10 @@ every pin from the committed bytes; `.prettierignore` and `.gitattributes -text`
   `openapi.yaml` and 2,168 `swagger.yaml` across 701 provider directories; YAML only. Code search finds
   85 `openapi.yaml` matching "openapi: 3.1"; the rest are 3.0.x (many converted from Swagger 2.0 by the
   directory's tooling, so not the provider's bytes).
-- Licence file: CC0 1.0 Universal (https://raw.githubusercontent.com/APIs-guru/openapi-directory/main/LICENSE).
+- Licence file: CC0 1.0 Universal (https://raw.githubusercontent.com/APIs-guru/openapi-directory/f04b8d0bcd39c52e1cf3ad7a5fe744709832ae49/LICENSE).
   README "Licenses" section, verbatim: "All API definitions contributed to project by authors are
   covered by the CC01.0 license." and "All API definitions acquired from public sources under the Fair
-  use principle." (https://raw.githubusercontent.com/APIs-guru/openapi-directory/main/README.md). So CC0
+  use principle." (https://raw.githubusercontent.com/APIs-guru/openapi-directory/f04b8d0bcd39c52e1cf3ad7a5fe744709832ae49/README.md). So CC0
   covers only author-contributed definitions; acquired ones carry a fair-use claim, which is not a
   licence grant. Per-document metadata: `x-origin` (upstream URL and format), `x-providerName`,
   `x-serviceName`, `x-apisguru-categories`; `info.license` where the provider set one (GitHub's entry:
@@ -122,7 +123,7 @@ every pin from the committed bytes; `.prettierignore` and `.gitattributes -text`
 ## 4. JSON-Schema-Test-Suite — https://github.com/json-schema-org/JSON-Schema-Test-Suite
 
 - Pin: `main` @ `5b0ee1613e45fcc2bddac00e07c19cd49b00d8a8`, 560 files. Licence: MIT text, "Copyright (c)
-  2012 Julian Berman" (https://raw.githubusercontent.com/json-schema-org/JSON-Schema-Test-Suite/main/LICENSE;
+  2012 Julian Berman" (https://raw.githubusercontent.com/json-schema-org/JSON-Schema-Test-Suite/5b0ee1613e45fcc2bddac00e07c19cd49b00d8a8/LICENSE;
   the file carries the MIT permission text without an "MIT License" heading). Copy with notice: yes.
 - `tests/draft7/`: 64 files, 322 test groups; `tests/draft2020-12/`: 80 files, 462 groups. Each file is a
   JSON array of `{description, schema, tests[]}` validated by `test-schema.json`; the `schema` is the
@@ -161,7 +162,7 @@ every pin from the committed bytes; `.prettierignore` and `.gitattributes -text`
 ### 5b. Parser and tooling fixture sets
 
 - swagger-api/swagger-parser — `master` @ `69f6d78250b70d2ccfcd306ff0aa74353a698f2a`; Apache 2.0
-  (https://raw.githubusercontent.com/swagger-api/swagger-parser/master/LICENSE). `modules/swagger-parser-v3/src/test/resources/`:
+  (https://raw.githubusercontent.com/swagger-api/swagger-parser/69f6d78250b70d2ccfcd306ff0aa74353a698f2a/LICENSE). `modules/swagger-parser-v3/src/test/resources/`:
   731 json/yaml (137 single-file at top level; `3.1.0/` has basic, oas3.1, petstore-3.1, securitySchemes31,
   siblings31 plus `dereference/` and `resolve/` trees). Heavy on relative, nested and remote file refs and
   issue-NNNN regressions; many deliberately broken. Copy with notice: yes.
@@ -187,13 +188,14 @@ every pin from the committed bytes; `.prettierignore` and `.gitattributes -text`
   package.json says `"license": "ISC"` — unconfirmed by a licence file. Fixtures are the OAI examples
   again plus `examples/repro.yaml` and `lib/tests/ref-in-another-file/`. Low value.
 - SchemaStore/schemastore — `master` @ `58e57d16bbddb12f578f7bb81a568f76bc264261`; Apache 2.0
-  (https://raw.githubusercontent.com/SchemaStore/schemastore/master/LICENSE). `src/schemas/json/`: 967
+  (https://raw.githubusercontent.com/SchemaStore/schemastore/58e57d16bbddb12f578f7bb81a568f76bc264261/LICENSE). `src/schemas/json/`: 967
   real-world JSON Schemas; code search: 736 files cite `draft-07/schema`, 72 cite `draft/2020-12/schema`
   (remainder older drafts or none). Measured in the clone: exactly 72 files declare the 2020-12
   `$schema`, 1,017,628 B in total, the largest 41,898 B, five of them with an `http` `$ref`. `src/test/` is 2,192 instance files, not inputs. No per-schema licence
   statement found in README or CONTRIBUTING. Gotchas: mixed drafts, some very large, `openapi-3.X.json`.
-- json-schema-org/json-schema-spec — BSD-style ("Copyright (c) 2022 JSON Schema Specification Authors",
-  https://raw.githubusercontent.com/json-schema-org/json-schema-spec/main/LICENSE); meta-schemas only.
+- json-schema-org/json-schema-spec — `main` @ `4f56a9900674b27804f0ec32e3b7fdfa4efad695` on 25 September 2026;
+  BSD-style ("Copyright (c) 2022 JSON Schema Specification Authors",
+  https://raw.githubusercontent.com/json-schema-org/json-schema-spec/4f56a9900674b27804f0ec32e3b7fdfa4efad695/LICENSE); meta-schemas only.
   stoplightio/spectral and OpenAPITools/openapi-generator are Apache 2.0; trees not surveyed.
 
 ### 5c. Vendor documents from their owners (explicit licences)
