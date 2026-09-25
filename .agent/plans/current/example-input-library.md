@@ -12,7 +12,7 @@ owner_directive: >-
   it, the owner chose to plan it as its own slice.
 todos:
   - id: EC-0
-    content: ATTRIBUTION.md at the repository root (source authors by name with public references) and docs/THIRD_PARTY_NOTICES.md (licence texts) are created, covering the OpenAPI Initiative examples already in lib/examples/openapi (unchanged files at their commit, modified files marked) and the Oak documents; the examples fetcher and its README instruction are retired; the course plan's MOVE section names the corpus, the library, their validator and both files
+    content: ATTRIBUTION.md at the repository root (source authors by name with public references) and docs/THIRD_PARTY_NOTICES.md (licence texts) are created, covering the OpenAPI Initiative examples already in lib/examples/openapi (unchanged files at their commit, modified files marked) and the Oak documents; the examples fetcher and its README instruction are retired; where the course's MOVE leg has not yet run, its section names the corpus, the library, their validator and both files
     status: pending
     depends_on: []
   - id: EC-1
@@ -156,10 +156,13 @@ Each is taken from the survey's evidence and is open to the owner to strike.
   before a source is pinned.
 - **EC-5 before EC-7 (blocking).** The `json-schema` kind lands with SchemaStore, its first
   documents; the meta-schemas reuse it.
-- **The course (none).** The plan sits beside the course, not on it: its documents are
-  format inputs whatever the MEASURE leg decides, and the plan touches no writer code. It
-  lands before the MOVE leg, and EC-0 adds the corpus, the library, their validator, the
-  notices file and `ATTRIBUTION.md` to the MOVE section's statement of what travels.
+- **The course (none, in either direction).** The plan sits beside the course and gates
+  nothing in it: its documents are format inputs whatever the MEASURE leg decides, the plan
+  touches no writer code, and MOVE's own prerequisite stays MEASURE alone. If MOVE runs
+  first, this plan travels with the course's plan set and the library lands in the new
+  repository under the same rules; if this plan lands first, EC-0 adds the corpus, the
+  library, their validator, the notices file and `ATTRIBUTION.md` to the MOVE section's
+  statement of what travels.
 
 ## Acceptance criteria (each with a proof — required)
 
@@ -186,8 +189,8 @@ Each is taken from the survey's evidence and is open to the owner to strike.
   Proof, `repo-safe`: `ATTRIBUTION.md` names the OpenAPI Initiative and learn.openapis.org
   with its public reference, and `docs/THIRD_PARTY_NOTICES.md` carries CC BY 4.0, the
   commit each unchanged file matches, and each modified file as modified, which
-  CC BY 4.0 §3(a)(1)(B) requires; the course plan's MOVE section names the corpus, the
-  library, their validator and both files. Todo: EC-0.
+  CC BY 4.0 §3(a)(1)(B) requires; where the course's MOVE leg has not yet run, its section
+  names the corpus, the library, their validator and both files. Todo: EC-0.
 
 ## Todos
 
@@ -212,8 +215,9 @@ most two review rounds); EC-2 to EC-6 are independent of each other.
   `lib/examples/openapi` and replaces it with an unpinned clone of learn's default branch,
   which would overwrite the three deliberately modified files and detach every file from the
   commit the attribution names; a refresh of that directory is a new pin under this plan's
-  rules, never a re-fetch. One sentence in the course plan's MOVE section names the corpus,
-  the library, their validator and both files. No pin record changes.
+  rules, never a re-fetch. Where the course's MOVE leg has not yet run, one sentence in its
+  section names the corpus, the library, their validator and both files. No pin record
+  changes.
 - **EC-1** — the record shape, red first: a `repository` source (`repository`, `commit`,
   `path`) beside `served`; a `format` (`json` or `yaml`) per entry; a `kind` per entry,
   `openapi` (checked by its `openapi` field alone) or `fragment` (checked by hash alone,

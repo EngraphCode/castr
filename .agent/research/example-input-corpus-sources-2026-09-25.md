@@ -115,8 +115,9 @@ every pin from the committed bytes; `.prettierignore` and `.gitattributes -text`
   licence grant. Per-document metadata: `x-origin` (upstream URL and format), `x-providerName`,
   `x-serviceName`, `x-apisguru-categories`; `info.license` where the provider set one (GitHub's entry:
   `name: MIT`, `url: https://spdx.org/licenses/MIT`).
-- Use it as an index: pin a document from the repo named in its `x-origin` where that repo's licence is
-  explicit; copy from APIs.guru directly only where `info.license` or the provider's terms are confirmed.
+- Use it as an index only: a document is pinned from the repository its `x-origin` names, under that
+  repository's terms, and nothing is copied from APIs.guru itself; `info.license` is the API's licence,
+  API metadata, never a grant to copy the file.
 - Gotchas: weekly auto-update rewrites files (commit pin is essential); AWS and Google trees are huge;
   the `api.apis.guru` metrics endpoint was not reachable from the surveying session.
 
