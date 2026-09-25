@@ -68,6 +68,12 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   pickup. The plan now states the licence rules and labels every count as the survey's
   measurement on the day, re-derived at pickup, and it went to pull request after two
   rounds rather than a third pre-review pass.
+- **`info.license` is the API's licence, not the file's (Codex, pull request 115).** The
+  plan had read a document's `info.license` as its redistribution terms. A file's terms
+  come from the repository whose authors wrote it, or from the origin the repository
+  names; the API metadata is recorded as data and read only as a signal of another origin.
+  And the specification's "corpus" is a defined term, the documents a capability is proved
+  against: unread third-party sets are a library beside it, never in it.
 
 ## 2026-09-24 (lane and plan categorisation — Quark stirs Latitude / 017FtN, claude-code)
 

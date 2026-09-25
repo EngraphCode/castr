@@ -1,6 +1,6 @@
 # Example-input corpus sources — survey of 25 September 2026
 
-Evidence base for the plan `.agent/plans/current/example-input-corpus.md`: candidate sources of
+Evidence base for the plan `.agent/plans/current/example-input-library.md`: candidate sources of
 real-world and edge-case input documents for Castr, each with its pin (repository and commit, or
 served URL), licence and gotchas, as read on 25 September 2026. Commissioned by the owner's words of
 that day: "We also need a wide variety of example input schemas to test against" and "If the
@@ -175,7 +175,8 @@ every pin from the committed bytes; `.prettierignore` and `.gitattributes -text`
   `openapi-workshop/`) / 40 yaml; 3.1: 12 json / 12 yaml (train-travel, webhooks, schema-types, security,
   parameters-style, schema-validation-*); 2.0: 7/7. Named by feature (circular, discriminators,
   polymorphism, parameters-extreme, response-multiple-mediatypes, star-trek). Copy with notice: yes,
-  except seventeen documents that declare their own licence in `info.license` at this commit:
+  read with care for seventeen documents that carry an `info.license` at this commit (the licence of
+  the API described, not of the file; a file's terms come from its origin):
   `3.1/json/train-travel.json` is "Creative Commons Attribution-NonCommercial-ShareAlike 4.0
   International" (identifier `CC-BY-NC-SA-4.0`), which an MIT repository cannot redistribute; six are
   Apache 2.0 (3.0 petstore, petstore-expanded, response-http-behavior, schema-encoding-style; 3.1
@@ -210,15 +211,15 @@ every pin from the committed bytes; `.prettierignore` and `.gitattributes -text`
 
 ## 6. Licence compatibility with an MIT repository, with attribution
 
-| Licence                 | Sources                                                                                                                                   | Verdict                                                           |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| MIT                     | openapi-typescript, hey-api, JSON-Schema-Test-Suite, Redocly, ReadMe (except seven documents declaring their own licence), GitHub, Stripe | Yes: keep copyright + permission notice per source                |
-| CC BY-NC-SA 4.0         | ReadMe's `train-travel.json`                                                                                                              | No: non-commercial; not redistributed                             |
-| Apache 2.0              | OAI spec repo, swagger-parser, SchemaStore, DigitalOcean                                                                                  | Yes: keep the Apache notice (and any NOTICE), state modifications |
-| CC BY 4.0               | learn.openapis.org                                                                                                                        | Yes: attribution with source, licence link, changes noted         |
-| CC0 1.0                 | APIs.guru author-contributed definitions                                                                                                  | Yes, no conditions; but only for contributed ones                 |
-| "Fair use"              | APIs.guru acquired definitions (the majority)                                                                                             | No grant: go to the `x-origin` upstream                           |
-| ISC (package.json only) | openapi-zod-client                                                                                                                        | Unconfirmed: no LICENSE file                                      |
+| Licence                        | Sources                                                                                                                                   | Verdict                                                           |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| MIT                            | openapi-typescript, hey-api, JSON-Schema-Test-Suite, Redocly, ReadMe (except seven documents declaring their own licence), GitHub, Stripe | Yes: keep copyright + permission notice per source                |
+| CC BY-NC-SA 4.0 (API metadata) | ReadMe's `train-travel.json`, origin not stated by ReadMe                                                                                 | No: terms of the file not established; not redistributed          |
+| Apache 2.0                     | OAI spec repo, swagger-parser, SchemaStore, DigitalOcean                                                                                  | Yes: keep the Apache notice (and any NOTICE), state modifications |
+| CC BY 4.0                      | learn.openapis.org                                                                                                                        | Yes: attribution with source, licence link, changes noted         |
+| CC0 1.0                        | APIs.guru author-contributed definitions                                                                                                  | Yes, no conditions; but only for contributed ones                 |
+| "Fair use"                     | APIs.guru acquired definitions (the majority)                                                                                             | No grant: go to the `x-origin` upstream                           |
+| ISC (package.json only)        | openapi-zod-client                                                                                                                        | Unconfirmed: no LICENSE file                                      |
 
 ## 7. Pinning and practical gotchas
 

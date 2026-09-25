@@ -1,5 +1,5 @@
 ---
-title: Example-input corpus — a wide variety of pinned input documents
+title: Example-input library — a wide variety of pinned input documents
 status: current
 lane: current
 created: 2026-09-25
@@ -12,19 +12,19 @@ owner_directive: >-
   it, the owner chose to plan it as its own slice.
 todos:
   - id: EC-0
-    content: docs/THIRD_PARTY_NOTICES.md is created with the CC BY 4.0 notice for the OpenAPI Initiative examples already in lib/examples/openapi (unchanged files at their commit, modified files marked) and the Oak OGL notice; the course plan's MOVE section names the corpus, its validator and the notices file
+    content: docs/THIRD_PARTY_NOTICES.md is created with the CC BY 4.0 notice for the OpenAPI Initiative examples already in lib/examples/openapi (unchanged files at their commit, modified files marked) and the Oak OGL notice; the course plan's MOVE section names the corpus, the library, their validator and the notices file
     status: pending
     depends_on: []
   - id: EC-1
-    content: The pin record's shape for many sources (repository kind, json and yaml, openapi and fragment kinds, one source directory each with the Oak documents moved into theirs, a notice per entry, the summary line), proved by the first pinned source, openapi-typescript's fixture files (MIT)
+    content: The pin record's shape for many sources (repository kind, json and yaml, openapi and fragment kinds, a library directory beside the corpus with one source directory each, a notice per entry, the summary line), proved by the first pinned source, openapi-typescript's fixture files (MIT)
     status: pending
     depends_on: [EC-0]
   - id: EC-2
-    content: hey-api/openapi-ts specs/3.0.x and specs/3.1.x pinned under the licence rules, invalid/ included (MIT)
+    content: hey-api/openapi-ts specs/3.0.x and specs/3.1.x pinned under the provenance rules, invalid/ included (MIT)
     status: pending
     depends_on: [EC-1]
   - id: EC-3
-    content: readmeio/oas examples pinned under the licence rules, JSON serialisation only (MIT, Apache 2.0 and ISC notices; train-travel and the third-party-owned documents left out)
+    content: readmeio/oas examples pinned under the provenance rules, JSON serialisation only (MIT and Apache 2.0 notices; train-travel and the third-party-owned documents left out)
     status: pending
     depends_on: [EC-1]
   - id: EC-4
@@ -45,32 +45,37 @@ todos:
     depends_on: [EC-5]
 ---
 
-# Example-input corpus
+# Example-input library
 
 ## Goal
 
-Castr holds a wide, pinned and licensed set of input documents beyond the two Oak
+Castr holds a wide, pinned and licensed library of input documents beyond the two Oak
 documents and its hand-made fixtures: real-world OpenAPI 3.0, 3.1 and 3.2 documents,
 feature-named edge cases, and JSON Schema draft-07 and 2020-12 documents. Every document
 is the bytes its pin record names, with its source, commit, licence and notice recorded,
-and the corpus validator recomputes all of it on every run. Until the owner names any of
-them in a capability's corpus in the specification, nothing reads them but the validator:
-the Oak entries remain SPEC-C-1's corpus, and this plan puts about 460 files into the
-repository with no reader. That is what the owner asked for, documents to test against,
-and the tests that read them belong to the course's legs and to the owner's later naming.
+and the corpus validator recomputes all of it on every run. The library is not a corpus in
+the specification's sense: a corpus is the documents a capability is proved against, and
+these are a capability's corpus only when the owner names them in the specification. Until
+then nothing reads them but the validator: the Oak entries remain SPEC-C-1's corpus, and
+this plan puts about 460 files into the repository with no reader. That is what the owner
+asked for, documents to test against, and the tests that read them belong to the course's
+legs and to the owner's later naming.
 
 ## Mechanism
 
 The corpus directory and its validator exist for the two Oak documents
 (`lib/tests-transforms/__fixtures__/corpus/`). Today the record admits one source kind
 (served), one format (JSON), one document kind (an OpenAPI document with `openapi`,
-`info.title` and `info.version` as strings) and one flat directory. Every candidate source
-needs a repository kind (repository, commit, path); between them they need YAML, files a
-document `$ref`s that are not documents, JSON Schema documents, JSON Schema test-suite
-files and one subdirectory per source; and many of them carry no `info.title` or a numeric
-`info.version`, so the hash, not the header, is a pin's identity. EC-1 gives the record
-that shape and proves it with the first pinned source; the tranches follow, one source per
-pull request, and each document kind lands in the tranche that pins its first document.
+`info.title` and `info.version` as strings) and one flat directory. The library lives
+beside it, `lib/tests-transforms/__fixtures__/library/<source>/`, one directory and one
+record per source, and the validator covers both roots; the corpus directory and the Oak
+files in it do not change. Every candidate source needs a repository kind (repository,
+commit, path); between them they need YAML, files a document `$ref`s that are not
+documents, JSON Schema documents and JSON Schema test-suite files; and many of them carry
+no `info.title` or a numeric `info.version`, so the hash, not the header, is a pin's
+identity. EC-1 gives the record that shape and proves it with the first pinned source; the
+tranches follow, one source per pull request, and each document kind lands in the tranche
+that pins its first document.
 
 The plan carries the rules and the sources. Every count below is the survey's measurement
 on 25 September 2026 at the pinned commit, and each tranche re-derives its own file list
@@ -81,19 +86,24 @@ licence text and gotchas, is the evidence base:
 
 ## Rules
 
-- **Owner rule.** A document whose `info` names a third party as the API's owner is pinned
-  from that owner's repository under its licence, or left out. This excludes hey-api's nine
-  vendor copies and readmeio's petstore, petstore-expanded and uspto documents (Swagger's and
-  the USPTO's); the OpenAPI Initiative's own copies of those are the ones Castr carries.
-- **Licence rule.** A document that declares its own `info.license` is pinned under that
-  licence, with that licence's notice, when the licence permits redistribution in an MIT
-  repository, and left out otherwise. Where a document declares none, its repository's
-  licence applies. This leaves readmeio's `train-travel.json` out (CC BY-NC-SA 4.0,
-  non-commercial), puts its `response-http-behavior` and both `schema-encoding-style`
-  documents under Apache 2.0 and its ten `openapi-workshop` documents under ISC, and puts
-  the rest under MIT.
+- **Provenance rule.** A file's redistribution terms are the licence of the repository
+  whose authors wrote it, read from that repository's LICENSE file. A file the repository
+  itself copied from elsewhere, which its README, a `.licenses` directory or the file's
+  `info` reveals, is pinned from the origin under the origin's licence, or left out when
+  the origin's terms cannot be established. The OpenAPI `info.license` object is the
+  licence of the API the document describes, not of the file; it is recorded in the notice
+  as document data and read as a signal of another origin, never as a grant. Under this
+  rule hey-api's nine vendor copies are the vendors' (left out, or pinned from the vendor);
+  readmeio's petstore, petstore-expanded and uspto documents are the OpenAPI Initiative's
+  and Castr already carries the Initiative's copies; readmeio's `response-http-behavior`
+  and both `schema-encoding-style` documents are Initiative-derived by readmeio's own
+  `.licenses/openapi-specification.md` and are pinned under Apache 2.0 from that statement;
+  readmeio's `train-travel.json` names a non-commercial licence in its API metadata and
+  readmeio states no origin for it, so it is left out; every other readmeio document,
+  the ten `openapi-workshop` documents included (their `info.license` says ISC, as API
+  metadata), is readmeio's own and pinned under MIT.
 - **Named exclusion.** hey-api's `3.0.x/sdk-method-class-conflict.yaml` ("Internal API")
-  declares no licence and names no owner; it is left out for its unstated origin.
+  names no owner and hey-api states no origin for it; it is left out.
 - **Fixtures, never tests.** No expectation, expected output or test from any source is
   run or asserted. A JSON-Schema-Test-Suite file is pinned as the bytes it is; the
   validator's header check for that kind reads the array shape and nothing inside
@@ -142,38 +152,39 @@ Each is taken from the survey's evidence and is open to the owner to strike.
 
 - **EC-0 before EC-1 (blocking).** The notices file must exist before a record entry can
   name its notice.
-- **EC-1 before EC-2 to EC-6 (blocking).** The record shape must admit a source's format,
-  kind and layout before that source is pinned.
+- **EC-1 before EC-2 to EC-6 (blocking).** The record shape and the library root must exist
+  before a source is pinned.
 - **EC-5 before EC-7 (blocking).** The `json-schema` kind lands with SchemaStore, its first
   documents; the meta-schemas reuse it.
 - **The course (none).** The plan sits beside the course, not on it: its documents are
   format inputs whatever the MEASURE leg decides, and the plan touches no writer code. It
-  lands before the MOVE leg, and EC-0 adds the corpus, its validator and the notices file
-  to the MOVE section's statement of what travels.
+  lands before the MOVE leg, and EC-0 adds the corpus, the library, their validator and the
+  notices file to the MOVE section's statement of what travels.
 
 ## Acceptance criteria (each with a proof — required)
 
 - **AC-1 Every pinned document is the bytes its record names.** Proof, `repo-safe`:
-  `pnpm --filter @engraph/agent-tools validate-corpus-provenance` passes over every corpus
-  source directory in `repo-validators:check`. Todos: EC-1 to EC-7.
+  `pnpm --filter @engraph/agent-tools validate-corpus-provenance` passes over the corpus
+  and every library source directory in `repo-validators:check`. Todos: EC-1 to EC-7.
 - **AC-2 Every pinned document has a recorded licence and attribution.** Proof,
   `repo-safe`: the validator checks that each record entry names a section of
   `docs/THIRD_PARTY_NOTICES.md` and that the section exists; the Oak entries name the OGL
   section EC-0 adds. Todos: EC-0, EC-1.
-- **AC-3 The corpus is wide.** Proof, `repo-safe`: the validator's summary line counts
-  pinned documents by kind, declared version (OpenAPI 3.0.x, with `"3.0"` counted as 3.0.x,
-  3.1.x and 3.2.x; JSON Schema draft-07 and 2020-12, a test-suite file's dialect taken from
-  its recorded path) and source; at the plan's end the OpenAPI documents come from at least
-  three sources, all three OpenAPI minors are present, and both JSON Schema dialects are
-  present. Todos: EC-1 to EC-7.
+- **AC-3 The library is wide.** Proof, `repo-safe`: the validator's summary line counts
+  pinned library documents by kind, declared version (OpenAPI 3.0.x, with `"3.0"` counted
+  as 3.0.x, 3.1.x and 3.2.x; JSON Schema draft-07 and 2020-12, a test-suite file's dialect
+  taken from its recorded path) and source; at the plan's end the OpenAPI documents come
+  from at least three sources, all three OpenAPI minors are present, and both JSON Schema
+  dialects are present. Width is a fact about the library, not a proof of any capability.
+  Todos: EC-1 to EC-7.
 - **AC-4 No third-party test is run or asserted.** Proof, `repo-safe`: the validator's
   unit tests show the `json-schema-test-suite` header check reads the array shape and
-  nothing inside `tests[]`; no code under `lib/` reads a corpus test-suite file. Todo: EC-4.
+  nothing inside `tests[]`; no code under `lib/` reads a library test-suite file. Todo: EC-4.
 - **AC-5 The existing OpenAPI Initiative examples are attributed, modifications marked.**
   Proof, `repo-safe`: `docs/THIRD_PARTY_NOTICES.md` names learn.openapis.org, CC BY 4.0,
   the commit each unchanged file matches, and each modified file as modified, which
-  CC BY 4.0 §3(a)(1)(B) requires; the course plan's MOVE section names the corpus, its
-  validator and the notices file. Todo: EC-0.
+  CC BY 4.0 §3(a)(1)(B) requires; the course plan's MOVE section names the corpus, the
+  library, their validator and the notices file. Todo: EC-0.
 
 ## Todos
 
@@ -188,26 +199,26 @@ most two review rounds); EC-2 to EC-6 are independent of each other.
   no learn revision), marked as modified; it records that `petstore-expanded` declares
   Apache 2.0 and `petstore` declares MIT in `info.license`. The Oak OGL notice moves here
   from the corpus README, which links to it. One sentence in the course plan's MOVE section
-  names the corpus, its validator and the notices file. No pin record changes.
+  names the corpus, the library, their validator and the notices file. No pin record changes.
 - **EC-1** — the record shape, red first: a `repository` source (`repository`, `commit`,
   `path`) beside `served`; a `format` (`json` or `yaml`) per entry; a `kind` per entry,
   `openapi` (checked by its `openapi` field alone) or `fragment` (checked by hash alone,
   for a file a pinned document in the same record `$ref`s, which the tranche's review
-  confirms); `infoTitle` and `infoVersion` removed; one record per source subdirectory
-  under `corpus/`, with `file` a relative path inside that directory and a traversal guard
-  in place of today's no-separator rule (security-expert reviews it); the two Oak files and
-  their record moved, bytes unchanged, into `corpus/oak/`, so the top level holds the
-  README and source directories only; a `notice` per entry naming its section in the
-  notices file; the summary line of AC-3. `.prettierignore` and `.gitattributes` cover
-  `corpus/**`, keeping each `provenance.json` and README formatted as today. The first
-  source is pinned in the same pull request: openapi-typescript's 14 top-level fixture
-  files at the survey's commit, nine documents and five fragments, so the shape has real
-  instances the moment it lands.
+  confirms); `infoTitle` and `infoVersion` removed; a second validator root,
+  `lib/tests-transforms/__fixtures__/library/`, holding one subdirectory and one record per
+  source, with `file` a relative path inside that directory and a traversal guard in place
+  of today's no-separator rule (security-expert reviews it); the corpus directory unchanged;
+  a `notice` per entry naming its section in the notices file; the summary line of AC-3.
+  `.prettierignore` and `.gitattributes` cover `library/**` as they cover the corpus,
+  keeping each `provenance.json` and README formatted. The first source is pinned in the
+  same pull request: openapi-typescript's 14 top-level fixture files at the survey's
+  commit, nine documents and five fragments, so the shape has real instances the moment it
+  lands.
 - **EC-2** — hey-api/openapi-ts `specs/3.0.x` and `specs/3.1.x`, `invalid/` included, under
   the rules; `gitleaks dir` over the source directory before staging (the survey measured
   no findings outside the excluded vendor copies). MIT notice.
 - **EC-3** — readmeio/oas `packages/oas-examples` 3.0 and 3.1, JSON only, under the rules;
-  MIT, Apache 2.0 and ISC notices.
+  MIT and Apache 2.0 notices, each document's `info.license` recorded as document data.
 - **EC-4** — JSON-Schema-Test-Suite `tests/draft7` and `tests/draft2020-12` files, whole,
   under the rules; the `json-schema-test-suite` kind lands here with its header check.
   MIT notice.
@@ -233,8 +244,8 @@ most two review rounds); EC-2 to EC-6 are independent of each other.
 ## Out of scope
 
 - **Reading the documents.** No transform scenario, proof or reader is added; SPEC-PR-6's
-  check runs capability corpora, and these documents join one only when the owner names
-  them.
+  check runs capability corpora, and a library document joins one only when the owner
+  names it in the specification.
 - **Running or asserting third-party tests.** The owner's ruling covers fixtures only;
   Castr's target behaviour may differ.
 - **APIs.guru's acquired definitions and unattributed vendor copies**, for the rules above.
