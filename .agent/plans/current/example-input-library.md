@@ -12,7 +12,7 @@ owner_directive: >-
   it, the owner chose to plan it as its own slice.
 todos:
   - id: EC-0
-    content: ATTRIBUTION.md at the repository root (source authors by name with public references) and docs/THIRD_PARTY_NOTICES.md (licence texts) are created, covering the OpenAPI Initiative examples already in lib/examples/openapi (unchanged files at their commit, modified files marked) and the Oak documents; the course plan's MOVE section names the corpus, the library, their validator and both files
+    content: ATTRIBUTION.md at the repository root (source authors by name with public references) and docs/THIRD_PARTY_NOTICES.md (licence texts) are created, covering the OpenAPI Initiative examples already in lib/examples/openapi (unchanged files at their commit, modified files marked) and the Oak documents; the examples fetcher and its README instruction are retired; the course plan's MOVE section names the corpus, the library, their validator and both files
     status: pending
     depends_on: []
   - id: EC-1
@@ -40,7 +40,7 @@ todos:
     status: pending
     depends_on: [EC-1]
   - id: EC-7
-    content: The OpenAPI Initiative 3.1 and 3.2 meta-schemas pinned with the json-schema kind (Apache 2.0)
+    content: The OpenAPI Initiative 3.1 and 3.2 meta-schemas, schema.yaml and schema-base.yaml at each branch commit, pinned with the json-schema kind (Apache 2.0)
     status: pending
     depends_on: [EC-5]
 ---
@@ -206,9 +206,14 @@ most two review rounds); EC-2 to EC-6 are independent of each other.
   (`v3.0/uspto.json`, edited in Castr at `SHA:d5bb5534`; `v3.0/api-with-examples.yaml` and
   `v3.0/uspto.yaml`, matching no learn revision), marked as modified; it records that
   `petstore-expanded` declares Apache 2.0 and `petstore` declares MIT in `info.license`. The
-  Oak OGL notice moves here from the corpus README, which links to both files. One sentence
-  in the course plan's MOVE section names the corpus, the library, their validator and both
-  files. No pin record changes.
+  Oak OGL notice moves here from the corpus README, which links to both files. The examples
+  fetcher (`pnpm fetch:examples`, `lib/scripts/examples-fetcher.mts`) and its instruction in
+  `lib/examples/README.md` are retired in the same pull request: it deletes
+  `lib/examples/openapi` and replaces it with an unpinned clone of learn's default branch,
+  which would overwrite the three deliberately modified files and detach every file from the
+  commit the attribution names; a refresh of that directory is a new pin under this plan's
+  rules, never a re-fetch. One sentence in the course plan's MOVE section names the corpus,
+  the library, their validator and both files. No pin record changes.
 - **EC-1** — the record shape, red first: a `repository` source (`repository`, `commit`,
   `path`) beside `served`; a `format` (`json` or `yaml`) per entry; a `kind` per entry,
   `openapi` (checked by its `openapi` field alone) or `fragment` (checked by hash alone,
@@ -237,9 +242,11 @@ most two review rounds); EC-2 to EC-6 are independent of each other.
   `json-schema` kind lands here, checked by its `$schema` field. Apache 2.0 notice.
 - **EC-6** — learn.openapis.org `examples/v3.2` (two documents), YAML. CC BY 4.0 notice,
   the section EC-0 creates.
-- **EC-7** — the OpenAPI Initiative meta-schemas for 3.1 and 3.2
-  (`src/schemas/validation/schema.yaml` on the `v3.1-dev` and `v3.2-dev` branches at the
-  survey's commits). Apache 2.0 notice.
+- **EC-7** — the OpenAPI Initiative meta-schemas for 3.1 and 3.2: at each of the `v3.1-dev`
+  and `v3.2-dev` branch commits the survey records, both `src/schemas/validation/schema.yaml`
+  (the dialect wrapper) and `src/schemas/validation/schema-base.yaml` (the base it refers
+  to), each a `json-schema` document, so the pinned pair is usable offline. Apache 2.0
+  notice.
 
 ## Execution contracts
 
@@ -320,6 +327,7 @@ template omits them.
   which it is read is SPEC-N-3, an open item on the ratification checklist; a Zod input
   set is planned when that decision lands. TypeScript is not read.
 - **Pinning or reverting `lib/examples/openapi`.** The set already serves the tests that
-  read it; it gains its notice in EC-0 with its modifications marked, and a provenance
-  record for a directory that mixes copied and Castr-authored files needs an authored
-  source kind no other directory needs.
+  read it; it gains its attribution in EC-0 with its modifications marked, its fetcher is
+  retired so nothing can replace it unpinned, and a provenance record for a directory that
+  mixes copied and Castr-authored files needs an authored source kind no other directory
+  needs.
