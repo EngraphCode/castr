@@ -78,6 +78,33 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   115 I cured Codex's two threads from the notifications that had arrived and pushed, while
   Copilot's seven threads had landed in the same minute and were only read afterwards. One
   push per review wave means one GraphQL harvest of all threads first, then one cure.
+- **Napkin edits never ride a cycle commit (Codex, pull request 115).** Three pull requests
+  this session carried napkin hunks inside `docs(...)` commits. The continuity-surface rule
+  says continuity drift lands in its own session-end `chore(continuity)` commit, or is
+  handed off by name, never bundled with the commit that produced it; and pushed history is
+  not re-cut. Write the napkin whenever; stage only the cycle's files for the cycle commit
+  and leave the napkin for the close's continuity commit.
+- **When two successive rounds narrow the same concern, close the class, not the sentence
+  (ADR-051 clause 4(c)).** Rounds 4 and 5 on the library plan both narrowed its relationship
+  to the course's MOVE leg (the ordering, then the travel claim), the clause's trigger. EC-7's
+  file set was narrowed in rounds 3 and 5 (the wrapper, then its base, then the graph), not
+  successive, and was closed the same way by choice. Each closed by a rule in place of a fact:
+  the plan asserts nothing about what MOVE carries; EC-7 pins every schema document in the
+  directory at the commit. A plan that names two files from a directory invites a third; one
+  that names the directory does not.
+- **ADR-051 clause 4 caps bot fix rounds at two; from the third, carry forward unless the
+  finding is blocking (mine).** I cured rounds 3 and 4 with pushes before re-reading the
+  clause, and the tally recorded the overrun after the fact. Read clause 4 when the tally is
+  created and write its cap into the tally's budget line, beside PDR-132's.
+- **The lifecycle-triggers component and the wrap skill disagree (reported, not resolved).**
+  The component's touch point 5 says every session closes with `wrap` (owner ruling
+  2026-07-28); the wrap skill's "Use When" says ordinary closeout is `session-handoff`'s lane
+  and wrap is never the default close. Codex flagged the library plan, which quotes the
+  component, against the skill. Which yields is the owner's doctrine decision; until then a
+  plan follows the component, which carries the ruling.
+- **Claim state is machine-local.** `active-claims.json` and `closed-claims.archive.json` are
+  gitignored, so opening and closing a claim commits nothing; the continuity commit carries
+  the napkin and the continuity contract, never the claims.
 
 ## 2026-09-24 (lane and plan categorisation — Quark stirs Latitude / 017FtN, claude-code)
 
