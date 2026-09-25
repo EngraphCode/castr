@@ -22,3 +22,8 @@
 # invokes any merge driver, so the human discipline in
 # `.agent/skills/semantic-merge/SKILL-CANONICAL.md` remains the backstop.
 .agent/memory/**/*.md merge=engraph-semantic-merge
+
+# Pinned corpus documents are the bytes their pin record names; no line-ending conversion
+# on any checkout, or the recomputed SHA-256 fails on a machine with core.autocrlf=true.
+# Every JSON file in the directory is covered, so a future pin needs no new line here.
+lib/tests-transforms/__fixtures__/corpus/*.json -text

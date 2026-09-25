@@ -40,6 +40,7 @@
     "validate-no-stale-script-invocations": "cd .. && pnpm exec tsx agent-tools/src/validators/stale-script-invocations/validate-no-stale-script-invocations.ts",
     "validate-loop-closure-references": "cd .. && pnpm exec tsx agent-tools/src/validators/loop-closure-references/validate-loop-closure-references.ts",
     "validate-no-machine-local-paths": "cd .. && pnpm exec tsx agent-tools/src/validators/machine-local-paths/validate-no-machine-local-paths.ts",
+    "validate-corpus-provenance": "cd .. && pnpm exec tsx agent-tools/src/validators/corpus-provenance/validate-corpus-provenance.ts",
     "validate-lifecycle-scripts": "cd .. && pnpm exec tsx agent-tools/src/validators/lifecycle-scripts/validate-lifecycle-scripts.ts",
     "validate-manifest-duplicate-keys": "cd .. && pnpm exec tsx agent-tools/src/validators/manifest-duplicate-keys/validate-manifest-duplicate-keys.ts",
     "validate-pretooluse-guard-routing": "cd .. && pnpm exec tsx agent-tools/src/validators/pretooluse-guard-routing/validate-pretooluse-guard-routing.ts",

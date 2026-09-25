@@ -4,12 +4,15 @@ This directory contains fixtures for transform testing with sample input (Sessio
 
 ## Directory Structure
 
-| Directory     | Purpose                                                      |
-| ------------- | ------------------------------------------------------------ |
-| `normalized/` | Castr-normalized specs for byte-for-byte idempotency testing |
-| `arbitrary/`  | Real-world specs for semantic equivalence testing            |
-| `edge-cases/` | Stress test fixtures for specific edge cases                 |
-| `corpus/`     | The pinned Oak API documents SPEC-C-1 is proved against      |
+| Directory      | Purpose                                                                                                  |
+| -------------- | -------------------------------------------------------------------------------------------------------- |
+| `normalized/`  | Castr-normalized specs for byte-for-byte idempotency testing                                             |
+| `arbitrary/`   | Real-world specs for semantic equivalence testing                                                        |
+| `edge-cases/`  | Stress test fixtures for specific edge cases                                                             |
+| `corpus/`      | The pinned Oak API documents SPEC-C-1 is proved against                                                  |
+| `valid/`       | OpenAPI 3.0.x and 3.1.x documents that parse                                                             |
+| `invalid/`     | Documents that must be rejected: missing required fields, cross-version fields, malformed path templates |
+| `json-schema/` | Standalone JSON Schema documents for the JSON Schema transform scenario                                  |
 
 ## Usage
 
