@@ -78,15 +78,17 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   115 I cured Codex's two threads from the notifications that had arrived and pushed, while
   Copilot's seven threads had landed in the same minute and were only read afterwards. One
   push per review wave means one GraphQL harvest of all threads first, then one cure.
-- **A napkin edit is committed on its own, whenever it is made (Codex, pull request 115).**
-  Three pull requests this session carried napkin hunks inside `docs(...)` commits; the
-  continuity-surface rule says those edits land as their own `chore(continuity)` commit, and
-  pushed history is not re-cut. Write the napkin whenever; stage and commit it separately,
-  every time, not only at session end.
-- **When a bot narrows the same concern twice, close the class, not the sentence (ADR-051
-  clause 4(c)).** Rounds 4 and 5 on the library plan both narrowed its relationship to the
-  course's MOVE leg (the ordering, then the travel claim); rounds 3 and 5 narrowed EC-7's file
-  set (the wrapper, then its base, then the graph). Each closed by a rule in place of a fact:
+- **Napkin edits never ride a cycle commit (Codex, pull request 115).** Three pull requests
+  this session carried napkin hunks inside `docs(...)` commits. The continuity-surface rule
+  says continuity drift lands in its own session-end `chore(continuity)` commit, or is
+  handed off by name, never bundled with the commit that produced it; and pushed history is
+  not re-cut. Write the napkin whenever; stage only the cycle's files for the cycle commit
+  and leave the napkin for the close's continuity commit.
+- **When two successive rounds narrow the same concern, close the class, not the sentence
+  (ADR-051 clause 4(c)).** Rounds 4 and 5 on the library plan both narrowed its relationship
+  to the course's MOVE leg (the ordering, then the travel claim), the clause's trigger. EC-7's
+  file set was narrowed in rounds 3 and 5 (the wrapper, then its base, then the graph), not
+  successive, and was closed the same way by choice. Each closed by a rule in place of a fact:
   the plan asserts nothing about what MOVE carries; EC-7 pins every schema document in the
   directory at the commit. A plan that names two files from a directory invites a third; one
   that names the directory does not.
