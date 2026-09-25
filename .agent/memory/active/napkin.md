@@ -4,24 +4,43 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 
 ## 2026-09-25 (Oak corpus pin and re-measurement — Quark stirs Latitude / 017FtN, claude-code)
 
-- **Read the URL's version segment before comparing documents.** The owner's URL is
-  `/api/v1`; the consumer's cache, and the 21 September review record measured from it, are
-  `/api/v0` (its codegen entry point hard-codes the v0 URL). For half an hour I treated the
-  differences as drift in one document. They are two documents, both now pinned.
+- **Fetch every version you compare, at the same time (mine).** I compared the owner's
+  `/api/v1` document, fetched today, with the consumer's cache of `/api/v0` from 3 August and
+  called every difference "what v1 changes". The documentation reviewer fetched today's v0:
+  it is v1 under another path, frozen, with the same content. The differences were five
+  weeks of Oak's changes, not a version. I had told the owner otherwise before they decided
+  what to pin, so the corrected fact went back to them; they replaced the cache pin with the
+  served v0. The lesson: a version comparison needs both versions fetched from the same
+  source at the same time; a snapshot from somewhere else compares time, not version.
+- **OWNER RULING (verbatim, 25 September 2026): "Castr needs to be able to process both Oak
+  API specs, although the V1 spec is the higher priority and there is wiggle room on
+  supporting the V0 spec if needed."** Landed in SPEC-C-1's corpus line (0.4.1).
+- **OWNER RULING (verbatim, 25 September 2026): "If the openapi-ts test suits is suitable and
+  appropriately licensed then I have no problem using it, the fixtures anyway, not the tests
+  themselves as our target behaviour may be different."** Supersedes the testing strategy's
+  "Do not copy third-party specs from OpenAPI-TS" line; the bullet now carries the ruling.
+  The wider example-input corpus is planned as its own slice (owner, same day).
+- **A pin check is not a product test (owner, testing strategy).** The first draft of the
+  corpus pin check was a vitest file in `lib/tests-transforms`: it read files, proved no Castr
+  behaviour, and matched the strategy's own words, "hashing a source and pinning the hash is
+  the antithesis". It is now a repository validator in `agent-tools`, where the other
+  integrity gates live, with unit tests on its pure comparison only.
 - **State the counting method with the count (mine).** My first walker excluded the
   children of `properties` and reported 245 closed objects against the record's 253, which I
   presented as an unexplained method difference. A string-occurrence count reproduces every
-  figure in the record; the eight missing objects were the `allOf` members. The note's
-  appendix now carries the script and its output for both documents.
+  figure in the record, so the note's appendix states that method and carries the script and
+  its output for all three documents; which eight objects my walker missed was never
+  established, and the note no longer claims it.
 - **A served document with no ETag or Last-Modified has only its hash.** The
-  specification's Corpus definition asks for a source commit and a SHA-256; the served v1
-  file offers the hash and a fetch time, the consumer's cached v0 offers a commit as well.
-  Pinned both, with the difference recorded in `provenance.json`.
+  specification's Corpus definition asked for a source commit and a SHA-256; a served
+  document offers the hash and a fetch time and no commit. The owner amended the definition
+  (SHA-256, a source commit where the source has one, URL and fetch time for a served
+  document), and both pins are served documents; the consumer's cache is not pinned.
 - **`prettier --check` on a path under `/tmp` is vacuous here.** `.prettierignore` carries
   `tmp/`, which matches the scratchpad, so the check reports success having matched no file.
   Check formatting on files inside the repository only. The pre-commit hook's
   `prettier --write` would have re-indented the one-line v1 document and broken its hash;
-  the corpus files are now in `.prettierignore` and the provenance test recomputes the hash.
+  the corpus files are now in `.prettierignore` and the validator recomputes the hash.
 - **A CONNECT 403 from the proxy is the environment's network policy, not the server.** The
   first fetch of the Oak document was refused before leaving the session; the owner widened
   the policy and the second fetch succeeded.

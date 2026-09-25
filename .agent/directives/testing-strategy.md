@@ -417,11 +417,12 @@ These layers define the structured acceptance criteria for the Castr pipeline. E
 
 ### Fixture Provenance
 
-| Source                     | Description                                                             |
-| -------------------------- | ----------------------------------------------------------------------- |
-| Oak SDK-decorated fixtures | Ground truth input + expected outputs                                   |
-| Castr normalized fixtures  | Transform-validation IR artifacts (incl. round-trip/idempotence proofs) |
-| Synthetic fixtures         | OpenAPI-TS-inspired edge cases recreated in-house (never copied)        |
+| Source                     | Description                                                                                   |
+| -------------------------- | --------------------------------------------------------------------------------------------- |
+| Oak SDK-decorated fixtures | Ground truth input + expected outputs                                                         |
+| Castr normalized fixtures  | Transform-validation IR artifacts (incl. round-trip/idempotence proofs)                       |
+| Synthetic fixtures         | OpenAPI-TS-inspired edge cases recreated in-house                                             |
+| OpenAPI-TS fixtures        | Reused when they suit the proof, licence confirmed and attributed; their tests are not reused |
 
 ### Fixture Matrix (Strict-Only)
 
@@ -438,9 +439,13 @@ These layers define the structured acceptance criteria for the Castr pipeline. E
 
 ### Licensing and Provenance
 
-- Do not copy third-party specs from OpenAPI-TS; recreate synthetic equivalents
+- OpenAPI-TS fixtures may be reused when they suit the proof and their licence permits it,
+  with attribution as below; the tests that come with them are not reused, because Castr's
+  target behaviour may differ (owner, 25 September 2026: "If the openapi-ts test suits is
+  suitable and appropriately licensed then I have no problem using it, the fixtures anyway,
+  not the tests themselves as our target behaviour may be different")
 - If reusing MIT-licensed content, confirm the license for specific files and add `docs/THIRD_PARTY_NOTICES.md` with attribution
-- Record fixture provenance (synthetic vs first-party) in test metadata
+- Record fixture provenance (synthetic, first-party or third-party) in test metadata
 
 ---
 

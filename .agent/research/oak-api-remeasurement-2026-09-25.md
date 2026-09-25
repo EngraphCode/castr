@@ -7,39 +7,51 @@
 The [review record of 21 September](./castr-specification-review-2026-09-21.md) measured
 the consumer's cached copy and said its figures were not re-verified; the
 [categorisation report of 24 September](../analysis-and-reports/castr-lanes-and-plans-categorised-2026-09-24.md)
-carried them forward unmeasured. This note measures the fetched document and the cached
-one, reproduces the record's figures, and states what the fetched document changes.
+carried them forward unmeasured. This note measures the documents Oak serves today and the
+consumer's cache, reproduces the record's figures on the cache, and states what has changed
+since the cache was taken.
 
 **What it decides.** Nothing. The owner's decisions of 25 September are recorded where
-they land: both documents are pinned in
+they land: both served documents are pinned in
 [`lib/tests-transforms/__fixtures__/corpus/`](../../lib/tests-transforms/__fixtures__/corpus/README.md),
-and the Zod version ruling is restated in the specification (0.4.1).
+and the specification (0.4.1) restates the Zod version ruling, amends the Corpus
+definition, and names both Oak documents in SPEC-C-1.
 
-## 1. The two documents
+## 1. Three documents
 
-| Document | `info.version`                                   | Source                                                                                                                                                                                                                                        | Pin                                                                                                                           |
-| -------- | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| v1       | `1.0.1`                                          | `https://open-api.thenational.academy/api/v1/swagger.json`, fetched 25 September 2026 at 12:39:20 UTC (HTTP 200, 184,589 bytes, no ETag or Last-Modified header)                                                                              | SHA-256 `ca61a52da2ee188ef71f4a097c7950da4c2683129f886bad24d5c7790bb4250e`                                                    |
-| v0       | `0.7.0-3b4b01e6a7677713b21d997f2c20d42b86ff9b46` | The Engraph Open Curriculum Ecosystem's committed schema cache, `packages/sdks/oak-sdk-codegen/schema-cache/api-schema-original.json`, last changed by its commit `SHA:bcdc6237` on 3 August 2026, unchanged at `SHA:1a4450a6` (25 September) | SHA-256 `6ff3b8b6825e2fce7358a6329f08ee7353470f7a64cc244f3ffbe65cc130b4df`; Oak commit `SHA:3b4b01e6` from the version string |
+| Document      | `info.version`                                   | Source                                                                                                                                                                                                                                                                    | Identity                                                                               |
+| ------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| v1, served    | `1.0.1`                                          | `https://open-api.thenational.academy/api/v1/swagger.json`, fetched 25 September 2026 at 12:39:20 UTC (HTTP 200, 184,589 bytes, one line, no ETag or Last-Modified header)                                                                                                | SHA-256 `ca61a52da2ee188ef71f4a097c7950da4c2683129f886bad24d5c7790bb4250e`; pinned     |
+| v0, served    | `0.11.2`                                         | `https://open-api.thenational.academy/api/v0/swagger.json`, fetched 25 September 2026 at 15:31:42 UTC (HTTP 200, 184,716 bytes, one line, no ETag or Last-Modified header)                                                                                                | SHA-256 `f1f9f66de13b843e29552f9e29a6f410358137fbb0c45320f10a01d0e12ca86c`; pinned     |
+| v0, the cache | `0.7.0-3b4b01e6a7677713b21d997f2c20d42b86ff9b46` | The Engraph Open Curriculum Ecosystem's committed schema cache, `packages/sdks/oak-sdk-codegen/schema-cache/api-schema-original.json`, last changed by its commit `SHA:bcdc6237` on 3 August 2026 and unchanged at `SHA:1a4450a6` (25 September); 390,337 bytes, indented | SHA-256 `6ff3b8b6825e2fce7358a6329f08ee7353470f7a64cc244f3ffbe65cc130b4df`; not pinned |
 
-The first fetch, at 12:24 UTC, was refused by this session's network policy before it
-reached Oak; the owner allowed the host and the second fetch succeeded. The served
-document is one line of JSON; the cached one is indented. Both are copied byte for byte.
+The first fetch of v1, at 12:24 UTC, was refused by this session's network policy before
+it reached Oak; the owner allowed the host and the second fetch succeeded. The served v0
+was fetched after the documentation review of this note's first draft compared the two
+served documents and found them alike.
 
-The consumer generates from v0: its code-generation entry point names
-`https://open-api.thenational.academy/api/v0/swagger.json`
-(`packages/sdks/oak-sdk-codegen/code-generation/codegen.ts:102`), and its cache README
-says the cached file is the document exactly as returned by the API. The review record's
-"last written 17 August 2026" is the file's modification time on the reviewer's disk; the
-commit that last changed it is dated 3 August.
+**The consumer generates from the cache.** Its code-generation entry point names the v0
+URL (`packages/sdks/oak-sdk-codegen/code-generation/codegen.ts:102` at `SHA:1a4450a6` on its
+default branch, `engraph`), and its cache README says the cached file is the document as returned by the API.
+The bytes are the consumer's own, not Oak's: the cache is written by
+`JSON.stringify(validated, undefined, 2)` from a validated object
+(`packages/sdks/oak-sdk-codegen/code-generation/schema-cache.ts:96`), which is why it is
+indented while both served documents are one line. The commit that last changed it is
+dated 3 August 2026.
 
-## 2. The review record's figures reproduce on v0
+**Served v0 is served v1 under another path.** Their paths, component schemas and every
+count in Appendix A are the same. A leaf-by-leaf comparison finds 14 differences: the
+server URL, eleven example asset URLs that carry the version segment, `info.version`, and
+one sentence of `info.description`, which reads: "This document describes `/api/v0`, which
+is frozen: it continues to receive fixes, but new endpoints and fields land in `/api/v1`".
+
+## 2. The review record's figures reproduce on the cache
 
 The record does not state its counting method. Counting string occurrences of each
 keyword, and counting an object node as any `type: object` or `properties`-bearing node
-outside `example` and `examples` subtrees, gives its figures exactly:
+outside `example` and `examples` subtrees, gives its figures:
 
-| Figure                                 | Review record      | v0, this note      |
+| Figure                                 | Review record      | Cache, this note   |
 | -------------------------------------- | ------------------ | ------------------ |
 | Paths, `operationId`s                  | 34, 34             | 34, 34             |
 | Component schemas                      | 33                 | 33                 |
@@ -56,23 +68,22 @@ outside `example` and `examples` subtrees, gives its figures exactly:
 | `format: uri`, `maximum`, `minItems`   | 4, 7, 1            | 4, 7, 1            |
 | Response statuses                      | 200, 400, 401, 404 | 200, 400, 401, 404 |
 
-The one difference, 134 against 133 `application/json` media types, is within the record's
-own rounding of a hand count; this note's figure is the occurrence count. The two
-schema-valued `additionalProperties` are at the same sites the record names, the
-`check-restricted` 200 responses, each with `propertyNames`.
+The one difference is the media-type count: the record's 133 is one short, and a
+structural count of `content` entries also gives 134. The two schema-valued
+`additionalProperties` are at the sites the record names, the `check-restricted` 200
+responses, each with `propertyNames`. The method is part of the figure, and Appendix A
+carries the one used here.
 
-A structural walk that also excludes the children of `properties` from the object count
-gives 245 closed objects, not 253: the eight it misses are the `allOf` members. The method
-is therefore part of the figure, and Appendix A carries the one used here.
+## 3. What changed between the cache and today's documents
 
-## 3. What v1 changes
+The cache is Oak's document as it stood on 3 August 2026; the served documents are Oak's
+documents on 25 September. Every difference below is a change Oak made in between, and
+both served documents carry all of them. Same method, cache against served v1 (served v0
+gives the same figures as v1):
 
-Same method, both documents:
-
-| Figure                               | v0 (0.7.0)         | v1 (1.0.1)                                                       |
+| Figure                               | Cache (0.7.0)      | Served (v1 1.0.1, v0 0.11.2)                                     |
 | ------------------------------------ | ------------------ | ---------------------------------------------------------------- |
 | `info.title`                         | Oak OpenAPI        | Oak Curriculum API                                               |
-| Server                               | `/api/v0`          | `/api/v1`                                                        |
 | Paths, operations                    | 34, 34             | 32, 32                                                           |
 | Component schemas                    | 33                 | 3 (`error.BAD_REQUEST`, `error.UNAUTHORIZED`, `error.NOT_FOUND`) |
 | `$ref` (distinct targets)            | 129 (33)           | 93 (3)                                                           |
@@ -90,41 +101,47 @@ Same method, both documents:
 In words:
 
 - **Two paths are gone:** `/changelog` and `/changelog/latest`. Nothing is added.
-- **The response schemas are inlined.** v0 declared 33 component schemas and referenced
-  them from operations; v1 keeps only the three error schemas as components and writes
-  every response schema inside its operation. Every `$ref` in v1 points at an error schema.
+- **The response schemas are inlined.** The cache declared 33 component schemas and
+  referenced them from operations; today's documents keep only the three error schemas as
+  components and write every response schema inside its operation. Every `$ref` points at
+  an error schema.
 - **The eight `allOf` sites that accepted no value are gone.** The record's example, the
-  quiz answer items under `starterQuiz`, is one closed object in v1 (`order`, `type`,
-  `content`). v1 has no `allOf` at all.
+  quiz answer items under `starterQuiz`, is now one closed object (`order`, `type`,
+  `content`). Neither served document has an `allOf`.
 - **A `302` appears** on `GET /lessons/{lesson}/assets/{type}`, returned for `type=video`
-  with a `Location` header to the file on the CDN. **`GET /keywords`** declares only a
-  `200`; every other operation declares `400`, `401` and `404`.
+  with a `Location` header to the file on the CDN. `GET /keywords` declares only a `200`,
+  as it did in the cache.
 - **The two schema-valued `additionalProperties` remain,** at the same two sites. Today's
-  parser rejects each (`lib/src/schema-processing/parsers/openapi/builder/builder.additional-properties.ts:22-34`)
-  and returns no partial document, so a whole-document run rejects v1 as it rejects v0.
+  parser rejects each
+  (`lib/src/schema-processing/parsers/openapi/builder/builder.additional-properties.ts:22-34`)
+  and returns no partial document, so a whole-document run rejects every one of the three
+  documents.
 - **Four more `default` keywords** (18 against 14), one more `format: uri`, two more
   `maximum`, four more query parameters, fewer examples and titles.
 
 ## 4. What this bears on
 
 - **RATIFY.** The SPEC-PR-7 example in the review record, eight `allOf` sites that accept
-  no value, is a v0 fact; v1 offers no such site. The SPEC-P-1 facts hold for both: two
-  schema-valued sites, 17 silent objects. The source-`default` decision card counted 14
-  keywords; on v1 it is 18.
-- **MEASURE.** Both documents are pinned, and the course's "pinned Oak corpus" is now
-  either. A run on v0 measures what a replacement of the consumer's generator must match
-  today; a run on v1 measures the document the consumer moves to. On v1, SPEC-C-1's Zod
-  schemas "addressable by component name" have three component names; everything else is
-  addressable only by operation, response status and media type.
-- **The categorisation report** carried the v0 figures, and its statements remain true of
-  v0. Its note that `lib/tests-transforms/__fixtures__/arbitrary/oak-api.json` is not the
-  corpus stands: that file is a third document, `0.5.0-18a779a2` with 26 paths.
+  no value, is a fact of the 3 August cache; neither served document offers such a site.
+  The SPEC-P-1 facts hold for all three documents: two schema-valued sites, 17 silent
+  objects. The source-`default` decision card in the specification's ratification
+  checklist counts 14 keywords, the cache's figure; both served documents have 18.
+- **MEASURE.** The course's "pinned Oak corpus" is the two served documents, v1 first, by
+  the owner's ruling of 25 September now in SPEC-C-1. Today they differ in no construct, so
+  a run on either measures the same set; the consumer's own generator still
+  runs on the 3 August cache, whose older shape (component schemas, `allOf`) a replacement
+  would meet only if the consumer does not refresh first. On the served documents, SPEC-C-1's
+  Zod schemas "addressable by component name" have three component names; everything else
+  is addressable only by operation, response status and media type.
+- **The categorisation report** carried the cache's figures, and those figures remain true
+  of the cache. Its note that `lib/tests-transforms/__fixtures__/arbitrary/oak-api.json` is
+  not the corpus stands: that file is a fourth document, `0.5.0-18a779a2` with 26 paths.
 
 ## Appendix A. Method
 
-Run from the corpus directory. The object count treats any node with `type: object` or a
-`properties` key as an object, outside `example` and `examples` subtrees; keyword counts
-are string occurrences of the quoted key.
+Run from the corpus directory, or from wherever a copy of the cache is held. The object
+count treats any node with `type: object` or a `properties` key as an object, outside
+`example` and `examples` subtrees; keyword counts are string occurrences of the quoted key.
 
 ```python
 import json
@@ -174,7 +191,7 @@ print('paths', len(document['paths']), 'operations', len(operations),
       'statuses', statuses)
 ```
 
-Output for v0 (`oak-openapi-v0-0.7.0-3b4b01e6.json`):
+Output for the cache (`api-schema-original.json` at `SHA:bcdc6237`):
 
 ```text
 title 63
@@ -198,7 +215,8 @@ objects 272 closed 253 silent 17 schema-valued 2
 paths 34 operations 34 schemas 33 parameters 73 {'query': 43, 'path': 30} statuses ['200', '400', '401', '404']
 ```
 
-Output for v1 (`oak-curriculum-api-v1-1.0.1.json`):
+Output for served v1 (`oak-curriculum-api-v1-1.0.1.json`); served v0
+(`oak-curriculum-api-v0-0.11.2.json`) gives the same output, line for line:
 
 ```text
 title 49
