@@ -44,6 +44,40 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 - **A CONNECT 403 from the proxy is the environment's network policy, not the server.** The
   first fetch of the Oak document was refused before leaving the session; the owner widened
   the policy and the second fetch succeeded.
+- **Green and clean is the merge condition; an owner invocation is not (pr-lifecycle, Phase 7).**
+  I held pull request 114 for the owner's word on the dependency-alert condition after every
+  check was green and every thread resolved. The skill says never wait for a per-PR owner
+  invocation, and the owner's reply was "land all work". Merge the moment the conditions hold;
+  a condition the session cannot read is stated once in the tally, not a hold.
+- **Commit a deletion with the content that replaces it.** Unstaging the old v0 document's
+  deletion to split commits put the index and the working tree out of step, and the
+  machine-local-paths validator, which reads every tracked file, threw ENOENT in the
+  pre-commit hook. The corpus swap and the validator that checks it went in one commit.
+- **A pinned name must be a regular file.** Copilot found that `readFileSync` follows a
+  symbolic link, so a linked pin would be hashed through to its target; `lstat` first, and a
+  fatal UTF-8 decoder so non-UTF-8 bytes cannot pass the header check. Both are now in the
+  validator and its tests.
+- **The one-page delivery template and the plan skill disagree (reported, not resolved).** The
+  skill's requirements list items the template omits (risks, quality gates, foundation
+  alignment, lifecycle triggers); the example-input corpus plan carries risks and
+  prerequisites by hand. The conflict is the plan skill's owner's to settle, not a plan's.
+- **A plan carries rules and sources; per-file classification is the tranche's (structural
+  step-back, pr-lifecycle).** Two assumptions-expert rounds on the example-input corpus plan
+  each narrowed the same class: a count or a per-file licence the plan asserted was wrong on
+  re-measurement. The cause was the plan carrying file-level facts a tranche re-derives at
+  pickup. The plan now states the licence rules and labels every count as the survey's
+  measurement on the day, re-derived at pickup, and it went to pull request after two
+  rounds rather than a third pre-review pass.
+- **`info.license` is the API's licence, not the file's (Codex, pull request 115).** The
+  plan had read a document's `info.license` as its redistribution terms. A file's terms
+  come from the repository whose authors wrote it, or from the origin the repository
+  names; the API metadata is recorded as data and read only as a signal of another origin.
+  And the specification's "corpus" is a defined term, the documents a capability is proved
+  against: unread third-party sets are a library beside it, never in it.
+- **Harvest every surface before the cure push (pr-lifecycle, Phase 3).** On pull request
+  115 I cured Codex's two threads from the notifications that had arrived and pushed, while
+  Copilot's seven threads had landed in the same minute and were only read afterwards. One
+  push per review wave means one GraphQL harvest of all threads first, then one cure.
 
 ## 2026-09-24 (lane and plan categorisation — Quark stirs Latitude / 017FtN, claude-code)
 
