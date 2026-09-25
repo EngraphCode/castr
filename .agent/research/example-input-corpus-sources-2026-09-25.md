@@ -84,8 +84,14 @@ every pin from the committed bytes; `.prettierignore` and `.gitattributes -text`
 - The 3.1 and 3.2 meta-schemas live on branches, as JSON Schema 2020-12 documents heavy in
   `$dynamicRef`/`$dynamicAnchor`/`unevaluatedProperties`: `v3.1-dev` @
   `551e3df140215a051cfb2a54bbe348490409bc88` and `v3.2-dev` @ `85f1be31c4946139b7afca8be3d3694bbad4877f`,
-  path `src/schemas/validation/schema.yaml` and `schema-base.yaml` (both fetch 200). Strong JSON Schema
-  edge-case inputs; pin by branch commit + path.
+  directory `src/schemas/validation/`, which at each commit holds a README and four schema
+  documents: `schema.yaml`, `schema-base.yaml`, `dialect.yaml` and `meta.yaml` (all four fetch
+  200, measured 25 September 2026). Every one declares the JSON Schema 2020-12 meta-schema as its
+  `$schema`, and they form one graph by absolute `$id` URI under
+  `https://spec.openapis.org/oas/<version>/`: `schema-base` refers to `schema` and to `dialect`,
+  `dialect` refers to `meta` and to the 2020-12 meta-schema, and `meta` refers only to itself.
+  Strong JSON Schema edge-case inputs; pin all four by branch commit + path, so the graph's
+  bytes are present; how a reader maps the URIs to them is the reader's concern.
 
 ### 2b. OAI/learn.openapis.org — https://github.com/OAI/learn.openapis.org
 

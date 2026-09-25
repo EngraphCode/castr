@@ -12,7 +12,7 @@ owner_directive: >-
   it, the owner chose to plan it as its own slice.
 todos:
   - id: EC-0
-    content: ATTRIBUTION.md at the repository root (source authors by name with public references) and docs/THIRD_PARTY_NOTICES.md (licence texts) are created, covering the OpenAPI Initiative examples already in lib/examples/openapi (unchanged files at their commit, modified files marked) and the Oak documents; the examples fetcher and its README instruction are retired; where the course's MOVE leg has not yet run, its section names the corpus, the library, their validator and both files
+    content: ATTRIBUTION.md at the repository root (source authors by name with public references) and docs/THIRD_PARTY_NOTICES.md (licence texts) are created, covering the OpenAPI Initiative examples already in lib/examples/openapi (unchanged files at their commit, modified files marked) and the Oak documents; the examples fetcher and its README instruction are retired; where the course's MOVE leg has not yet run, its section names the corpus, the library, their validator, both files, and this plan with its survey while any of its todos is open
     status: pending
     depends_on: []
   - id: EC-1
@@ -40,7 +40,7 @@ todos:
     status: pending
     depends_on: [EC-1]
   - id: EC-7
-    content: The OpenAPI Initiative 3.1 and 3.2 meta-schemas, schema.yaml and schema-base.yaml at each branch commit, pinned with the json-schema kind (Apache 2.0)
+    content: The OpenAPI Initiative 3.1 and 3.2 meta-schemas, every schema document in src/schemas/validation at each branch commit (four on the day, schema, schema-base, dialect and meta), pinned with the json-schema kind (Apache 2.0)
     status: pending
     depends_on: [EC-5]
 ---
@@ -158,11 +158,15 @@ Each is taken from the survey's evidence and is open to the owner to strike.
   documents; the meta-schemas reuse it.
 - **The course (none, in either direction).** The plan sits beside the course and gates
   nothing in it: its documents are format inputs whatever the MEASURE leg decides, the plan
-  touches no writer code, and MOVE's own prerequisite stays MEASURE alone. If MOVE runs
-  first, this plan travels with the course's plan set and the library lands in the new
-  repository under the same rules; if this plan lands first, EC-0 adds the corpus, the
-  library, their validator, the notices file and `ATTRIBUTION.md` to the MOVE section's
-  statement of what travels.
+  touches no writer code, and MOVE's own prerequisite stays MEASURE alone. The plan asserts
+  nothing about what MOVE carries. The course's "MOVE: what travels" section names the
+  specification, the course plan, the review record, the doctrine the new repository lacks
+  and, on MEASURE's word, the product code; it names no plan in `current/`, this one
+  included. If MOVE runs first, whether this plan and its survey travel is the owner's
+  decision when MOVE runs, taken there. If this plan lands first, EC-0 adds the corpus, the
+  library, their validator, the notices file, `ATTRIBUTION.md`, and this plan with its
+  survey while any of its todos is open, to that section's statement of what travels, an
+  edit to the course the owner reads in EC-0's pull request.
 
 ## Acceptance criteria (each with a proof — required)
 
@@ -190,7 +194,8 @@ Each is taken from the survey's evidence and is open to the owner to strike.
   with its public reference, and `docs/THIRD_PARTY_NOTICES.md` carries CC BY 4.0, the
   commit each unchanged file matches, and each modified file as modified, which
   CC BY 4.0 §3(a)(1)(B) requires; where the course's MOVE leg has not yet run, its section
-  names the corpus, the library, their validator and both files. Todo: EC-0.
+  names the corpus, the library, their validator, both files, and this plan with its survey
+  while any of its todos is open. Todo: EC-0.
 
 ## Todos
 
@@ -216,8 +221,8 @@ most two review rounds); EC-2 to EC-6 are independent of each other.
   which would overwrite the three deliberately modified files and detach every file from the
   commit the attribution names; a refresh of that directory is a new pin under this plan's
   rules, never a re-fetch. Where the course's MOVE leg has not yet run, one sentence in its
-  section names the corpus, the library, their validator and both files. No pin record
-  changes.
+  section names the corpus, the library, their validator, both files, and this plan with
+  its survey while any of its todos is open. No pin record changes.
 - **EC-1** — the record shape, red first: a `repository` source (`repository`, `commit`,
   `path`) beside `served`; a `format` (`json` or `yaml`) per entry; a `kind` per entry,
   `openapi` (checked by its `openapi` field alone) or `fragment` (checked by hash alone,
@@ -247,10 +252,13 @@ most two review rounds); EC-2 to EC-6 are independent of each other.
 - **EC-6** — learn.openapis.org `examples/v3.2` (two documents), YAML. CC BY 4.0 notice,
   the section EC-0 creates.
 - **EC-7** — the OpenAPI Initiative meta-schemas for 3.1 and 3.2: at each of the `v3.1-dev`
-  and `v3.2-dev` branch commits the survey records, both `src/schemas/validation/schema.yaml`
-  (the dialect wrapper) and `src/schemas/validation/schema-base.yaml` (the base it refers
-  to), each a `json-schema` document, so the pinned pair is usable offline. Apache 2.0
-  notice.
+  and `v3.2-dev` branch commits the survey records, every schema document in
+  `src/schemas/validation/`, each a `json-schema` document; the survey measured four on the
+  day (`schema.yaml`, `schema-base.yaml`, `dialect.yaml`, `meta.yaml`), re-derived at
+  pickup from the directory listing at the commit. The four refer to one another and to
+  the JSON Schema 2020-12 meta-schema by absolute `$id` URI; the pin is of the bytes, and
+  how a reader maps those URIs to the pinned files is decided when a capability names them
+  in its corpus, never here. Apache 2.0 notice.
 
 ## Execution contracts
 
