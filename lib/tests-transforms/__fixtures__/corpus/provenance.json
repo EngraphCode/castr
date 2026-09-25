@@ -1,0 +1,33 @@
+{
+  "documents": [
+    {
+      "file": "oak-curriculum-api-v1-1.0.1.json",
+      "openapi": "3.1.0",
+      "infoTitle": "Oak Curriculum API",
+      "infoVersion": "1.0.1",
+      "bytes": 184589,
+      "sha256": "ca61a52da2ee188ef71f4a097c7950da4c2683129f886bad24d5c7790bb4250e",
+      "source": {
+        "kind": "served",
+        "url": "https://open-api.thenational.academy/api/v1/swagger.json",
+        "fetchedAt": "2026-09-25T12:39:20Z"
+      }
+    },
+    {
+      "file": "oak-openapi-v0-0.7.0-3b4b01e6.json",
+      "openapi": "3.1.0",
+      "infoTitle": "Oak OpenAPI",
+      "infoVersion": "0.7.0-3b4b01e6a7677713b21d997f2c20d42b86ff9b46",
+      "bytes": 390337,
+      "sha256": "6ff3b8b6825e2fce7358a6329f08ee7353470f7a64cc244f3ffbe65cc130b4df",
+      "source": {
+        "kind": "copied",
+        "repository": "https://github.com/EngraphCode/open-curriculum-ecosystem",
+        "repositoryCommit": "bcdc6237360346c5398cdfb1962b9817e2954509",
+        "path": "packages/sdks/oak-sdk-codegen/schema-cache/api-schema-original.json",
+        "upstreamUrl": "https://open-api.thenational.academy/api/v0/swagger.json",
+        "upstreamCommit": "3b4b01e6a7677713b21d997f2c20d42b86ff9b46"
+      }
+    }
+  ]
+}

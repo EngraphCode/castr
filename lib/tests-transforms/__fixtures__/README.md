@@ -9,6 +9,7 @@ This directory contains fixtures for transform testing with sample input (Sessio
 | `normalized/` | Castr-normalized specs for byte-for-byte idempotency testing |
 | `arbitrary/`  | Real-world specs for semantic equivalence testing            |
 | `edge-cases/` | Stress test fixtures for specific edge cases                 |
+| `corpus/`     | The pinned Oak API documents SPEC-C-1 is proved against      |
 
 ## Usage
 

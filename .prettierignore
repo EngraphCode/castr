@@ -3,6 +3,10 @@
 lib/examples
 tmp/
 
+# Pinned corpus documents: the committed bytes are the pin, and the
+# corpus-provenance test recomputes their SHA-256 from those bytes.
+lib/tests-transforms/__fixtures__/corpus/oak-*.json
+
 # Dependencies
 node_modules
 .pnpm-store
