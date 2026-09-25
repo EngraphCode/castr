@@ -11,7 +11,10 @@ off every inherited worktree, orphaned branch and open pull request, and ruled t
 moves into the Engraph Open Curriculum Ecosystem repository as workspaces, after the
 present generator has been measured against the specification. `main` has zero open
 dependency alerts. The platform-neutral autonomous-development experiment stays paused.
-The Practice-enhancement lane in this repository is stopped.
+The Practice-enhancement lane in this repository is stopped. On 25 September 2026 the
+categorisation of every lane and plan landed (#113), both served Oak documents were pinned
+as the corpus with a recomputing validator and the specification moved to draft 0.4.1
+(#114), and the example-input library plan sits in `current/` awaiting pickup (#115).
 
 ## Active threads
 
@@ -52,8 +55,7 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 First, the owner's re-assessment of the course (owner, 23 September 2026, after #110
 merged as `SHA:75f47abd`). Then, unless it changes the order: (1) the ratification walk
-of the specification with the owner, one decision card per checklist entry (31 at draft
-0.4.0), then the spoken approval recorded per SPEC-CC-2; (2) MEASURE; (3) MOVE; (4) PLOT.
+of the specification with the owner, one decision card per checklist entry (31 at draft 0.4.0; draft 0.4.1 added the 25 September entries), then the spoken approval recorded per SPEC-CC-2; (2) MEASURE; (3) MOVE; (4) PLOT.
 The [thread record](threads/castr-correction.next-session.md) carries the exact state of
 each.
 
