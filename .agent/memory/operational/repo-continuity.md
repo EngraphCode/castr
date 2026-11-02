@@ -9,19 +9,49 @@ The destination is [the specification](../../../docs/SPECIFICATION.md) and the c
 [castr-course.md](../../plans/active/castr-course.md). On 21 September 2026 the owner wrote
 off every inherited worktree, orphaned branch and open pull request, and ruled that Castr
 moves into the Engraph Open Curriculum Ecosystem repository as workspaces, after the
-present generator has been measured against the specification. `main` has zero open
-dependency alerts. The platform-neutral autonomous-development experiment stays paused.
+present generator has been measured against the specification. `main` had zero open
+dependency alerts from #111 until new advisories arrived; on 2 November 2026 it had 30
+(3 critical, 8 high), so only alert cures merge (SPEC-G-1). The platform-neutral autonomous-development experiment stays paused.
 The Practice-enhancement lane in this repository is stopped. On 25 September 2026 the
 categorisation of every lane and plan landed (#113), both served Oak documents were pinned
 as the corpus with a recomputing validator and the specification moved to draft 0.4.1
 (#114), and the example-input library plan sits in `current/` awaiting pickup (#115).
 
+On 1 November 2026 the owner named two goals: "bringing Castr into a requires compliant
+and functioning shape" and "migrating Castr into OCE". In the owner's words, "Those
+priorities do not supersede previous plans, they are part of enacting the previous plans".
+The same day, on the owner's word, every linked worktree was deleted. Only the main
+checkout remains; branches and the stash were kept. The record of the deletion is in the
+napkin. Two facts from that day's review:
+
+- **OCE has started receiving Castr.** On 10 October 2026 the Engraph Open Curriculum
+  Ecosystem repository added `docs/architecture/oce-integrity-and-castr.md` and two
+  unratified sketch plans, `oce-castr-integration-profile` and
+  `oce-castr-generator-replacement`, pinned at `SHA:851c7efe`. They follow this course's
+  order. The architecture document lists five profile mismatches to resolve before
+  replacement: defaults, the boundary check, extractability, labelling the unknown-key
+  reading as a Castr profile, and OpenAPI 3.2.1 against a 3.2.0 writer target. The owner
+  decided all five on 2 November 2026.
+- **The Sonar issues are recorded in
+  [the 1 November analysis](../../analysis-and-reports/sonar-issues-2026-11-01.md).** It
+  counts 380 open issues on `main`, with nothing urgent. 211 of them are in Practice
+  tooling and 117 are in code the specification condemns.
+
+On 2 November 2026 the owner had every open question run through OCE's decision matrix and
+answered the survivors by decision card: the specification's whole ratification checklist
+and OCE's two further mismatches, 30 cards. The answers, and the owner's ruling "All Castr
+work happens via AST not via string manipulation. Where string manipulation is
+unavoidable, ask _why_", are folded into draft 0.5.0 and ADR-026's amendment; the course
+gained PROBE and CURRENCY. No version is approved. The draft and the records sit on
+`feat/prepare-for-migration`, the branch the owner opened on 1 November, and merge after
+the alert cure.
+
 ## Active threads
 
-| Thread                                                       | Role and next step                                                                | Latest identity                                                                                          |
-| ------------------------------------------------------------ | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| [Castr correction](threads/castr-correction.next-session.md) | The owner re-assesses the course now #110 has landed; the route is in the record. | claude-code / claude-opus-5-5 / Mussel mends Buoy / #110 round-1 cure and merge / 2026-09-23             |
-| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.    | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23 |
+| Thread                                                       | Role and next step                                                                                                                                 | Latest identity                                                                                          |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [Castr correction](threads/castr-correction.next-session.md) | RATIFY: draft 0.5.0 awaits the owner's approval words (SPEC-CC-2). ALERTS is open again (30 alerts on 2 November 2026), so only alert cures merge. | claude-code / claude-opus-5-5 / Bilby hunts Dreamscape / ratification walk and draft 0.5.0 / 2026-11-02  |
+| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                                                                     | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23 |
 
 ## Paused threads and historical records
 
@@ -53,27 +83,25 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-First, the owner's re-assessment of the course (owner, 23 September 2026, after #110
-merged as `SHA:75f47abd`). Then, unless it changes the order: (1) the ratification walk
-of the specification with the owner, one decision card per checklist entry (31 at draft 0.4.0; draft 0.4.1 added the 25 September entries), then the spoken approval recorded per SPEC-CC-2; (2) MEASURE; (3) MOVE; (4) PLOT.
-The [thread record](threads/castr-correction.next-session.md) carries the exact state of
-each.
+1. **The alert cure.** A dependency-update pull request from `main` that brings the open
+   alerts to zero and lands without analysis (SPEC-G-1; the dependency-currency skill's
+   survey and override floors). Until it merges, nothing else merges.
+2. **Approval of draft 0.5.0.** The owner reads it and approves it in their own words
+   naming the version; the agent records the words, the date and the SHA-256 per SPEC-CC-2
+   in the change that sets the status to `ratified`. An agent never writes an approval it
+   was not given in that session.
+3. **The pull request for `feat/prepare-for-migration`** (draft 0.5.0, the course, ADR-026,
+   the Sonar analysis and the continuity records) opens and merges once the alerts are
+   at zero.
+4. **PROBE** runs any time, read-only; **CURRENCY** follows ALERTS; then MEASURE, MOVE and
+   PLOT in the course's order. The [thread record](threads/castr-correction.next-session.md)
+   carries each leg's state as of 2 November 2026.
 
 ## Deep consolidation status
 
-due — 23 September 2026 second close: the napkin runs to about 1,490 lines across
-sessions since 27 August, the pending-graduations register holds eighteen rows (fourteen pending, one
-`due`, one owner-gated, one re-evaluate and one open), and Q-018 is open. The 20 September close named
-five candidates — the local-host hook-bypass prohibition, a prettier-ignore recomputation
-validator, the container-anchored register pattern, evidence scripts shown failing first,
-and postinstall writing the shared git config — and each lives in the register, the
-napkin or `distilled.md`. Not run at this closeout. Constraint: the owner stopped the
-Practice-enhancement lane in this repository on 21 September 2026 (the thread record's
-standing owner rulings), the course's MOVE leg carries the doctrine Castr needs into the
-new repository, and a pass over a napkin spanning four weeks and eighteen register rows
-is not bounded to one closeout. Evidence: that ruling and the counts above. Falsifier:
-the deferral was premature if the owner restarts that lane, if the re-assessment strikes
-MOVE (the buffers then have no other destination), or if one session-completion pass
-drains the `due` row and routes the napkin's September sections inside a single
-closeout; it was correct if MOVE lands with these buffers carried or consolidated in the
-new repository.
+Not run, by owner ruling of 1 November 2026, verbatim: "we are not going to run the
+consolidation, unless it would help with the goals of - bringing Castr into a requires
+compliant and functioning shape - migrating Castr into OCE". A consolidation pass, or any
+part of one, runs only where it serves one of those two goals. The buffers stand as they
+are: the napkin is about 1,650 lines, and the pending-graduations register holds the
+eighteen rows counted on 23 September.

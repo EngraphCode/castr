@@ -2,6 +2,173 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-11-02 (open questions through the OCE decision matrix — Bilby hunts Dreamscape / d71882, claude-code)
+
+- **OWNER RULING (2 November 2026, verbatim): "All Castr work happens via AST not via
+  string manipulation. Where string manipulation is unavoidable, ask _why_".** It extends
+  SPEC-AR-3's owner quote ("No string matching, only proper AST operations ...") and is
+  stricter than ADR-026, which lets designated utility modules parse data strings with
+  string methods (ADR-026 lines 93-133). My 2 November answer that "native string methods
+  in designated modules" resolves ADR-026 against OCE's string rules is wrong under it: a
+  grammar-defined string is parsed into structure by a parser for its grammar, and any
+  string operation that remains carries its answer to "why". Durable homes: SPEC-AR-3 and
+  an ADR-026 amendment.
+- **Owner, same message: "No one mentioned Zod 5, not sure where that came from."** Source:
+  the specification's §6 (lines 190-193) quotes the owner's ruling of 31 August 2026,
+  "latest here means latest 4, with a tripwire to examine Zod 5 if and when it is
+  released", and the zod-truth plan (lines 386-393) carries the tripwire. I checked the
+  tripwire as a dormant owner decision.
+- **Mistake: I reported QD-1 and QD-10 as surviving owner questions without reading their
+  status columns.** Both were closed by the owner on 26 August 2026: QD-1 "RULED ... It's
+  deferred and that will not change unless I say otherwise"; QD-10 "STRUCK as
+  not-currently-actionable" ("What published npm package? What are you talking about?").
+  Read a register row to its last column before calling it open.
+- **Ratification walk, owner answers by decision card (2 November 2026, verbatim; to be
+  folded into the specification's next draft).** Round 1:
+  - Card 1, source `default` (SPEC-G-4): "Annotation only, but with clear warning logging
+    to support resolution in the consuming app".
+  - Card 2, boundary check in C-1 acceptance: "Add the check (Recommended)".
+  - Card 3, v0 in C-1 acceptance: "Require both, and require that latest version of both".
+  - Card 4, OpenAPI written version: "Write 3.2.1 (Recommended)".
+  - Round 2. Card 5, unknown-key reading labelled as profile and proved under SPEC-G-4:
+    "Label and prove it (Recommended)".
+  - Card 6, §10 extractability: "Strike the condition, Castr will move into OCE and be fully
+    integrated". This also retires the course's MOVE boundary rule (castr-course.md MOVE
+    todo and acceptance) and its "no Castr workspace depends on a package outside Castr".
+  - Card 7, SPEC-G-1 cure-only merge rule: "Confirm (Recommended)".
+  - Card 8, SPEC-AR-5 writers are total: "Confirm (Recommended)".
+  - Round 3. Card 9, SPEC-PR-3: "Confirm (Recommended)". Card 10, SPEC-PR-4: "Confirm
+    (Recommended)". Card 11, SPEC-PR-7: "Confirm, and the logging must be explicit and
+    informative". Card 12, SPEC-P-1 reporting rule: "Confirm (Recommended)".
+  - Round 4. Card 13, SPEC-P-1 closure keyword: "Confirm (Recommended)". Card 14, SPEC-P-2
+    three-part test: "Confirm (Recommended)". Card 15, SPEC-P-3 2020-12 scope: "Confirm
+    (Recommended)". Card 16, SPEC-P-5 Zod call removed: "Confirm removal (Recommended)".
+  - Round 5, cards 17-20 (SPEC-G-4, SPEC-G-5, SPEC-G-6, SPEC-G-7), owner verbatim: "In
+    each case take the default, they are all good so far. Where appropriate make sure that
+    logging is explicit and informative, and make sure that we respect "strict,
+    everywhere, all the time"". All four confirmed. The overlay applies wherever a clause
+    reports: a G-4 disagreement names the shape, the value and which decisions differed; a
+    G-5 shortfall names each uncaught constraint and its location.
+  - Round 6, cards 21-30 by one card listing each clause with its recommended answer:
+    "Take all ten (Recommended)". Confirmed with the overlay: 21 C-1 artefact list and
+    status-key rule; 22 media type in the C-1 Zod address; 23 consumers on the latest Zod
+    4 within the C-1 landing; 24 corpus pin wording, with card 3 (both Oak documents pinned
+    at their latest version); 25 SPEC-AR-6 calls by construct kind and the SPEC-N-3
+    requirement; 26 Appendix A's `NOT-YET-BUILT` rows; 27 Appendix A's `.default`,
+    `.prefault` and `z.lazy` rows; 28 SPEC-CC-1; 29 SPEC-CC-2's approved-text definition;
+    30 SPEC-CC-3.
+  - The checklist is empty. No approval of any version has been given: SPEC-CC-2 approval
+    is the owner's own words naming the version, after the answers are folded into the
+    next draft.
+  - "Ask why" (SPEC-AR-3), decided by card after a side agent and the docs-adr-expert both
+    showed that the draft's "states that answer where it is made" let an agent grant its
+    own exception: the owner chose "Stop and ask me (Recommended)", whose card text read
+    "No string manipulation in Castr's code, tooling or tests. A grammar-defined string
+    is read only by a parser for its grammar, tested against that grammar's
+    specification. Where string manipulation seems unavoidable, the work stops and asks
+    the owner why it is needed; an exception exists only as an owner-approved entry in
+    the specification, and a lint check bans string methods everywhere else." The card
+    defined string manipulation as reading characters to find meaning (prefix checks,
+    splitting, searching, regular expressions) or building output by joining text, and
+    excluded a grammar parser's own tokenising and whole-value comparison with a typed
+    constant. Lesson: an "ask why" that the asker answers alone is an escape hatch.
+  - Folded into draft 0.5.0 the same day (owner: "please write up"), with ADR-026's
+    amendment and the course's PROBE and CURRENCY todos; one docs-adr-expert pass checked
+    the draft against these answers before the wrap.
+- **Surprise: plan frontmatter YAML can break with every check green.** I wrote a
+  single-quoted YAML todo; Prettier silently rewrote it double-quoted, so my next edit's
+  inner double quotes broke the parse, and an unquoted todo broke on an inserted ": ".
+  Prettier, markdownlint and `pnpm repo-validators:check` all passed both broken states;
+  only a direct parse with the installed `yaml` package caught them. After editing a
+  plan's frontmatter, parse it.
+- **Matrix dispositions of 2 November for the question registers (decision-sufficient
+  record; the full per-question frame was a scratch file).** Q-016 answered in place;
+  Q-017 subsumed by the specification (categorisation report §4); Q-018 not an owner
+  question (owner, 13 September: "not an owner decision") and Practice-only, with the stash
+  kept; Q-019 dissolved (no linked worktrees since 1 November; Practice-only); QD-1 and
+  QD-10 closed by the owner on 26 August; the other QD rows paused with the proof
+  programme. The registers are left as they are: by the owner's ruling of 1 November a
+  consolidation pass runs only where it serves the two goals, and MOVE archives this
+  repository.
+- **Evidence from 1 November kept for the C-1 reader and the rules step (first-hand).**
+  - Scalar probe (`@scalar/openapi-parser` through Castr's loader): a Swagger 2.0
+    document loads, is relabelled `openapi: 3.2.0` and its response lands under an
+    invented `application/json`; a 3.0.3 document with `nullable` and a boolean
+    `exclusiveMinimum` is rewritten into the 3.1 form. Both break the specification's §6 (2.0 is not read)
+    and §5 (meaning at the source's version), which is why the C-1 reader replaces Scalar:
+    Ajv with the OpenAPI Initiative's 3.1 and 3.2 schemas validates (example-input library
+    EC-7), Castr's own types replace Scalar's, and bundling is not needed (both pinned Oak
+    documents hold 93 references, none external).
+  - Lint configuration sites the rules step starts from (`lib/eslint.config.ts` at
+    `851c7efe`): line 79 ignores the normalised `zod*.ts` fixtures; lines 117-118 use the
+    untyped `strict` and `stylistic` presets rather than the type-checked ones; lines 218
+    and 220 switch rules off for tests; lines 330-348 are ADR-026's method-name bans; lines
+    567-583 switch `sonarjs/prefer-native-lodash-alternative` off for `src`. Each switched-off
+    rule breaches SPEC-G-3; OCE's `@oaknational/eslint-plugin-standards` mirrors Sonar
+    through unicorn (`prefer-string-starts-ends-with`, `prefer-includes`,
+    `prefer-code-point`), which the AST ruling makes moot by removing string work.
+  - Dependency survey, 1 November: majors outdated were TypeScript 6.0.3 to 7.0.2 (held:
+    ts-morph 28 vendors 6.0 and typescript-eslint's peer range ends below 6.1), vitest and
+    its coverage 4 to 5, tsup 8 to 9, `@types/node` 24 to 26, ink 7 to 8 and
+    `@scalar/json-magic` 0.13 to 0.17; `pnpm audit` reported 47 advisories (3 critical,
+    14 high) against Dependabot's 30 alerts.
+
+- **Mistake: I asked the owner a question the matrix dissolves, and asked it in prose.** On
+  1 November I asked "Shall I write this into the course plan on this branch and open the
+  alerts PR?" The course already settles it: the cure-first rule is the owner's (course
+  lines 69-73), agents merge green-and-clean pull requests (lines 82-84), and 30 alerts were
+  open. The owner then asked for every open question to go through the OCE decision matrix
+  (OCE `principles.md` §Decision Lenses). Run the matrix before any owner-bound question.
+- **Mistake: I called ADR-026 against OCE's string rules an owner decision.** ADR-026 already
+  designs the answer (lines 93-108, 127-133): native string methods live only in designated
+  utility modules and are banned elsewhere. The lodash "sanctioned idiom" and the
+  `sonarjs/prefer-native-lodash-alternative` off in `lib/eslint.config.ts` (lines 567-583)
+  depart from the ADR; the ADR never mentions lodash.
+- **Mistake: I reordered the owner's own plan without stating the consequence.** The owner
+  proposed "dependencies, then rules"; my plan put rules after MEASURE and never said that
+  MEASURE waits on RATIFY, which the owner had paused. A side agent pointed it out to the
+  owner. When a plan reorders the owner's sequence, state the change and every hold it now
+  inherits.
+- **An agent's generalisation became course text that reads as the owner's.** The course
+  (line 80) and the thread record (line 72) say "Nothing more goes into the present writer
+  code", unattributed. The owner's ruling was "land it frozen", for one pull request (#109,
+  21 September); the general rule is an agent's lesson from it (the September entry
+  "Unfreezing a frozen landing" further down). I cited it as an owner ruling until an adversarial
+  Cricket asked for its source. Quote the owner's words, or label a derived rule as derived.
+- **Correction from the Cricket panel: survival has no liveness test.** A question reaches
+  the owner when it is constitutively theirs or all five lenses fail; whether it is live
+  decides only whether to ask now. I had kept QD-1 and QD-10 out of the survivors because
+  nothing forces them.
+
+## 2026-11-01 (review of repo, code and course — Bilby hunts Dreamscape / d71882, claude-code)
+
+- **Removed: every linked worktree (owner, 1 November 2026, verbatim: "if the worktrees do
+  not contain useful work then delete them, do not relitigate their usefulness").** There
+  were 35 registrations. Nine were missing directories under the system temp directory, and
+  26 were present: 18 `castr-*` sibling checkouts, three Codex worktrees, one under
+  `.agent/worktrees/` and four under `.claude/worktrees/`. All of them belonged to the class
+  the owner wrote off on 21 September. The newest commit in any of them was dated
+  10 September and the newest dirty file 6 September. Eleven of them held uncommitted
+  changes, and those changes are gone. They were removed with `rm` and then
+  `git worktree prune`, per the never-use-git-to-remove-work rule. The main checkout, every branch (their
+  commits stay reachable) and the stash (Q-018) were left untouched. The usefulness of the
+  removed work is not to be reopened.
+- **OWNER RULING (verbatim, 1 November 2026): "we are not going to run the consolidation,
+  unless it would help with the goals of - bringing Castr into a requires compliant and
+  functioning shape - migrating Castr into OCE. Those priorities do not supersede previous
+  plans, they are part of enacting the previous plans".** This settles the deep
+  consolidation that `repo-continuity.md` lists as due. It runs only where it serves those
+  two goals, which are the course's own legs (RATIFY and MEASURE, then MOVE).
+- **OCE has started receiving Castr, and Castr's records do not say so.** On 10 October 2026
+  the Engraph Open Curriculum Ecosystem repository added
+  `docs/architecture/oce-integrity-and-castr.md` and two unratified sketch plans,
+  `oce-castr-integration-profile` and `oce-castr-generator-replacement`, pinned at Castr
+  `SHA:851c7efe`. The architecture document lists five profile mismatches to resolve
+  before replacement: the unknown-key reading, defaults, the OpenAPI 3.2.0 versus 3.2.1
+  writer target, independent boundary checks, and extractability against OCE's shared
+  packages. Three of them are already on the specification's ratification checklist. The
+  unknown-key labelling and the 3.2.1 target are not.
+
 ## 2026-09-25 (Oak corpus pin and re-measurement — Quark stirs Latitude / 017FtN, claude-code)
 
 - **Fetch every version you compare, at the same time (mine).** I compared the owner's

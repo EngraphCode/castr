@@ -2,12 +2,12 @@
 
 ## Continuation route
 
-State at the second 23 September 2026 close (Mussel mends Buoy, 372325, after Poppy calls
-Topsoil's close the same morning), written for a successor on any platform: everything that matters is here or in the files this section
+State at the 2 November 2026 boundary (Bilby hunts Dreamscape, d71882), written for a
+successor on any platform: everything that matters is here or in the files this section
 names, never only in an agent's private memory. Verify each line against the live
 repository before acting.
 
-- **Destination:** [the specification](../../../../docs/SPECIFICATION.md), draft 0.4.0,
+- **Destination:** [the specification](../../../../docs/SPECIFICATION.md), draft 0.5.0,
   status `draft-awaiting-owner-ratification`. It is the only description of Castr's
   destination. The owner: "this work has drifted and drifted and now I think we need a
   destination that can only change with process and agreement"; "approval happens locally,
@@ -17,6 +17,133 @@ repository before acting.
   in that session. Merging the specification's pull request is mechanics an agent performs
   (the drafting agent had written "no agent merges"; the owner ruled on 23 September that
   this was invented, and SPEC-CC-4 is retired).
+- **The ratification walk ran on 2 November 2026.** The owner asked for every open
+  question to go through the decision matrix of the Engraph Open Curriculum Ecosystem (its
+  `principles.md` §Decision Lenses, with the survival tests in its
+  `route-blocks-and-questions-to-director` and `owner-attention-at-action-moments` rules),
+  then for the survivors as decision cards with enough on each card to decide. The
+  survivors were the specification's checklist entries and two profile mismatches raised
+  by OCE's `docs/architecture/oce-integrity-and-castr.md`. All 30 were decided. Draft
+  0.5.0 carries every decision; its change-log row names what changed and which wording
+  is the drafting agent's, and the checklist section is removed. No version is approved.
+- **Next owner interaction:** the owner reads draft 0.5.0 and, if it is right, approves it
+  in their own words naming the version (SPEC-CC-2). The agent then records the words, the
+  date and the SHA-256 of the text above the change log, sets the status to `ratified` in
+  that same change, and the file lands on `main`. The draft and this session's records sit
+  on `feat/prepare-for-migration`, the branch the owner opened for this work on
+  1 November; they merge after the alert cure, because only alert cures merge while
+  `main` has open dependency alerts (SPEC-G-1, confirmed by the owner on 2 November).
+- **Owner rulings of 1 and 2 November 2026, verbatim where quoted:** the two goals,
+  "bringing Castr into a requires compliant and functioning shape" and "migrating Castr
+  into OCE", which "do not supersede previous plans, they are part of enacting the
+  previous plans"; no consolidation pass unless it serves those goals (quoted in full in
+  `repo-continuity.md`); every linked worktree deleted (done on 1 November; branches and
+  the stash kept); "All Castr work happens via AST not via string manipulation. Where
+  string manipulation is unavoidable, ask _why_" (now in SPEC-AR-3 and in ADR-026's
+  amendment), with a further card the same day: where string manipulation seems unavoidable
+  the work stops and asks the owner, and an exception exists only as an owner-approved
+  entry in the specification (none is approved); "Strike the condition, Castr will move
+  into OCE and be fully integrated" (§10); "Where appropriate make sure that logging is
+  explicit and informative, and make sure that we respect "strict, everywhere, all the
+  time"" (SPEC-PR-8).
+- **Course:** [castr-course.md](../../../plans/active/castr-course.md). Order, fixed by the
+  owner on 21 September: ALERTS, RATIFY, MEASURE (a throwaway probe scoring today's
+  generator on the pinned Oak corpus against the source document with an independent
+  validator; its verdict — evolve the present model or rebuild — decides what MOVE
+  carries), MOVE (into the Engraph Open Curriculum Ecosystem repository as workspaces,
+  fully integrated there; this repository is then archived), PLOT. ALERTS is open again:
+  30 open dependency alerts on `main` on 2 November (3 critical, 8 high). Two todos were
+  added on 2 November from the plan discussed with the owner on 1 November: PROBE (a
+  read-only lint probe with OCE's rules, now) and CURRENCY (dependencies at latest within
+  stated holds, after ALERTS). RATIFY waits only on the owner's approval words.
+- **Plan departures stated to the owner on 2 November 2026 and not overruled (silence,
+  not approval):** OCE's lint rules are adopted after MEASURE and only on code that
+  travels, where the owner's 1 November order was dependencies, then rules; vitest 4 and
+  tsup 8 are held at OCE's majors. Both rest on MEASURE's verdict. A side agent pointed
+  out to the owner that this puts the rules behind the walk; asked whether that changed
+  anything, the agent answered that it changed the report and not the verdict, and the
+  owner's next message moved on without overruling it (an observation, not an approval).
+- **Evidence:** [the specification review record](../../../research/castr-specification-review-2026-09-21.md)
+  keeps what six reviewers measured on 21 September (the Oak API specification's feature
+  inventory, its eight `allOf` sites that accept no value — the owner fixes those at
+  source — the consumer's code-generation contract, Zod 4.5.4's behaviour, and the list of
+  documents that disagree with the specification). Not one measurement was re-verified by
+  the session that wrote the record.
+- **Evidence gathered on 1 November 2026:** [the Sonar analysis](../../../analysis-and-reports/sonar-issues-2026-11-01.md)
+  (380 open issues on `main`; 211 in Practice tooling, 117 in code the specification
+  condemns; nothing urgent). The Scalar probe and the lint-configuration findings are in
+  the napkin's 2 November section.
+- **Landed on `main` since the 21 September close:** #111 (dependency alerts to zero,
+  `SHA:fc94488f`) and #109 (component identity chain, `SHA:8b0aa438`, two review rounds).
+  The owner's ruling on #109 was "land it frozen"; the working rule drawn from it is the
+  agent's wording, not the owner's: nothing more goes into the present writer code, and a
+  review finding against the present model is cured only when it blocks a landing,
+  otherwise dropped with the reason stated to the owner. The present model fails SPEC-AR-1 (OpenAPI vocabulary as structure,
+  mandatory Zod output text on every node) and the writers fail SPEC-AR-3 (text emission);
+  building on it as if it will last is the error the course exists to end.
+- **Merging:** the owner granted agents `gh pr merge` for green-and-clean pull requests on
+  21 September; the permission rule lives in the agent's local, unversioned settings on
+  the host that was used, so a new host may need it again. Green and clean means every
+  check passing, no unresolved review thread, no new static-analysis issue, and zero open
+  dependency alerts on `main`.
+- **Written off on 21 September 2026 by owner ruling:** every dirty worktree and orphaned
+  branch, and pull requests #11–#13, #15–#18, #20, #21, #23, #26, #27 and #81 (closed; commits
+  reachable at `refs/pull/<n>/head`). Nothing of theirs is evaluated or recovered. The plans
+  `unmerged-work-to-main-or-deleted.md` and
+  `castr-documentation-and-fidelity-correction.md` carry `status: superseded` and are in
+  `.agent/plans/archive/`.
+- **Standing owner rulings that govern every session:** long-term architectural excellence
+  over short-term expediency, always; strict, everywhere, all the time; no failing test,
+  check or validator is ever tolerated ("'Red by design' is utterly unacceptable, that was
+  never true"); no work is routed to any list or future plan, under any name — a finding
+  is cured in its own next pull request or dropped with the reason stated, and a known gap
+  lives in a tested `NOT-YET-BUILT` rejection; green in a pull request means no
+  static-analysis issue in new code, and the specification is met only while `main` has
+  zero issues; dependency-update pull requests land on green without analysis; the
+  Practice-enhancement lane in this repository is stopped (a more advanced Practice comes
+  later from the owner's other estates); the Practice is always vendor-agnostic, so
+  everything that matters is written to the repository, never only to one platform's
+  memory; where the owner names a Director session, team members own their own work and
+  contact the Director only for a second opinion or a suspected rabbit hole (owner's word
+  of 23 September 2026 as relayed by the Director, Wick binds Temper; the owner's own
+  message that day named the Director as the route for questions).
+- **Behavioural corrections from the owner, 21 September, that a successor inherits:**
+  "slow right down" — one thing at a time, one gate at a time, never parallel gates on
+  this host; a permissive instruction ("dependency PRs land without analysis") is not a
+  licence to skip care (two errors followed: a misread `pnpm why` output cited the wrong
+  consumer, and a copy-pasted test failed the static-analysis duplication gate); a record
+  is never written ahead of its outcome; an owner statement naming who decides is never
+  widened by the agent into a prohibition on who executes (the invented merge clause).
+- **Behavioural corrections of 1 and 2 November 2026 that a successor inherits:** run
+  every owner-bound question through OCE's decision matrix before asking it, and ask the
+  survivors as self-contained decision cards with the recommended answer first, never in
+  prose (the owner asked for exactly this after an unmatrixed prose question); quote the
+  owner's words, and label a rule the agent derived as derived; read a register row to its
+  status column before calling it open (QD-1 and QD-10 were closed by the owner on
+  26 August); when a plan reorders the owner's sequence, state the change and every hold
+  it inherits.
+- **What the 2 November boundary left in context only:** the two Cricket panels' returns
+  (their corrections are in the napkin's 2 November entries), the full text of the
+  decision cards (every answer is verbatim in the napkin's 2 November entry, and the
+  non-default answers are quoted in the specification), and the scratch frames and probe
+  scripts. Bounds of this scan: the owner's view of the stated plan departures is known
+  only from silence, and the comms watcher saw no other agent in the two days.
+- **Collaboration state:** Bilby hunts Dreamscape holds claims on the files it edited
+  (`active-claims.json`, gitignored) and closes them at its session's end. On arrival,
+  register on the comms stream and arm the all-channels watcher before any edit.
+- **Host:** on 2 November the load averages were 2 to 6 on 14 cores with no linked
+  worktrees; on 21 to 23 September the machine was swap-starved. Check `uptime` before
+  running gates.
+
+## History (dated evidence; none of it is live direction)
+
+### Continuation route of 23 September 2026 (superseded on 2 November 2026)
+
+State at the second 23 September 2026 close (Mussel mends Buoy, 372325, after Poppy calls
+Topsoil's close the same morning), written for a successor on any platform: everything that matters is here or in the files this section
+names, never only in an agent's private memory. Verify each line against the live
+repository before acting.
+
 - **Pull request #110 merged on 23 September 2026** as `SHA:75f47abd` (head
   `SHA:4080cbf8`, 16 of 16 checks, no unresolved thread, no dependency alert on `main`),
   carrying the specification, the course plan, the review record and this record. The
@@ -61,52 +188,6 @@ repository before acting.
   Engraph Open Curriculum Ecosystem repository as workspaces; all wiring and the removal of
   every other description of the destination happen once, there, with no tombstones; this
   repository is then archived), PLOT.
-- **Evidence:** [the specification review record](../../../research/castr-specification-review-2026-09-21.md)
-  keeps what six reviewers measured on 21 September (the Oak API specification's feature
-  inventory, its eight `allOf` sites that accept no value — the owner fixes those at
-  source — the consumer's code-generation contract, Zod 4.5.4's behaviour, and the list of
-  documents that disagree with the specification). Not one measurement was re-verified by
-  the session that wrote the record.
-- **Landed on `main` since the 21 September close:** #111 (dependency alerts to zero,
-  `SHA:fc94488f`) and #109 (component identity chain, `SHA:8b0aa438`, two review rounds).
-  Nothing more goes into the present writer code: a review finding against the present
-  model is cured only when it blocks a landing, otherwise dropped with the reason stated
-  to the owner. The present model fails SPEC-AR-1 (OpenAPI vocabulary as structure,
-  mandatory Zod output text on every node) and the writers fail SPEC-AR-3 (text emission);
-  building on it as if it will last is the error the course exists to end.
-- **Merging:** the owner granted agents `gh pr merge` for green-and-clean pull requests on
-  21 September; the permission rule lives in the agent's local, unversioned settings on
-  the host that was used, so a new host may need it again. Green and clean means every
-  check passing, no unresolved review thread, no new static-analysis issue, and zero open
-  dependency alerts on `main`.
-- **Written off on 21 September 2026 by owner ruling:** every dirty worktree and orphaned
-  branch, and pull requests #11–#13, #15–#18, #20, #21, #23, #26, #27 and #81 (closed; commits
-  reachable at `refs/pull/<n>/head`). Nothing of theirs is evaluated or recovered. The plans
-  `unmerged-work-to-main-or-deleted.md` and
-  `castr-documentation-and-fidelity-correction.md` carry `status: superseded` and are in
-  `.agent/plans/archive/`.
-- **Standing owner rulings that govern every session:** long-term architectural excellence
-  over short-term expediency, always; strict, everywhere, all the time; no failing test,
-  check or validator is ever tolerated ("'Red by design' is utterly unacceptable, that was
-  never true"); no work is routed to any list or future plan, under any name — a finding
-  is cured in its own next pull request or dropped with the reason stated, and a known gap
-  lives in a tested `NOT-YET-BUILT` rejection; green in a pull request means no
-  static-analysis issue in new code, and the specification is met only while `main` has
-  zero issues; dependency-update pull requests land on green without analysis; the
-  Practice-enhancement lane in this repository is stopped (a more advanced Practice comes
-  later from the owner's other estates); the Practice is always vendor-agnostic, so
-  everything that matters is written to the repository, never only to one platform's
-  memory; where the owner names a Director session, team members own their own work and
-  contact the Director only for a second opinion or a suspected rabbit hole (owner's word
-  of 23 September 2026 as relayed by the Director, Wick binds Temper; the owner's own
-  message that day named the Director as the route for questions).
-- **Behavioural corrections from the owner, 21 September, that a successor inherits:**
-  "slow right down" — one thing at a time, one gate at a time, never parallel gates on
-  this host; a permissive instruction ("dependency PRs land without analysis") is not a
-  licence to skip care (two errors followed: a misread `pnpm why` output cited the wrong
-  consumer, and a copy-pasted test failed the static-analysis duplication gate); a record
-  is never written ahead of its outcome; an owner statement naming who decides is never
-  widened by the agent into a prohibition on who executes (the invented merge clause).
 - **Collaboration state:** no claims are active (Mussel mends Buoy's claim on the #110
   files closed at the merge). Bora seeks Turbulence's five stale claims
   from 9–10 September were closed on the owner's word ("Bora is gone") on 21 September. On
@@ -117,8 +198,6 @@ repository before acting.
   started 9 September from the `castr-correction-custody` worktree, which belonged to no
   live session, was stopped on 23 September under the owner's instruction to stop all
   processes at the close.
-
-## History (dated evidence; none of it is live direction)
 
 - Governing sequence for every inherited PR and dirty worktree: the
   [12 September value-proof sequence](../../../plans/archive/castr-documentation-and-fidelity-correction.md#12-september-value-proof-sequence).
@@ -283,11 +362,13 @@ this discovery for the architectural repair; no implementation is claimed here.
 
 ## Participating agent identities
 
-| Agent                 | Platform    | Model            | Session prefix | Agent UUID                           | Role                                           | First session | Last session |
-| --------------------- | ----------- | ---------------- | -------------- | ------------------------------------ | ---------------------------------------------- | ------------- | ------------ |
-| Bora seeks Turbulence | codex       | gpt-6-astra      | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd                    | 2026-09-06    | 2026-09-10   |
-| Coal weaves Pumice    | claude-code | claude-fable-5-1 | f67c69         | d0dfc3a1-ed69-535c-96bd-03c07648c274 | handover analysis, value-proof sequence        | 2026-09-12    | 2026-09-20   |
-| Foxglove weaves Acorn | codex       | gpt-6-astra      | 01a088         | a6955478-7b8e-59e9-870e-dcef0d6e81cd | final Cricket I2 proof                         | 2026-09-10    | 2026-09-10   |
-| Candle weaves Residue | claude-code | claude-fable-5-1 | a4c7fb         | 6803f4ef-dcc2-5305-a2c8-b82944f21b0f | bootstrap merge-driver cure, PR lifecycle      | 2026-09-20    | 2026-09-21   |
-| Poppy calls Topsoil   | claude-code | claude-fable-5-1 | bf551f         | (seed-derived; not registered)       | PR closure, PR #109, destination specification | 2026-09-21    | 2026-09-23   |
-| Mussel mends Buoy     | claude-code | claude-opus-5-5  | 372325         | b69485ad-3a77-5c8a-b2c0-cc764d734103 | PR #110 round-1 cure and merge                 | 2026-09-23    | 2026-09-23   |
+| Agent                  | Platform    | Model            | Session prefix | Agent UUID                           | Role                                           | First session | Last session |
+| ---------------------- | ----------- | ---------------- | -------------- | ------------------------------------ | ---------------------------------------------- | ------------- | ------------ |
+| Bora seeks Turbulence  | codex       | gpt-6-astra      | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd                    | 2026-09-06    | 2026-09-10   |
+| Coal weaves Pumice     | claude-code | claude-fable-5-1 | f67c69         | d0dfc3a1-ed69-535c-96bd-03c07648c274 | handover analysis, value-proof sequence        | 2026-09-12    | 2026-09-20   |
+| Foxglove weaves Acorn  | codex       | gpt-6-astra      | 01a088         | a6955478-7b8e-59e9-870e-dcef0d6e81cd | final Cricket I2 proof                         | 2026-09-10    | 2026-09-10   |
+| Candle weaves Residue  | claude-code | claude-fable-5-1 | a4c7fb         | 6803f4ef-dcc2-5305-a2c8-b82944f21b0f | bootstrap merge-driver cure, PR lifecycle      | 2026-09-20    | 2026-09-21   |
+| Poppy calls Topsoil    | claude-code | claude-fable-5-1 | bf551f         | (seed-derived; not registered)       | PR closure, PR #109, destination specification | 2026-09-21    | 2026-09-23   |
+| Mussel mends Buoy      | claude-code | claude-opus-5-5  | 372325         | b69485ad-3a77-5c8a-b2c0-cc764d734103 | PR #110 round-1 cure and merge                 | 2026-09-23    | 2026-09-23   |
+| Smith stirs Ashes      | claude-code | claude-opus-5-5  | 7bd175         | 02ed168a-55c7-5450-8fdb-b7fd399d9c86 | Sonar analysis (sub-agent)                     | 2026-11-01    | 2026-11-01   |
+| Bilby hunts Dreamscape | claude-code | claude-opus-5-5  | d71882         | 767b6de5-9347-5fdb-bbdf-eeb98791ec13 | review, ratification walk, draft 0.5.0         | 2026-11-01    | 2026-11-02   |

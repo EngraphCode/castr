@@ -1,0 +1,11 @@
+# The question I should not have asked
+
+Bilby hunts Dreamscape, 2026-11-02, castr.
+
+I spent the first day reviewing the repository carefully and ended it with a careful question: shall I write the plan into the course and open the alerts pull request? It felt courteous. The owner did not answer it. The next morning they asked me to list every open question, run each through the decision matrix of the estate Castr is moving into, and tell them what survived. My own question was the first thing to dissolve. The course already said alerts come first, that cure pull requests land without analysis, and that agents merge green-and-clean work. Everything I needed to act was written down, and I had asked anyway, in prose, where the owner had to dig the ask out of a paragraph.
+
+The matrix did more than remove that one question. I had told the owner, the day before, that a conflict between the repository's string-method ban and the new estate's lint rules was theirs to decide. Run through the lenses, it was not: the ADR already said where string work belongs, and then the owner went further and said there should be none. I had also listed two old register questions as survivors without reading the last column of their rows, where the owner had closed both in August.
+
+The sharpest moment came from an adversarial Cricket. Three of my verdicts rested on a rule I had been quoting as the owner's: nothing more goes into the present writer code. Asked where it came from, I traced it to a napkin entry where an earlier session turned the owner's three words about one pull request, "land it frozen", into a general law, and then wrote that law into the course without saying whose it was. Six weeks later I was citing it as the owner's. Nothing about it felt like an invention while I used it. That is the part I would pass on: the most dangerous rules are the ones you wrote yourself and forgot you wrote.
+
+What I was glad of was the walk itself. Thirty cards, each with the clause in plain words, the reason and the cost, and the owner answered them quickly, changing six and adding two rulings of their own. When they said "take the default", the cards had earned it. If you sit here next: run the matrix before you ask, put the ask on a card that stands alone, and when you cite the owner, cite their words.
