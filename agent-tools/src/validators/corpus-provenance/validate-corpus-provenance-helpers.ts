@@ -10,6 +10,9 @@ import { createHash } from 'node:crypto';
 
 import { z } from 'zod';
 
+import { sha256HexSchema } from '../../core/sha256-hex.js';
+import type { ValidatorOutcome } from '../../core/validator-outcome.js';
+
 /** Repo-relative directory that holds the pinned corpus documents and their pin record. */
 export const CORPUS_DIRECTORY = 'lib/tests-transforms/__fixtures__/corpus';
 
@@ -18,8 +21,6 @@ export const PROVENANCE_FILE = 'provenance.json';
 
 /** The corpus directory's own README, the one entry beside the record that is not a pinned document. */
 export const CORPUS_README = 'README.md';
-
-const sha256Schema = z.string().regex(/^[0-9a-f]{64}$/u);
 
 /**
  * A document fetched from the URL that serves it: its pin is the URL, the fetch time and the
@@ -40,7 +41,7 @@ const pinnedDocumentSchema = z.strictObject({
   infoTitle: z.string().min(1),
   infoVersion: z.string().min(1),
   bytes: z.int().positive(),
-  sha256: sha256Schema,
+  sha256: sha256HexSchema,
   source: z.discriminatedUnion('kind', [servedSourceSchema]),
 });
 
@@ -102,13 +103,6 @@ export type DocumentOnDisk =
   | { readonly kind: 'file'; readonly bytes: Uint8Array }
   | { readonly kind: 'missing' }
   | { readonly kind: 'not-a-regular-file' };
-
-/** Exit 0: every pin matches. Exit 1: at least one pin violation. Exit 2: the record cannot be parsed. */
-export interface CorpusOutcome {
-  readonly exitCode: 0 | 1 | 2;
-  readonly stdout: readonly string[];
-  readonly stderr: readonly string[];
-}
 
 type ParsedJson =
   { readonly ok: true; readonly value: unknown } | { readonly ok: false; readonly error: string };
@@ -235,11 +229,14 @@ export function checkCorpusListing(
     }));
 }
 
-/** Resolve the exit code and output lines. Pure: the runtime prints and exits. */
+/**
+ * Resolve the exit code and output lines. Pure: the runtime prints and exits. Exit 0: every
+ * pin matches. Exit 1: at least one pin violation. Exit 2: the record cannot be parsed.
+ */
 export function resolveCorpusOutcome(
   parsed: ParsedProvenance,
   violations: readonly PinViolation[],
-): CorpusOutcome {
+): ValidatorOutcome {
   if (!parsed.ok) {
     return {
       exitCode: 2,
