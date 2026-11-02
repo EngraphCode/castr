@@ -16,25 +16,29 @@ todos:
     status: pending
     depends_on: []
   - id: PROBE
-    content: "A read-only lint probe: OCE's lint configuration, with its type-aware rules, runs over Castr's product code without changing it, and the table of rule, hits and area is saved under .agent/analysis-and-reports/; it is the first step of the owner's question of 1 November 2026, 'run your analysis on the code as-is', and an input to MEASURE"
+    content: "A read-only lint probe: OCE's lint configuration, with its type-aware rules, runs over Castr's product code without changing it, and the table of rule, hits and area is saved under .agent/analysis-and-reports/; it is the first step of the owner's question of 1 November 2026, 'run your analysis on the code as-is', an input to the reflection after MEASURE, and RULES's starting point"
     status: pending
     depends_on: []
   - id: CURRENCY
-    content: "Dependencies at latest within the holds the toolchain forces: TypeScript 6 (ts-morph 28 vendors it; typescript-eslint's peer range ends below 6.1), @types/node 24 (engines.node 24.x, ADR-049), vitest 4 and tsup 8 (OCE's majors, which the code meets at MOVE), and the Scalar packages, which the C-1 OpenAPI reader replaces; one proof-gated commit per type-affecting cycle; done when only the holds are outdated, pnpm audit reports zero and the gates are green"
+    content: "After MEASURE and scoped by what the reflection decides travels (owner's decision card, 2 November 2026: 'After MEASURE, scoped'): if code travels, lib and the root tooling at latest within the holds the toolchain forces, TypeScript 6 (ts-morph 28 vendors it; typescript-eslint's peer range ends below 6.1), @types/node 24 (engines.node 24.x, ADR-049), vitest 4 and tsup 8 (OCE's majors), and the Scalar packages, which the C-1 OpenAPI reader replaces, one proof-gated commit per type-affecting cycle; if MOVE starts fresh, no pass on code that is archived; agent-tools is outside it either way, because it does not travel"
     status: pending
-    depends_on: [ALERTS]
+    depends_on: [MEASURE]
   - id: RATIFY
-    content: The owner ratifies the specification locally (SPEC-CC-2); the checklist was walked by decision card on 2 November 2026, and draft 0.5.0 awaits the owner's approval in their own words; the ratified file lands on main
+    content: "The owner approved draft 0.5.0 in this repository's working session on 2 November 2026 ('I approve draft 0.5.0 , if we need to review and change it later that is fine.'), recorded per SPEC-CC-2 with its SHA-256 at SHA:0e2ca07a; the ratified file lands on main together with the SPEC-CC-3 check, which does not yet exist"
     status: pending
     depends_on: [ALERTS]
   - id: MEASURE
-    content: The coverage table for SPEC-C-1 — what today's generator gets right on the pinned Oak corpus, scored against the source document by an independent validator, never against the libraries being replaced; a throwaway probe, nothing red enters any repository
+    content: "The coverage table for SPEC-C-1: what today's generator does on both Oak documents at their latest published versions, its Zod output loaded under the latest Zod 4, scored against the source document by an independent validator, never against the libraries being replaced; it makes no decision (owner's decision card, 2 November 2026: 'Measure without making decisions, drop the thresholds, we figure out what we have, then we reflect on it'); the owner and the agent then reflect on it and decide what travels; a throwaway probe, nothing red enters any repository"
     status: pending
     depends_on: [RATIFY]
-  - id: MOVE
-    content: Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces and is fully integrated there (owner, 2 November 2026); what travels (the code with its history, or the specification with fresh workspaces) is decided from the MEASURE table; code that travels first meets OCE's lint rules, chosen from the PROBE table; the specification travels as the only description of the destination; this repository is archived
+  - id: RULES
+    content: "Only if code travels: OCE's lint rules are adopted in this repository for the code that travels, starting from the PROBE table, and that code is fixed until they pass with no suppression (SPEC-G-3), before MOVE; the owner's decision card, 2 November 2026: 'At move the OCE rules will apply, the point of applying them early is to fix issues in isolation before moving'"
     status: pending
-    depends_on: [MEASURE]
+    depends_on: [CURRENCY, PROBE]
+  - id: MOVE
+    content: Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces and is fully integrated there (owner, 2 November 2026); what travels (the code with its history, or the specification with fresh workspaces) is decided at the reflection on the MEASURE table; the specification travels as the only description of the destination, and its SPEC-CC-3 check is given a home in OCE; this repository is archived
+    status: pending
+    depends_on: [RULES]
   - id: PLOT
     content: The legs to SPEC-C-1 are written into this plan from the MEASURE table and the model design (SPEC-N-1), each with an observable exit state, and reviewed by assumptions-expert
     status: pending
@@ -65,6 +69,19 @@ carrying the present product code and its history into the new repository import
 clutter the owner wrote off on 21 September; the move is then the specification plus fresh
 workspaces. Where Castr ends up is unchanged; only the order is.
 
+Owner decisions by card, 2 November 2026, after the approval of 0.5.0. MEASURE measures
+and decides nothing: "Measure without making decisions, drop the thresholds, we figure out
+what we have, then we reflect on it". What travels is decided at that reflection, with the
+owner. CURRENCY follows MEASURE and is scoped by what travels ("After MEASURE, scoped"):
+no pass on code that is archived, and `agent-tools` is outside it either way. OCE's lint
+rules are applied here, before the move, to the code that travels: "At move the OCE rules
+will apply, the point of applying them early is to fix issues in isolation before moving".
+The agent reads this as a RULES leg after CURRENCY and before MOVE, which restores the
+owner's 1 November order, "dependencies, then rules"; the reflection confirms that reading
+before any RULES work starts. The order is therefore ALERTS, RATIFY, MEASURE, the
+reflection, CURRENCY, RULES, MOVE, PLOT, with PROBE (read-only) at any time before the
+reflection.
+
 ## RATIFY: how the specification is ratified
 
 The owner walked the ratification checklist on 2 November 2026, one decision card per
@@ -72,10 +89,15 @@ clause, each stating the clause in plain language with its reason and its cost; 
 to 20 were settled by the owner's word "In each case take the default", and cards 21 to
 30 together on one card that listed each clause with its recommended answer. Two profile
 mismatches raised by the Engraph Open Curriculum Ecosystem were decided on cards the same
-day. Draft 0.5.0 carries every decision, and its change log names what changed. What
-remains is approval: the owner (or mantagen, a human collaborator) approves the version in
-their own words in a working session, and the agent records those words, the date and the
-SHA-256 of the text in the change log (SPEC-CC-2).
+day. Draft 0.5.0 carries every decision, and its change log names what changed. The owner
+approved it in a working session the same day, in their own words: "I approve draft 0.5.0 ,
+if we need to review and change it later that is fine." The agent recorded the words, the
+date and the SHA-256 of the text above the change log in the change that set the status to
+`ratified` (`SHA:0e2ca07a`, SPEC-CC-2). From that ratification the document changes only by
+approved amendment (SPEC-CC-1): an amended text is committed only together with its
+version, its change-log row and its approval record, because the SPEC-CC-3 check fails on
+committed text that does not match the latest approved record. That check does not exist
+yet; it is written test-first and lands in the same pull request as the ratified file.
 
 Settled by the owner on 21 September 2026 and already in the draft: the value-domain
 reading (SPEC-P-5); OpenAPI 2.0 is not read; zero open dependency alerts on `main` to
@@ -110,8 +132,8 @@ The measured evidence behind the specification is in
 ## MOVE: what travels
 
 The specification, the course plan, the review record, the engineering doctrine Castr
-needs that the new repository lacks, and — only if the MEASURE table says the present
-model is worth evolving — the product code with its history. Every other
+needs that the new repository lacks, and — only if the reflection on the MEASURE table
+decides it — the product code with its history. Every other
 statement of Castr's destination, fidelity contract or capability list (the review record
 lists them) is left behind or rewritten to state the specification's position, once, in
 the new repository. The owner approved rewriting the contradicting passages of
@@ -161,14 +183,17 @@ before the ruling, is pull request #109.
 ## Acceptance
 
 - **RATIFY:** the specification's status is `ratified`, its approval is recorded per
-  SPEC-CC-2, and it is on `main`.
+  SPEC-CC-2, the SPEC-CC-3 check passes in the aggregate gate, and both are on `main`.
 - **MEASURE:** a table of construct by outcome (`exact`, `wrong output`, `rejects`,
-  `absent`, `vacuous proof`), every cell backed by a command and its output, and a
-  stated verdict: evolve the present model, or rebuild it.
+  `absent`, `vacuous proof`) for both Oak documents, every cell backed by a command and its
+  output, with no verdict; then the owner's reflection decides what travels.
+- **RULES:** OCE's lint rules pass, with no suppression, on the code that travels; or, if
+  nothing travels, the leg is closed with that reason.
 - **MOVE:** Castr's gates pass inside the new repository and this repository is archived.
 - **PROBE:** the table is saved and every row is backed by the command that produced it.
-- **CURRENCY:** only the named holds are outdated, `pnpm audit` reports zero and the gates
-  are green.
+- **CURRENCY:** in the code that travels, only the named holds are outdated, `pnpm audit`
+  reports zero and the gates are green; or, if nothing travels, the leg is closed with that
+  reason.
 - **PLOT:** this file's todos name every leg to SPEC-C-1 with an observable exit state.
 - **Plan complete:** SPEC-C-1 and SPEC-C-2 are advertised and SPEC-G-2 holds.
 
