@@ -30,8 +30,7 @@ repository before acting.
   in their own words naming the version (SPEC-CC-2). The agent then records the words, the
   date and the SHA-256 of the text above the change log, sets the status to `ratified` in
   that same change, and the file lands on `main`. The draft and this session's records sit
-  on `feat/prepare-for-migration`, the branch the owner opened for this work on
-  1 November; they merge after the alert cure, because only alert cures merge while
+  on `feat/prepare-for-migration`, the branch the owner named for this work on 1 November ("We are on a new branch"); they merge after the alert cure, because only alert cures merge while
   `main` has open dependency alerts (SPEC-G-1, confirmed by the owner on 2 November).
 - **Owner rulings of 1 and 2 November 2026, verbatim where quoted:** the two goals,
   "bringing Castr into a requires compliant and functioning shape" and "migrating Castr
@@ -42,7 +41,9 @@ repository before acting.
   string manipulation is unavoidable, ask _why_" (now in SPEC-AR-3 and in ADR-026's
   amendment), with a further card the same day: where string manipulation seems unavoidable
   the work stops and asks the owner, and an exception exists only as an owner-approved
-  entry in the specification (none is approved); "Strike the condition, Castr will move
+  entry in the specification (none is approved); and, the same day, "No strings refers to the
+  compiler/decompiler/ and associated state and systems, not to the logger, loggers use
+  strings"; "Strike the condition, Castr will move
   into OCE and be fully integrated" (§10); "Where appropriate make sure that logging is
   explicit and informative, and make sure that we respect "strict, everywhere, all the
   time"" (SPEC-PR-8).

@@ -43,7 +43,7 @@ and OCE's two further mismatches, 30 cards. The answers, and the owner's ruling 
 work happens via AST not via string manipulation. Where string manipulation is
 unavoidable, ask _why_", are folded into draft 0.5.0 and ADR-026's amendment; the course
 gained PROBE and CURRENCY. No version is approved. The draft and the records sit on
-`feat/prepare-for-migration`, the branch the owner opened on 1 November, and merge after
+`feat/prepare-for-migration`, the branch the owner named on 1 November ("We are on a new branch"), and merge after
 the alert cure.
 
 ## Active threads

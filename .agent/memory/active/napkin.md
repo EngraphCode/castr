@@ -72,6 +72,14 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
     splitting, searching, regular expressions) or building output by joining text, and
     excluded a grammar parser's own tokenising and whole-value comparison with a typed
     constant. Lesson: an "ask why" that the asker answers alone is an escape hatch.
+  - **OWNER RULING, after the wrap (2 November 2026, verbatim): "No strings refers to the
+    compiler/decompiler/ and associated state and systems, not to the logger, loggers use
+    strings".** A side agent showed that the card's scope ("Castr's code, tooling or
+    tests") and its definition ("building output by joining text") together banned every
+    log line, contradicting SPEC-PR-8's logging requirement from the same day. The card's
+    scope was my wording, wider than the owner's. SPEC-AR-3 and ADR-026 now bind the
+    compiler, the decompiler and their associated state and systems; logging is outside.
+    Lesson: when two rules land in one draft, test each against the other before asking.
   - Folded into draft 0.5.0 the same day (owner: "please write up"), with ADR-026's
     amendment and the course's PROBE and CURRENCY todos; one docs-adr-expert pass checked
     the draft against these answers before the wrap.
