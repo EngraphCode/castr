@@ -9,9 +9,7 @@ The destination is [the specification](../../../docs/SPECIFICATION.md) and the c
 [castr-course.md](../../plans/active/castr-course.md). On 21 September 2026 the owner wrote
 off every inherited worktree, orphaned branch and open pull request, and ruled that Castr
 moves into the Engraph Open Curriculum Ecosystem repository as workspaces, after the
-present generator has been measured against the specification. `main` had zero open
-dependency alerts from #111 until new advisories arrived; on 2 November 2026 it had 30
-(3 critical, 8 high), so only alert cures merge (SPEC-G-1). The platform-neutral autonomous-development experiment stays paused.
+present generator has been measured against the specification. `main` had zero open dependency alerts from #111 until new advisories arrived; on 2 November 2026 it had 30, and #117 and #118 brought it back to zero the same day (SPEC-G-1). The platform-neutral autonomous-development experiment stays paused.
 The Practice-enhancement lane in this repository is stopped. On 25 September 2026 the
 categorisation of every lane and plan landed (#113), both served Oak documents were pinned
 as the corpus with a recomputing validator and the specification moved to draft 0.4.1
@@ -46,16 +44,18 @@ gained PROBE and CURRENCY. The owner approved 0.5.0 the same day ("I approve dra
 if we need to review and change it later that is fine."), recorded per SPEC-CC-2 in
 `SHA:0e2ca07a`, and then decided by card how the course continues: MEASURE decides
 nothing and a reflection with the owner decides what travels; CURRENCY and a new RULES leg
-follow it, only for code that travels. The ratified file and the records sit on
-`feat/prepare-for-migration`, the branch the owner named on 1 November ("We are on a new
-branch"), and merge after the alert cure together with the SPEC-CC-3 check.
+follow it, only for code that travels. The owner then approved 0.5.1 ("I approve 0.5.1",
+`SHA:1a7631ac`), which reads SPEC-CC-3's latest approved record as the latest ever approved.
+The ratified file, the SPEC-CC-3 check that enforces it, the PROBE table and the records
+sit on `feat/prepare-for-migration`, the branch the owner named on 1 November ("We are on a
+new branch"); its pull request lands them on `main`.
 
 ## Active threads
 
-| Thread                                                       | Role and next step                                                                                                                                                          | Latest identity                                                                                          |
-| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| [Castr correction](threads/castr-correction.next-session.md) | ALERTS cure first (30 alerts on 2 November 2026); then the SPEC-CC-3 check and the branch's pull request land the ratified 0.5.0 (approved and recorded at `SHA:0e2ca07a`). | claude-code / claude-opus-5-5 / Bilby hunts Dreamscape / ratification walk and draft 0.5.0 / 2026-11-02  |
-| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                                                                                              | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23 |
+| Thread                                                       | Role and next step                                                                                                                     | Latest identity                                                                                          |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [Castr correction](threads/castr-correction.next-session.md) | The branch's pull request lands the ratified 0.5.1 and its SPEC-CC-3 check (alerts at zero since #118, 2 November 2026); then MEASURE. | claude-code / claude-opus-5-5 / Bilby hunts Dreamscape / ratification walk and draft 0.5.0 / 2026-11-02  |
+| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                                                         | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23 |
 
 ## Paused threads and historical records
 
@@ -92,7 +92,10 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    when green and clean. `main` has had zero open alerts since #118 (2 November 2026,
    15:00Z), so it merges with analysis like any pull request; a new alert brings back the
    cure-only rule (SPEC-G-1). RATIFY is complete at that merge.
-2. **MEASURE** follows RATIFY and decides nothing; then the owner's reflection decides what
+2. **The SPEC-CC-3 check's known gap**, in its own pull request next: compare the branch's
+   approval records with `main`'s, so that deleting the newest row and reverting the text
+   fails, as 0.5.1's "latest ever approved" requires (thread record).
+3. **MEASURE** follows RATIFY and decides nothing; then the owner's reflection decides what
    travels, and CURRENCY, RULES, MOVE and PLOT follow in the course's order. The
    [thread record](threads/castr-correction.next-session.md) carries each leg's state.
 

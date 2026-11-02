@@ -55,7 +55,56 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   13 of 16 test mutations survived.** test-reviewer's mutation run, not reading, found it.
   For a validator, ask a test reviewer for mutations, not opinions.
 
-- **SPEC-CC-3 has no check yet.** The ratified text requires one ("A required check fails
+- **Wrap of 2 November 2026 (owner: "prepare for compaction … then stop all processes"),
+  concept exploration of the day's incident class: outside eyes and trials caught what my own
+  reading missed, seven times.**
+  - **Observations.** In each case the fluent answer came from reasoning and the true one
+    from execution or an independent reader:
+    - a verdict rule that could only say "rebuild" (assumptions-expert);
+    - approvals bundled into plan approval (assumptions-expert);
+    - "KaTeX is never loaded" (config-expert);
+    - "forcing minimatch is probably harmless" (`check:ci` trial);
+    - a vendor patch that changed matching (config-expert; upstream #570 already had it);
+    - 13 of 16 mutations surviving the check's tests (test-reviewer);
+    - curing alerts raising new ones (config-expert and a side agent).
+  - **Frame.** Self-review converges on the self-model.
+  - **Proposals, each with its warrant and falsifier:**
+    1. Drive `pnpm audit` to zero before calling a dependency cure done. Warrant: #117's
+       six follow-on alerts. Falsifier: a cure, audit-clean at merge, after which Dependabot
+       raises an advisory audit did not list.
+    2. Run the cheapest real trial before stating a runtime claim about third-party code.
+       Warrant: KaTeX, minimatch. Falsifier: trials that keep agreeing with reading.
+    3. Search the package's open pull requests before writing a vendor patch. Warrant: #570.
+       Falsifier: such searches keep coming back empty.
+    4. Ask test reviewers for mutations, not opinions, on validators. Warrant: 13 of 16.
+  - **Not graduated.** Consolidation runs only where it serves the owner's two goals (owner,
+    1 November 2026); these stay napkin entries.
+- **Owner correction, told plainly: "Measure without making decisions, drop the thresholds,
+  we figure out what we have, then we reflect on it".** I had turned an act of looking into
+  a decision procedure, a verdict rule and a threshold, because the day's decision matrix had
+  made decision machinery feel like rigour. A matrix is for questions; a measurement is for
+  looking. The reflection after MEASURE is the owner's and the agent's together. Run it as
+  concept exploration over the table, not as a matrix over options.
+- **Free-play seeds, marked as associations, never findings.**
+  - Kept:
+    - "every cure changes the bytes another checker fingerprints, and so re-opens its scan"
+      (lockfile → Dependabot, spec → hash, patch → review);
+    - "the strictest guard is the most brittle to benign change" (byte-exact approval
+      against a formatter);
+    - "MEASURE then reflection is play then exploration at course scale".
+  - Discarded as forced: "the approval hash is a wax seal and the formatter humidity", and
+    "the session is a lockfile".
+- **Tacit fix: `pnpm install` resolves a conflicted `pnpm-lock.yaml` itself** after a
+  merge, re-resolving from the merged manifests (0 markers left, frozen install clean). Use
+  it rather than a line merge or taking one side.
+- **Wrap promise sweep caught a gap I had noticed and not recorded:** the SPEC-CC-3 check
+  enforces "no record fails" but not "latest ever approved" when only the newest row is
+  deleted and the text reverted. Recorded in the thread record as the next pull request.
+  A gap noticed mid-build goes to the record at once, not to "the report".
+- **Mistake: I reached for `rm -f $D/*.prefix` out of habit.** A safety check refused it,
+  correctly; the overwrite I was about to do made the removal pointless. Don't delete as a
+  reflex before regenerating files.
+- **SPEC-CC-3 had no check (built the same day, `SHA:5d264896`).** The ratified text requires one ("A required check fails
   when this document's content does not match its latest approved record"); it lands with
   the ratification, test-first. Consequence to remember: an amendment's text is committed
   only together with its version, change-log row and approval record.
