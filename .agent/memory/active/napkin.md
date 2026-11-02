@@ -2,6 +2,42 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-11-02 (approval of 0.5.0 and the plan of the course — Bilby hunts Dreamscape / d71882, claude-code)
+
+- **OWNER APPROVAL (2 November 2026, this session, the whole message verbatim): "I approve
+  draft 0.5.0 , if we need to review and change it later that is fine. Otherwise, please
+  plan the work, ultrathink use the planning and cognitive OCE skills".** The first sentence
+  is the approval of the named version. It is recorded per SPEC-CC-2 in `SHA:0e2ca07a`:
+  status `ratified`, the only change above the change log. The approved text's SHA-256 is
+  `f7dc66610dec0bca320a5c50eacc7d75115d757038c09a8be0f3e4de5452edb2`, re-verified from the
+  commit's bytes. Rows 0.2.0 to 0.4.1 read "none" (agent's wording, the log's own word),
+  because SPEC-CC-1 binds the whole document from ratification.
+- **Owner decisions by card on the plan (verbatim).** MEASURE: "Measure without making
+  decisions, drop the thresholds, we figure out what we have, then we reflect on it".
+  CURRENCY: "After MEASURE, scoped (Recommended)". Lint rules: "At move the OCE rules will
+  apply, the point of applying them early is to fix issues in isolation before moving". My
+  reading of the third is a RULES leg after CURRENCY and before MOVE, on the code that
+  travels; it is labelled as my reading in the course and is confirmed at the reflection.
+- **Mistake caught by assumptions-expert: a verdict rule that could not produce the answer
+  it claimed to allow.** My MEASURE rule required the present modules to be brought under
+  SPEC-AR-1 and AR-3 "by changing them", which the course's own 21 September facts already
+  answer no; and "most" had no number. I told the owner the rule let measurement overturn
+  the prior when it could not. The owner then dropped verdict rules altogether. Before
+  writing a decision rule, check each condition against facts already recorded.
+- **Mistake caught by assumptions-expert: approvals bundled into plan approval.** I wrote
+  "approving this plan approves them" over three departures from the owner's order. The 2
+  November correction says owner-bound questions go as cards; they did, and one answer
+  overturned my departure on the lint rules.
+- **Also caught:** MEASURE would have loaded Zod 4.5.4 while §6 writes the latest Zod 4
+  (4.6.7); leaving `agent-tools` out of CURRENCY narrowed the course silently; mdast offsets
+  count characters, not bytes, so the SPEC-CC-3 check encodes the decoded prefix. The
+  adversarial Cricket (ON-TRACK) caught that PROBE before MEASURE needed the same
+  justification I used to move CURRENCY after it.
+- **SPEC-CC-3 has no check yet.** The ratified text requires one ("A required check fails
+  when this document's content does not match its latest approved record"); it lands with
+  the ratification, test-first. Consequence to remember: an amendment's text is committed
+  only together with its version, change-log row and approval record.
+
 ## 2026-11-02 (open questions through the OCE decision matrix — Bilby hunts Dreamscape / d71882, claude-code)
 
 - **OWNER RULING (2 November 2026, verbatim): "All Castr work happens via AST not via

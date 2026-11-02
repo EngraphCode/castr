@@ -7,9 +7,9 @@ successor on any platform: everything that matters is here or in the files this 
 names, never only in an agent's private memory. Verify each line against the live
 repository before acting.
 
-- **Destination:** [the specification](../../../../docs/SPECIFICATION.md), draft 0.5.0,
-  status `draft-awaiting-owner-ratification`. It is the only description of Castr's
-  destination. The owner: "this work has drifted and drifted and now I think we need a
+- **Destination:** [the specification](../../../../docs/SPECIFICATION.md), version 0.5.0,
+  status `ratified` since 2 November 2026 (`SHA:0e2ca07a` on `feat/prepare-for-migration`,
+  not yet on `main`). It is the only description of Castr's destination. The owner: "this work has drifted and drifted and now I think we need a
   destination that can only change with process and agreement"; "approval happens locally,
   only I or mantagen can approve". Mantagen is a human collaborator. Approval is spoken
   locally in a working session and the agent records the words, the date and the content
@@ -25,13 +25,21 @@ repository before acting.
   survivors were the specification's checklist entries and two profile mismatches raised
   by OCE's `docs/architecture/oce-integrity-and-castr.md`. All 30 were decided. Draft
   0.5.0 carries every decision; its change-log row names what changed and which wording
-  is the drafting agent's, and the checklist section is removed. No version is approved.
-- **Next owner interaction:** the owner reads draft 0.5.0 and, if it is right, approves it
-  in their own words naming the version (SPEC-CC-2). The agent then records the words, the
-  date and the SHA-256 of the text above the change log, sets the status to `ratified` in
-  that same change, and the file lands on `main`. The draft and this session's records sit
-  on `feat/prepare-for-migration`, the branch the owner named for this work on 1 November ("We are on a new branch"); they merge after the alert cure, because only alert cures merge while
-  `main` has open dependency alerts (SPEC-G-1, confirmed by the owner on 2 November).
+  is the drafting agent's, and the checklist section is removed.
+- **Approval, 2 November 2026, in this session, verbatim:** "I approve draft 0.5.0 , if we
+  need to review and change it later that is fine." Recorded per SPEC-CC-2 in
+  `SHA:0e2ca07a`: the status set to `ratified` (the only change above the change log), the
+  words, the date and the SHA-256 of the bytes above the change-log heading
+  (`f7dc6661…52edb2`, re-verified from the commit). Rows 0.2.0 to 0.4.1 read "none".
+  From ratification the whole document changes only by approved amendment (SPEC-CC-1).
+  The SPEC-CC-3 check does not exist yet; it is written test-first on the same branch and
+  lands with the ratified file. The branch is the one the owner named for this work on
+  1 November ("We are on a new branch"); it merges after the alert cure, because only alert
+  cures merge while `main` has open dependency alerts (SPEC-G-1).
+- **Next owner interaction:** the reflection on MEASURE's table, which decides what travels
+  into OCE. Until then the work needs no owner decision: the alert cure, the SPEC-CC-3 check,
+  the branch's pull request, PROBE and MEASURE run in that order (the course, and the plan
+  approved by the owner on 2 November).
 - **Owner rulings of 1 and 2 November 2026, verbatim where quoted:** the two goals,
   "bringing Castr into a requires compliant and functioning shape" and "migrating Castr
   into OCE", which "do not supersede previous plans, they are part of enacting the
@@ -53,17 +61,21 @@ repository before acting.
   validator; its verdict — evolve the present model or rebuild — decides what MOVE
   carries), MOVE (into the Engraph Open Curriculum Ecosystem repository as workspaces,
   fully integrated there; this repository is then archived), PLOT. ALERTS is open again:
-  30 open dependency alerts on `main` on 2 November (3 critical, 8 high). Two todos were
-  added on 2 November from the plan discussed with the owner on 1 November: PROBE (a
-  read-only lint probe with OCE's rules, now) and CURRENCY (dependencies at latest within
-  stated holds, after ALERTS). RATIFY waits only on the owner's approval words.
-- **Plan departures stated to the owner on 2 November 2026 and not overruled (silence,
-  not approval):** OCE's lint rules are adopted after MEASURE and only on code that
-  travels, where the owner's 1 November order was dependencies, then rules; vitest 4 and
-  tsup 8 are held at OCE's majors. Both rest on MEASURE's verdict. A side agent pointed
-  out to the owner that this puts the rules behind the walk; asked whether that changed
-  anything, the agent answered that it changed the report and not the verdict, and the
-  owner's next message moved on without overruling it (an observation, not an approval).
+  30 open dependency alerts on `main` on 2 November (3 critical, 8 high). The course now
+  runs ALERTS, RATIFY (lands with the SPEC-CC-3 check), MEASURE (decides nothing), the
+  reflection with the owner (decides what travels), CURRENCY and RULES (both only for code
+  that travels), MOVE, PLOT; PROBE is read-only and runs any time before the reflection.
+- **Owner decisions by card, 2 November 2026, after the approval (verbatim):** MEASURE:
+  "Measure without making decisions, drop the thresholds, we figure out what we have, then
+  we reflect on it" (the agent had proposed an 80% `exact` threshold; it is dropped).
+  CURRENCY: "After MEASURE, scoped (Recommended)" — after MEASURE, scoped to the code that
+  travels, none on archived code, `agent-tools` outside it either way. Lint rules: "At
+  move the OCE rules will apply, the point of applying them early is to fix issues in
+  isolation before moving" — the agent's reading, to be confirmed at the reflection, is a
+  RULES leg after CURRENCY and before MOVE on the code that travels, which restores the
+  owner's 1 November order "dependencies, then rules". These replace the agent's earlier
+  departure (rules applied at MOVE), which the owner had never approved. vitest 4 and tsup
+  8 stay held at OCE's majors.
 - **Evidence:** [the specification review record](../../../research/castr-specification-review-2026-09-21.md)
   keeps what six reviewers measured on 21 September (the Oak API specification's feature
   inventory, its eight `allOf` sites that accept no value — the owner fixes those at

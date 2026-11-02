@@ -42,16 +42,20 @@ answered the survivors by decision card: the specification's whole ratification 
 and OCE's two further mismatches, 30 cards. The answers, and the owner's ruling "All Castr
 work happens via AST not via string manipulation. Where string manipulation is
 unavoidable, ask _why_", are folded into draft 0.5.0 and ADR-026's amendment; the course
-gained PROBE and CURRENCY. No version is approved. The draft and the records sit on
-`feat/prepare-for-migration`, the branch the owner named on 1 November ("We are on a new branch"), and merge after
-the alert cure.
+gained PROBE and CURRENCY. The owner approved 0.5.0 the same day ("I approve draft 0.5.0 ,
+if we need to review and change it later that is fine."), recorded per SPEC-CC-2 in
+`SHA:0e2ca07a`, and then decided by card how the course continues: MEASURE decides
+nothing and a reflection with the owner decides what travels; CURRENCY and a new RULES leg
+follow it, only for code that travels. The ratified file and the records sit on
+`feat/prepare-for-migration`, the branch the owner named on 1 November ("We are on a new
+branch"), and merge after the alert cure together with the SPEC-CC-3 check.
 
 ## Active threads
 
-| Thread                                                       | Role and next step                                                                                                                                 | Latest identity                                                                                          |
-| ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| [Castr correction](threads/castr-correction.next-session.md) | RATIFY: draft 0.5.0 awaits the owner's approval words (SPEC-CC-2). ALERTS is open again (30 alerts on 2 November 2026), so only alert cures merge. | claude-code / claude-opus-5-5 / Bilby hunts Dreamscape / ratification walk and draft 0.5.0 / 2026-11-02  |
-| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                                                                     | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23 |
+| Thread                                                       | Role and next step                                                                                                                                                          | Latest identity                                                                                          |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [Castr correction](threads/castr-correction.next-session.md) | ALERTS cure first (30 alerts on 2 November 2026); then the SPEC-CC-3 check and the branch's pull request land the ratified 0.5.0 (approved and recorded at `SHA:0e2ca07a`). | claude-code / claude-opus-5-5 / Bilby hunts Dreamscape / ratification walk and draft 0.5.0 / 2026-11-02  |
+| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                                                                                              | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23 |
 
 ## Paused threads and historical records
 
@@ -83,19 +87,19 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-1. **The alert cure.** A dependency-update pull request from `main` that brings the open
-   alerts to zero and lands without analysis (SPEC-G-1; the dependency-currency skill's
-   survey and override floors). Until it merges, nothing else merges.
-2. **Approval of draft 0.5.0.** The owner reads it and approves it in their own words
-   naming the version; the agent records the words, the date and the SHA-256 per SPEC-CC-2
-   in the change that sets the status to `ratified`. An agent never writes an approval it
-   was not given in that session.
-3. **The pull request for `feat/prepare-for-migration`** (draft 0.5.0, the course, ADR-026,
-   the Sonar analysis and the continuity records) opens and merges once the alerts are
-   at zero.
-4. **PROBE** runs any time, read-only; **CURRENCY** follows ALERTS; then MEASURE, MOVE and
-   PLOT in the course's order. The [thread record](threads/castr-correction.next-session.md)
-   carries each leg's state as of 2 November 2026.
+1. **The alert cure.** One dependency-update pull request from `main`, within current
+   majors, that brings the 30 open alerts to zero and lands without analysis (SPEC-G-1).
+   Until it merges, nothing else merges.
+2. **The SPEC-CC-3 check.** After the cure merges, `main` is merged into
+   `feat/prepare-for-migration` and the check is written test-first in
+   `agent-tools/src/validators/specification-approval/`, wired into `repo-validators:check`.
+3. **The pull request for `feat/prepare-for-migration`** (ratified 0.5.0, ADR-026, the
+   course, the Sonar analysis, the records, the check) opens and merges once the alerts are
+   at zero. RATIFY is complete at that merge.
+4. **PROBE** runs read-only while remote CI runs; **MEASURE** follows RATIFY and decides
+   nothing; then the owner's reflection decides what travels, and CURRENCY, RULES, MOVE and
+   PLOT follow in the course's order. The [thread record](threads/castr-correction.next-session.md)
+   carries each leg's state.
 
 ## Deep consolidation status
 
