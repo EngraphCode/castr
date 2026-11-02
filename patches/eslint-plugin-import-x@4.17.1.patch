@@ -1,0 +1,54 @@
+diff --git a/lib/index.cjs b/lib/index.cjs
+index bba741d933d95c753f47aa934a720f249ed56825..986cbb33d1d60717f4bacfb723fcf52905a9dbec 100644
+--- a/lib/index.cjs
++++ b/lib/index.cjs
+@@ -4694,13 +4694,13 @@ var no_internal_modules_default = createRule({
+ 	defaultOptions: [],
+ 	create(context) {
+ 		const options = context.options[0] || {};
+-		const allowRegexps = (options.allow || []).map((p) => (0, minimatch.makeRe)(p)).filter(Boolean);
+-		const forbidRegexps = (options.forbid || []).map((p) => (0, minimatch.makeRe)(p)).filter(Boolean);
++		const allowMatchers = (options.allow || []).map((p) => new minimatch.Minimatch(p));
++		const forbidMatchers = (options.forbid || []).map((p) => new minimatch.Minimatch(p));
+ 		function reachingAllowed(importPath) {
+-			return allowRegexps.some((re) => re.test(importPath));
++			return allowMatchers.some((m) => m.match(importPath));
+ 		}
+ 		function reachingForbidden(importPath) {
+-			return forbidRegexps.some((re) => re.test(importPath));
++			return forbidMatchers.some((m) => m.match(importPath));
+ 		}
+ 		function isAllowViolation(importPath) {
+ 			const steps = toSteps(importPath);
+diff --git a/lib/rules/no-internal-modules.js b/lib/rules/no-internal-modules.js
+index cf3696278157c4a5b2623ed634ef367387b042bc..123ab4d31c02826839b4a0a4eb63250298c8092e 100644
+--- a/lib/rules/no-internal-modules.js
++++ b/lib/rules/no-internal-modules.js
+@@ -1,4 +1,4 @@
+-import { makeRe } from 'minimatch';
++import { Minimatch } from 'minimatch';
+ import { importType, createRule, moduleVisitor, resolve, } from '../utils/index.js';
+ function normalizeSep(somePath) {
+     return somePath.split('\\').join('/');
+@@ -66,17 +66,13 @@ export default createRule({
+     defaultOptions: [],
+     create(context) {
+         const options = context.options[0] || {};
+-        const allowRegexps = (options.allow || [])
+-            .map(p => makeRe(p))
+-            .filter(Boolean);
+-        const forbidRegexps = (options.forbid || [])
+-            .map(p => makeRe(p))
+-            .filter(Boolean);
++        const allowMatchers = (options.allow || []).map(p => new Minimatch(p));
++        const forbidMatchers = (options.forbid || []).map(p => new Minimatch(p));
+         function reachingAllowed(importPath) {
+-            return allowRegexps.some(re => re.test(importPath));
++            return allowMatchers.some(m => m.match(importPath));
+         }
+         function reachingForbidden(importPath) {
+-            return forbidRegexps.some(re => re.test(importPath));
++            return forbidMatchers.some(m => m.match(importPath));
+         }
+         function isAllowViolation(importPath) {
+             const steps = toSteps(importPath);
