@@ -1,7 +1,7 @@
 # ADR-026: No String/Regex Heuristics for TS-Source Parsing
 
-**Status:** Accepted (Extended January 2026)  
-**Date:** 2026-01-10 (Updated: 2026-02-13)  
+**Status:** Accepted (Extended January 2026; amended 2 November 2026)  
+**Date:** 2026-01-10 (Updated: 2026-02-13; 2026-11-02)  
 **Deciders:** Engineering Team
 
 ## Context
@@ -30,22 +30,13 @@ These patterns are equally fragile because they:
 
 ## Decision
 
-**No string/regex heuristics shall be used to derive schema semantics from TypeScript source code when an AST exists.**
+**No string/regex heuristics shall be used to derive schema semantics from TypeScript source code when an AST exists** (January 2026).
 
-This ADR targets **TS-source parsing** (ts-morph + TypeScript compiler APIs), not “data-string parsing” inside OpenAPI/JSON Schema documents.
+**All Castr work happens via AST, not via string manipulation** (the amendment of 2 November 2026, below). A string whose grammar a specification defines (a `$ref`, a JSON Pointer, a URI reference, a media type, a status range, a path template, a `format` value) is read only by a parser for that grammar, tested against that grammar's specification, and the work is done on the parsed data, as [SPEC-AR-3](../SPECIFICATION.md) states.
 
-### Out of Scope (But Still Strict)
+Banned patterns include, but are not limited to:
 
-Parsing _data strings_ that are part of OpenAPI/JSON Schema (e.g. `$ref`, media types) is allowed when it is:
-
-- centralized,
-- validated,
-- tested,
-- and fail-fast on invalid inputs.
-
-This includes but is not limited to:
-
-| Banned Pattern (TS-source parsing)  | Reason                                 |
+| Banned pattern                      | Reason                                 |
 | ----------------------------------- | -------------------------------------- |
 | Regex literals (`/pattern/`)        | Fragile, unreadable, inappropriate     |
 | `RegExp` constructor                | Same as above                          |
@@ -67,17 +58,45 @@ The Zod parser (and any future source code parsers) must use proper semantic too
 | **Symbol resolution**       | Verify identifiers reference correct imports         |
 | **Type checking**           | Determine types without string comparison            |
 
+## Amendment of 2 November 2026: AST, not string manipulation
+
+The owner, 2 November 2026, verbatim: "All Castr work happens via AST not via string
+manipulation. Where string manipulation is unavoidable, ask _why_".
+
+The same day the owner chose, by decision card, how "ask why" binds. The chosen option
+read: "No string manipulation in Castr's code, tooling or tests. A grammar-defined string
+is read only by a parser for its grammar, tested against that grammar's specification.
+Where string manipulation seems unavoidable, the work stops and asks the owner why it is
+needed; an exception exists only as an owner-approved entry in the specification, and a
+lint check bans string methods everywhere else."
+
+**String manipulation** is reading characters to find meaning (prefix checks, splitting,
+searching, regular expressions) or building output by joining text. A grammar parser's own
+tokenising, and comparing a whole value with a typed constant, are not string
+manipulation. No exception is approved: the specification lists none.
+
 ## Enforcement
 
-ESLint rules in `lib/eslint.config.ts` enforce this ADR:
+Today's `lib/eslint.config.ts` enforces the January 2026 form of this ADR: regex literals
+and the `RegExp` constructor are errors; `startsWith`, `endsWith`, `indexOf`,
+`lastIndexOf` and non-literal `includes` are banned in `src/` outside three modules;
+`castr/no-magic-string-comparison` bans string-literal comparison in binary expressions
+while allowing `typeof` narrowing; and test files are excluded. It does not yet enforce the
+amendment, and this present code does not meet it:
 
-- Regex literals and `RegExp` constructor are **errors**
-- String/regex heuristic bans are scoped to TS-source parsing modules (where semantics must come from the AST)
-- `castr/no-magic-string-comparison` enforces string-literal comparison bans in binary expressions while allowing `typeof` narrowing checks
-- Data-string parsing utilities are excluded (they must be centralized/validated/tested instead)
-- Test files are excluded (they may assert on string content)
+- the three modules the January form designated for data-string parsing,
+  `src/shared/ref-resolution.ts`,
+  `src/schema-processing/parsers/openapi/builder.component-ref-resolution.ts` and
+  `src/schema-processing/context/template-context.status-codes.ts`, which parse with
+  string methods;
+- the lodash function-call form that the configuration calls this repository's sanctioned
+  idiom, which never had this ADR's sanction;
+- the configuration's switched-off `sonarjs/prefer-native-lodash-alternative`, which
+  SPEC-G-3 counts as red.
 
-## Scope Definition (Session 3.3a.01 Audit)
+SPEC-AR-3 binds the present code today.
+
+## Scope Definition (Session 3.3a.01 Audit, amended 2 November 2026)
 
 ### What This ADR Bans
 
@@ -87,30 +106,14 @@ String/regex heuristics that derive meaning from TypeScript source code text whe
 2. **Text comparison for semantics**: `expression.includes('.optional()')` instead of AST chain analysis
 3. **Naming-convention heuristics**: `name.endsWith('Schema')` instead of a symbol table
 4. **getText()-then-manipulate**: Getting source text then parsing with string methods, when `getName()`, `getLiteralValue()`, or symbol resolution could extract the information directly
+5. **String manipulation of any kind** (since 2 November 2026), as defined in the amendment above
 
 ### What This ADR Allows
 
-**Data-string parsing** (OpenAPI `$ref`, media types, URL templates, HTTP status codes) is allowed **only** when ALL of the following hold:
-
-1. **Centralized** — the parsing lives in a designated utility module (not inline, not ad-hoc, not scattered)
-2. **Validated** — fail-fast on invalid inputs with helpful error messages
-3. **Tested** — unit tests covering normal, edge, and error cases
-4. **Not parsing TypeScript source code** — operating on data from the IR, OpenAPI spec, or configuration
-5. **Explicitly designated** — the utility module is listed below
-
-**Designated centralized data-string utilities:**
-
-- `src/shared/ref-resolution.ts` — OpenAPI `$ref` parsing (canonical, all `$ref` parsing MUST delegate here)
-- `src/schema-processing/parsers/openapi/builder.component-ref-resolution.ts` — OpenAPI builder component-ref validation/enforcement (supported prefix checks, expected component-type checks, circular-ref guards). OpenAPI builders must delegate component-ref handling here instead of local parsing/catch logic.
-- `src/schema-processing/context/template-context.status-codes.ts` — endpoint success-status parsing (`200`, `201`, `202`, `203`, `204`, `2XX`, `default`)
-- Future: media-type parser, URL-template parser (when created)
-
-**Ad-hoc data-string parsing (e.g., inline `startsWith('#/components/')` in 7 files) is a violation of the centralization requirement** and must be remediated to delegate to the designated utility.
-
-Also allowed (not string-parsing, no centralization needed):
-
-- **Array `.includes()`** on typed arrays (not string operations)
-- **Display/formatting** operations (`.toUpperCase()`, `.toLowerCase()` for rendering output, never for semantics)
+- A parser for a named grammar tokenising that grammar, tested against the grammar's specification
+- Comparing a whole value with a typed constant
+- Array `.includes()` on typed arrays (not a string operation)
+- Exceptions: none; each would be an owner-approved entry in the specification
 
 **`getText()` principle:** `getText()` is banned for identity or semantic comparison (`=== 'z'`, `=== 'undefined'`). Prefer ts-morph semantic APIs (`getName()`, `getLiteralValue()`, `getLiteralText()`, symbol resolution) in all cases. `getText()` may be used only for data extraction from a known node type when no semantic API exists, and never for comparison.
 
@@ -124,14 +127,14 @@ This is enforced by an ESLint selector exemption for `getText()` calls on nodes 
 
 ### Enforcement Principle
 
-**TS-source heuristics (`getText()`, regex, text comparison) are banned in ALL `src/` files, no exceptions.** Data-string methods (`startsWith`, `includes`, `split`, `slice`) are banned in ALL `src/` files EXCEPT in designated centralized utility modules listed above. Test files are excluded (they may assert on string content).
+**String manipulation is banned in all Castr code, tooling and tests, and TS-source heuristics in all `src/` files. The only exceptions are owner-approved entries in the specification, and there are none.**
 
-| Scope                      | Files                                         | Policy                                                             |
-| -------------------------- | --------------------------------------------- | ------------------------------------------------------------------ |
-| **Banned**                 | All `src/**/*.ts`                             | `getText()` identity, regex, text comparison — always banned       |
-| **Banned (data-string)**   | All `src/**/*.ts` except designated utilities | Inline `startsWith`, `includes`, `split` etc. on ref/media strings |
-| **Allowed (data-string)**  | Designated centralized utilities only         | String methods for data parsing, centralized + validated + tested  |
-| **Excluded from all bans** | `**/*.test.ts`, `**/*.spec.ts`, `tests-*/**`  | Tests may assert on string content                                 |
+| Scope    | Files                                       | Policy                                                               |
+| -------- | ------------------------------------------- | -------------------------------------------------------------------- |
+| Banned   | All Castr code, tooling and tests           | String manipulation; `getText()` identity, regex and text comparison |
+| Allowed  | Parsers for a named grammar                 | Tokenising that grammar, tested against its specification            |
+| Allowed  | Everywhere                                  | Comparing a whole value with a typed constant                        |
+| Excepted | Owner-approved entries in the specification | None                                                                 |
 
 ## Consequences
 

@@ -1,9 +1,9 @@
 ---
 title: Castr destination specification
 id: castr-specification
-version: 0.4.1
+version: 0.5.0
 status: draft-awaiting-owner-ratification
-date: 2026-09-25
+date: 2026-11-02
 owner: Jim Cresswell
 approvers:
   - Jim Cresswell
@@ -24,9 +24,11 @@ This is the definitive statement of where Castr is going. Plans describe how to 
 there; this document says where "there" is. It is the only description of Castr's
 destination.
 
-Text in quotation blocks is the owner's, verbatim, from 21 September 2026. "Must" states a
-requirement. Clauses that came from review and not from the owner's own words are listed
-in the [ratification checklist](#ratification-checklist).
+Text in quotation blocks is the owner's, verbatim, from 21 September 2026 unless another
+date is given beside it. "Must" states a requirement. Every clause that came from review
+rather than from the owner's own words was confirmed, changed or struck by the owner by
+decision card on 2 November 2026. The drafting agent's wording of those decisions, named in
+the change log (0.5.0), is the owner's to confirm at approval.
 
 - **SPEC-I-1 Silence is never permission.** Where this document is silent or admits two
   readings on something a piece of work depends on, that work stops, the owner is asked,
@@ -115,8 +117,19 @@ table in §6, and what Castr commits to is the capabilities in §7.
   Capability granularity is the directed pair; no construct inside an advertised pair is
   withdrawn from it.
 - **SPEC-PR-7 The source's stated meaning governs.** Castr does not infer intent. A shape
-  that no value can satisfy is carried faithfully and reported as a diagnostic naming its
-  location; it is never repaired inside a conversion.
+  that no value can satisfy is carried faithfully and reported as a diagnostic that names
+  its location, the constraints that conflict and why no value satisfies them; it is never
+  repaired inside a conversion. The owner, 2 November 2026: "Confirm, and the logging must
+  be explicit and informative".
+- **SPEC-PR-8 Reports are explicit and informative.**
+
+  > Where appropriate make sure that logging is explicit and informative, and make sure
+  > that we respect "strict, everywhere, all the time"
+
+  (Owner, 2 November 2026.) Where Castr reports something, in its run report, a warning or
+  a diagnostic, the entry names the construct it concerns, that construct's location in the
+  source, what Castr did, and why; a located rejection meets the same standard (§3). The
+  strictness the owner names is SPEC-F-2.
 
 ## 5. Profile
 
@@ -132,7 +145,10 @@ where a profile decision below declares a different reading.
   produced value). All four are meanings.
   - _Reading._ An object that does not state its policy is read as **closed**. This applies
     to every document Castr reads, whoever wrote it. A Zod `z.object()` with no catchall
-    states **stripped** and is read as stripped.
+    states **stripped** and is read as stripped. The closed reading is a Castr profile
+    decision, not fidelity to the source: JSON Schema and OpenAPI read an object that
+    states no policy as open, so this reading narrows the source's accepted set. SPEC-G-4
+    proves it (the owner's decision card of 2 November 2026).
   - _Writing._ Every expression Castr writes states the policy explicitly. Closure is
     written with the keyword that expresses it in the target dialect: across composition
     and references that is `unevaluatedProperties`, and a dialect that cannot close across
@@ -162,7 +178,8 @@ where a profile decision below declares a different reading.
   > Always write to the latest widely used format, in this case OpenAPI 3.2.0.
 
   Each writer emits its format at the version named in §6. A construct that version cannot
-  express is a located rejection.
+  express is a located rejection. On 2 November 2026 the owner moved the OpenAPI version to
+  3.2.1, the latest release on that date (§6).
 
 - **SPEC-P-5 Value domain.** (Reading confirmed by the owner, 21 September 2026.)
 
@@ -174,11 +191,23 @@ where a profile decision below declares a different reading.
   describes a host-language object with no serialised form (a JavaScript `Date`, `bigint`,
   `Map`, `Set`, `symbol`, `undefined`) receives a located rejection.
 
+- **SPEC-P-6 A source `default` is an annotation.**
+
+  > Annotation only, but with clear warning logging to support resolution in the consuming
+  > app
+
+  (Owner, 2 November 2026.) A JSON Schema or OpenAPI `default` is meaning (§3): the model
+  carries it, writers express it as an annotation wherever the target can, and it inserts
+  nothing into a produced value. Every such `default` is reported in the run's report as a
+  warning that names its location, its value and the property it would fill, so the
+  consuming application can resolve it. A Zod `.default` inserts, and is carried with its
+  two sides (SPEC-P-2).
+
 ## 6. Formats and versions
 
 | Format           | Read                            | Written               |
 | ---------------- | ------------------------------- | --------------------- |
-| OpenAPI          | 3.0.x, 3.1.x, 3.2.x             | 3.2.0                 |
+| OpenAPI          | 3.0.x, 3.1.x, 3.2.x             | 3.2.1                 |
 | JSON Schema      | Draft 2020-12 and Draft-07      | both, by request      |
 | Zod              | 4, at 4.5 or later (`>=4.5 <5`) | 4, the latest release |
 | TypeScript types | not read                        | yes                   |
@@ -192,6 +221,9 @@ consumers, I am happy to state the Zod input must be >= 4.5 and that Zod output 
 latest", and "latest here means latest 4, with a tripwire to examine Zod 5 if and when it
 is released".
 
+The OpenAPI row names 3.2.1, the latest release on 2 November 2026, by the owner's decision
+card of that date.
+
 ## 7. Capabilities
 
 Each capability names its corpus. A directed pair is advertised only after its
@@ -202,9 +234,11 @@ scope-and-fidelity table is written into this document and its corpus passes §8
 > We want OpenAPI -> Zod + TS in order to be able to replace existing libraries in OCE with
 > Castr, the Zod + TS -> MCP is already handled in OCE and it can stay that way for now.
 
-Corpus: the Oak API specification, pinned: v1 first, and v0. The owner, 25 September 2026:
-"Castr needs to be able to process both Oak API specs, although the V1 spec is the higher
-priority and there is wiggle room on supporting the V0 spec if needed."
+Corpus: the Oak API specification, both documents, each at its latest published version and
+pinned: v1 first, and v0. The owner, 25 September 2026: "Castr needs to be able to process
+both Oak API specs, although the V1 spec is the higher priority and there is wiggle room on
+supporting the V0 spec if needed." The owner, 2 November 2026: "Require both, and require
+that latest version of both".
 
 Castr produces, from a document given as a file or as a document value:
 
@@ -223,7 +257,12 @@ or treats `default` as a status, and an exact code takes precedence over a range
 Accepted when:
 
 1. in Castr's own checks, generation from the corpus, compilation and execution of the
-   output, and the proof of SPEC-G-4 all pass;
+   output, and the proof of SPEC-G-4 all pass on both documents, each pinned at the version
+   its source publishes when acceptance is claimed; and a check made by Castr, reading the
+   source document independently of Castr's parser, confirms that every boundary the output
+   describes matches the source: its address, method and identity, its parameter locations
+   and serialisation, its request media types, and its response status keys and media
+   types (owner, 2 November 2026, by decision card);
 2. in the consuming workspaces, `openapi-zod-client`, the `openapi-zod-client-adapter`
    package and `openapi-typescript` are removed, no string or regular-expression rewriting
    of Castr's output remains, and their build, type-check and tests pass. The consuming
@@ -282,19 +321,25 @@ the owner names them.
   a capability's corpus and every sampled value, these decisions are identical: an
   independent reference validator run against the source document in the source's own
   dialect (type coercion, default insertion and property removal disabled; `format`
-  asserting per SPEC-P-3); the generated Zod validator; and the same reference validator
-  run against any JSON Schema Castr generated. Those decisions prove the accepted side.
+  asserting per SPEC-P-3; each object whose unknown-key policy the source leaves unstated
+  read as closed per SPEC-P-1, the closing made by a transformation independent of Castr's
+  parser); the generated Zod validator; and the same reference
+  validator run against any JSON Schema Castr generated. Those decisions prove the accepted
+  side.
   The produced side is proved for every sampled value the generated Zod validator accepts:
   the value it returns equals the input with each default the source inserts added and, for
   a stripped object, each unknown key removed. A Zod `.default` inserts; a JSON Schema or
-  OpenAPI `default` is an annotation (§5) and inserts nothing. The generated TypeScript
-  type for a side and `z.input` or `z.output` of the generated Zod validator for that side
-  are mutually assignable, checked by the compiler under `strict` in both directions.
+  OpenAPI `default` is an annotation (SPEC-P-6) and inserts nothing. The generated
+  TypeScript type for a side and `z.input` or `z.output` of the generated Zod validator for
+  that side are mutually assignable, checked by the compiler under `strict` in both
+  directions. A disagreement is reported naming the shape, the sampled value and the
+  decisions that differed (SPEC-PR-8).
 - **SPEC-G-5 The sample is adequate.** Samples are derived from the source document. For
   every constraint a shape states, the sample holds a value that the shape decides
   differently with and without it, plus the boundary values of every bounded constraint.
   Deleting any single constraint from generated output flips at least one decision; the
-  check reports constraints caught over constraints present and fails below all of them.
+  check reports constraints caught over constraints present, names each constraint not
+  caught with its location, and fails below all of them.
   The one exception is a constraint that the check shows, from the source itself, changes
   nothing when deleted: by naming the constraint that implies it (such as `minimum: 0` in
   one `allOf` branch and `minimum: 1` in another), or by showing that the shape stays
@@ -334,6 +379,11 @@ the owner names them.
   > breakable system that decreases fidelity and stability instead of creating a permanent
   > foundation for it.
 
+  The owner, 2 November 2026:
+
+  > All Castr work happens via AST not via string manipulation. Where string manipulation
+  > is unavoidable, ask _why_
+
   Source code is read through syntax trees and the type checker: every recognition is
   made from a resolved symbol or type, never from a node's text. Generated code is built
   as syntax-tree nodes and printed by the compiler's printer; data formats are built as
@@ -341,6 +391,13 @@ the owner names them.
   no model value holds rendered output. A string whose grammar a specification defines
   (JSON Pointer, URI reference, path template, media type, status range, `format` value)
   is parsed once at the boundary by a parser for that grammar, and the result is data.
+  String manipulation is reading characters to find meaning (prefix checks, splitting,
+  searching, regular expressions) or building output by joining text; a grammar parser's
+  own tokenising, and comparing a whole value with a typed constant, are not. Castr's code,
+  tooling and tests do no string manipulation. Where it seems unavoidable, the work stops
+  and asks the owner why it is needed (SPEC-I-1); an exception exists only as an
+  owner-approved entry in this document, and a check bans string methods everywhere else
+  (the owner's decision card of 2 November 2026). No exception is approved at this version.
 
 - **SPEC-AR-4 Seams follow the concepts.**
 
@@ -375,9 +432,10 @@ the owner names them.
 ## 10. Home
 
 Castr moves into the Engraph Open Curriculum Ecosystem repository as a set of workspaces,
-early in the course. No Castr workspace depends on a package of that repository outside
-Castr, so Castr stays extractable and publishable. This document travels with it as the
-only description of the destination.
+early in the course, and is fully integrated there. The owner, 2 November 2026, striking
+the extractability condition this section carried: "Strike the condition, Castr will move
+into OCE and be fully integrated". This document travels with it as the only description
+of the destination.
 
 ## 11. Not part of Castr for now
 
@@ -452,61 +510,14 @@ Verified against Zod 4.5.4 on 21 September 2026 by executing each construct.
 | `.meta`, `.describe`                                                                           | no                                            | yes                         | yes                                    | accepted; annotations are meaning                                 |
 | `z.strictObject`, `z.looseObject`, `.catchall`, `z.object`                                     | no                                            | yes                         | `z.object` strips                      | accepted (SPEC-P-1)                                               |
 
-## Ratification checklist
-
-These clauses came from review, not from the owner's own words, and are the owner's to
-confirm, change or strike at ratification.
-
-From the six reviews of 21 September 2026: SPEC-PR-3, SPEC-PR-4, SPEC-PR-7, the reporting
-rule and the closure-keyword rule in SPEC-P-1, the three-part test in SPEC-P-2 and
-Appendix A's "rejected (`NOT-YET-BUILT`)" rows, SPEC-G-4, SPEC-G-5, SPEC-G-6, SPEC-G-7,
-the cure-only merge rule in SPEC-G-1, SPEC-AR-5, the content of the C-1 artefact list and
-status-key rule, the extractability condition in §10, and SPEC-CC-3. The review record
-names SPEC-G-4 to SPEC-G-7 as the reviewers' cure; whether the owner confirmed SPEC-G-4
-and SPEC-G-6 by decision card on 21 September is not recorded, so both are listed.
-
-From the review of pull request #110 on 23 September 2026, folded into draft 0.4.0: the
-reference-resolving function admitted in SPEC-P-2 and the third part of its test; the
-2020-12 scope of the vocabulary sentence in SPEC-P-3; the removal of the Zod call from
-SPEC-P-5; the media type in the C-1 Zod address; the produced-side proof in SPEC-G-4,
-including its reading that a JSON Schema or OpenAPI `default` inserts nothing; the
-exception rule in SPEC-G-5; the scope of SPEC-CC-1; the approved-text definition in
-SPEC-CC-2; the no-record rule in SPEC-CC-3; the calls made by kind and the SPEC-N-3
-requirement in SPEC-AR-6; and Appendix A's `.default`, `.prefault` and `z.lazy` rows.
-
-Two decisions from the same review are the owner's before ratification, each stated so it
-can be decided on its own:
-
-- **The reading of a source `default`.** SPEC-G-4 reads a JSON Schema or OpenAPI
-  `default` as an annotation that inserts nothing into the produced value (§5). The
-  consumer's present generator, `openapi-zod-client` as the Engraph Open Curriculum
-  Ecosystem configures it, emits `.default()` for a schema `default`, and each pinned Oak
-  API document has 18 `default` keywords; confirming this reading changes what the
-  consumer's parsed values contain once SPEC-C-1 replaces that generator.
-- **A boundary check in C-1's acceptance, proposed and not in the text.** The review
-  proposed that C-1's first acceptance part also require a check, made by Castr and read
-  from the source document independently of Castr's parser, that every boundary the
-  output describes (address, method, identity, parameter locations and serialisation,
-  request media types, response status keys and media types) matches the source. The
-  owner adds it or declines it.
-
-From the review of 25 September 2026, folded into draft 0.4.1, each chosen by the owner from
-a stated option rather than in the owner's own words: the pin wording in the Corpus
-definition (SHA-256, and a source commit where the source has one; a served document records
-its URL and fetch time), and the sentence in SPEC-C-1's second acceptance part that checks it
-with the consuming workspaces on the latest Zod 4 release. One further decision from that day
-is the owner's before ratification: whether C-1's first acceptance part requires generation
-from v0 to pass. The corpus names both documents and the owner's words leave wiggle room on
-v0, while the acceptance text as written requires the whole corpus. Today the two documents
-differ in no construct; v0 is frozen, and Oak says new endpoints and fields land in v1 only.
-
 ## Change log
 
-| Version | Date       | Change                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Approval |
-| ------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| 0.1.0   | 2026-09-21 | First draft from the owner's statements of 21 September 2026.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | none     |
-| 0.2.0   | 2026-09-21 | Owner decisions of the same day and six reviews folded in: sides, source-anchored proof, scope-and-fidelity tables, rejection kinds, versions, home, change control.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | pending  |
-| 0.3.0   | 2026-09-21 | Owner decisions by card: mantagen is a human collaborator; approval is spoken locally and recorded by the agent with the content hash (SPEC-N-6 retired, answered by SPEC-CC-2); zero open dependency alerts on `main` to merge; SPEC-P-5 reading confirmed; OpenAPI 2.0 is not read.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | pending  |
-| 0.3.1   | 2026-09-23 | SPEC-CC-4 retired. It read "No agent merges a change to this document" and was the drafting agent's invention, never an owner decision (owner, 23 September 2026: "you invented the need for me to merge, it was never real"). Approval is the spoken word recorded under SPEC-CC-2; merging is mechanics. SPEC-CC-3 clarified to say so.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | pending  |
-| 0.4.0   | 2026-09-23 | The review of pull request #110 folded in; every changed clause is on the ratification checklist. SPEC-P-2 admits the function Zod calls to resolve a reference (`z.lazy`, a getter in an object shape) and names default insertion and unknown-key stripping as the only accepted-to-produced differences; SPEC-AR-6 makes those calls, and the call that reads a default's value, by construct kind, and requires the SPEC-N-3 technique to tell a function-form default from a value; the SPEC-P-3 vocabulary sentence is scoped to 2020-12; the wrong Zod call is removed from SPEC-P-5 (bare `z.iso.datetime()` rejects offsets that `date-time` permits); the C-1 Zod address carries the media type; the SPEC-G-4 produced side is defined, reading a JSON Schema or OpenAPI `default` as an annotation that inserts nothing; SPEC-G-5 excuses a constraint only where the source shows its deletion changes nothing; SPEC-CC-1 binds from the first ratification, SPEC-CC-2 defines the hashed text and SPEC-CC-3 its no-record state; SPEC-G-4 and SPEC-G-6 are added to the checklist, with two decisions the review raised for the owner: the reading of a source `default`, and a proposed C-1 boundary check. | pending  |
-| 0.4.1   | 2026-09-25 | Owner decisions of 25 September 2026. The Zod row of the Formats and versions table restates the ruling of 31 August 2026 quoted under the table (read at 4.5 or later within Zod 4, written as the latest Zod 4 release); the owner chose to restate it here rather than leave it as a ruling outside this document. The Corpus definition pins by SHA-256, and by source commit where the source has one, and a served document records its URL and fetch time. SPEC-C-1 names both Oak API documents, v1 first, in the owner's words, and checks its second acceptance part with the consuming workspaces on the latest Zod 4 release. The pin wording and the Zod 4 sentence were chosen by the owner from stated options and are on the ratification checklist, with a third decision for the owner: whether C-1's acceptance requires generation from v0 to pass. The checklist's `default` count is re-measured on the pinned documents: 18.                                                                                                                                                                                                                                                                        | pending  |
+| Version | Date       | Change                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Approval |
+| ------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| 0.1.0   | 2026-09-21 | First draft from the owner's statements of 21 September 2026.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | none     |
+| 0.2.0   | 2026-09-21 | Owner decisions of the same day and six reviews folded in: sides, source-anchored proof, scope-and-fidelity tables, rejection kinds, versions, home, change control.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | pending  |
+| 0.3.0   | 2026-09-21 | Owner decisions by card: mantagen is a human collaborator; approval is spoken locally and recorded by the agent with the content hash (SPEC-N-6 retired, answered by SPEC-CC-2); zero open dependency alerts on `main` to merge; SPEC-P-5 reading confirmed; OpenAPI 2.0 is not read.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | pending  |
+| 0.3.1   | 2026-09-23 | SPEC-CC-4 retired. It read "No agent merges a change to this document" and was the drafting agent's invention, never an owner decision (owner, 23 September 2026: "you invented the need for me to merge, it was never real"). Approval is the spoken word recorded under SPEC-CC-2; merging is mechanics. SPEC-CC-3 clarified to say so.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | pending  |
+| 0.4.0   | 2026-09-23 | The review of pull request #110 folded in; every changed clause is on the ratification checklist. SPEC-P-2 admits the function Zod calls to resolve a reference (`z.lazy`, a getter in an object shape) and names default insertion and unknown-key stripping as the only accepted-to-produced differences; SPEC-AR-6 makes those calls, and the call that reads a default's value, by construct kind, and requires the SPEC-N-3 technique to tell a function-form default from a value; the SPEC-P-3 vocabulary sentence is scoped to 2020-12; the wrong Zod call is removed from SPEC-P-5 (bare `z.iso.datetime()` rejects offsets that `date-time` permits); the C-1 Zod address carries the media type; the SPEC-G-4 produced side is defined, reading a JSON Schema or OpenAPI `default` as an annotation that inserts nothing; SPEC-G-5 excuses a constraint only where the source shows its deletion changes nothing; SPEC-CC-1 binds from the first ratification, SPEC-CC-2 defines the hashed text and SPEC-CC-3 its no-record state; SPEC-G-4 and SPEC-G-6 are added to the checklist, with two decisions the review raised for the owner: the reading of a source `default`, and a proposed C-1 boundary check.                                                                                                                                                                                 | pending  |
+| 0.4.1   | 2026-09-25 | Owner decisions of 25 September 2026. The Zod row of the Formats and versions table restates the ruling of 31 August 2026 quoted under the table (read at 4.5 or later within Zod 4, written as the latest Zod 4 release); the owner chose to restate it here rather than leave it as a ruling outside this document. The Corpus definition pins by SHA-256, and by source commit where the source has one, and a served document records its URL and fetch time. SPEC-C-1 names both Oak API documents, v1 first, in the owner's words, and checks its second acceptance part with the consuming workspaces on the latest Zod 4 release. The pin wording and the Zod 4 sentence were chosen by the owner from stated options and are on the ratification checklist, with a third decision for the owner: whether C-1's acceptance requires generation from v0 to pass. The checklist's `default` count is re-measured on the pinned documents: 18.                                                                                                                                                                                                                                                                                                                                                                                                                                                        | pending  |
+| 0.5.0   | 2026-11-02 | Owner decisions of 2 November 2026 by decision card: 30 cards, 28 on checklist clauses and two on mismatches raised by the Engraph Open Curriculum Ecosystem; cards 17 to 20 settled by the owner's word "In each case take the default", cards 21 to 30 on one card that listed each clause with its recommended answer; one further card on how SPEC-AR-3's "ask why" binds. Confirmed as written: every other checklist clause. Changed: SPEC-PR-7's diagnostic; new SPEC-P-6 (a source `default` is an annotation, with a warning for each); SPEC-P-1 labels the closed reading a profile decision and SPEC-G-4 applies it; SPEC-G-4 and SPEC-G-5 name what they report; SPEC-C-1 adds a boundary check and requires both Oak documents at their latest versions; OpenAPI is written at 3.2.1; the extractability condition in §10 is struck. Added from the owner's words of the same day: SPEC-PR-8 and the SPEC-AR-3 ruling with its exception rule. The checklist section is removed. Wording the drafting agent wrote, which is the owner's to confirm at approval: SPEC-P-6's body, SPEC-PR-8's body, SPEC-AR-3's definition and exception sentences, SPEC-P-1's two new sentences, SPEC-PR-7's named contents, the reporting sentences in SPEC-G-4 and SPEC-G-5, SPEC-G-4's closing transformation, SPEC-C-1's version and boundary-check wording, and "the latest release on 2 November 2026". | pending  |

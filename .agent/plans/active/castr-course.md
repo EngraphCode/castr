@@ -3,7 +3,7 @@ title: Castr course — from the present code to the specification
 status: active
 lane: active
 created: 2026-09-21
-last_updated: 2026-09-23
+last_updated: 2026-11-02
 destination: docs/SPECIFICATION.md
 owner_directive: >-
   Owner, 2026-09-21: "Before we go further we stop, and we define a destination,
@@ -13,10 +13,18 @@ owner_directive: >-
 todos:
   - id: ALERTS
     content: Dependency alerts on main reach zero through dependency-update pull requests that land without analysis; until then nothing else merges (SPEC-G-1)
-    status: done
+    status: pending
     depends_on: []
+  - id: PROBE
+    content: "A read-only lint probe: OCE's lint configuration, with its type-aware rules, runs over Castr's product code without changing it, and the table of rule, hits and area is saved under .agent/analysis-and-reports/; it is the first step of the owner's question of 1 November 2026, 'run your analysis on the code as-is', and an input to MEASURE"
+    status: pending
+    depends_on: []
+  - id: CURRENCY
+    content: "Dependencies at latest within the holds the toolchain forces: TypeScript 6 (ts-morph 28 vendors it; typescript-eslint's peer range ends below 6.1), @types/node 24 (engines.node 24.x, ADR-049), vitest 4 and tsup 8 (OCE's majors, which the code meets at MOVE), and the Scalar packages, which the C-1 OpenAPI reader replaces; one proof-gated commit per type-affecting cycle; done when only the holds are outdated, pnpm audit reports zero and the gates are green"
+    status: pending
+    depends_on: [ALERTS]
   - id: RATIFY
-    content: The owner ratifies the specification locally (SPEC-CC-2), walked one decision card per checklist clause; the ratified file lands on main
+    content: The owner ratifies the specification locally (SPEC-CC-2); the checklist was walked by decision card on 2 November 2026, and draft 0.5.0 awaits the owner's approval in their own words; the ratified file lands on main
     status: pending
     depends_on: [ALERTS]
   - id: MEASURE
@@ -24,7 +32,7 @@ todos:
     status: pending
     depends_on: [RATIFY]
   - id: MOVE
-    content: Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces, under a boundary rule that no Castr workspace depends on a package outside Castr; what travels (the code with its history, or the specification with fresh workspaces) is decided from the MEASURE table; the specification travels as the only description of the destination; this repository is archived
+    content: Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces and is fully integrated there (owner, 2 November 2026); what travels (the code with its history, or the specification with fresh workspaces) is decided from the MEASURE table; code that travels first meets OCE's lint rules, chosen from the PROBE table; the specification travels as the only description of the destination; this repository is archived
     status: pending
     depends_on: [MEASURE]
   - id: PLOT
@@ -59,12 +67,15 @@ workspaces. Where Castr ends up is unchanged; only the order is.
 
 ## RATIFY: how the specification is ratified
 
-The specification is draft 0.4.0. The owner chose to walk its ratification checklist one
-decision card per clause: each card states the clause in plain language with its reason
-and its cost, and records confirm, change or strike. When the checklist is empty, the
-owner (or mantagen, a human collaborator) approves the version in their own words in a
-working session, and the agent records those words, the date and the SHA-256 of the text
-in the change log (SPEC-CC-2).
+The owner walked the ratification checklist on 2 November 2026, one decision card per
+clause, each stating the clause in plain language with its reason and its cost; cards 17
+to 20 were settled by the owner's word "In each case take the default", and cards 21 to
+30 together on one card that listed each clause with its recommended answer. Two profile
+mismatches raised by the Engraph Open Curriculum Ecosystem were decided on cards the same
+day. Draft 0.5.0 carries every decision, and its change log names what changed. What
+remains is approval: the owner (or mantagen, a human collaborator) approves the version in
+their own words in a working session, and the agent records those words, the date and the
+SHA-256 of the text in the change log (SPEC-CC-2).
 
 Settled by the owner on 21 September 2026 and already in the draft: the value-domain
 reading (SPEC-P-5); OpenAPI 2.0 is not read; zero open dependency alerts on `main` to
@@ -72,12 +83,16 @@ merge (SPEC-G-1); the approval mechanism. Approval is the spoken word recorded u
 SPEC-CC-2; merging the specification's pull request is mechanics that an agent performs
 (owner, 23 September 2026).
 
-## ALERTS: done
+## ALERTS
 
 `main` had seven open dependency alerts on 21 September 2026. Pull request #111 cured all
-seven with capped security floors (`SHA:fc94488f`); `main` has had zero open alerts since.
-Pull request #109, the identity-chain cure, merged after it (`SHA:8b0aa438`) at the end of
-its second review round. Nothing more goes into the present writer code: a review finding
+seven with capped security floors (`SHA:fc94488f`). New advisories reopened the leg: on
+2 November 2026 `main` had 30 open alerts (3 critical, 8 high, 15 medium, 4 low). The owner
+confirmed SPEC-G-1's cure-only rule that day, so until they are cured only alert-cure pull
+requests merge. Pull request #109, the identity-chain cure, merged after #111
+(`SHA:8b0aa438`) at the end of its second review round. The owner's ruling on #109 was
+"land it frozen". From it the agent drew a working rule, which is the agent's wording and
+not the owner's: nothing more goes into the present writer code, and a review finding
 against the present model is cured only when it blocks a landing, otherwise dropped with
 the reason stated. Agents merge green-and-clean pull requests; the owner granted that on
 21 September 2026, and the permission rule lives in the agent's local settings, outside
@@ -150,8 +165,10 @@ before the ruling, is pull request #109.
 - **MEASURE:** a table of construct by outcome (`exact`, `wrong output`, `rejects`,
   `absent`, `vacuous proof`), every cell backed by a command and its output, and a
   stated verdict: evolve the present model, or rebuild it.
-- **MOVE:** Castr's gates pass inside the new repository, the boundary rule is enforced
-  by that repository's own checks, and this repository is archived.
+- **MOVE:** Castr's gates pass inside the new repository and this repository is archived.
+- **PROBE:** the table is saved and every row is backed by the command that produced it.
+- **CURRENCY:** only the named holds are outdated, `pnpm audit` reports zero and the gates
+  are green.
 - **PLOT:** this file's todos name every leg to SPEC-C-1 with an observable exit state.
 - **Plan complete:** SPEC-C-1 and SPEC-C-2 are advertised and SPEC-G-2 holds.
 

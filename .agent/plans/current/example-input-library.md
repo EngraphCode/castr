@@ -337,7 +337,7 @@ template omits them.
 - **Swagger 2.0 documents.** The specification does not read OpenAPI 2.0.
 - **Zod input documents.** The owner's words name schemas and the openapi-ts fixtures,
   which are OpenAPI and JSON Schema documents. Zod is a read format, but the technique by
-  which it is read is SPEC-N-3, an open item on the ratification checklist; a Zod input
+  which it is read is SPEC-N-3, an open item of the specification; a Zod input
   set is planned when that decision lands. TypeScript is not read.
 - **Pinning or reverting `lib/examples/openapi`.** The set already serves the tests that
   read it; it gains its attribution in EC-0 with its modifications marked, its fetcher is
