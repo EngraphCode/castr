@@ -39,7 +39,8 @@ overrides:
   # to prevent. Raise the cap together with the deliberate TS-major bump.
   typescript: '^6.0.3'
   # Security floors for vulnerable transitives (pnpm audit; first batch
-  # 2026-07-03, refreshed to audit-zero 2026-08-26). Every floor is CAPPED to
+  # 2026-07-03, refreshed to audit-zero 2026-08-26, raised and extended for
+  # the 30 Dependabot alerts of 2026-11-02). Every floor is CAPPED to
   # the consumer's declared supported major (caret / explicit union, never an
   # open-ended >=) so a future currency pass cannot silently force a major the
   # consumer does not support once it clears the release-age window. Remove
@@ -48,31 +49,54 @@ overrides:
   #   "^1.19.9 || ^2.0.5"; only 1.x < 1.19.15 was vulnerable), body-parser
   #   (express declares ^2.2.1), ip-address (express-rate-limit declares
   #   ^10.2.0) — all via @modelcontextprotocol/sdk (GHSA-8j4g-w8fx-2239,
-  #   GHSA-frvp-7c67-39w9, GHSA-v422-hmwv-36x6, GHSA-mwp4-54f8-5fhr families)
+  #   GHSA-frvp-7c67-39w9, GHSA-v422-hmwv-36x6, GHSA-mwp4-54f8-5fhr families;
+  #   2026-11-02: hono GHSA-5r4p-p66f-jhc7, body-parser GHSA-27r3-jxmh-p828,
+  #   ip-address GHSA-rxp7-6hxx-x8q5 and GHSA-2vr4-cq9g-pvrc)
+  # - proxy-addr via express in the same chain (GHSA-jqcg-44mw-7w3h);
+  #   express declares ^2.0.7
   # - esbuild via tsup/vite (GHSA-g7r4-m6w7-qqqr low; tsup still declares
   #   ^0.27.0 as of 2026-08-26; 0.28 proven green here since 2026-07-03)
-  # - fast-uri via ajv (commitlint + ajv-draft-04 chains; GHSA-7p8r-x3mc-p8w7);
-  #   ajv declares ^3.0.1
+  # - fast-uri via ajv (commitlint + ajv-draft-04 chains; GHSA-7p8r-x3mc-p8w7;
+  #   2026-11-02: GHSA-58mr-gqgx-xq4g, GHSA-333x-w4r6-6crp, GHSA-xhq7-xmqj-769h,
+  #   GHSA-w74x-v6f9-j3xg, GHSA-wjr9-j795-jxcr); ajv declares ^3.0.1
   # - brace-expansion via minimatch in the eslint chain (GHSA-rgw5-rvv9-x895;
   #   consumers already resolve 5.x)
   # - nanoid + postcss via madge's detective chain (GHSA-2v37-7h3g-55p8,
-  #   GHSA-fxqj-rqcc-2cmp); consumers declare ^3 / ^8
+  #   GHSA-fxqj-rqcc-2cmp); consumers declare ^3 / ^8; postcss raised to
+  #   ^8.5.30 on 2026-11-02, the floor vite 8.3 declares
   # - qs via express + body-parser in the @modelcontextprotocol/sdk chain
-  #   (GHSA-4mjr-xmp4-gh2g, GHSA-x5fp-wj9c-mxmx); consumers declare ^6
+  #   (GHSA-4mjr-xmp4-gh2g, GHSA-x5fp-wj9c-mxmx; 2026-11-02:
+  #   GHSA-6pq8-jhm2-2vcw); body-parser 2.4.0 declares ^6.16.1, so the floor
+  #   never sits below the consumer's own
   # - js-yaml 4.x via cosmiconfig in the commitlint chain
-  #   (GHSA-2883-xcg3-v3hh); scoped to the 4.x line because
-  #   markdownlint-cli2 resolves 5.x, which is not affected
+  #   (GHSA-2883-xcg3-v3hh); scoped to the 4.x line
+  # - js-yaml 5.x, markdown-it via markdownlint-cli2 0.23.2, which pins
+  #   js-yaml 5.2.2 (GHSA-r3ph-w7gj-g6xm) and markdown-it 14.3.0
+  #   (GHSA-r7fv-28h4-cvq7, GHSA-gfr2-rv44-r23c, GHSA-vfgh-jcmw-g37q,
+  #   GHSA-253c-mchw-3w2r) exactly; floors rather than the 0.24 line, which
+  #   brings a new markdownlint whose rules could re-lint the
+  #   change-controlled specification (docs/SPECIFICATION.md, SPEC-CC-1)
+  # - vite via vitest, which declares ^6 || ^7 || ^8; capped to the resolved
+  #   8.x (GHSA-587h-7wmj-h5pm, GHSA-9jrq-w75r-8gcw, GHSA-698v-4r3x-3vcv,
+  #   GHSA-r825-w8mm-5pxw, GHSA-rq7h-c2jc-7f22)
+  # - source-map-js via @vue/compiler-* in madge's detective chain
+  #   (GHSA-68fv-2mgg-jv7q); consumers declare ^1
   # - smol-toml via markdownlint-cli2 (GHSA-7w5x-hrqm-74c2); consumers
   #   declare 1.x
-  hono: '^4.13.5'
-  qs: '^6.16.0'
+  hono: '^4.13.11'
+  qs: '^6.16.1'
   'js-yaml@4': '^4.3.2'
   smol-toml: '^1.7.1'
   '@hono/node-server': '^1.19.15 || ^2.0.5'
-  body-parser: '^2.3.0'
-  ip-address: '^10.3.1'
+  body-parser: '^2.4.0'
+  ip-address: '^10.7.4'
+  proxy-addr: '^2.0.8'
   esbuild: '^0.28.1'
-  fast-uri: '^3.1.5'
+  fast-uri: '^3.1.9'
   brace-expansion: '^5.0.9'
   nanoid: '^3.3.18'
-  postcss: '^8.5.23'
+  postcss: '^8.5.30'
+  'js-yaml@5': '^5.4.1'
+  markdown-it: '^14.3.3'
+  vite: '^8.1.6'
+  source-map-js: '^1.2.2'
