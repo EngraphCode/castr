@@ -33,6 +33,28 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   count characters, not bytes, so the SPEC-CC-3 check encodes the decoded prefix. The
   adversarial Cricket (ON-TRACK) caught that PROBE before MEASURE needed the same
   justification I used to move CURRENCY after it.
+- **OWNER APPROVAL of 0.5.1 (2 November 2026, this session, verbatim): "I approve 0.5.1".**
+  Typed as the free answer on the card that showed the amended SPEC-CC-3 in full. Recorded
+  per SPEC-CC-2 at `SHA:1a7631ac` (SHA-256 `f3c24703…83d305`, re-verified from the commit),
+  together with the check's rule that a change log without a record always fails.
+- **Owner decisions by card, later on 2 November (verbatim answers):** SPEC-CC-3 reading
+  "Historical (Recommended)"; minimatch "Patch import-x (Recommended)"; RULES reading "Yes, as
+  read (Recommended)".
+- **Surprise: curing Dependabot's list can raise new Dependabot alerts.** #117 cured all 30;
+  the lockfile change made Dependabot raise six advisories that `pnpm audit` had already
+  reported and Dependabot had never raised. Two reviewers (config-expert, a side agent)
+  predicted it. Before declaring an alert cure complete, also drive `pnpm audit` to zero, or
+  expect the cure-only gate to close again after merge.
+- **Surprise: a forced major can break a consumer at module load, not at call time.**
+  minimatch 11 removed `makeRe`; eslint-plugin-import-x imports it by name, so its ESM build
+  fails to link even though Castr never enables the rule that calls it. A full `check:ci`
+  trial (a two-way door) found it in ten minutes where code reading had predicted "harmless".
+  The patch now carries upstream's own pending fix (un-ts/eslint-plugin-import-x#570), which
+  a reviewer showed my first patch did not match.
+- **Mistake caught by review: my first SPEC-CC-3 check let a record with no words pass, and
+  13 of 16 test mutations survived.** test-reviewer's mutation run, not reading, found it.
+  For a validator, ask a test reviewer for mutations, not opinions.
+
 - **SPEC-CC-3 has no check yet.** The ratified text requires one ("A required check fails
   when this document's content does not match its latest approved record"); it lands with
   the ratification, test-first. Consequence to remember: an amendment's text is committed

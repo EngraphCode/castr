@@ -7,9 +7,9 @@ successor on any platform: everything that matters is here or in the files this 
 names, never only in an agent's private memory. Verify each line against the live
 repository before acting.
 
-- **Destination:** [the specification](../../../../docs/SPECIFICATION.md), version 0.5.0,
-  status `ratified` since 2 November 2026 (`SHA:0e2ca07a` on `feat/prepare-for-migration`,
-  not yet on `main`). It is the only description of Castr's destination. The owner: "this work has drifted and drifted and now I think we need a
+- **Destination:** [the specification](../../../../docs/SPECIFICATION.md), version 0.5.1,
+  status `ratified` since 2 November 2026 (0.5.0 at `SHA:0e2ca07a`, 0.5.1 at
+  `SHA:1a7631ac`, both on `feat/prepare-for-migration`, not yet on `main`). It is the only description of Castr's destination. The owner: "this work has drifted and drifted and now I think we need a
   destination that can only change with process and agreement"; "approval happens locally,
   only I or mantagen can approve". Mantagen is a human collaborator. Approval is spoken
   locally in a working session and the agent records the words, the date and the content
@@ -32,10 +32,18 @@ repository before acting.
   words, the date and the SHA-256 of the bytes above the change-log heading
   (`f7dc6661…52edb2`, re-verified from the commit). Rows 0.2.0 to 0.4.1 read "none".
   From ratification the whole document changes only by approved amendment (SPEC-CC-1).
-  The SPEC-CC-3 check does not exist yet; it is written test-first on the same branch and
-  lands with the ratified file. The branch is the one the owner named for this work on
+  The owner then approved 0.5.1 the same day, verbatim "I approve 0.5.1": SPEC-CC-3's
+  latest approved record is the latest ever approved, so a change log without a record
+  always fails. The SPEC-CC-3 check is written (`SHA:5d264896`, with the shared helpers at
+  `SHA:592a4cdc`) and enforces that reading (`SHA:1a7631ac`); it lands with the ratified
+  file. The branch is the one the owner named for this work on
   1 November ("We are on a new branch"); it merges after the alert cure, because only alert
   cures merge while `main` has open dependency alerts (SPEC-G-1).
+- **Alerts, 2 November 2026:** #117 cured the 30 (`SHA:31f49532`); Dependabot then raised
+  six advisories `pnpm audit` had reported. #118 cures them, forcing minimatch 11, glob 14
+  and KaTeX 0.19 and patching eslint-plugin-import-x with upstream's pending fix, by the
+  owner's card "Patch import-x". Merge #118, confirm zero alerts, then merge `main` into the
+  branch (regenerate `pnpm-lock.yaml`) and open its pull request.
 - **Next owner interaction:** the reflection on MEASURE's table, which decides what travels
   into OCE. Until then the work needs no owner decision: the alert cure, the SPEC-CC-3 check,
   the branch's pull request, PROBE and MEASURE run in that order (the course, and the plan
@@ -71,9 +79,9 @@ repository before acting.
   CURRENCY: "After MEASURE, scoped (Recommended)" — after MEASURE, scoped to the code that
   travels, none on archived code, `agent-tools` outside it either way. Lint rules: "At
   move the OCE rules will apply, the point of applying them early is to fix issues in
-  isolation before moving" — the agent's reading, to be confirmed at the reflection, is a
-  RULES leg after CURRENCY and before MOVE on the code that travels, which restores the
-  owner's 1 November order "dependencies, then rules". These replace the agent's earlier
+  isolation before moving" — read as a RULES leg after CURRENCY and before MOVE on the
+  code that travels, restoring the owner's 1 November order "dependencies, then rules"; the
+  owner confirmed that reading by card the same day ("Yes, as read"). These replace the agent's earlier
   departure (rules applied at MOVE), which the owner had never approved. vitest 4 and tsup
   8 stay held at OCE's majors.
 - **Evidence:** [the specification review record](../../../research/castr-specification-review-2026-09-21.md)

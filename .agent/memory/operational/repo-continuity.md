@@ -87,19 +87,15 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-1. **The alert cure.** One dependency-update pull request from `main`, within current
-   majors, that brings the 30 open alerts to zero and lands without analysis (SPEC-G-1).
-   Until it merges, nothing else merges.
-2. **The SPEC-CC-3 check.** After the cure merges, `main` is merged into
-   `feat/prepare-for-migration` and the check is written test-first in
-   `agent-tools/src/validators/specification-approval/`, wired into `repo-validators:check`.
-3. **The pull request for `feat/prepare-for-migration`** (ratified 0.5.0, ADR-026, the
-   course, the Sonar analysis, the records, the check) opens and merges once the alerts are
-   at zero. RATIFY is complete at that merge.
-4. **PROBE** runs read-only while remote CI runs; **MEASURE** follows RATIFY and decides
-   nothing; then the owner's reflection decides what travels, and CURRENCY, RULES, MOVE and
-   PLOT follow in the course's order. The [thread record](threads/castr-correction.next-session.md)
-   carries each leg's state.
+1. **#118, the second alert cure,** merges when green and clean; then confirm zero open
+   alerts on `main`. Until then only alert cures merge (SPEC-G-1).
+2. **The pull request for `feat/prepare-for-migration`** (ratified 0.5.1, the SPEC-CC-3
+   check, ADR-026, the course, the Sonar and PROBE reports, the records): merge `main` into
+   the branch first and regenerate `pnpm-lock.yaml` (both sides change it), then open it.
+   RATIFY is complete at that merge.
+3. **MEASURE** follows RATIFY and decides nothing; then the owner's reflection decides what
+   travels, and CURRENCY, RULES, MOVE and PLOT follow in the course's order. The
+   [thread record](threads/castr-correction.next-session.md) carries each leg's state.
 
 ## Deep consolidation status
 
