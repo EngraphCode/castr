@@ -62,7 +62,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@modelcontextprotocol/sdk": "^1.32.0",
     "@scalar/json-magic": "0.13.3",
     "@scalar/openapi-parser": "0.29.0",
     "@scalar/openapi-validator": "0.1.0",
@@ -90,7 +90,7 @@
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^24.13.3",
     "@typescript-eslint/parser": "^8.68.0",
-    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/coverage-v8": "^4.1.12",
     "ajv-draft-04": "^1.0.0",
     "degit": "^3.8.0",
     "dependency-cruiser": "^18.2.0",
@@ -109,7 +109,7 @@
     "type-fest": "^5.8.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.68.0",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.12"
   },
   "files": [
     "src",
