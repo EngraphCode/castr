@@ -12,8 +12,8 @@ owner_directive: >-
   excellence in engineering and software design and architecture."
 todos:
   - id: ALERTS
-    content: Dependency alerts on main reach zero through dependency-update pull requests that land without analysis; until then nothing else merges (SPEC-G-1)
-    status: pending
+    content: 'Dependency alerts on main reach zero through dependency-update pull requests that land without analysis; until then nothing else merges (SPEC-G-1). Done on 2 November 2026: #117 (SHA:31f49532) cured 30, #118 (SHA:acd9d2b0) the six raised after it; main had zero open alerts at 15:00Z and pnpm audit reported none. A new alert reopens the leg'
+    status: completed
     depends_on: []
   - id: PROBE
     content: "A read-only lint probe: OCE's lint configuration, with its type-aware rules, runs over Castr's product code without changing it, and the table of rule, hits and area is saved under .agent/analysis-and-reports/; it is the first step of the owner's question of 1 November 2026, 'run your analysis on the code as-is', an input to the reflection after MEASURE, and RULES's starting point; run on 2 November 2026, its table is .agent/analysis-and-reports/oce-lint-probe-2026-11-02.md"
