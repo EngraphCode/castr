@@ -32,7 +32,7 @@ These patterns are equally fragile because they:
 
 **No string/regex heuristics shall be used to derive schema semantics from TypeScript source code when an AST exists** (January 2026).
 
-**All Castr work happens via AST, not via string manipulation** (the amendment of 2 November 2026, below). A string whose grammar a specification defines (a `$ref`, a JSON Pointer, a URI reference, a media type, a status range, a path template, a `format` value) is read only by a parser for that grammar, tested against that grammar's specification, and the work is done on the parsed data, as [SPEC-AR-3](../SPECIFICATION.md) states.
+**Castr's compiler and decompiler work via AST, not via string manipulation** (the amendment of 2 November 2026, below; logging is outside it). A string whose grammar a specification defines (a `$ref`, a JSON Pointer, a URI reference, a media type, a status range, a path template, a `format` value) is read only by a parser for that grammar, tested against that grammar's specification, and the work is done on the parsed data, as [SPEC-AR-3](../SPECIFICATION.md) states.
 
 Banned patterns include, but are not limited to:
 
@@ -72,8 +72,11 @@ lint check bans string methods everywhere else."
 
 **String manipulation** is reading characters to find meaning (prefix checks, splitting,
 searching, regular expressions) or building output by joining text. A grammar parser's own
-tokenising, and comparing a whole value with a typed constant, are not string
-manipulation. No exception is approved: the specification lists none.
+tokenising, and comparing a whole value with a typed constant, are not string manipulation.
+The rule binds the compiler and decompiler (every parser and reader, the model, every
+writer and generator) and their associated state and systems; the owner, 2 November 2026:
+"No strings refers to the compiler/decompiler/ and associated state and systems, not to the
+logger, loggers use strings". No exception is approved: the specification lists none.
 
 ## Enforcement
 
@@ -127,14 +130,15 @@ This is enforced by an ESLint selector exemption for `getText()` calls on nodes 
 
 ### Enforcement Principle
 
-**String manipulation is banned in all Castr code, tooling and tests, and TS-source heuristics in all `src/` files. The only exceptions are owner-approved entries in the specification, and there are none.**
+**String manipulation is banned in the compiler, the decompiler and their associated state and systems, and TS-source heuristics in all `src/` files. Logging is outside the rule. The only exceptions are owner-approved entries in the specification, and there are none.**
 
-| Scope    | Files                                       | Policy                                                               |
-| -------- | ------------------------------------------- | -------------------------------------------------------------------- |
-| Banned   | All Castr code, tooling and tests           | String manipulation; `getText()` identity, regex and text comparison |
-| Allowed  | Parsers for a named grammar                 | Tokenising that grammar, tested against its specification            |
-| Allowed  | Everywhere                                  | Comparing a whole value with a typed constant                        |
-| Excepted | Owner-approved entries in the specification | None                                                                 |
+| Scope    | Files                                                               | Policy                                                               |
+| -------- | ------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Banned   | The compiler, the decompiler and their associated state and systems | String manipulation; `getText()` identity, regex and text comparison |
+| Allowed  | Parsers for a named grammar                                         | Tokenising that grammar, tested against its specification            |
+| Allowed  | Everywhere                                                          | Comparing a whole value with a typed constant                        |
+| Excepted | Owner-approved entries in the specification                         | None                                                                 |
+| Outside  | Logging                                                             | Loggers use strings (owner, 2 November 2026)                         |
 
 ## Consequences
 
