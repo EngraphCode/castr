@@ -87,13 +87,12 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-1. **#118, the second alert cure,** merges when green and clean; then confirm zero open
-   alerts on `main`. Until then only alert cures merge (SPEC-G-1).
-2. **The pull request for `feat/prepare-for-migration`** (ratified 0.5.1, the SPEC-CC-3
-   check, ADR-026, the course, the Sonar and PROBE reports, the records): merge `main` into
-   the branch first and regenerate `pnpm-lock.yaml` (both sides change it), then open it.
-   RATIFY is complete at that merge.
-3. **MEASURE** follows RATIFY and decides nothing; then the owner's reflection decides what
+1. **The pull request for `feat/prepare-for-migration`** (ratified 0.5.1, the SPEC-CC-3
+   check, ADR-026, the course, the Sonar and PROBE reports, the records) opens and merges
+   when green and clean. `main` has had zero open alerts since #118 (2 November 2026,
+   15:00Z), so it merges with analysis like any pull request; a new alert brings back the
+   cure-only rule (SPEC-G-1). RATIFY is complete at that merge.
+2. **MEASURE** follows RATIFY and decides nothing; then the owner's reflection decides what
    travels, and CURRENCY, RULES, MOVE and PLOT follow in the course's order. The
    [thread record](threads/castr-correction.next-session.md) carries each leg's state.
 
