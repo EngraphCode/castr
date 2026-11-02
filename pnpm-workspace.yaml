@@ -60,9 +60,6 @@ overrides:
   # - fast-uri via ajv (commitlint + ajv-draft-04 chains; GHSA-7p8r-x3mc-p8w7;
   #   2026-11-02: GHSA-58mr-gqgx-xq4g, GHSA-333x-w4r6-6crp, GHSA-xhq7-xmqj-769h,
   #   GHSA-w74x-v6f9-j3xg, GHSA-wjr9-j795-jxcr); ajv declares ^3.0.1
-  # - brace-expansion via minimatch in the eslint chain (GHSA-rgw5-rvv9-x895;
-  #   2026-11-02: GHSA-q2hr-2g5m-vwhr, GHSA-qhr7-859c-m2p7,
-  #   GHSA-6j4f-fj2g-mc7p); consumers declare ^5
   # - nanoid + postcss via madge's detective chain (GHSA-2v37-7h3g-55p8,
   #   GHSA-fxqj-rqcc-2cmp); consumers declare ^3 / ^8; postcss raised to
   #   ^8.5.30 on 2026-11-02, the floor vite 8.3 declares; nanoid scoped to
@@ -98,7 +95,6 @@ overrides:
   proxy-addr: '^2.0.8'
   esbuild: '^0.28.1'
   fast-uri: '^3.1.9'
-  brace-expansion: '^5.0.12'
   'nanoid@3': '^3.3.18'
   postcss: '^8.5.30'
   'js-yaml@5': '^5.4.1'
@@ -109,21 +105,28 @@ overrides:
   # only floors above their consumers' declared majors: minimatch has no
   # patched 10.x, so while it stays below 11.0.1 main carries an open alert
   # and nothing but alert cures can merge (docs/SPECIFICATION.md, SPEC-G-1).
-  # Each was proved by the full check:ci gate. Remove each floor, and the
-  # patch, once every consumer declares the patched major.
+  # A check:ci trial with these floors on 2026-11-02 failed only on
+  # eslint-plugin-import-x's makeRe import, which the patch below cures.
+  # Remove each floor, and the patch, once every consumer declares the
+  # patched major.
   # - minimatch 11 (GHSA-g3hv-75wg-m249). eslint, @eslint/config-array,
-  #   typescript-eslint, eslint-plugin-import-x and @ts-morph/common declare
-  #   ^10 (import-x ^9 || ^10). minimatch 11 removed makeRe, which
-  #   eslint-plugin-import-x imports by name, so it is patched
-  #   (patches/eslint-plugin-import-x@4.17.1.patch) to match with
-  #   Minimatch#match in its no-internal-modules rule; upstream issue
-  #   un-ts/eslint-plugin-import-x#569.
+  #   @typescript-eslint/typescript-estree, eslint-plugin-sonarjs,
+  #   eslint-plugin-import-x and @ts-morph/common declare ^10 (import-x
+  #   ^9 || ^10). minimatch 11 removed makeRe, which eslint-plugin-import-x
+  #   imports by name, so it is patched
+  #   (patches/eslint-plugin-import-x@4.17.1.patch) with the change in
+  #   upstream pull request un-ts/eslint-plugin-import-x#570, whose
+  #   toMatcher helpers keep makeRe's matching in no-internal-modules
+  #   (upstream issue #569). minimatch 11 declares brace-expansion ^5.0.12,
+  #   which clears GHSA-rgw5-rvv9-x895, GHSA-q2hr-2g5m-vwhr,
+  #   GHSA-qhr7-859c-m2p7 and GHSA-6j4f-fj2g-mc7p, so brace-expansion needs
+  #   no floor of its own.
   # - glob 14, because glob 13 calls minimatch 10 internals that 11 removed;
   #   it also clears GHSA-3g3m-2fjr-6pw4. rimraf declares ^13.
   # - katex 0.19 (GHSA-238p-pmpm-9mq7). micromark-extension-math declares
   #   ^0.16; KaTeX deprecated 0.18.x ("Accidentally published with breaking
-  #   changes. Use 0.19.0 instead"). markdownlint imports only the math
-  #   syntax extension, which never calls KaTeX.
+  #   changes. Use 0.19.0 instead"). markdownlint uses only the math syntax
+  #   extension; KaTeX loads through the package entry but is never called.
   minimatch: '^11.0.1'
   glob: '^14.0.2'
   katex: '^0.19.0'
