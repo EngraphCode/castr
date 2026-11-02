@@ -24,7 +24,7 @@ todos:
     status: pending
     depends_on: [MEASURE]
   - id: RATIFY
-    content: "The owner approved draft 0.5.0 in this repository's working session on 2 November 2026 ('I approve draft 0.5.0 , if we need to review and change it later that is fine.'), recorded per SPEC-CC-2 with its SHA-256 at SHA:0e2ca07a; the ratified file lands on main together with the SPEC-CC-3 check, which does not yet exist"
+    content: "The owner approved draft 0.5.0 in this repository's working session on 2 November 2026 ('I approve draft 0.5.0 , if we need to review and change it later that is fine.'), recorded per SPEC-CC-2 with its SHA-256 at SHA:0e2ca07a; the owner then approved 0.5.1 ('I approve 0.5.1'), which reads SPEC-CC-3's latest approved record as the latest ever approved, recorded at SHA:1a7631ac; the SPEC-CC-3 check is written (SHA:5d264896) and enforces that reading; all of it lands on main through the branch's pull request"
     status: pending
     depends_on: [ALERTS]
   - id: MEASURE
@@ -32,7 +32,7 @@ todos:
     status: pending
     depends_on: [RATIFY]
   - id: RULES
-    content: "Only if code travels: OCE's lint rules are adopted in this repository for the code that travels, starting from the PROBE table, and that code is fixed until they pass with no suppression (SPEC-G-3), before MOVE; the owner's decision card, 2 November 2026: 'At move the OCE rules will apply, the point of applying them early is to fix issues in isolation before moving'"
+    content: "Only if code travels: OCE's lint rules are adopted in this repository for the code that travels, starting from the PROBE table, and that code is fixed until they pass with no suppression (SPEC-G-3), before MOVE; the owner's decision card, 2 November 2026: 'At move the OCE rules will apply, the point of applying them early is to fix issues in isolation before moving', and the owner confirmed by card the same day that this reading (after the reflection and CURRENCY, travelling code only, before MOVE) is right"
     status: pending
     depends_on: [CURRENCY, PROBE]
   - id: MOVE
@@ -76,9 +76,9 @@ owner. CURRENCY follows MEASURE and is scoped by what travels ("After MEASURE, s
 no pass on code that is archived, and `agent-tools` is outside it either way. OCE's lint
 rules are applied here, before the move, to the code that travels: "At move the OCE rules
 will apply, the point of applying them early is to fix issues in isolation before moving".
-The agent reads this as a RULES leg after CURRENCY and before MOVE, which restores the
-owner's 1 November order, "dependencies, then rules"; the reflection confirms that reading
-before any RULES work starts. The order is therefore ALERTS, RATIFY, MEASURE, the
+The agent read this as a RULES leg after CURRENCY and before MOVE, which restores the
+owner's 1 November order, "dependencies, then rules"; the owner confirmed that reading by
+card the same day ("Yes, as read"). The order is therefore ALERTS, RATIFY, MEASURE, the
 reflection, CURRENCY, RULES, MOVE, PLOT, with PROBE (read-only) at any time before the
 reflection.
 
@@ -111,7 +111,13 @@ SPEC-CC-2; merging the specification's pull request is mechanics that an agent p
 seven with capped security floors (`SHA:fc94488f`). New advisories reopened the leg: on
 2 November 2026 `main` had 30 open alerts (3 critical, 8 high, 15 medium, 4 low). The owner
 confirmed SPEC-G-1's cure-only rule that day, so until they are cured only alert-cure pull
-requests merge. Pull request #109, the identity-chain cure, merged after #111
+requests merge. Pull request #117 cured all 30 the same day (`SHA:31f49532`). Its lockfile
+change made Dependabot raise six advisories that `pnpm audit` had already reported; five
+cure within declared ranges, and minimatch is fixed only in 11, which breaks
+eslint-plugin-import-x. By the owner's decision card ("Patch import-x"), pull request #118
+forces minimatch 11, glob 14 and KaTeX 0.19 and patches import-x with the change in
+upstream pull request un-ts/eslint-plugin-import-x#570; each forced floor and the patch go
+once their consumers declare the patched major. Pull request #109, the identity-chain cure, merged after #111
 (`SHA:8b0aa438`) at the end of its second review round. The owner's ruling on #109 was
 "land it frozen". From it the agent drew a working rule, which is the agent's wording and
 not the owner's: nothing more goes into the present writer code, and a review finding
