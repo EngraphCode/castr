@@ -16,7 +16,7 @@ todos:
     status: pending
     depends_on: []
   - id: PROBE
-    content: "A read-only lint probe: OCE's lint configuration, with its type-aware rules, runs over Castr's product code without changing it, and the table of rule, hits and area is saved under .agent/analysis-and-reports/; it is the first step of the owner's question of 1 November 2026, 'run your analysis on the code as-is', an input to the reflection after MEASURE, and RULES's starting point"
+    content: "A read-only lint probe: OCE's lint configuration, with its type-aware rules, runs over Castr's product code without changing it, and the table of rule, hits and area is saved under .agent/analysis-and-reports/; it is the first step of the owner's question of 1 November 2026, 'run your analysis on the code as-is', an input to the reflection after MEASURE, and RULES's starting point; run on 2 November 2026, its table is .agent/analysis-and-reports/oce-lint-probe-2026-11-02.md"
     status: pending
     depends_on: []
   - id: CURRENCY
@@ -36,7 +36,7 @@ todos:
     status: pending
     depends_on: [CURRENCY, PROBE]
   - id: MOVE
-    content: Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces and is fully integrated there (owner, 2 November 2026); what travels (the code with its history, or the specification with fresh workspaces) is decided at the reflection on the MEASURE table; the specification travels as the only description of the destination, and its SPEC-CC-3 check is given a home in OCE; this repository is archived
+    content: Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces and is fully integrated there (owner, 2 November 2026); what travels (the code with its history, or the specification with fresh workspaces) is decided at the reflection on the MEASURE table; the specification travels as the only description of the destination, and its SPEC-CC-3 check is given a home in OCE; the approval record covers the specification's exact bytes, so if its arrival in OCE changes any byte above its change log (OCE's formatter or markdownlint), the move carries a format-only amendment approved in words (SPEC-CC-1); this repository is archived
     status: pending
     depends_on: [RULES]
   - id: PLOT
