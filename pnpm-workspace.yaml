@@ -62,21 +62,20 @@ overrides:
   # - brace-expansion via minimatch in the eslint chain (GHSA-rgw5-rvv9-x895;
   #   consumers already resolve 5.x)
   # - nanoid + postcss via madge's detective chain (GHSA-2v37-7h3g-55p8,
-  #   GHSA-fxqj-rqcc-2cmp); consumers declare ^3 / ^8
+  #   GHSA-fxqj-rqcc-2cmp); consumers declare ^3 / ^8; postcss raised to
+  #   ^8.5.30 on 2026-11-02, the floor vite 8.3 declares
   # - qs via express + body-parser in the @modelcontextprotocol/sdk chain
-  #   (GHSA-4mjr-xmp4-gh2g, GHSA-x5fp-wj9c-mxmx); consumers declare ^6
+  #   (GHSA-4mjr-xmp4-gh2g, GHSA-x5fp-wj9c-mxmx; 2026-11-02:
+  #   GHSA-6pq8-jhm2-2vcw); body-parser 2.4.0 declares ^6.16.1, so the floor
+  #   never sits below the consumer's own
   # - js-yaml 4.x via cosmiconfig in the commitlint chain
   #   (GHSA-2883-xcg3-v3hh); scoped to the 4.x line
   # - js-yaml 5.x, markdown-it via markdownlint-cli2 0.23.2, which pins
   #   js-yaml 5.2.2 (GHSA-r3ph-w7gj-g6xm) and markdown-it 14.3.0
   #   (GHSA-r7fv-28h4-cvq7, GHSA-gfr2-rv44-r23c, GHSA-vfgh-jcmw-g37q,
   #   GHSA-253c-mchw-3w2r) exactly; floors rather than the 0.24 line, which
-  #   brings a new markdownlint whose rules could re-lint the ratified
-  #   specification (docs/SPECIFICATION.md, SPEC-CC-1)
-  # - handlebars via @boundaries/elements 3.1.1 under eslint-plugin-boundaries
-  #   7.2.0, which pins 4.7.9 (GHSA-p8wg-vrv2-v86f, GHSA-8r5x-fm3f-whwj,
-  #   GHSA-xw65-4hp5-5hc7); eslint-plugin-boundaries 7.4.1 pins the patched
-  #   4.7.10 but was inside the release-age window on 2026-11-02
+  #   brings a new markdownlint whose rules could re-lint the
+  #   change-controlled specification (docs/SPECIFICATION.md, SPEC-CC-1)
   # - vite via vitest, which declares ^6 || ^7 || ^8; capped to the resolved
   #   8.x (GHSA-587h-7wmj-h5pm, GHSA-9jrq-w75r-8gcw, GHSA-698v-4r3x-3vcv,
   #   GHSA-r825-w8mm-5pxw, GHSA-rq7h-c2jc-7f22)
@@ -85,7 +84,7 @@ overrides:
   # - smol-toml via markdownlint-cli2 (GHSA-7w5x-hrqm-74c2); consumers
   #   declare 1.x
   hono: '^4.13.11'
-  qs: '^6.16.0'
+  qs: '^6.16.1'
   'js-yaml@4': '^4.3.2'
   smol-toml: '^1.7.1'
   '@hono/node-server': '^1.19.15 || ^2.0.5'
@@ -96,9 +95,8 @@ overrides:
   fast-uri: '^3.1.9'
   brace-expansion: '^5.0.9'
   nanoid: '^3.3.18'
-  postcss: '^8.5.23'
+  postcss: '^8.5.30'
   'js-yaml@5': '^5.4.1'
   markdown-it: '^14.3.3'
-  handlebars: '^4.7.10'
   vite: '^8.1.6'
   source-map-js: '^1.2.2'
