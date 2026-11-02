@@ -111,8 +111,9 @@ SPEC-CC-2; merging the specification's pull request is mechanics that an agent p
 seven with capped security floors (`SHA:fc94488f`). New advisories reopened the leg: on
 2 November 2026 `main` had 30 open alerts (3 critical, 8 high, 15 medium, 4 low). The owner
 confirmed SPEC-G-1's cure-only rule that day, so until they are cured only alert-cure pull
-requests merge. Pull request #117 cured all 30 the same day (`SHA:31f49532`). Its lockfile
-change made Dependabot raise six advisories that `pnpm audit` had already reported; five
+requests merge. Pull request #117 cured all 30 the same day (`SHA:31f49532`). After its
+lockfile change, Dependabot raised six advisories that `pnpm audit` had already reported
+(the cause is inferred from the timing, not observed); five
 cure within declared ranges, and minimatch is fixed only in 11, which breaks
 eslint-plugin-import-x. By the owner's decision card ("Patch import-x"), pull request #118
 forces minimatch 11, glob 14 and KaTeX 0.19 and patches import-x with the change in
