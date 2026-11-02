@@ -5,9 +5,11 @@
  * The specification's change control (docs/SPECIFICATION.md §13) defines what this checks.
  * SPEC-CC-2: the approved text is the file's bytes above the `## Change log` heading, and the
  * approval is recorded as a change-log row holding the approver's words, the date and the
- * SHA-256 of that text. SPEC-CC-3: "A required check fails when this document's content does
- * not match its latest approved record. While no approved record exists, it fails if the
- * status is `ratified`."
+ * SHA-256 of that text. SPEC-CC-3 (version 0.5.1): "A required check fails when this
+ * document's content does not match its latest approved record. The latest approved record is
+ * the latest ever approved, not the latest left in the file, so from the first ratification
+ * (version 0.5.0) the check also fails when the change log holds no approval record". The
+ * first ratification has happened, so a change log without a record always fails.
  *
  * The document is read as Markdown, never scanned as text: the frontmatter, the heading and
  * the table are syntax-tree nodes, so a heading-like line inside a code fence or a pipe inside
@@ -39,6 +41,8 @@ const NO_APPROVAL = 'none';
 /** SPEC-CC-2: "Approval is given locally by Jim Cresswell or mantagen". */
 const APPROVERS = ['Jim Cresswell', 'mantagen'] as const;
 const RATIFIED = 'ratified';
+/** SPEC-CC-3 (0.5.1): from this version on, the change log always holds an approval record. */
+const FIRST_RATIFIED_VERSION = '0.5.0';
 const BYTE_ORDER_MARK = 0xfeff;
 
 const REMEDY =
@@ -287,23 +291,18 @@ function readDocument(text: string): Read<ReadDocument> {
 function judge(document: ReadDocument): ValidatorOutcome {
   const latest = document.records.at(-1);
   if (latest === undefined) {
-    return document.status === RATIFIED
-      ? {
-          exitCode: 1,
-          stdout: [],
-          stderr: [
-            `${SPECIFICATION_FILE}: the status is "${RATIFIED}" but the change log holds no approval ` +
-              'record (SPEC-CC-3). Only the approver can approve a version, in their own words in a ' +
-              'working session, and an agent never writes an approval it was not given (SPEC-CC-2).',
-          ],
-        }
-      : {
-          exitCode: 0,
-          stdout: [
-            `${SPECIFICATION_FILE}: version ${document.version}, status "${document.status}", no approval record yet.`,
-          ],
-          stderr: [],
-        };
+    return {
+      exitCode: 1,
+      stdout: [],
+      stderr: [
+        `${SPECIFICATION_FILE}: version ${document.version}, status "${document.status}", but the ` +
+          'change log holds no approval record. Since the first ratification (version ' +
+          `${FIRST_RATIFIED_VERSION}) the latest approved record is the latest ever approved, so ` +
+          'an approval row may never be removed (SPEC-CC-3). Only the approver can approve a ' +
+          'version, in their own words in a working session, and an agent never writes an ' +
+          'approval it was not given (SPEC-CC-2).',
+      ],
+    };
   }
   const problems: string[] = [];
   if (latest.sha256 !== document.approvedTextSha256) {

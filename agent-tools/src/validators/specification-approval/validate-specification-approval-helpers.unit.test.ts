@@ -42,10 +42,13 @@ const check = (prefix: string, rows: readonly string[]) =>
 const report = (lines: readonly string[]): string => lines.join('\n');
 
 describe('checkSpecificationBytes: SPEC-CC-3 with no approval record', () => {
-  it('passes a draft that has no approval record', () => {
+  it('fails a draft that has no approval record, since the first ratification (0.5.0)', () => {
     const outcome = check(DRAFT_050, [unapproved('0.4.0')]);
-    expect(outcome.exitCode).toBe(0);
-    expect(report(outcome.stdout)).toContain('no approval record');
+    expect(outcome.exitCode).toBe(1);
+    const lines = report(outcome.stderr);
+    expect(lines).toContain('no approval record');
+    expect(lines).toContain('first ratification');
+    expect(lines).toContain('0.5.0');
   });
 
   it('fails a document marked ratified that has no approval record', () => {
