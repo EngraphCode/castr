@@ -51,6 +51,17 @@ landed on `main` on 18 November 2026 with #120 (`SHA:3ff0fd2e`), at version 0.5.
 owner approved that day ("I approve version 0.5.2"). RATIFY is complete. The pins of both
 Oak documents as served that day landed with #123 (`SHA:ca6ba049`).
 
+On 18 November 2026 the owner had the items left open by that day's work run through the
+same matrix. Three survived, all the owner's: what travels into OCE, which the reflection on
+the MEASURE table decides; whether this repository, which is public, gets a licence
+file (it has none; `package.json` declares MIT); and whether the user-home paths in three
+archived napkins stay. By card that day the owner chose to reflect now, to add the
+MIT text in the owner's own name, and to scrub the seven user-home paths from three archived
+napkins. The seat settled the rest; each
+disposition is in the napkin's entry for that pass. The
+[example-input library](../../plans/current/example-input-library.md) proceeds beside the
+reflection, from EC-0.
+
 ## Active threads
 
 | Thread                                                       | Role and next step                                                                                            | Latest identity                                                                                               |
@@ -88,19 +99,31 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-1. **The reflection on the MEASURE table** is the next owner interaction. MEASURE ran on
+1. **The reflection began on 18 November 2026 with the owner's ruling**, verbatim: "I don't
+   want to move the code until we have defined what working and working well looks like, what
+   correctness means, and explored if we can reach that state in isolation. Moving broken
+   code into another repo seems like it can only cause further problems". MOVE therefore
+   waits on that definition and that exploration; the course's order below predates it and
+   is rewritten when the reflection settles the legs.
+   **The reflection on the MEASURE table** continues from there. MEASURE ran on
    18 November 2026 and decides nothing: its table is
    [measure-2026-11-18.md](../../analysis-and-reports/measure-2026-11-18.md). Run the
    reflection with the owner as concept exploration over the table; it decides what travels.
    CURRENCY, RULES, MOVE and PLOT follow in the course's order. The
    [thread record](threads/castr-correction.next-session.md) carries each leg's state.
-2. **The picomatch alert stays open** (GHSA-fc5q-39xc-vjpf, high). SPEC-G-1 at 0.5.2 names
+2. **The example-input library starts at EC-0**, attribution and third-party notices
+   ([its plan](../../plans/current/example-input-library.md)). It gates nothing in the course
+   and nothing gates it. The owner asked for it on 25 September 2026 and reads one sentence
+   of the course in EC-0's pull request.
+3. **The picomatch alert stays open** (GHSA-fc5q-39xc-vjpf, high). SPEC-G-1 at 0.5.2 names
    it, so it does not hold merges while its advisory names no patched version; it is never
    dismissed. When the advisory names a patched version old enough to install, it holds
-   merges again and its cure, a floor in `pnpm-workspace.yaml`, goes first. Any other alert
+   merges again and its cure, a floor in `pnpm-workspace.yaml`, goes first. The clause names
+   it only while nothing a user of Castr supplies reaches the vulnerable code, so a change
+   that lets user input reach picomatch goes to the owner before it merges. Any other alert
    holds merges as before; one with no patched version needs the same trace (is the code
    used, can the function go, can it be done another way) and its own amendment.
-3. **The SPEC-CC-3 check compares approval records with `main`'s.** An approval record that
+4. **The SPEC-CC-3 check compares approval records with `main`'s.** An approval record that
    `origin/main` holds must still open the branch's records, in order and with the same
    approver, date, words and digest. The check reads `origin/main` from git, so a checkout
    that has not fetched it exits 2.

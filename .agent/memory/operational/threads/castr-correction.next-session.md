@@ -34,9 +34,25 @@ repository before acting.
   source. Media types, response headers, security on the endpoint, source defaults as
   annotations and the `paths` type are absent. The table gives no verdict; the reflection
   with the owner is next.
+- **OWNER RULING, 18 November 2026, at the start of the reflection, verbatim:** "I don't want
+  to move the code until we have defined what working and working well looks like, what
+  correctness means, and explored if we can reach that state in isolation. Moving broken
+  code into another repo seems like it can only cause further problems". MOVE does not
+  start until both are done. Every statement of the course's order further down this record
+  predates the ruling; the course plan carries the hold, and the legs before MOVE are
+  rewritten when the reflection settles them.
+- **The matrix pass of 18 November 2026.** The owner had the items left open by that day's
+  work run through OCE's decision matrix. Three survived, all the owner's: what travels (the
+  reflection), whether this public repository gets a licence file, and whether the
+  user-home paths in three archived napkins stay. By card the owner chose to reflect now,
+  to add the MIT text in the owner's own name and to scrub the paths. The seat settled the
+  rest, and the napkin's entry for the pass holds each disposition: MEASURE's defects are
+  not cured in the present code before the reflection, the eight `allOf` sites are only in
+  the consumer's cached copy, the branches and the stash are left, and the example-input
+  library starts at EC-0 beside the reflection.
 - **Destination:** [the specification](../../../../docs/SPECIFICATION.md), version 0.5.2,
   status `ratified` since 2 November 2026 (0.5.0 at `SHA:0e2ca07a`, 0.5.1 at
-  `SHA:1a7631ac`, both on `feat/prepare-for-migration`, not yet on `main`). It is the only description of Castr's destination. The owner: "this work has drifted and drifted and now I think we need a
+  `SHA:1a7631ac`, 0.5.2 at `SHA:8ef18e43`; all on `main` since #120, `SHA:3ff0fd2e`). It is the only description of Castr's destination. The owner: "this work has drifted and drifted and now I think we need a
   destination that can only change with process and agreement"; "approval happens locally,
   only I or mantagen can approve". Mantagen is a human collaborator. Approval is spoken
   locally in a working session and the agent records the words, the date and the content
@@ -153,8 +169,14 @@ repository before acting.
 - **Merging:** the owner granted agents `gh pr merge` for green-and-clean pull requests on
   21 September; the permission rule lives in the agent's local, unversioned settings on
   the host that was used, so a new host may need it again. Green and clean means every
-  check passing, no unresolved review thread, no new static-analysis issue, and zero open
-  dependency alerts on `main`.
+  check passing, no unresolved review thread, no new static-analysis issue, and no open
+  dependency alert on `main` that holds merges. Since 0.5.2 an alert that SPEC-G-1 names
+  does not hold them. Read that alert's patched-version field at every merge: it holds
+  merges again once its advisory names a patched version old enough to install, and no
+  pull request will announce that, because Dependabot security updates are off here. The
+  clause names the alert only while nothing a user of Castr supplies reaches the
+  vulnerable code, so read each change for a new call into a glob matcher with user input
+  too; one that adds such a call goes to the owner before it merges.
 - **Written off on 21 September 2026 by owner ruling:** every dirty worktree and orphaned
   branch, and pull requests #11–#13, #15–#18, #20, #21, #23, #26, #27 and #81 (closed; commits
   reachable at `refs/pull/<n>/head`). Nothing of theirs is evaluated or recovered. The plans
@@ -441,4 +463,4 @@ this discovery for the architectural repair; no implementation is claimed here.
 | Mussel mends Buoy      | claude-code | claude-opus-5-5  | 372325         | b69485ad-3a77-5c8a-b2c0-cc764d734103 | PR #110 round-1 cure and merge                 | 2026-09-23    | 2026-09-23   |
 | Smith stirs Ashes      | claude-code | claude-opus-5-5  | 7bd175         | 02ed168a-55c7-5450-8fdb-b7fd399d9c86 | Sonar analysis (sub-agent)                     | 2026-11-01    | 2026-11-01   |
 | Bilby hunts Dreamscape | claude-code | claude-opus-5-5  | d71882         | 767b6de5-9347-5fdb-bbdf-eeb98791ec13 | review, ratification walk, draft 0.5.0         | 2026-11-01    | 2026-11-02   |
-| Ingot binds Patina     | claude-code | claude-fable-5-2 | 194219         | 8fde4762-1621-5ce7-b563-2d0f4f647804 | alert cure #119, the branch's pull request     | 2026-11-18    | 2026-11-18   |
+| Ingot binds Patina     | claude-code | claude-fable-5-2 | 194219         | 8fde4762-1621-5ce7-b563-2d0f4f647804 | alert cure, RATIFY landing, MEASURE, 0.5.2     | 2026-11-18    | 2026-11-18   |
