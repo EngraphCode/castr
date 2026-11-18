@@ -57,7 +57,8 @@ the MEASURE table decides; whether this repository, which is public, gets a lice
 file (it has none; `package.json` declares MIT); and whether the user-home paths in three
 archived napkins stay. By card that day the owner chose to reflect now, to add the
 MIT text in the owner's own name, and to scrub the seven user-home paths from three archived
-napkins. The seat settled the rest; each
+napkins. The scrub landed with #125 (`SHA:f17e6e8f`) and the licence file, the MIT text
+alone by the owner's ruling, with #126 (`SHA:c3669e36`). The seat settled the rest; each
 disposition is in the napkin's entry for that pass. The
 [example-input library](../../plans/current/example-input-library.md) proceeds beside the
 reflection, from EC-0.

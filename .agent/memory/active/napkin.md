@@ -55,6 +55,19 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   reflection's first decision and it changes the course's order: MOVE waits on a definition
   of working, working well and correct, and on exploring whether Castr reaches that state
   here. The course's todos are rewritten when the reflection settles the legs, not before.
+- **OWNER RULING (18 November 2026, verbatim): "remove all reference to openapi-zod-client,
+  this codebase bears no resemblence to it, I doubt you could find a similarity".** The
+  licence file carries the MIT text alone (#126, `SHA:c3669e36`), and no attribution entry
+  for that project is added anywhere. The owner agreed that places where the name describes
+  the generator OCE uses today, which Castr is to replace, stay as they are.
+- **MISTAKE (mine): I wrote a third party's copyright into the owner's licence file on an
+  inference.** A shared version number and one survey line became "this project began from"
+  it, and two review bots agreeing made it feel settled. I compared no code. What works: a
+  claim of derivation needs a comparison of the code, and a statement about who holds
+  copyright in the owner's repository is the owner's before it is written, whatever a
+  reviewer says.
+- **Landed after the pass:** the records (#124, `SHA:f41c8d1a`), the archive scrub (#125,
+  `SHA:f17e6e8f`) and the licence file (#126).
 - **Owner decisions by card, 18 November 2026 (verbatim answers).** What travels: "Reflect
   now (Recommended)". Licence file: "My own name" (MIT text, its own one-file pull request).
   Archive paths: "Scrub the files now" (the seven occurrences replaced by a placeholder and
@@ -81,8 +94,7 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   for read-only reviewers cites root-relative paths, and the dispatch prompt names the roots.
 - **Two Crickets, one normal and one adversarial, read the verdicts before the report.**
   Taken: I had quoted "not as a decision matrix" and "branches and the stash were kept" as the
-  owner's when both are agents' wording; the licence question narrows to the copyright line,
-  because crediting openapi-zod-client is a licence duty and belongs in EC-0's notices;
+  owner's when both are agents' wording; the licence question narrows to the copyright line;
   leaving the archive paths is a risk only the owner accepts; the reasons for each dropped
   item go in the report. Not taken, with evidence: "0.5.2 may have no owner-approved
   carve-out" (the owner approved it that day, in words, and the validator checks the record).
