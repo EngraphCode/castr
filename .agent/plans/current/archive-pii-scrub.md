@@ -5,6 +5,12 @@ open/publish-gated framing). **Tool shape DECIDED (owner, same day): FULL TOOL**
 `--check` and `--write` land as slice 1, TDD, in the next implementation session (this plan is
 the controlling artefact; the 2026-07-03 consolidation session landed the plan and records).
 
+**Working-tree layer done by hand on 18 November 2026.** The repository is public. By the
+owner's card that day ("Scrub the files now") the seven user-home path occurrences in three
+archived napkins were replaced with the `<user>` placeholder and each file annotated; no
+tool was built for seven strings. Public history still holds the originals, so the history
+layer below is unchanged and remains the owner's.
+
 ## Context
 
 The `no-machine-local-paths` rule deliberately exempts `archive/` (frozen historical records),
