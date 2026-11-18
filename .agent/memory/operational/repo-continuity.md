@@ -47,15 +47,16 @@ nothing and a reflection with the owner decides what travels; CURRENCY and a new
 follow it, only for code that travels. The owner then approved 0.5.1 ("I approve 0.5.1",
 `SHA:1a7631ac`), which reads SPEC-CC-3's latest approved record as the latest ever approved.
 The ratified file, the SPEC-CC-3 check that enforces it, the PROBE table and the records
-sit on `feat/prepare-for-migration`, the branch the owner named on 1 November ("We are on a
-new branch"); its pull request lands them on `main`.
+landed on `main` on 18 November 2026 with #120 (`SHA:3ff0fd2e`), at version 0.5.2, which the
+owner approved that day ("I approve version 0.5.2"). RATIFY is complete. The pins of both
+Oak documents as served that day landed with #123 (`SHA:ca6ba049`).
 
 ## Active threads
 
-| Thread                                                       | Role and next step                                                                                                                                                                | Latest identity                                                                                          |
-| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| [Castr correction](threads/castr-correction.next-session.md) | The branch's pull request lands the ratified 0.5.1 and its SPEC-CC-3 check once the picomatch alert is cured or the owner rules on it; MEASURE needs no merge and runs meanwhile. | claude-code / claude-opus-5-5 / Bilby hunts Dreamscape / ratification walk and draft 0.5.0 / 2026-11-02  |
-| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                                                                                                    | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23 |
+| Thread                                                       | Role and next step                                                                                            | Latest identity                                                                                               |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| [Castr correction](threads/castr-correction.next-session.md) | The reflection with the owner on the MEASURE table decides what travels; then CURRENCY, RULES, MOVE and PLOT. | claude-code / claude-fable-5-2 / Ingot binds Patina / alert cure, RATIFY landing, MEASURE, 0.5.2 / 2026-11-18 |
+| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                                | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23      |
 
 ## Paused threads and historical records
 
@@ -87,26 +88,22 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-1. **The pull request for `feat/prepare-for-migration`** (ratified 0.5.1, the SPEC-CC-3
-   check, ADR-026, the course, the Sonar and PROBE reports, the records) opens and merges
-   when green and clean. The picomatch alert (GHSA-fc5q-39xc-vjpf, high) has no patched
-   release and cannot be removed: the test runner, the lint parser and the build depend
-   on picomatch, and a measured generation run made no call into it. On 18 November 2026
-   the owner chose by decision card to amend SPEC-G-1 and approved 0.5.2 ("I approve
-   version 0.5.2"): an open alert holds merges unless the clause names it, and it names
-   this one. The alert stays open and is never dismissed; when its advisory names a
-   patched version old enough to install, it holds merges again and its cure goes first.
-   RATIFY is complete at this merge.
-2. **The SPEC-CC-3 check compares approval records with `main`'s**, in the pull request
-   that follows the ratification one: an approval record that `origin/main` holds must
-   still be on the branch with the same version and digest, so deleting the newest row and
-   reverting the text fails, as 0.5.1's "latest ever approved" requires. The check reads
-   `origin/main` from git, so a checkout that has not fetched it exits 2.
-3. **MEASURE ran on 18 November 2026** and decides nothing: its table is
-   [measure-2026-11-18.md](../../analysis-and-reports/measure-2026-11-18.md). The next owner
-   interaction is the reflection on that table, run as concept exploration, which decides
-   what travels; CURRENCY, RULES, MOVE and PLOT follow in the course's order. The
+1. **The reflection on the MEASURE table** is the next owner interaction. MEASURE ran on
+   18 November 2026 and decides nothing: its table is
+   [measure-2026-11-18.md](../../analysis-and-reports/measure-2026-11-18.md). Run the
+   reflection with the owner as concept exploration over the table; it decides what travels.
+   CURRENCY, RULES, MOVE and PLOT follow in the course's order. The
    [thread record](threads/castr-correction.next-session.md) carries each leg's state.
+2. **The picomatch alert stays open** (GHSA-fc5q-39xc-vjpf, high). SPEC-G-1 at 0.5.2 names
+   it, so it does not hold merges while its advisory names no patched version; it is never
+   dismissed. When the advisory names a patched version old enough to install, it holds
+   merges again and its cure, a floor in `pnpm-workspace.yaml`, goes first. Any other alert
+   holds merges as before; one with no patched version needs the same trace (is the code
+   used, can the function go, can it be done another way) and its own amendment.
+3. **The SPEC-CC-3 check compares approval records with `main`'s.** An approval record that
+   `origin/main` holds must still open the branch's records, in order and with the same
+   approver, date, words and digest. The check reads `origin/main` from git, so a checkout
+   that has not fetched it exits 2.
 
 ## Deep consolidation status
 

@@ -2,6 +2,69 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-11-18 (alert cure, RATIFY landing, MEASURE, 0.5.2 — Ingot binds Patina / 194219, claude-code)
+
+- **OWNER APPROVAL (18 November 2026, this session, the whole message verbatim): "I approve
+  version 0.5.2".** Recorded per SPEC-CC-2 in `SHA:8ef18e43`; the approved text's SHA-256 is
+  `3317a18924b6bf2140d996063480cecfc164e774cc86e1d428420722516a599c`, checked with `shasum`
+  as well as by the validator. The decision came first, by card: "Amend SPEC-G-1
+  (Recommended)".
+- **Owner instruction for the session, verbatim:** "please plan and carry out the Castr only
+  work. When comparing to the Oak open curriculum spec, use the latest v1" (the served
+  `swagger.json`).
+- **MISTAKE (mine): I asked the owner a question before tracing the friction.** A Dependabot
+  alert on picomatch had no patched release, and I put four process options to the owner.
+  The owner's reply was the trace I had skipped: "it sounds like picomatch is not actually
+  used? Is that true, and if it is used is it useful, do we need that functionality, can we
+  simply no longer perform that function. If the function matters, can we do it a
+  different way?" My question also carried a claim I had not measured (that picomatch
+  reaches Castr "only through ts-morph"), a prediction with no evidence (that upstream
+  "suggests days") and an option the specification's own change control forbids (a one-off
+  ruling to merge). What works: for an instrument's verdict, measure what it is a reading
+  of first. Here that was the lockfile's routes to the package, a load-hook count of calls
+  during a real generation run with a control that does call it, and upstream's maintainer
+  activity.
+- **What the trace found.** The product loads picomatch and never calls it; every ts-morph
+  `Project` in `lib/src` is in-memory. It sits under vitest, vite, typescript-eslint, tsup,
+  knip, dependency-cruiser, madge, markdownlint-cli2 and eslint-plugin-boundaries, so it
+  cannot leave the lockfile. Castr's own direct uses are two call sites in `agent-tools`
+  (tinyglobby) and two test files in `lib` (fast-glob); Node 24's `fs.glob` vendors
+  minimatch and would replace them, but that closes no alert, so it was not done.
+- **An adversarial read before approval paid for itself.** Amended text can only be
+  committed with its approval, so its review has to happen before the owner approves. One
+  reviewer found the first draft circular (it exempted an alert once a pull request "merged
+  past it", which that pull request could never do) and unprovable (an agent showing a
+  negative in a pull request body). The approved shape is a list in the clause that only an
+  amendment extends.
+- **Reviewer findings, tested one by one.** Taken: the approval words must name the version;
+  every file-system refusal exits 2; the base branch's approval records must stay in order;
+  the whole record (approver, date, words) is compared, not only version and digest; the
+  `@hono/node-server` floor is 2.1.7, because upstream's 2.1.7 release note names an
+  advisory 2.1.6 leaves open. Not taken, with evidence: "the recorded 0.5.1 digest does not
+  match" (the validator and `static-checks` both passed on that head), and "the corpus must
+  not follow what Oak publishes" (the reviewer had read the draft on `main`; ratified
+  SPEC-C-1 says "each at its latest published version").
+- **SURPRISE: curing two alerts raised a third.** After #119's lockfile change Dependabot
+  raised the picomatch alert within minutes, though the advisory was a month old and
+  `pnpm audit` had already reported it. The same thing happened after #117 on 2 November.
+  Read `pnpm audit` before an alert-cure pull request, not only the open alerts.
+- **SURPRISE: the hook read a `gh` flag as a force-push.** A compound of `git push origin
+<branch>` followed by `gh api graphql -f query=…` was refused as "git push -f". Nothing
+  was force-pushed. Keep `git push` in a command of its own.
+- **SURPRISE: no document Castr holds has an `allOf`.** Neither the September pins nor the
+  documents served on 18 November contain one, so the eight unsatisfiable `allOf` sites in
+  the course plan's "Known on 21 September" are in no pinned document. Both served
+  documents also dropped the `200` response of `GET /lessons/{lesson}/assets/{type}`.
+- **What works: one stacked chain, merged in order.** `main` requires an up-to-date branch,
+  so each merge sends every other branch through a merge of `main` and the ten-minute
+  pre-push gate again. Merge the independent pull request first, then bring the next one
+  up to date once.
+- **MEASURE probe pitfalls worth keeping.** Closing an unstated-policy object needs
+  `unevaluatedProperties` when it wraps a `oneOf`; `additionalProperties: false` there makes
+  the reference validator reject everything, which first looked like sixteen disagreements.
+  And a probe that builds one value per schema never reaches the later `oneOf` branches:
+  `const` showed no samples until values were built per branch choice.
+
 ## 2026-11-02 (approval of 0.5.0 and the plan of the course — Bilby hunts Dreamscape / d71882, claude-code)
 
 - **OWNER APPROVAL (2 November 2026, this session, the whole message verbatim): "I approve
