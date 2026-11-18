@@ -95,9 +95,11 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    proposed on 17 and 18 November (micromatch/picomatch pull requests 261 to 270) and none
    is merged. The cure is a floor on the patched release once one is published. Whether
    anything merges before then is the owner's decision. RATIFY is complete at that merge.
-2. **The SPEC-CC-3 check's known gap**, in its own pull request next: compare the branch's
-   approval records with `main`'s, so that deleting the newest row and reverting the text
-   fails, as 0.5.1's "latest ever approved" requires (thread record).
+2. **The SPEC-CC-3 check compares approval records with `main`'s**, in the pull request
+   that follows the ratification one: an approval record that `origin/main` holds must
+   still be on the branch with the same version and digest, so deleting the newest row and
+   reverting the text fails, as 0.5.1's "latest ever approved" requires. The check reads
+   `origin/main` from git, so a checkout that has not fetched it exits 2.
 3. **MEASURE** follows RATIFY and decides nothing; then the owner's reflection decides what
    travels, and CURRENCY, RULES, MOVE and PLOT follow in the course's order. The
    [thread record](threads/castr-correction.next-session.md) carries each leg's state.

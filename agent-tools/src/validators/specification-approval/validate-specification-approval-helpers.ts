@@ -270,11 +270,14 @@ function readRecords(table: TableNode): Read<readonly ApprovalRecord[]> {
 const describeBlock = (node: RootNode | undefined): string =>
   node === undefined ? 'nothing' : `a ${node.type} at ${lineOf(node)}`;
 
-function readDocument(text: string): Read<ReadDocument> {
-  const tree = fromMarkdown(text, {
+const parseMarkdown = (text: string): MarkdownRoot =>
+  fromMarkdown(text, {
     extensions: [frontmatter(['yaml']), gfmTable()],
     mdastExtensions: [frontmatterFromMarkdown(['yaml']), gfmTableFromMarkdown()],
   });
+
+function readDocument(text: string): Read<ReadDocument> {
+  const tree = parseMarkdown(text);
   const front = readFrontmatter(tree.children[0]);
   if (!front.ok) {
     return front;
@@ -367,12 +370,90 @@ function judge(document: ReadDocument): ValidatorOutcome {
       };
 }
 
+function readSpecification(bytes: Uint8Array): Read<ReadDocument> {
+  const text = decode(bytes);
+  return text.ok ? readDocument(text.value) : text;
+}
+
 /** Check the specification's bytes against its change control (SPEC-CC-2, SPEC-CC-3). */
 export function checkSpecificationBytes(bytes: Uint8Array): ValidatorOutcome {
-  const text = decode(bytes);
-  if (!text.ok) {
-    return unreadable(text.error);
-  }
-  const document = readDocument(text.value);
+  const document = readSpecification(bytes);
   return document.ok ? judge(document.value) : unreadable(document.error);
+}
+
+const unreadableBase = (error: string): ValidatorOutcome => ({
+  exitCode: 2,
+  stdout: [],
+  stderr: [
+    `${SPECIFICATION_FILE} on the base branch: cannot be read for change control: ${error}.`,
+  ],
+});
+
+/**
+ * The approval records of the base branch's copy, or nothing when that copy is still a draft.
+ * A draft predates the first ratification and holds no approval record, whatever its change
+ * log looks like; once the base is ratified it has passed this check, so it can be read.
+ */
+function readBaseRecords(baseBytes: Uint8Array): Read<readonly ApprovalRecord[]> {
+  const text = decode(baseBytes);
+  if (!text.ok) {
+    return text;
+  }
+  const front = readFrontmatter(parseMarkdown(text.value).children[0]);
+  if (!front.ok) {
+    return front;
+  }
+  if (front.value.status !== RATIFIED) {
+    return { ok: true, value: [] };
+  }
+  const base = readDocument(text.value);
+  return base.ok ? { ok: true, value: base.value.records } : base;
+}
+
+/**
+ * {@link checkSpecificationBytes}, and SPEC-CC-3's general rule: "The latest approved record is
+ * the latest ever approved, not the latest left in the file". Every approval record the base
+ * branch holds must still be here with the same version and digest, so deleting the newest
+ * row and reverting the text to an earlier approved version fails.
+ *
+ * @param bytes - The specification's bytes on this branch.
+ * @param baseBytes - The base branch's copy, or `undefined` when it holds no specification.
+ */
+export function checkSpecificationAgainstBase(
+  bytes: Uint8Array,
+  baseBytes: Uint8Array | undefined,
+): ValidatorOutcome {
+  const document = readSpecification(bytes);
+  if (!document.ok) {
+    return unreadable(document.error);
+  }
+  const outcome = judge(document.value);
+  if (outcome.exitCode !== 0 || baseBytes === undefined) {
+    return outcome;
+  }
+  const baseRecords = readBaseRecords(baseBytes);
+  if (!baseRecords.ok) {
+    return unreadableBase(baseRecords.error);
+  }
+  const missing = baseRecords.value.filter(
+    (base) =>
+      !document.value.records.some(
+        (record) => record.version === base.version && record.sha256 === base.sha256,
+      ),
+  );
+  return missing.length === 0
+    ? outcome
+    : {
+        exitCode: 1,
+        stdout: [],
+        stderr: [
+          ...missing.map(
+            (record) =>
+              `${SPECIFICATION_FILE}: the base branch holds the approval record of version ` +
+              `${record.version} (SHA-256 ${record.sha256}), and this change log does not.`,
+          ),
+          'The latest approved record is the latest ever approved, so an approval row is never ' +
+            'removed or altered (SPEC-CC-3).',
+        ],
+      };
 }
