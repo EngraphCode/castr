@@ -14,7 +14,8 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
 - **Six tensions, found by reading the specification, the course, the MEASURE table, the
   library plan and the code in full.** A second reader was given the same documents and not
   my list. It runs on the same model and the same sources, so its agreement corroborates the
-  reading and is not independent evidence. It found the same five and added the fifth below.
+  reading and is not independent evidence. It found the five I had (1 to 4 and 6 below) and
+  added number 5.
   1. "Correct" means what the output does or how the code is built, and the specification
      binds both ("§9 binds the present code today"; SPEC-AR-3 approves no exception).
   2. The owner's words hold three gates on the move: defined and explored, not broken,
