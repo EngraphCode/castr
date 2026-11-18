@@ -3,7 +3,7 @@ title: Castr course — from the present code to the specification
 status: active
 lane: active
 created: 2026-09-21
-last_updated: 2026-11-02
+last_updated: 2026-11-18
 destination: docs/SPECIFICATION.md
 owner_directive: >-
   Owner, 2026-09-21: "Before we go further we stop, and we define a destination,
@@ -12,12 +12,12 @@ owner_directive: >-
   excellence in engineering and software design and architecture."
 todos:
   - id: ALERTS
-    content: 'Dependency alerts on main reach zero through dependency-update pull requests that land without analysis; until then nothing else merges (SPEC-G-1). Done on 2 November 2026: #117 (SHA:31f49532) cured 30, #118 (SHA:acd9d2b0) the six raised after it; main had zero open alerts at 15:00Z and pnpm audit reported none. A new alert reopens the leg. Reopened on 13 November 2026 by two alerts on @hono/node-server, cured by #119 (SHA:d3077124) on 18 November; open again that day on picomatch (GHSA-fc5q-39xc-vjpf), which has no patched release'
+    content: 'Dependency alerts on main reach zero through dependency-update pull requests that land without analysis; while main has an alert that holds merges, nothing else merges (SPEC-G-1). Done on 2 November 2026: #117 (SHA:31f49532) cured 30, #118 (SHA:acd9d2b0) the six raised after it; main had zero open alerts at 15:00Z and pnpm audit reported none. A new alert reopens the leg. Reopened on 13 November 2026 by two alerts on @hono/node-server, cured by #119 (SHA:d3077124) on 18 November; open again that day on picomatch (GHSA-fc5q-39xc-vjpf), which has no patched release; specification 0.5.2 names that alert in SPEC-G-1, so it does not hold merges until its advisory names a patched version old enough to install, and its cure then goes first'
     status: pending
     depends_on: []
   - id: PROBE
-    content: "A read-only lint probe: OCE's lint configuration, with its type-aware rules, runs over Castr's product code without changing it, and the table of rule, hits and area is saved under .agent/analysis-and-reports/; it is the first step of the owner's question of 1 November 2026, 'run your analysis on the code as-is', an input to the reflection after MEASURE, and RULES's starting point; run on 2 November 2026, its table is .agent/analysis-and-reports/oce-lint-probe-2026-11-02.md"
-    status: pending
+    content: "A read-only lint probe: OCE's lint configuration, with its type-aware rules, runs over Castr's product code without changing it, and the table of rule, hits and area is saved under .agent/analysis-and-reports/; it is the first step of the owner's question of 1 November 2026, 'run your analysis on the code as-is', an input to the reflection after MEASURE, and RULES's starting point; run on 2 November 2026, its table is .agent/analysis-and-reports/oce-lint-probe-2026-11-02.md, on main since #120 (SHA:3ff0fd2e)"
+    status: completed
     depends_on: []
   - id: CURRENCY
     content: "After MEASURE and scoped by what the reflection decides travels (owner's decision card, 2 November 2026: 'After MEASURE, scoped'): if code travels, lib and the root tooling at latest within the holds the toolchain forces, TypeScript 6 (ts-morph 28 vendors it; typescript-eslint's peer range ends below 6.1), @types/node 24 (engines.node 24.x, ADR-049), vitest 4 and tsup 8 (OCE's majors), and the Scalar packages, which the C-1 OpenAPI reader replaces, one proof-gated commit per type-affecting cycle; if MOVE starts fresh, no pass on code that is archived; agent-tools is outside it either way, because it does not travel"
@@ -122,7 +122,9 @@ once their consumers declare the patched major. Two alerts on `@hono/node-server
 on 13 November 2026 and #119 cured them on 18 November (`SHA:d3077124`). Dependabot then
 raised a high alert on picomatch (GHSA-fc5q-39xc-vjpf) covering every release up to 4.0.7,
 the latest, so no dependency-update pull request can cure it until upstream publishes a
-patched release; the leg stays open. Pull request #109, the identity-chain cure, merged after #111
+patched release; the leg stays open. Specification 0.5.2, approved on 18 November 2026, names
+that alert in SPEC-G-1: it does not hold merges until its advisory names a patched version old
+enough to install, and its cure then goes first. Pull request #109, the identity-chain cure, merged after #111
 (`SHA:8b0aa438`) at the end of its second review round. The owner's ruling on #109 was
 "land it frozen". From it the agent drew a working rule, which is the agent's wording and
 not the owner's: nothing more goes into the present writer code, and a review finding
@@ -136,6 +138,14 @@ version control.
 Owner decision, 21 September 2026: the eight `allOf` sites that accept no value are fixed
 in the document at source. Castr reports each with its location and carries it faithfully
 (SPEC-PR-7); it never guesses intent.
+
+Measured on 18 November 2026: none of the eight sites is in a document Oak serves or Castr
+pins. The review record measured the consumer's cached copy
+(`packages/sdks/oak-sdk-codegen/schema-cache/api-schema-original.json` in the Engraph Open
+Curriculum Ecosystem repository), which that day held `info.version` 0.7.0-3b4b01e6 and
+eight `allOf`; the documents Oak served that day (v1 1.1.1 and v0 0.11.2) and all four pins
+hold none. The owner's decision stands and has nothing left to act on in what Oak serves.
+SPEC-PR-7 has no instance in the corpus, so a proof of it needs a document that has one.
 
 The measured evidence behind the specification is in
 [the review record](../../research/castr-specification-review-2026-09-21.md).
