@@ -54,7 +54,7 @@ Oak documents as served that day landed with #123 (`SHA:ca6ba049`).
 On 18 November 2026 the owner had the items left open by that day's work run through the
 same matrix. Three survived, all the owner's: what travels into OCE, which the reflection on
 the MEASURE table decides; whether this repository, which is public, gets a licence
-file (it has none; `package.json` declares MIT); and whether the user-home paths in three
+file (it had none that morning; `package.json` declares MIT); and whether the user-home paths in three
 archived napkins stay. By card that day the owner chose to reflect now, to add the
 MIT text in the owner's own name, and to scrub the seven user-home paths from three archived
 napkins. The scrub landed with #125 (`SHA:f17e6e8f`) and the licence file, the MIT text
