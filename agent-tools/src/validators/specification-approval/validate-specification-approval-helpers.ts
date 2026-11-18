@@ -121,12 +121,34 @@ const lineOf = (node: {
 }): string =>
   node.position === undefined ? 'an unknown line' : `line ${node.position.start.line}`;
 
+const isLetterOrDigit = (character: string): boolean =>
+  character.toLowerCase() !== character.toUpperCase() || (character >= '0' && character <= '9');
+
+/** A word without the punctuation around it: `"0.5.1."` and `0.5.1,` both name `0.5.1`. */
+function bareWord(word: string): string {
+  const characters = [...word];
+  const start = characters.findIndex(isLetterOrDigit);
+  const end = characters.findLastIndex(isLetterOrDigit);
+  return start === -1 ? '' : characters.slice(start, end + 1).join('');
+}
+
+/**
+ * SPEC-CC-2: the approver's words name the version approved. The version must stand as a word
+ * of its own, so `10.5.0.1` does not name `0.5.0`.
+ */
+const namesVersion = (words: string, version: string): boolean =>
+  words.split(/\s+/u).some((word) => bareWord(word) === version);
+
 /**
  * An Approval cell is exactly `none`, or exactly one record: words that open with an approver
- * the specification names and the row's date, continue with the approver's words, and end
- * with one inline-code SHA-256.
+ * the specification names and the row's date, continue with the approver's words, which name
+ * the row's version, and end with one inline-code SHA-256.
  */
-function classifyApprovalCell(cell: TableCellNode | undefined, date: string): ApprovalCell {
+function classifyApprovalCell(
+  cell: TableCellNode | undefined,
+  date: string,
+  version: string,
+): ApprovalCell {
   if (singleText(cell) === NO_APPROVAL) {
     return { kind: 'none' };
   }
@@ -150,6 +172,12 @@ function classifyApprovalCell(cell: TableCellNode | undefined, date: string): Ap
     return {
       kind: 'malformed',
       reason: 'it holds no words of approval after the approver and the date',
+    };
+  }
+  if (!namesVersion(words.value.slice(opening.length), version)) {
+    return {
+      kind: 'malformed',
+      reason: `its words do not name the version approved, ${version}, as SPEC-CC-2 requires`,
     };
   }
   if (!isSha256Hex(digest.value)) {
@@ -199,7 +227,7 @@ function readRow(
   if (changeCell === undefined || changeCell.children.length === 0) {
     return fail(`${where} (version ${version}) states no change`);
   }
-  const approval = classifyApprovalCell(approvalCell, date);
+  const approval = classifyApprovalCell(approvalCell, date, version);
   if (approval.kind === 'malformed') {
     return fail(
       `the Approval cell of row ${version} at ${lineOf(row)} cannot be read: ${approval.reason}`,

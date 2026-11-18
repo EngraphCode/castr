@@ -16,7 +16,7 @@
 import { lstatSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { isErrnoCode } from '../../core/errno.js';
+import { errnoCodeOf, isErrnoCode } from '../../core/errno.js';
 import { resolveRepoRoot } from '../../core/repo-root.js';
 import { writeErrorLine, writeLine } from '../../core/terminal-output.js';
 import type { ValidatorOutcome } from '../../core/validator-outcome.js';
@@ -46,6 +46,12 @@ function checkCommittedSpecification(): ValidatorOutcome {
   } catch (error) {
     if (isErrnoCode(error, 'ENOENT')) {
       return cannotRead('the file does not exist');
+    }
+    // Any other file-system refusal (EACCES, ENOTDIR, EISDIR…) is also "cannot be read", so
+    // the exit code stays 2; an error with no errno code is a defect and is thrown.
+    const code = errnoCodeOf(error);
+    if (code !== undefined) {
+      return cannotRead(`the file system refused it (${code})`);
     }
     throw error;
   }

@@ -145,6 +145,21 @@ describe('checkSpecificationBytes: an Approval cell is `none` or one approval re
       'words',
     ],
     [
+      'a record whose words name no version',
+      recordRow(`Jim Cresswell, 2026-11-02, said so. \`${RATIFIED_050_SHA256}\``),
+      'name the version approved',
+    ],
+    [
+      'a record whose words name another version',
+      recordRow(`Jim Cresswell, 2026-11-02, "I approve 0.4.0." \`${RATIFIED_050_SHA256}\``),
+      'name the version approved',
+    ],
+    [
+      'a record whose words name a version that only contains the row’s',
+      recordRow(`Jim Cresswell, 2026-11-02, "I approve 10.5.0.1." \`${RATIFIED_050_SHA256}\``),
+      'name the version approved',
+    ],
+    [
       'a digest written beside "none"',
       recordRow(`none; draft SHA-256 \`${RATIFIED_050_SHA256}\``),
       'approver',
