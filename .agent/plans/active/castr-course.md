@@ -22,7 +22,7 @@ todos:
   - id: CURRENCY
     content: "After MEASURE and scoped by what the reflection decides travels (owner's decision card, 2 November 2026: 'After MEASURE, scoped'): if code travels, lib and the root tooling at latest within the holds the toolchain forces, TypeScript 6 (ts-morph 28 vendors it; typescript-eslint's peer range ends below 6.1), @types/node 24 (engines.node 24.x, ADR-049), vitest 4 and tsup 8 (OCE's majors), and the Scalar packages, which the C-1 OpenAPI reader replaces, one proof-gated commit per type-affecting cycle; if MOVE starts fresh, no pass on code that is archived; agent-tools is outside it either way, because it does not travel; the reflection of 18 November 2026 decided that code travels, so the pass runs, on the code PLOT says is kept"
     status: pending
-    depends_on: [MEASURE]
+    depends_on: [PLOT]
   - id: RATIFY
     content: "The owner approved draft 0.5.0 in this repository's working session on 2 November 2026 ('I approve draft 0.5.0 , if we need to review and change it later that is fine.'), recorded per SPEC-CC-2 with its SHA-256 at SHA:0e2ca07a; the owner then approved 0.5.1 ('I approve 0.5.1'), which reads SPEC-CC-3's latest approved record as the latest ever approved, recorded at SHA:1a7631ac; the SPEC-CC-3 check is written (SHA:5d264896) and enforces that reading; all of it landed on main with #120 (SHA:3ff0fd2e) on 18 November 2026, at version 0.5.2, which the owner approved that day ('I approve version 0.5.2') to name the picomatch alert in SPEC-G-1"
     status: completed

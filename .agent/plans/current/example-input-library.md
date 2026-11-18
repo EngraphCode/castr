@@ -27,14 +27,18 @@ todos:
     content: readmeio/oas examples pinned under the provenance rules, JSON serialisation only (MIT and Apache 2.0 notices; train-travel and the third-party-owned documents left out)
     status: pending
     depends_on: [EC-1]
+  - id: C2-GATE
+    content: "Work on SPEC-C-2 begins: the course plan names its legs. The library's JSON Schema tranches wait for this (owner's decision card, 18 November 2026: 'The JSON Schema documents wait for the second capability')"
+    status: pending
+    depends_on: []
   - id: EC-4
     content: JSON-Schema-Test-Suite tests/draft7 and tests/draft2020-12 files pinned whole with the json-schema-test-suite kind (MIT); files that reference the suite's own server left out; waits for SPEC-C-2 (owner, 18 November 2026)
     status: pending
-    depends_on: [EC-1]
+    depends_on: [EC-1, C2-GATE]
   - id: EC-5
     content: SchemaStore schemas declaring 2020-12 pinned with the json-schema kind (Apache 2.0); waits for SPEC-C-2 (owner, 18 November 2026)
     status: pending
-    depends_on: [EC-1]
+    depends_on: [EC-1, C2-GATE]
   - id: EC-6
     content: learn.openapis.org's two OpenAPI 3.2 examples pinned, YAML as the source (CC BY 4.0)
     status: pending
@@ -167,6 +171,8 @@ Each is taken from the survey's evidence and is open to the owner to strike.
   before a source is pinned.
 - **EC-5 before EC-7 (blocking).** The `json-schema` kind lands with SchemaStore, its first
   documents; the meta-schemas reuse it.
+- **C2-GATE before EC-4 and EC-5 (blocking).** The JSON Schema tranches wait until work on
+  SPEC-C-2 begins, by the owner's decision of 18 November 2026; EC-7 follows EC-5.
 - **The course (since 18 November 2026, this plan precedes MOVE).** Until that day the plan
   sat beside the course and gated nothing in it. By the owner's decisions of 18 November
   the state Castr reaches before MOVE includes the library's standard on its OpenAPI
