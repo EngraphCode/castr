@@ -69,6 +69,8 @@ type TableCellNode = TableRowNode['children'][number];
 interface ApprovalRecord {
   readonly version: string;
   readonly sha256: string;
+  /** The cell's text before the digest: the approver, the date and the approver's words. */
+  readonly words: string;
 }
 
 interface ReadDocument {
@@ -86,7 +88,7 @@ type Read<T> = { readonly ok: true; readonly value: T } | ReadFailure;
 
 type ApprovalCell =
   | { readonly kind: 'none' }
-  | { readonly kind: 'record'; readonly sha256: string }
+  | { readonly kind: 'record'; readonly sha256: string; readonly words: string }
   | { readonly kind: 'malformed'; readonly reason: string };
 
 const fail = (error: string): ReadFailure => ({ ok: false, error });
@@ -186,7 +188,7 @@ function classifyApprovalCell(
       reason: `its code "${digest.value}" is not a SHA-256 of 64 lower-case hexadecimal characters`,
     };
   }
-  return { kind: 'record', sha256: digest.value };
+  return { kind: 'record', sha256: digest.value, words: words.value };
 }
 
 function readFrontmatter(node: RootNode | undefined): Read<Frontmatter> {
@@ -261,7 +263,11 @@ function readRecords(table: TableNode): Read<readonly ApprovalRecord[]> {
     }
     versions.add(read.value.version);
     if (read.value.approval.kind === 'record') {
-      records.push({ version: read.value.version, sha256: read.value.approval.sha256 });
+      records.push({
+        version: read.value.version,
+        sha256: read.value.approval.sha256,
+        words: read.value.approval.words,
+      });
     }
   }
   return { ok: true, value: records };
@@ -437,10 +443,15 @@ export function checkSpecificationAgainstBase(
     return unreadableBase(baseRecords.error);
   }
   // The base branch's records must open this change log's records, unchanged and in the same
-  // order: membership alone would let the rows be reordered so an earlier record governs.
+  // order: membership alone would let the rows be reordered so an earlier record governs, and
+  // SPEC-CC-2 records the approver, the date and the words, so those are compared too.
   const displaced = baseRecords.value.filter((base, position) => {
     const record = document.value.records[position];
-    return record?.version !== base.version || record.sha256 !== base.sha256;
+    return (
+      record?.version !== base.version ||
+      record.sha256 !== base.sha256 ||
+      record.words !== base.words
+    );
   });
   return displaced.length === 0
     ? outcome
@@ -452,7 +463,7 @@ export function checkSpecificationAgainstBase(
             (record) =>
               `${SPECIFICATION_FILE}: the base branch holds the approval record of version ` +
               `${record.version} (SHA-256 ${record.sha256}), and this change log does not hold ` +
-              'it in the same place.',
+              'it in the same place with the same approver, date and words.',
           ),
           'The latest approved record is the latest ever approved: the approval records of the ' +
             'base branch stay, unchanged and in the same order, and a new record follows them ' +
