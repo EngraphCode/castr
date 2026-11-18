@@ -24,6 +24,13 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   of first. Here that was the lockfile's routes to the package, a load-hook count of calls
   during a real generation run with a control that does call it, and upstream's maintainer
   activity.
+- **MISTAKE (mine): continuity edits bundled into three work commits.** `SHA:24e7380f`,
+  `SHA:bee12b4e` and `SHA:8ef18e43` each carry edits to `repo-continuity.md` or the thread
+  record beside their own change, against `continuity-surface-commits-as-orphans`. A
+  reviewer caught it on #122. I had grounded in the Oak ecosystem repository's rules and
+  not read this repository's `RULES_INDEX.md`. Pushed history is append-only, so the three
+  stand; from `SHA:eb37894f` on, continuity edits are their own `chore(continuity)` commits.
+  What works: read the rules index of the repository being changed before the first commit.
 - **What the trace found.** The product loads picomatch and never calls it; every ts-morph
   `Project` in `lib/src` is in-memory. It sits under vitest, vite, typescript-eslint, tsup,
   knip, dependency-cruiser, madge, markdownlint-cli2 and eslint-plugin-boundaries, so it
