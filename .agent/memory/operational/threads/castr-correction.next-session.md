@@ -35,8 +35,10 @@ repository before acting.
   annotations and the `paths` type are absent. The table gives no verdict; the reflection
   with the owner is next.
 - **The matrix pass of 18 November 2026.** The owner had the items left open by that day's
-  work run through OCE's decision matrix. Two survive, both the owner's: what travels (the
-  reflection) and whether this public repository gets a licence file. The seat settled the
+  work run through OCE's decision matrix. Three survived, all the owner's: what travels (the
+  reflection), whether this public repository gets a licence file, and whether the
+  user-home paths in three archived napkins stay. By card the owner chose to reflect now,
+  to add the MIT text in the owner's own name and to scrub the paths. The seat settled the
   rest, and the napkin's entry for the pass holds each disposition: MEASURE's defects are
   not cured in the present code before the reflection, the eight `allOf` sites are only in
   the consumer's cached copy, the branches and the stash are left, and the example-input
