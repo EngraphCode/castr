@@ -32,6 +32,7 @@ import path from 'node:path';
 
 import { isPathInScope } from '../../hook-policy/matchers.js';
 import { type ScopedContentBlockGroup } from '../../hook-policy/types.js';
+import type { ValidatorOutcome } from '../../core/validator-outcome.js';
 
 /** Null byte: the `git ls-files -z` record separator, and the binary-content marker. */
 export const NUL = '\u0000';
@@ -75,16 +76,6 @@ export interface ScanFile {
 
 /** Reads a file's UTF-8 content given its absolute path. Injectable for tests. */
 export type FileReader = (absolutePath: string) => string;
-
-/**
- * The resolved verdict of a scan: a process exit code plus the lines to emit.
- * 0 = clean, 1 = at least one hit, 2 = the policy block is missing.
- */
-export interface ScanOutcome {
-  readonly exitCode: 0 | 1 | 2;
-  readonly stdout: readonly string[];
-  readonly stderr: readonly string[];
-}
 
 /** The policy concept name for the machine-local-path block. */
 const MACHINE_LOCAL_PATH_CONCEPT = 'machine-local-path';
@@ -196,6 +187,7 @@ export function readScanFiles(
 /**
  * Resolve the scan verdict (exit code + output lines) from the policy block and
  * the files to scan. Pure: the runtime calls this, then prints and exits.
+ * Exit 0 = clean, 1 = at least one hit, 2 = the policy block is missing.
  *
  * @param block - the machine-local-path policy block, or `undefined` when the
  *   policy does not define it (a misconfiguration → exit 2).
@@ -203,7 +195,7 @@ export function readScanFiles(
 export function resolveScanOutcome(
   block: ScopedContentBlockGroup | undefined,
   files: readonly ScanFile[],
-): ScanOutcome {
+): ValidatorOutcome {
   if (block === undefined) {
     return {
       exitCode: 2,
