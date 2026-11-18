@@ -2,6 +2,94 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-11-18 (open items through the OCE decision matrix — Ingot binds Patina / 194219, claude-code)
+
+- **Owner instruction (18 November 2026, verbatim):** "use the OCE principles and skills to
+  run the remaining open questions, tasks for me, and unknowns through the decision matrix,
+  and report what, if anything, remains unresolved". The matrix is OCE's `principles.md`
+  §Decision Lenses, with its proportionality gate first and the survival tests in its
+  `owner-attention-at-action-moments` rule and `user-collaboration.md` §Risk and Decisions.
+- **Matrix dispositions of 18 November (decision-sufficient record; the frame was a scratch
+  file).** The list was rebuilt from the course, the continuity files, the plans in
+  `current/` and GitHub, not carried from my last report.
+  - **Survives, the owner's:** what travels into OCE. The course says "What travels is
+    decided at that reflection, with the owner". "Not as a decision matrix" in the thread
+    record is an agent's wording, not the owner's; the matrix's own first step for an
+    unformed question is concept exploration, so the seat brings a reading to the reflection.
+  - **Survives, the owner's (found during the pass):** whether this public repository gets a
+    licence file, and under which copyright line. None has ever been in the tree;
+    `package.json` and `lib/package.json` declare MIT; no `author` key exists.
+  - **Settled, not cured now:** the defects MEASURE found (`const` as its bare type, the
+    body-less `302`, the two rejected operations). The owner's card says MEASURE decides
+    nothing, and the ratified specification says the present writers fail SPEC-AR-3, so a
+    cure inside them is work on a design the specification replaces. Castr has no consumer
+    today (OCE generates with `openapi-zod-client`). They are rows the reflection reads.
+  - **Settled by measurement:** the eight unsatisfiable `allOf` sites are only in the
+    consumer's cached copy (see the surprise below). Recorded in the course.
+  - **Settled, dropped:** replacing Castr's own glob uses with Node's `fs.glob`. It closes no
+    alert, `agent-tools` does not travel, and the two `lib` test files are CURRENCY's if code
+    travels.
+  - **Settled, left:** the 85 local branches (56 are ancestors of `origin/main`, 29 are the
+    work written off on 21 September) and the stash. They were kept when the worktrees were
+    deleted on 1 November; nothing depends on them and MOVE archives this repository.
+  - **Settled, a standing check:** when picomatch gets a patched release. The sensor is the
+    alert's patched-version field, read at every merge; Dependabot security updates are off
+    here, so no pull request will announce it. The thread record's definition of green and
+    clean now says so.
+  - **Settled, stays unmeasured:** `propertyNames`. It occurs only inside the two schemas the
+    generator rejects, so on the Oak documents its outcome is `rejects` by containment.
+  - **Settled, starts now:** the example-input library, at EC-0. Its plan gates nothing in
+    the course and nothing gates it.
+  - **Settled, no action (found during the pass):** the archive-scrub plan stays dormant, as
+    the lane categorisation of 24 September left it. The repository is public and three
+    archived napkins hold seven user-home path occurrences, but the same account name is in
+    the public commit metadata, a working-tree scrub leaves public history unchanged, and a
+    history rewrite is destructive and the owner's alone. Leaving it is the owner's to
+    accept, so it went on a card with "leave it" recommended.
+- **OWNER RULING (18 November 2026, after the cards, the whole message verbatim): "I don't
+  want to move the code until we have defined what working and working well looks like, what
+  correctness means, and explored if we can reach that state in isolation. Moving broken
+  code into another repo seems like it can only cause further problems".** It is the
+  reflection's first decision and it changes the course's order: MOVE waits on a definition
+  of working, working well and correct, and on exploring whether Castr reaches that state
+  here. The course's todos are rewritten when the reflection settles the legs, not before.
+- **Owner decisions by card, 18 November 2026 (verbatim answers).** What travels: "Reflect
+  now (Recommended)". Licence file: "My own name" (MIT text, its own one-file pull request).
+  Archive paths: "Scrub the files now" (the seven occurrences replaced by a placeholder and
+  the three files annotated, one small pull request; public history still holds them).
+- **MISTAKE (mine): I listed the example-input library as Castr-only work, the owner told me
+  to carry out the Castr-only work, and I neither started it nor said why.** The matrix found
+  no question in it. What works: an item I list and the owner approves is owed until it is
+  done or dropped with the reason said aloud.
+- **MISTAKE (mine): I handed the reflection to the owner in prose.** My report ended "The
+  next step is yours". By the owner's standing word a gate that is theirs is a card, and a
+  question asked in prose is not seen.
+- **MISTAKE (mine): "roughly 30 stale local branches" was a guess.** There are 85. Count
+  before reporting a number.
+- **SURPRISE: the repository is public.** The archive-scrub plan of 3 July was written for
+  "if the repo is ever made public", and the 24 September categorisation read it as
+  mattering "only if code travels with its history". Check a repository's visibility before
+  reasoning about what publication would expose.
+- **SURPRISE: the review record measured the consumer's cached copy, not what Oak serves.**
+  Its file is OCE's `packages/sdks/oak-sdk-codegen/schema-cache/api-schema-original.json`,
+  which on 18 November held `info.version` 0.7.0-3b4b01e6, 34 paths and eight `allOf`. The
+  documents Oak served that day and all four pins hold no `allOf`, and the review record's
+  example site does not exist in them.
+- **SURPRISE: the write-time hook refuses a user-home path in a scratch file too.** A frame
+  for read-only reviewers cites root-relative paths, and the dispatch prompt names the roots.
+- **Two Crickets, one normal and one adversarial, read the verdicts before the report.**
+  Taken: I had quoted "not as a decision matrix" and "branches and the stash were kept" as the
+  owner's when both are agents' wording; the licence question narrows to the copyright line,
+  because crediting openapi-zod-client is a licence duty and belongs in EC-0's notices;
+  leaving the archive paths is a risk only the owner accepts; the reasons for each dropped
+  item go in the report. Not taken, with evidence: "0.5.2 may have no owner-approved
+  carve-out" (the owner approved it that day, in words, and the validator checks the record).
+  Their work verdicts differed (ON-TRACK and DRIFTING); I took the stricter reading on each
+  disputed item instead of running the other six seats.
+- **What works: check each item's facts before giving it a verdict.** Three verdicts changed
+  on a first-hand read: the `allOf` sites (a cache, not the source), the example-input
+  library (owed, not optional) and the archive-scrub plan (its premise had already happened).
+
 ## 2026-11-18 (alert cure, RATIFY landing, MEASURE, 0.5.2 — Ingot binds Patina / 194219, claude-code)
 
 - **OWNER APPROVAL (18 November 2026, this session, the whole message verbatim): "I approve
