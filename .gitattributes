@@ -27,3 +27,8 @@
 # on any checkout, or the recomputed SHA-256 fails on a machine with core.autocrlf=true.
 # Every JSON file in the directory is covered, so a future pin needs no new line here.
 lib/tests-transforms/__fixtures__/corpus/*.json -text
+
+# The specification's approval record is the SHA-256 of its exact bytes above the change
+# log (docs/SPECIFICATION.md, SPEC-CC-2); no line-ending conversion on any checkout, or the
+# recomputed hash fails on a machine with core.autocrlf=true.
+docs/SPECIFICATION.md -text

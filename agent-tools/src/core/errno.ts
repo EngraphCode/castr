@@ -17,3 +17,18 @@
 export function isErrnoCode(error: unknown, code: string): boolean {
   return typeof error === 'object' && error !== null && 'code' in error && error.code === code;
 }
+
+/**
+ * The errno code an error carries, when it carries one.
+ *
+ * @param error - The caught value (typed `unknown` at every catch site).
+ * @returns The code (e.g. `EACCES`), or `undefined` when the value has no string `code`.
+ */
+export function errnoCodeOf(error: unknown): string | undefined {
+  return typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    typeof error.code === 'string'
+    ? error.code
+    : undefined;
+}
