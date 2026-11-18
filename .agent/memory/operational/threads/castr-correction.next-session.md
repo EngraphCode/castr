@@ -34,6 +34,13 @@ repository before acting.
   source. Media types, response headers, security on the endpoint, source defaults as
   annotations and the `paths` type are absent. The table gives no verdict; the reflection
   with the owner is next.
+- **OWNER RULING, 18 November 2026, at the start of the reflection, verbatim:** "I don't want
+  to move the code until we have defined what working and working well looks like, what
+  correctness means, and explored if we can reach that state in isolation. Moving broken
+  code into another repo seems like it can only cause further problems". MOVE does not
+  start until both are done. Every statement of the course's order further down this record
+  predates the ruling; the course plan carries the hold, and the legs before MOVE are
+  rewritten when the reflection settles them.
 - **The matrix pass of 18 November 2026.** The owner had the items left open by that day's
   work run through OCE's decision matrix. Three survived, all the owner's: what travels (the
   reflection), whether this public repository gets a licence file, and whether the
