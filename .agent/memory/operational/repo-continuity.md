@@ -97,9 +97,11 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    this one. The alert stays open and is never dismissed; when its advisory names a
    patched version old enough to install, it holds merges again and its cure goes first.
    RATIFY is complete at this merge.
-2. **The SPEC-CC-3 check's known gap**, in its own pull request next: compare the branch's
-   approval records with `main`'s, so that deleting the newest row and reverting the text
-   fails, as 0.5.1's "latest ever approved" requires (thread record).
+2. **The SPEC-CC-3 check compares approval records with `main`'s**, in the pull request
+   that follows the ratification one: an approval record that `origin/main` holds must
+   still be on the branch with the same version and digest, so deleting the newest row and
+   reverting the text fails, as 0.5.1's "latest ever approved" requires. The check reads
+   `origin/main` from git, so a checkout that has not fetched it exits 2.
 3. **MEASURE** follows RATIFY and decides nothing; then the owner's reflection decides what
    travels, and CURRENCY, RULES, MOVE and PLOT follow in the course's order. The
    [thread record](threads/castr-correction.next-session.md) carries each leg's state.

@@ -1,6 +1,12 @@
+import { createHash } from 'node:crypto';
+
 import { describe, expect, it } from 'vitest';
 
-import { checkSpecificationBytes } from './validate-specification-approval-helpers.js';
+import {
+  checkSpecificationAgainstBase,
+  checkSpecificationBytes,
+  classifyBaseLookup,
+} from './validate-specification-approval-helpers.js';
 
 /**
  * Fixture prefixes: everything above the change-log heading. Each SHA-256 below was computed
@@ -290,5 +296,129 @@ describe('checkSpecificationBytes: the document must be readable', () => {
     );
     expect(outcome.exitCode).toBe(2);
     expect(report(outcome.stderr)).toContain('byte-order mark');
+  });
+});
+
+describe('checkSpecificationAgainstBase: the latest approved record is the latest ever approved', () => {
+  const document = (prefix: string, rows: readonly string[]): Uint8Array =>
+    bytes(`${prefix}${changeLog(rows)}`);
+  const row050 = approved('0.5.0', RATIFIED_050_SHA256);
+  const row051 = approved('0.5.1', RATIFIED_051_SHA256);
+  const onBase = document(RATIFIED_051, [row050, row051]);
+
+  it('passes when the base branch holds no specification', () => {
+    const outcome = checkSpecificationAgainstBase(document(RATIFIED_050, [row050]), undefined);
+    expect(outcome.exitCode).toBe(0);
+  });
+
+  it('passes when every approval record on the base branch is still here', () => {
+    const outcome = checkSpecificationAgainstBase(onBase, document(RATIFIED_050, [row050]));
+    expect(outcome.exitCode).toBe(0);
+    expect(report(outcome.stdout)).toContain('version 0.5.1');
+  });
+
+  it('fails a revert to an earlier approved version that deletes the newest approval row', () => {
+    const reverted = document(RATIFIED_050, [row050]);
+    expect(checkSpecificationBytes(reverted).exitCode).toBe(0);
+    const outcome = checkSpecificationAgainstBase(reverted, onBase);
+    expect(outcome.exitCode).toBe(1);
+    const lines = report(outcome.stderr);
+    expect(lines).toContain('0.5.1');
+    expect(lines).toContain(RATIFIED_051_SHA256);
+    expect(lines).toContain('SPEC-CC-3');
+  });
+
+  it('fails when an earlier approval record keeps its version but not its digest', () => {
+    const altered = document(RATIFIED_051, [approved('0.5.0', RATIFIED_050_SPACE_SHA256), row051]);
+    expect(checkSpecificationBytes(altered).exitCode).toBe(0);
+    const outcome = checkSpecificationAgainstBase(altered, onBase);
+    expect(outcome.exitCode).toBe(1);
+    expect(report(outcome.stderr)).toContain(RATIFIED_050_SHA256);
+  });
+
+  it('fails when an earlier approval record keeps its digest but not its words', () => {
+    const reworded = row050.replace(
+      '"I approve 0.5.0."',
+      '"I approve 0.5.0 and all later versions."',
+    );
+    expect(reworded).not.toBe(row050);
+    const rewritten = document(RATIFIED_051, [reworded, row051]);
+    expect(checkSpecificationBytes(rewritten).exitCode).toBe(0);
+    const outcome = checkSpecificationAgainstBase(rewritten, onBase);
+    expect(outcome.exitCode).toBe(1);
+    expect(report(outcome.stderr)).toContain('0.5.0');
+  });
+
+  it('fails when an earlier approval record names another approver', () => {
+    const rewritten = document(RATIFIED_051, [
+      approved('0.5.0', RATIFIED_050_SHA256, 'mantagen'),
+      row051,
+    ]);
+    expect(checkSpecificationBytes(rewritten).exitCode).toBe(0);
+    expect(checkSpecificationAgainstBase(rewritten, onBase).exitCode).toBe(1);
+  });
+
+  it('fails when the rows are reordered so that an earlier record governs again', () => {
+    const reordered = document(RATIFIED_050, [row051, row050]);
+    expect(checkSpecificationBytes(reordered).exitCode).toBe(0);
+    const outcome = checkSpecificationAgainstBase(reordered, onBase);
+    expect(outcome.exitCode).toBe(1);
+    expect(report(outcome.stderr)).toContain('same order');
+  });
+
+  it('passes when a new approval record follows the base branch’s records', () => {
+    const next = front('0.5.2', 'ratified');
+    const nextSha256 = createHash('sha256').update(next).digest('hex');
+    const amended = document(next, [row050, row051, approved('0.5.2', nextSha256)]);
+    expect(checkSpecificationAgainstBase(amended, onBase).exitCode).toBe(0);
+  });
+
+  it('passes over a base that is still a draft, even one whose change log it cannot read', () => {
+    const draftBase = document(DRAFT_050, [
+      `| 0.4.0 | 2026-09-23 | Draft. | none; draft SHA-256 \`${DRAFT_050_SHA256}\` |`,
+    ]);
+    expect(checkSpecificationBytes(draftBase).exitCode).toBe(2);
+    const outcome = checkSpecificationAgainstBase(document(RATIFIED_050, [row050]), draftBase);
+    expect(outcome.exitCode).toBe(0);
+  });
+
+  it('cannot conclude when the base branch is ratified but cannot be read', () => {
+    const brokenBase = document(RATIFIED_050, [
+      `| 0.5.0 | 2026-11-02 | Ratified. | Jim Cresswell, 2026-11-02, said so. |`,
+    ]);
+    const outcome = checkSpecificationAgainstBase(onBase, brokenBase);
+    expect(outcome.exitCode).toBe(2);
+    expect(report(outcome.stderr)).toContain('base branch');
+  });
+
+  it('reports this document’s own failure without consulting the base', () => {
+    const own = check(RATIFIED_050_SPACE, [row050]);
+    const outcome = checkSpecificationAgainstBase(
+      bytes(`${RATIFIED_050_SPACE}${changeLog([row050])}`),
+      onBase,
+    );
+    expect(outcome).toStrictEqual(own);
+  });
+});
+
+describe('classifyBaseLookup: what a tree listing of the base branch says about the file', () => {
+  it('finds the file when the listing names it', () => {
+    expect(classifyBaseLookup(0, 'docs/SPECIFICATION.md\n')).toBe('present');
+  });
+
+  it('finds no file when the listing succeeds and is empty', () => {
+    expect(classifyBaseLookup(0, '')).toBe('absent');
+  });
+
+  it('cannot tell when git fails, so a failed read is never taken for an absent file', () => {
+    expect(classifyBaseLookup(128, '')).toBe('unknown');
+  });
+
+  it('cannot tell when git did not exit at all', () => {
+    expect(classifyBaseLookup(null, '')).toBe('unknown');
+  });
+
+  it('cannot tell when the listing names something else', () => {
+    expect(classifyBaseLookup(0, 'docs/OTHER.md\n')).toBe('unknown');
   });
 });

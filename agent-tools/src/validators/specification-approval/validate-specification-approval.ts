@@ -3,9 +3,14 @@
 /**
  * Standalone validator that makes the specification's change control enforceable
  * (docs/SPECIFICATION.md, SPEC-CC-3): it fails when the text above the change log does not
- * match the latest approval record, and while no record exists it fails if the status is
- * `ratified`. The rules and the reading live in `validate-specification-approval-helpers.ts`;
- * this shell reads the committed bytes and prints the outcome.
+ * match the latest approval record, when the change log holds no record, and when an approval
+ * record the base branch holds is missing here. The rules and the reading live in
+ * `validate-specification-approval-helpers.ts`; this shell reads the committed bytes, asks
+ * git for the base branch's copy and prints the outcome.
+ *
+ * The base branch is `origin/main`, read from the local object store: a checkout that has
+ * not fetched it cannot conclude and exits 2, so the continuous-integration job fetches full
+ * history.
  *
  * Wired into root `repo-validators:check`, which the continuous-integration `static-checks`
  * job runs inside the required `quality-gates` check.
@@ -13,18 +18,24 @@
  * @packageDocumentation
  */
 
+import { spawnSync } from 'node:child_process';
 import { lstatSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { errnoCodeOf, isErrnoCode } from '../../core/errno.js';
 import { resolveRepoRoot } from '../../core/repo-root.js';
 import { writeErrorLine, writeLine } from '../../core/terminal-output.js';
+import { resolveTrustedGit } from '../../core/trusted-git.js';
 import type { ValidatorOutcome } from '../../core/validator-outcome.js';
 
 import {
-  checkSpecificationBytes,
+  checkSpecificationAgainstBase,
+  classifyBaseLookup,
   SPECIFICATION_FILE,
 } from './validate-specification-approval-helpers.js';
+
+/** The branch whose approval records may never be removed (SPEC-CC-3). */
+const BASE_REF = 'origin/main';
 
 const cannotRead = (reason: string): ValidatorOutcome => ({
   exitCode: 2,
@@ -32,17 +43,63 @@ const cannotRead = (reason: string): ValidatorOutcome => ({
   stderr: [`${SPECIFICATION_FILE}: cannot be read for change control: ${reason}.`],
 });
 
+type BaseCopy =
+  | { readonly kind: 'bytes'; readonly bytes: Uint8Array }
+  | { readonly kind: 'absent' }
+  | { readonly kind: 'unknown'; readonly reason: string };
+
 /**
- * The committed bytes at the specification's path. `lstat` does not follow a symbolic link, so
- * a link or a directory is refused rather than read through to bytes that are not the file's.
+ * The base branch's copy of the specification, from git's object store. Three answers, kept
+ * apart: the bytes, a base that holds no specification, and a base this checkout cannot see.
+ */
+function readBaseCopy(repoRoot: string): BaseCopy {
+  const git = resolveTrustedGit();
+  const run = (args: readonly string[]) => spawnSync(git, args, { cwd: repoRoot });
+  if (run(['rev-parse', '--verify', '--quiet', `${BASE_REF}^{commit}`]).status !== 0) {
+    return {
+      kind: 'unknown',
+      reason: `${BASE_REF} is not in this checkout, so its approval records cannot be compared; fetch it with "git fetch origin main"`,
+    };
+  }
+  const listed = run(['ls-tree', '--name-only', BASE_REF, '--', SPECIFICATION_FILE]);
+  const lookup = classifyBaseLookup(listed.status, listed.stdout.toString('utf8'));
+  if (lookup === 'absent') {
+    return { kind: 'absent' };
+  }
+  const blob = `${BASE_REF}:${SPECIFICATION_FILE}`;
+  if (lookup === 'unknown') {
+    return { kind: 'unknown', reason: `git could not list ${blob}` };
+  }
+  const shown = run(['show', blob]);
+  return shown.status === 0
+    ? { kind: 'bytes', bytes: shown.stdout }
+    : { kind: 'unknown', reason: `git could not read ${blob}` };
+}
+
+/**
+ * The committed bytes at the specification's path, checked with the base branch's copy.
+ * `lstat` does not follow a symbolic link, so a link or a directory is refused rather than
+ * read through to bytes that are not the file's.
  */
 function checkCommittedSpecification(): ValidatorOutcome {
-  const specificationPath = path.join(resolveRepoRoot(import.meta.url), SPECIFICATION_FILE);
+  const repoRoot = resolveRepoRoot(import.meta.url);
+  const specificationPath = path.join(repoRoot, SPECIFICATION_FILE);
   try {
     if (!lstatSync(specificationPath).isFile()) {
       return cannotRead('the path is not a regular file');
     }
-    return checkSpecificationBytes(readFileSync(specificationPath));
+    const bytes = readFileSync(specificationPath);
+    // This branch's own file is judged first, so its failure is reported even where the base
+    // branch cannot be read.
+    const own = checkSpecificationAgainstBase(bytes, undefined);
+    if (own.exitCode !== 0) {
+      return own;
+    }
+    const base = readBaseCopy(repoRoot);
+    if (base.kind === 'unknown') {
+      return cannotRead(base.reason);
+    }
+    return base.kind === 'bytes' ? checkSpecificationAgainstBase(bytes, base.bytes) : own;
   } catch (error) {
     if (isErrnoCode(error, 'ENOENT')) {
       return cannotRead('the file does not exist');

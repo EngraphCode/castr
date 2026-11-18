@@ -66,6 +66,11 @@ repository before acting.
   pnpm). At the compaction boundary of 2 November the branch is pushed and its pull
   request is opened as the last act before the seat stops; shepherd it with
   `engraph-pr-lifecycle` (its review tally is the first comment to post).
+- **The gap described in the next bullet is cured on 18 November 2026** by the pull request
+  stacked on the ratification one: the check also reads `origin/main`'s copy of the
+  specification and fails when an approval record there is missing here or has another
+  digest. A base that is still a draft holds no record; the continuous-integration
+  `static-checks` job fetches full history so that `origin/main` is there to read.
 - **Known gap in the SPEC-CC-3 check, found by the wrap's promise sweep on 2 November
   2026 (stated to the owner the same day):** the check enforces 0.5.1's concrete clause, that
   a change log with no approval record fails, but not its general principle, that "the
