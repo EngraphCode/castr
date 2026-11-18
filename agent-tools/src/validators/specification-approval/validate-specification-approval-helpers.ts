@@ -471,3 +471,25 @@ export function checkSpecificationAgainstBase(
         ],
       };
 }
+
+/**
+ * What `git ls-tree --name-only <base> -- <file>` says about the base branch's copy. Only a
+ * listing that succeeds and is empty shows the file is absent; a failed or unfinished git read
+ * says nothing, and is never taken for an absent file.
+ *
+ * @param status - The exit status, or `null` when git did not exit.
+ * @param listing - The command's standard output.
+ */
+export function classifyBaseLookup(
+  status: number | null,
+  listing: string,
+): 'present' | 'absent' | 'unknown' {
+  if (status !== 0) {
+    return 'unknown';
+  }
+  const names = listing.split('\n').filter((name) => name !== '');
+  if (names.length === 0) {
+    return 'absent';
+  }
+  return names.length === 1 && names[0] === SPECIFICATION_FILE ? 'present' : 'unknown';
+}

@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import {
   checkSpecificationAgainstBase,
   checkSpecificationBytes,
+  classifyBaseLookup,
 } from './validate-specification-approval-helpers.js';
 
 /**
@@ -397,5 +398,27 @@ describe('checkSpecificationAgainstBase: the latest approved record is the lates
       onBase,
     );
     expect(outcome).toStrictEqual(own);
+  });
+});
+
+describe('classifyBaseLookup: what a tree listing of the base branch says about the file', () => {
+  it('finds the file when the listing names it', () => {
+    expect(classifyBaseLookup(0, 'docs/SPECIFICATION.md\n')).toBe('present');
+  });
+
+  it('finds no file when the listing succeeds and is empty', () => {
+    expect(classifyBaseLookup(0, '')).toBe('absent');
+  });
+
+  it('cannot tell when git fails, so a failed read is never taken for an absent file', () => {
+    expect(classifyBaseLookup(128, '')).toBe('unknown');
+  });
+
+  it('cannot tell when git did not exit at all', () => {
+    expect(classifyBaseLookup(null, '')).toBe('unknown');
+  });
+
+  it('cannot tell when the listing names something else', () => {
+    expect(classifyBaseLookup(0, 'docs/OTHER.md\n')).toBe('unknown');
   });
 });

@@ -30,6 +30,7 @@ import type { ValidatorOutcome } from '../../core/validator-outcome.js';
 
 import {
   checkSpecificationAgainstBase,
+  classifyBaseLookup,
   SPECIFICATION_FILE,
 } from './validate-specification-approval-helpers.js';
 
@@ -60,9 +61,14 @@ function readBaseCopy(repoRoot: string): BaseCopy {
       reason: `${BASE_REF} is not in this checkout, so its approval records cannot be compared; fetch it with "git fetch origin main"`,
     };
   }
-  const blob = `${BASE_REF}:${SPECIFICATION_FILE}`;
-  if (run(['cat-file', '-e', blob]).status !== 0) {
+  const listed = run(['ls-tree', '--name-only', BASE_REF, '--', SPECIFICATION_FILE]);
+  const lookup = classifyBaseLookup(listed.status, listed.stdout.toString('utf8'));
+  if (lookup === 'absent') {
     return { kind: 'absent' };
+  }
+  const blob = `${BASE_REF}:${SPECIFICATION_FILE}`;
+  if (lookup === 'unknown') {
+    return { kind: 'unknown', reason: `git could not list ${blob}` };
   }
   const shown = run(['show', blob]);
   return shown.status === 0
@@ -83,11 +89,17 @@ function checkCommittedSpecification(): ValidatorOutcome {
       return cannotRead('the path is not a regular file');
     }
     const bytes = readFileSync(specificationPath);
+    // This branch's own file is judged first, so its failure is reported even where the base
+    // branch cannot be read.
+    const own = checkSpecificationAgainstBase(bytes, undefined);
+    if (own.exitCode !== 0) {
+      return own;
+    }
     const base = readBaseCopy(repoRoot);
     if (base.kind === 'unknown') {
       return cannotRead(base.reason);
     }
-    return checkSpecificationAgainstBase(bytes, base.kind === 'bytes' ? base.bytes : undefined);
+    return base.kind === 'bytes' ? checkSpecificationAgainstBase(bytes, base.bytes) : own;
   } catch (error) {
     if (isErrnoCode(error, 'ENOENT')) {
       return cannotRead('the file does not exist');
