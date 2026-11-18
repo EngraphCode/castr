@@ -12,7 +12,7 @@ owner_directive: >-
   excellence in engineering and software design and architecture."
 todos:
   - id: ALERTS
-    content: 'Dependency alerts on main reach zero through dependency-update pull requests that land without analysis; while main has an alert that holds merges, nothing else merges (SPEC-G-1). Done on 2 November 2026: #117 (SHA:31f49532) cured 30, #118 (SHA:acd9d2b0) the six raised after it; main had zero open alerts at 15:00Z and pnpm audit reported none. A new alert reopens the leg. Reopened on 13 November 2026 by two alerts on @hono/node-server, cured by #119 (SHA:d3077124) on 18 November; open again that day on picomatch (GHSA-fc5q-39xc-vjpf), which has no patched release; specification 0.5.2 names that alert in SPEC-G-1, so it does not hold merges until its advisory names a patched version old enough to install, and its cure then goes first'
+    content: 'Dependency alerts on main reach zero through dependency-update pull requests that land without analysis; while main has an alert that holds merges, nothing else merges (SPEC-G-1). Done on 2 November 2026: #117 (SHA:31f49532) cured 30, #118 (SHA:acd9d2b0) the six raised after it; main had zero open alerts at 15:00Z and pnpm audit reported none. A new alert reopens the leg. Reopened on 13 November 2026 by two alerts on @hono/node-server, cured by #119 (SHA:d3077124) on 18 November; open again that day on picomatch (GHSA-fc5q-39xc-vjpf), which has no patched release; specification 0.5.2 names that alert in SPEC-G-1, so it does not hold merges until its advisory names a patched version old enough to install, and its cure then goes first; the alert is named only while nothing a user of Castr supplies reaches the vulnerable code, so a change that makes picomatch reachable from user input ends that and needs the owner'
     status: pending
     depends_on: []
   - id: PROBE
@@ -124,7 +124,9 @@ raised a high alert on picomatch (GHSA-fc5q-39xc-vjpf) covering every release up
 the latest, so no dependency-update pull request can cure it until upstream publishes a
 patched release; the leg stays open. Specification 0.5.2, approved on 18 November 2026, names
 that alert in SPEC-G-1: it does not hold merges until its advisory names a patched version old
-enough to install, and its cure then goes first. Pull request #109, the identity-chain cure, merged after #111
+enough to install, and its cure then goes first. The clause names the alert only while
+nothing a user of Castr supplies reaches the vulnerable code; a change that would let user
+input reach picomatch ends that condition and goes to the owner before it merges. Pull request #109, the identity-chain cure, merged after #111
 (`SHA:8b0aa438`) at the end of its second review round. The owner's ruling on #109 was
 "land it frozen". From it the agent drew a working rule, which is the agent's wording and
 not the owner's: nothing more goes into the present writer code, and a review finding
