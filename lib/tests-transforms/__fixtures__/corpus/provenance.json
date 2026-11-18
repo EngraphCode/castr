@@ -25,6 +25,32 @@
         "url": "https://open-api.thenational.academy/api/v0/swagger.json",
         "fetchedAt": "2026-09-25T15:31:42Z"
       }
+    },
+    {
+      "file": "oak-curriculum-api-v1-1.1.1.json",
+      "openapi": "3.1.0",
+      "infoTitle": "Oak Curriculum API",
+      "infoVersion": "1.1.1",
+      "bytes": 184195,
+      "sha256": "dffc32cadece5e6e0afc6690b01d98d580d5143dc07963eb304c10d3763e9232",
+      "source": {
+        "kind": "served",
+        "url": "https://open-api.thenational.academy/api/v1/swagger.json",
+        "fetchedAt": "2026-11-18T08:03:18Z"
+      }
+    },
+    {
+      "file": "oak-curriculum-api-v0-0.11.2-2026-11-18.json",
+      "openapi": "3.1.0",
+      "infoTitle": "Oak Curriculum API",
+      "infoVersion": "0.11.2",
+      "bytes": 184322,
+      "sha256": "481a332c25e3b7b4e67c604adab768cff18b6de2dbbdafd5eeb8e9fbfc9a6ce7",
+      "source": {
+        "kind": "served",
+        "url": "https://open-api.thenational.academy/api/v0/swagger.json",
+        "fetchedAt": "2026-11-18T08:03:18Z"
+      }
     }
   ]
 }

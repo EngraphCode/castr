@@ -15,16 +15,24 @@ fails on a document here that is not pinned. It lives with the repository valida
 than in the product test suite because it proves nothing about Castr's behaviour.
 
 No transform scenario parses these documents: `transform-helpers.ts` lists its fixtures by
-name. On 25 September 2026 neither document passes the parser, because both carry a
-schema-valued `additionalProperties` at their two `check-restricted` 200 responses, which
+name. Neither pair passes the parser (checked on 25 September and 18 November 2026), because every
+document carries a schema-valued `additionalProperties` at its two `check-restricted` 200 responses, which
 the parser rejects.
 
 ## Documents
 
-| File                                | What it is                                                                                                                                                                                                                                   |
-| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `oak-curriculum-api-v1-1.0.1.json`  | Oak's v1 document, `info.version` 1.0.1, as served at `https://open-api.thenational.academy/api/v1/swagger.json` on 25 September 2026 at 12:39 UTC.                                                                                          |
-| `oak-curriculum-api-v0-0.11.2.json` | Oak's v0 document, `info.version` 0.11.2, as served at `https://open-api.thenational.academy/api/v0/swagger.json` on 25 September 2026 at 15:31 UTC. Its description says v0 is frozen: fixes continue, new endpoints and fields land in v1. |
+| File                                           | What it is                                                                                                                                                                                                                                      |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `oak-curriculum-api-v1-1.1.1.json`             | Oak's v1 document, `info.version` 1.1.1, as served at `https://open-api.thenational.academy/api/v1/swagger.json` on 18 November 2026 at 08:03 UTC. The latest v1.                                                                               |
+| `oak-curriculum-api-v0-0.11.2-2026-11-18.json` | Oak's v0 document, `info.version` 0.11.2, as served at `https://open-api.thenational.academy/api/v0/swagger.json` on 18 November 2026 at 08:03 UTC. The latest v0: the version did not move, the bytes did, so the name carries the fetch date. |
+| `oak-curriculum-api-v1-1.0.1.json`             | Oak's v1 document, `info.version` 1.0.1, as served at `https://open-api.thenational.academy/api/v1/swagger.json` on 25 September 2026 at 12:39 UTC.                                                                                             |
+| `oak-curriculum-api-v0-0.11.2.json`            | Oak's v0 document, `info.version` 0.11.2, as served at `https://open-api.thenational.academy/api/v0/swagger.json` on 25 September 2026 at 15:31 UTC. Its description says v0 is frozen: fixes continue, new endpoints and fields land in v1.    |
+
+SPEC-C-1 pins each document at the version its source publishes, so the two documents of
+18 November 2026 are the corpus's current pair and the two of 25 September are its history.
+Between the two dates each document changed in examples, descriptions and summaries, v1's
+`info.version` moved from 1.0.1 to 1.1.1, and both lost the `200` response of
+`GET /lessons/{lesson}/assets/{type}`, which now declares only its `302`.
 
 The server sends no ETag or Last-Modified header for either, so the SHA-256 is each
 document's only identity. On 25 September 2026 the two documents differ only in their server
@@ -55,7 +63,8 @@ contains public sector information licensed under the Open Government Licence v3
 A new document is a new file and a new `provenance.json` entry, never an edit of an
 existing file. Record what the validator checks: the file name, `openapi`, `info.title`,
 `info.version`, the byte count and the SHA-256, plus the source: the URL and fetch time.
-Served documents are the one source kind the record holds; a document from another kind of
+Where the source serves new bytes under an unchanged `info.version`, the new file's name
+carries the fetch date. Served documents are the one source kind the record holds; a document from another kind of
 source, one with a commit for instance, gets its own source shape in the validator's record
 schema when the first such document is pinned.
 
