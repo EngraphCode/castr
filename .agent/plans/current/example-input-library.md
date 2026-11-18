@@ -3,7 +3,7 @@ title: Example-input library — a wide variety of pinned input documents
 status: current
 lane: current
 created: 2026-09-25
-last_updated: 2026-09-25
+last_updated: 2026-11-18
 owner_directive: >-
   Owner, 2026-09-25: "We also need a wide variety of example input schemas to
   test against"; "If the openapi-ts test suits is suitable and appropriately
@@ -28,11 +28,11 @@ todos:
     status: pending
     depends_on: [EC-1]
   - id: EC-4
-    content: JSON-Schema-Test-Suite tests/draft7 and tests/draft2020-12 files pinned whole with the json-schema-test-suite kind (MIT); files that reference the suite's own server left out
+    content: JSON-Schema-Test-Suite tests/draft7 and tests/draft2020-12 files pinned whole with the json-schema-test-suite kind (MIT); files that reference the suite's own server left out; waits for SPEC-C-2 (owner, 18 November 2026)
     status: pending
     depends_on: [EC-1]
   - id: EC-5
-    content: SchemaStore schemas declaring 2020-12 pinned with the json-schema kind (Apache 2.0)
+    content: SchemaStore schemas declaring 2020-12 pinned with the json-schema kind (Apache 2.0); waits for SPEC-C-2 (owner, 18 November 2026)
     status: pending
     depends_on: [EC-1]
   - id: EC-6
@@ -40,7 +40,7 @@ todos:
     status: pending
     depends_on: [EC-1]
   - id: EC-7
-    content: The OpenAPI Initiative 3.1 and 3.2 meta-schemas, every schema document in src/schemas/validation at each branch commit (four on the day, schema, schema-base, dialect and meta), pinned with the json-schema kind (Apache 2.0)
+    content: The OpenAPI Initiative 3.1 and 3.2 meta-schemas, every schema document in src/schemas/validation at each branch commit (four on the day, schema, schema-base, dialect and meta), pinned with the json-schema kind (Apache 2.0); waits for SPEC-C-2 with EC-5
     status: pending
     depends_on: [EC-5]
 ---
@@ -60,6 +60,17 @@ then nothing reads them but the validator: the Oak entries remain SPEC-C-1's cor
 this plan puts about 460 files into the repository with no reader. That is what the owner
 asked for, documents to test against, and the tests that read them belong to the course's
 legs and to the owner's later naming.
+
+Owner decision by card, 18 November 2026. The owner's words that day name "a variety of
+other examples specs, which I assume corresponds to the example input library" as part of
+what Castr must work with before it moves, and the card's answer says what working with
+them means: "Never wrong, never crashes (Recommended)". On every OpenAPI document in the
+library, each construct is converted exactly, checked against an independent validator, or
+refused with a located rejection; full support stays required only for the two Oak
+documents. That standard is named in the specification by the course's TERMS amendment,
+and the reader that holds the library to it is one of the legs the course's PLOT writes.
+This plan still pins documents and adds no reader. Its OpenAPI tranches (EC-1, EC-2, EC-3
+and EC-6) come first; its JSON Schema tranches (EC-4, EC-5 and EC-7) wait for SPEC-C-2.
 
 ## Mechanism
 
@@ -156,17 +167,17 @@ Each is taken from the survey's evidence and is open to the owner to strike.
   before a source is pinned.
 - **EC-5 before EC-7 (blocking).** The `json-schema` kind lands with SchemaStore, its first
   documents; the meta-schemas reuse it.
-- **The course (none, in either direction).** The plan sits beside the course and gates
-  nothing in it: its documents are format inputs whatever the MEASURE leg decides, the plan
-  touches no writer code, and MOVE's own prerequisite stays MEASURE alone. The plan asserts
-  nothing about what MOVE carries. The course's "MOVE: what travels" section names the
-  specification, the course plan, the review record, the doctrine the new repository lacks
-  and, on MEASURE's word, the product code; it names no plan in `current/`, this one
-  included. If MOVE runs first, whether this plan and its survey travel is the owner's
-  decision when MOVE runs, taken there. If this plan lands first, EC-0 adds the corpus, the
-  library, their validator, the notices file, `ATTRIBUTION.md`, and this plan with its
-  survey while any of its todos is open, to that section's statement of what travels, an
-  edit to the course the owner reads in EC-0's pull request.
+- **The course (since 18 November 2026, this plan precedes MOVE).** Until that day the plan
+  sat beside the course and gated nothing in it. By the owner's decisions of 18 November
+  the state Castr reaches before MOVE includes the library's standard on its OpenAPI
+  documents, so EC-0 to EC-3 and EC-6 precede the course's reader leg and, through it,
+  MOVE. Nothing in the course gates this plan, and the plan touches no writer code. The
+  course's "MOVE: what travels" section names the specification, the course plan, the
+  review record, the doctrine the new repository lacks and the product code; it names no
+  plan in `current/`, this one included. EC-0 adds the corpus, the library, their
+  validator, the notices file, `ATTRIBUTION.md`, and this plan with its survey while any of
+  its todos is open, to that section's statement of what travels, an edit to the course the
+  owner reads in EC-0's pull request.
 
 ## Acceptance criteria (each with a proof — required)
 
@@ -325,7 +336,8 @@ template omits them.
 
 - **Reading the documents.** No transform scenario, proof or reader is added; SPEC-PR-6's
   check runs capability corpora, and a library document joins one only when the owner
-  names it in the specification.
+  names it in the specification. The reader for the standard of 18 November 2026 is the
+  course's, not this plan's.
 - **Running or asserting third-party tests.** The owner's ruling covers fixtures only;
   Castr's target behaviour may differ.
 - **APIs.guru's acquired definitions and unattributed vendor copies**, for the rules above.
