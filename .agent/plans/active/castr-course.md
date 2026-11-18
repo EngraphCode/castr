@@ -12,8 +12,8 @@ owner_directive: >-
   excellence in engineering and software design and architecture."
 todos:
   - id: ALERTS
-    content: 'Dependency alerts on main reach zero through dependency-update pull requests that land without analysis; until then nothing else merges (SPEC-G-1). Done on 2 November 2026: #117 (SHA:31f49532) cured 30, #118 (SHA:acd9d2b0) the six raised after it; main had zero open alerts at 15:00Z and pnpm audit reported none. A new alert reopens the leg'
-    status: completed
+    content: 'Dependency alerts on main reach zero through dependency-update pull requests that land without analysis; until then nothing else merges (SPEC-G-1). Done on 2 November 2026: #117 (SHA:31f49532) cured 30, #118 (SHA:acd9d2b0) the six raised after it; main had zero open alerts at 15:00Z and pnpm audit reported none. A new alert reopens the leg. Reopened on 13 November 2026 by two alerts on @hono/node-server, cured by #119 (SHA:d3077124) on 18 November; open again that day on picomatch (GHSA-fc5q-39xc-vjpf), which has no patched release'
+    status: pending
     depends_on: []
   - id: PROBE
     content: "A read-only lint probe: OCE's lint configuration, with its type-aware rules, runs over Castr's product code without changing it, and the table of rule, hits and area is saved under .agent/analysis-and-reports/; it is the first step of the owner's question of 1 November 2026, 'run your analysis on the code as-is', an input to the reflection after MEASURE, and RULES's starting point; run on 2 November 2026, its table is .agent/analysis-and-reports/oce-lint-probe-2026-11-02.md"
@@ -118,7 +118,11 @@ cure within declared ranges, and minimatch is fixed only in 11, which breaks
 eslint-plugin-import-x. By the owner's decision card ("Patch import-x"), pull request #118
 forces minimatch 11, glob 14 and KaTeX 0.19 and patches import-x with the change in
 upstream pull request un-ts/eslint-plugin-import-x#570; each forced floor and the patch go
-once their consumers declare the patched major. Pull request #109, the identity-chain cure, merged after #111
+once their consumers declare the patched major. Two alerts on `@hono/node-server` arrived
+on 13 November 2026 and #119 cured them on 18 November (`SHA:d3077124`). Dependabot then
+raised a high alert on picomatch (GHSA-fc5q-39xc-vjpf) covering every release up to 4.0.7,
+the latest, so no dependency-update pull request can cure it until upstream publishes a
+patched release; the leg stays open. Pull request #109, the identity-chain cure, merged after #111
 (`SHA:8b0aa438`) at the end of its second review round. The owner's ruling on #109 was
 "land it frozen". From it the agent drew a working rule, which is the agent's wording and
 not the owner's: nothing more goes into the present writer code, and a review finding

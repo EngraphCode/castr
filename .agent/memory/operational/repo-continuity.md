@@ -9,7 +9,7 @@ The destination is [the specification](../../../docs/SPECIFICATION.md) and the c
 [castr-course.md](../../plans/active/castr-course.md). On 21 September 2026 the owner wrote
 off every inherited worktree, orphaned branch and open pull request, and ruled that Castr
 moves into the Engraph Open Curriculum Ecosystem repository as workspaces, after the
-present generator has been measured against the specification. `main` had zero open dependency alerts from #111 until new advisories arrived; on 2 November 2026 it had 30, and #117 and #118 brought it back to zero the same day (SPEC-G-1). The platform-neutral autonomous-development experiment stays paused.
+present generator has been measured against the specification. `main` had zero open dependency alerts from #111 until new advisories arrived; on 2 November 2026 it had 30, and #117 and #118 brought it back to zero the same day (SPEC-G-1). Two more arrived on 13 November on `@hono/node-server`; #119 cured them on 18 November 2026. The same day Dependabot raised a high alert on picomatch (GHSA-fc5q-39xc-vjpf) covering every release up to 4.0.7, the latest: no patched release exists, so `main` has one open alert that no pull request can cure yet. The platform-neutral autonomous-development experiment stays paused.
 The Practice-enhancement lane in this repository is stopped. On 25 September 2026 the
 categorisation of every lane and plan landed (#113), both served Oak documents were pinned
 as the corpus with a recomputing validator and the specification moved to draft 0.4.1
@@ -52,10 +52,10 @@ new branch"); its pull request lands them on `main`.
 
 ## Active threads
 
-| Thread                                                       | Role and next step                                                                                                                     | Latest identity                                                                                          |
-| ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| [Castr correction](threads/castr-correction.next-session.md) | The branch's pull request lands the ratified 0.5.1 and its SPEC-CC-3 check (alerts at zero since #118, 2 November 2026); then MEASURE. | claude-code / claude-opus-5-5 / Bilby hunts Dreamscape / ratification walk and draft 0.5.0 / 2026-11-02  |
-| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                                                         | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23 |
+| Thread                                                       | Role and next step                                                                                                                                                                | Latest identity                                                                                          |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [Castr correction](threads/castr-correction.next-session.md) | The branch's pull request lands the ratified 0.5.1 and its SPEC-CC-3 check once the picomatch alert is cured or the owner rules on it; MEASURE needs no merge and runs meanwhile. | claude-code / claude-opus-5-5 / Bilby hunts Dreamscape / ratification walk and draft 0.5.0 / 2026-11-02  |
+| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                                                                                                    | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23 |
 
 ## Paused threads and historical records
 
@@ -89,9 +89,12 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 1. **The pull request for `feat/prepare-for-migration`** (ratified 0.5.1, the SPEC-CC-3
    check, ADR-026, the course, the Sonar and PROBE reports, the records) opens and merges
-   when green and clean. `main` has had zero open alerts since #118 (2 November 2026,
-   15:00Z), so it merges with analysis like any pull request; a new alert brings back the
-   cure-only rule (SPEC-G-1). RATIFY is complete at that merge.
+   when green and clean, and when `main` has zero open alerts (SPEC-G-1). On 18 November
+   2026 it does not: the picomatch alert (GHSA-fc5q-39xc-vjpf, high) has no patched
+   release, and picomatch reaches Castr's runtime through ts-morph. Upstream fixes were
+   proposed on 17 and 18 November (micromatch/picomatch pull requests 261 to 270) and none
+   is merged. The cure is a floor on the patched release once one is published. Whether
+   anything merges before then is the owner's decision. RATIFY is complete at that merge.
 2. **The SPEC-CC-3 check's known gap**, in its own pull request next: compare the branch's
    approval records with `main`'s, so that deleting the newest row and reverting the text
    fails, as 0.5.1's "latest ever approved" requires (thread record).

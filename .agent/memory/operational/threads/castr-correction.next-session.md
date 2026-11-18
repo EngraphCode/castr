@@ -7,6 +7,16 @@ successor on any platform: everything that matters is here or in the files this 
 names, never only in an agent's private memory. Verify each line against the live
 repository before acting.
 
+- **State on 18 November 2026 (Ingot binds Patina, 194219), which the lines below predate:**
+  the branch's pull request was not opened on 2 November; it is opened on 18 November.
+  #119 cured the two `@hono/node-server` alerts of 13 November (`SHA:d3077124`), with the
+  floor at 2.1.7 because upstream's 2.1.7 release closes GHSA-fj57-4f93-cfw6, which 2.1.6
+  leaves open. Dependabot then raised a high alert on picomatch (GHSA-fc5q-39xc-vjpf) for
+  every release up to 4.0.7, the latest; no patched release exists, so `main` has one open
+  alert and SPEC-G-1 holds every other merge. The served Oak documents have moved since
+  the 25 September pins: v1 is `info.version` 1.1.1, and v0 has new bytes under the same
+  0.11.2. Neither the pins nor the served documents contain any `allOf`, so the eight
+  `allOf` sites the review record measured on 21 September are in no document Castr holds.
 - **Destination:** [the specification](../../../../docs/SPECIFICATION.md), version 0.5.1,
   status `ratified` since 2 November 2026 (0.5.0 at `SHA:0e2ca07a`, 0.5.1 at
   `SHA:1a7631ac`, both on `feat/prepare-for-migration`, not yet on `main`). It is the only description of Castr's destination. The owner: "this work has drifted and drifted and now I think we need a
@@ -409,3 +419,4 @@ this discovery for the architectural repair; no implementation is claimed here.
 | Mussel mends Buoy      | claude-code | claude-opus-5-5  | 372325         | b69485ad-3a77-5c8a-b2c0-cc764d734103 | PR #110 round-1 cure and merge                 | 2026-09-23    | 2026-09-23   |
 | Smith stirs Ashes      | claude-code | claude-opus-5-5  | 7bd175         | 02ed168a-55c7-5450-8fdb-b7fd399d9c86 | Sonar analysis (sub-agent)                     | 2026-11-01    | 2026-11-01   |
 | Bilby hunts Dreamscape | claude-code | claude-opus-5-5  | d71882         | 767b6de5-9347-5fdb-bbdf-eeb98791ec13 | review, ratification walk, draft 0.5.0         | 2026-11-01    | 2026-11-02   |
+| Ingot binds Patina     | claude-code | claude-fable-5-2 | 194219         | 8fde4762-1621-5ce7-b563-2d0f4f647804 | alert cure #119, the branch's pull request     | 2026-11-18    | 2026-11-18   |
