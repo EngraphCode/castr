@@ -36,7 +36,7 @@ todos:
     status: pending
     depends_on: [CURRENCY, PROBE]
   - id: MOVE
-    content: Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces and is fully integrated there (owner, 2 November 2026); what travels (the code with its history, or the specification with fresh workspaces) is decided at the reflection on the MEASURE table; the specification travels as the only description of the destination, and its SPEC-CC-3 check is given a home in OCE; the approval record covers the specification's exact bytes, so if its arrival in OCE changes any byte above its change log (OCE's formatter or markdownlint), the move carries a format-only amendment approved in words (SPEC-CC-1); this repository is archived
+    content: Held by the owner's ruling of 18 November 2026 until working, working well and correct are defined and reaching that state in this repository has been explored (see Order of the legs). Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces and is fully integrated there (owner, 2 November 2026); what travels (the code with its history, or the specification with fresh workspaces) is decided at the reflection on the MEASURE table; the specification travels as the only description of the destination, and its SPEC-CC-3 check is given a home in OCE; the approval record covers the specification's exact bytes, so if its arrival in OCE changes any byte above its change log (OCE's formatter or markdownlint), the move carries a format-only amendment approved in words (SPEC-CC-1); this repository is archived
     status: pending
     depends_on: [RULES]
   - id: PLOT
@@ -81,6 +81,13 @@ owner's 1 November order, "dependencies, then rules"; the owner confirmed that r
 card the same day ("Yes, as read"). The order is therefore ALERTS, RATIFY, MEASURE, the
 reflection, CURRENCY, RULES, MOVE, PLOT, with PROBE (read-only) at any time before the
 reflection.
+
+Owner ruling, 18 November 2026, at the start of the reflection, verbatim: "I don't want to
+move the code until we have defined what working and working well looks like, what
+correctness means, and explored if we can reach that state in isolation. Moving broken code
+into another repo seems like it can only cause further problems". MOVE therefore does not
+start until both are done, whatever the todos above say about its order; the order of the
+legs before it is rewritten when the reflection settles them.
 
 ## RATIFY: how the specification is ratified
 
