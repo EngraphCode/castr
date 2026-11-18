@@ -60,15 +60,22 @@ MIT text in the owner's own name, and to scrub the seven user-home paths from th
 napkins. The scrub landed with #125 (`SHA:f17e6e8f`) and the licence file, the MIT text
 alone by the owner's ruling, with #126 (`SHA:c3669e36`). The seat settled the rest; each
 disposition is in the napkin's entry for that pass. The
-[example-input library](../../plans/current/example-input-library.md) proceeds beside the
-reflection, from EC-0.
+[example-input library](../../plans/current/example-input-library.md) proceeds from EC-0.
+
+The reflection ran the same day. The owner asked whether their request held tensions; the
+seat found six and the owner decided three by card. The code travels, made correct here
+first: correct includes how the code is built, SPEC-C-1's first acceptance part passes in
+this repository on both Oak documents before MOVE, and the example library's OpenAPI
+documents are each converted exactly or refused with a located rejection. The
+[course](../../plans/active/castr-course.md) carries the decisions in "Order of the legs",
+with a new TERMS leg (the amendment that defines the terms and changes §10) ahead of PLOT.
 
 ## Active threads
 
-| Thread                                                       | Role and next step                                                                                            | Latest identity                                                                                               |
-| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| [Castr correction](threads/castr-correction.next-session.md) | The reflection with the owner on the MEASURE table decides what travels; then CURRENCY, RULES, MOVE and PLOT. | claude-code / claude-fable-5-2 / Ingot binds Patina / alert cure, RATIFY landing, MEASURE, 0.5.2 / 2026-11-18 |
-| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                                | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23      |
+| Thread                                                       | Role and next step                                                                                         | Latest identity                                                                                               |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| [Castr correction](threads/castr-correction.next-session.md) | TERMS, the amendment the owner approves in words; then PLOT, the legs it writes, CURRENCY, RULES and MOVE. | claude-code / claude-fable-5-2 / Ingot binds Patina / alert cure, RATIFY landing, MEASURE, 0.5.2 / 2026-11-18 |
+| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                             | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23      |
 
 ## Paused threads and historical records
 
@@ -100,23 +107,26 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-1. **The reflection began on 18 November 2026 with the owner's ruling**, verbatim: "I don't
-   want to move the code until we have defined what working and working well looks like, what
-   correctness means, and explored if we can reach that state in isolation. Moving broken
-   code into another repo seems like it can only cause further problems". MOVE therefore
-   waits on that definition and that exploration; the course's order below predates it and
-   is rewritten when the reflection settles the legs.
-   **The reflection on the MEASURE table** continues from there. MEASURE ran on
-   18 November 2026 and decides nothing: its table is
-   [measure-2026-11-18.md](../../analysis-and-reports/measure-2026-11-18.md). Run the
-   reflection with the owner as concept exploration over the table; it decides what travels.
-   CURRENCY, RULES, MOVE and PLOT follow in the course's order. The
+1. **TERMS: draft the amendment and take it to the owner.** The reflection of 18 November
+   2026 began with the owner's ruling, verbatim: "I don't want to move the code until we
+   have defined what working and working well looks like, what correctness means, and
+   explored if we can reach that state in isolation. Moving broken code into another repo
+   seems like it can only cause further problems". It ended with three decisions by card
+   (the [course](../../plans/active/castr-course.md), "Order of the legs"). The amendment
+   carries them into the specification: §10 moves Castr once SPEC-C-1's first acceptance
+   part passes here, in place of "early in the course"; working, working well and correct
+   are defined; the example library's standard is named. The owner approves it in words,
+   naming the version (SPEC-CC-2). PLOT follows it. The
    [thread record](threads/castr-correction.next-session.md) carries each leg's state.
 2. **The example-input library starts at EC-0**, attribution and third-party notices
-   ([its plan](../../plans/current/example-input-library.md)). It gates nothing in the course
-   and nothing gates it. The owner asked for it on 25 September 2026 and reads one sentence
-   of the course in EC-0's pull request.
-3. **The picomatch alert stays open** (GHSA-fc5q-39xc-vjpf, high). SPEC-G-1 at 0.5.2 names
+   ([its plan](../../plans/current/example-input-library.md)). Since 18 November its OpenAPI
+   tranches precede MOVE and its JSON Schema tranches wait for SPEC-C-2. The owner asked
+   for it on 25 September 2026 and reads one sentence of the course in EC-0's pull request.
+3. **The picomatch alert was still open on 18 November at 17:43 UTC, and its advisory is
+   withdrawn** (GHSA-fc5q-39xc-vjpf; withdrawn at 15:38 UTC that day). Read the alert's
+   state, the advisory and the latest release at session open and at every merge: the owner
+   asked for a daily check. If GitHub closes the alert, SPEC-G-1 still names it and removing
+   the name is an amendment the owner approves. While it is open, SPEC-G-1 at 0.5.2 names
    it, so it does not hold merges while its advisory names no patched version; it is never
    dismissed. When the advisory names a patched version old enough to install, it holds
    merges again and its cure, a floor in `pnpm-workspace.yaml`, goes first. The clause names
