@@ -34,18 +34,20 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
     deleted on 1 November; nothing depends on them and MOVE archives this repository.
   - **Settled, a standing check:** when picomatch gets a patched release. The sensor is the
     alert's patched-version field, read at every merge; Dependabot security updates are off
-    here, so no pull request will announce it. The thread record's definition of green and
-    clean now says so.
+    here, so no pull request will announce it. The clause's other condition is read at
+    every merge too: nothing a user of Castr supplies reaches the vulnerable code. The
+    thread record's definition of green and clean now says both.
   - **Settled, stays unmeasured:** `propertyNames`. It occurs only inside the two schemas the
     generator rejects, so on the Oak documents its outcome is `rejects` by containment.
   - **Settled, starts now:** the example-input library, at EC-0. Its plan gates nothing in
     the course and nothing gates it.
-  - **Settled, no action (found during the pass):** the archive-scrub plan stays dormant, as
-    the lane categorisation of 24 September left it. The repository is public and three
+  - **Went to the owner (found during the pass), who chose to scrub:** the archive-scrub
+    plan had stayed dormant since the lane categorisation of 24 September. The repository is public and three
     archived napkins hold seven user-home path occurrences, but the same account name is in
     the public commit metadata, a working-tree scrub leaves public history unchanged, and a
     history rewrite is destructive and the owner's alone. Leaving it is the owner's to
-    accept, so it went on a card with "leave it" recommended.
+    accept, so it went on a card with "leave it" recommended; the owner's answer is below
+    and the scrub is its own pull request.
 - **OWNER RULING (18 November 2026, after the cards, the whole message verbatim): "I don't
   want to move the code until we have defined what working and working well looks like, what
   correctness means, and explored if we can reach that state in isolation. Moving broken

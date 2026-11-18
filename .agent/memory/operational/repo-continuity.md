@@ -117,7 +117,9 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 3. **The picomatch alert stays open** (GHSA-fc5q-39xc-vjpf, high). SPEC-G-1 at 0.5.2 names
    it, so it does not hold merges while its advisory names no patched version; it is never
    dismissed. When the advisory names a patched version old enough to install, it holds
-   merges again and its cure, a floor in `pnpm-workspace.yaml`, goes first. Any other alert
+   merges again and its cure, a floor in `pnpm-workspace.yaml`, goes first. The clause names
+   it only while nothing a user of Castr supplies reaches the vulnerable code, so a change
+   that lets user input reach picomatch goes to the owner before it merges. Any other alert
    holds merges as before; one with no patched version needs the same trace (is the code
    used, can the function go, can it be done another way) and its own amendment.
 4. **The SPEC-CC-3 check compares approval records with `main`'s.** An approval record that

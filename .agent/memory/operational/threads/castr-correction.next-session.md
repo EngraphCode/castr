@@ -164,7 +164,10 @@ repository before acting.
   dependency alert on `main` that holds merges. Since 0.5.2 an alert that SPEC-G-1 names
   does not hold them. Read that alert's patched-version field at every merge: it holds
   merges again once its advisory names a patched version old enough to install, and no
-  pull request will announce that, because Dependabot security updates are off here.
+  pull request will announce that, because Dependabot security updates are off here. The
+  clause names the alert only while nothing a user of Castr supplies reaches the
+  vulnerable code, so read each change for a new call into a glob matcher with user input
+  too; one that adds such a call goes to the owner before it merges.
 - **Written off on 21 September 2026 by owner ruling:** every dirty worktree and orphaned
   branch, and pull requests #11–#13, #15–#18, #20, #21, #23, #26, #27 and #81 (closed; commits
   reachable at `refs/pull/<n>/head`). Nothing of theirs is evaluated or recovered. The plans
