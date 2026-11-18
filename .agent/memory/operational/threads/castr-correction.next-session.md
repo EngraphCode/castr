@@ -17,6 +17,14 @@ repository before acting.
   the 25 September pins: v1 is `info.version` 1.1.1, and v0 has new bytes under the same
   0.11.2. Neither the pins nor the served documents contain any `allOf`, so the eight
   `allOf` sites the review record measured on 21 September are in no document Castr holds.
+- **Specification 0.5.2, approved on 18 November 2026, verbatim "I approve version 0.5.2":**
+  SPEC-G-1 now says an open alert holds merges unless the clause names it, and names
+  GHSA-fc5q-39xc-vjpf (picomatch). The owner first asked whether picomatch is used, whether
+  the function is needed and whether it can be done another way; the trace found the
+  product loads it and never calls it, the gate tools all depend on it, and upstream's
+  maintainers had not responded in a month. One adversarial review reshaped the wording
+  from a test an agent applies to a list the owner approves. The alert is never dismissed.
+  A future alert with no patched version needs its own amendment, after the same trace.
 - **MEASURE ran on 18 November 2026:**
   [its table](../../../analysis-and-reports/measure-2026-11-18.md) scores today's generator
   on the documents served that day, one operation at a time, against Ajv on the source
@@ -26,7 +34,7 @@ repository before acting.
   source. Media types, response headers, security on the endpoint, source defaults as
   annotations and the `paths` type are absent. The table gives no verdict; the reflection
   with the owner is next.
-- **Destination:** [the specification](../../../../docs/SPECIFICATION.md), version 0.5.1,
+- **Destination:** [the specification](../../../../docs/SPECIFICATION.md), version 0.5.2,
   status `ratified` since 2 November 2026 (0.5.0 at `SHA:0e2ca07a`, 0.5.1 at
   `SHA:1a7631ac`, both on `feat/prepare-for-migration`, not yet on `main`). It is the only description of Castr's destination. The owner: "this work has drifted and drifted and now I think we need a
   destination that can only change with process and agreement"; "approval happens locally,
