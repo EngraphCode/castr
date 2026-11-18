@@ -28,7 +28,7 @@ todos:
     status: pending
     depends_on: [ALERTS]
   - id: MEASURE
-    content: "The coverage table for SPEC-C-1: what today's generator does on both Oak documents at their latest published versions, its Zod output loaded under the latest Zod 4, scored against the source document by an independent validator, never against the libraries being replaced; it makes no decision (owner's decision card, 2 November 2026: 'Measure without making decisions, drop the thresholds, we figure out what we have, then we reflect on it'); the owner and the agent then reflect on it and decide what travels; a throwaway probe, nothing red enters any repository"
+    content: "The coverage table for SPEC-C-1: what today's generator does on both Oak documents at their latest published versions, its Zod output loaded under the latest Zod 4, scored against the source document by an independent validator, never against the libraries being replaced; it makes no decision (owner's decision card, 2 November 2026: 'Measure without making decisions, drop the thresholds, we figure out what we have, then we reflect on it'); the owner and the agent then reflect on it and decide what travels; a throwaway probe, nothing red enters any repository; run on 18 November 2026 against the documents served that day (v1 1.1.1, v0 0.11.2), its table is .agent/analysis-and-reports/measure-2026-11-18.md, and the reflection with the owner is next"
     status: pending
     depends_on: [RATIFY]
   - id: RULES

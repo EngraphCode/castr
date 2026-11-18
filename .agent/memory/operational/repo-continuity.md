@@ -100,8 +100,10 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    still be on the branch with the same version and digest, so deleting the newest row and
    reverting the text fails, as 0.5.1's "latest ever approved" requires. The check reads
    `origin/main` from git, so a checkout that has not fetched it exits 2.
-3. **MEASURE** follows RATIFY and decides nothing; then the owner's reflection decides what
-   travels, and CURRENCY, RULES, MOVE and PLOT follow in the course's order. The
+3. **MEASURE ran on 18 November 2026** and decides nothing: its table is
+   [measure-2026-11-18.md](../../analysis-and-reports/measure-2026-11-18.md). The next owner
+   interaction is the reflection on that table, run as concept exploration, which decides
+   what travels; CURRENCY, RULES, MOVE and PLOT follow in the course's order. The
    [thread record](threads/castr-correction.next-session.md) carries each leg's state.
 
 ## Deep consolidation status
