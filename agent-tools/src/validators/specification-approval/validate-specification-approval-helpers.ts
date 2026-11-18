@@ -413,8 +413,9 @@ function readBaseRecords(baseBytes: Uint8Array): Read<readonly ApprovalRecord[]>
 /**
  * {@link checkSpecificationBytes}, and SPEC-CC-3's general rule: "The latest approved record is
  * the latest ever approved, not the latest left in the file". Every approval record the base
- * branch holds must still be here with the same version and digest, so deleting the newest
- * row and reverting the text to an earlier approved version fails.
+ * branch holds must still be here, with the same version and digest and in the same order, so
+ * deleting or moving the newest row and reverting the text to an earlier approved version
+ * fails.
  *
  * @param bytes - The specification's bytes on this branch.
  * @param baseBytes - The base branch's copy, or `undefined` when it holds no specification.
@@ -435,25 +436,27 @@ export function checkSpecificationAgainstBase(
   if (!baseRecords.ok) {
     return unreadableBase(baseRecords.error);
   }
-  const missing = baseRecords.value.filter(
-    (base) =>
-      !document.value.records.some(
-        (record) => record.version === base.version && record.sha256 === base.sha256,
-      ),
-  );
-  return missing.length === 0
+  // The base branch's records must open this change log's records, unchanged and in the same
+  // order: membership alone would let the rows be reordered so an earlier record governs.
+  const displaced = baseRecords.value.filter((base, position) => {
+    const record = document.value.records[position];
+    return record?.version !== base.version || record.sha256 !== base.sha256;
+  });
+  return displaced.length === 0
     ? outcome
     : {
         exitCode: 1,
         stdout: [],
         stderr: [
-          ...missing.map(
+          ...displaced.map(
             (record) =>
               `${SPECIFICATION_FILE}: the base branch holds the approval record of version ` +
-              `${record.version} (SHA-256 ${record.sha256}), and this change log does not.`,
+              `${record.version} (SHA-256 ${record.sha256}), and this change log does not hold ` +
+              'it in the same place.',
           ),
-          'The latest approved record is the latest ever approved, so an approval row is never ' +
-            'removed or altered (SPEC-CC-3).',
+          'The latest approved record is the latest ever approved: the approval records of the ' +
+            'base branch stay, unchanged and in the same order, and a new record follows them ' +
+            '(SPEC-CC-3).',
         ],
       };
 }

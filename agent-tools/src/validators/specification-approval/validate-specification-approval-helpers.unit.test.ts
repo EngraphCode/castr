@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto';
+
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -331,6 +333,21 @@ describe('checkSpecificationAgainstBase: the latest approved record is the lates
     const outcome = checkSpecificationAgainstBase(altered, onBase);
     expect(outcome.exitCode).toBe(1);
     expect(report(outcome.stderr)).toContain(RATIFIED_050_SHA256);
+  });
+
+  it('fails when the rows are reordered so that an earlier record governs again', () => {
+    const reordered = document(RATIFIED_050, [row051, row050]);
+    expect(checkSpecificationBytes(reordered).exitCode).toBe(0);
+    const outcome = checkSpecificationAgainstBase(reordered, onBase);
+    expect(outcome.exitCode).toBe(1);
+    expect(report(outcome.stderr)).toContain('same order');
+  });
+
+  it('passes when a new approval record follows the base branch’s records', () => {
+    const next = front('0.5.2', 'ratified');
+    const nextSha256 = createHash('sha256').update(next).digest('hex');
+    const amended = document(next, [row050, row051, approved('0.5.2', nextSha256)]);
+    expect(checkSpecificationAgainstBase(amended, onBase).exitCode).toBe(0);
   });
 
   it('passes over a base that is still a draft, even one whose change log it cannot read', () => {
