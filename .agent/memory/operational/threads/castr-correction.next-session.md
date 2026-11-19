@@ -69,6 +69,12 @@ repository before acting.
   and the rules `present-verdicts-not-menus` and `design-from-impact-not-the-cowpath`
   before putting anything to the owner: a recommendation-bearing decision is not a
   question, and joint reflection is discussed in prose.
+- **OWNER RULING, 19 November 2026, verbatim: "Drop v0, latest v1 only".** Asked what the
+  two Oak documents are, the owner was told that SPEC-C-1 requires both and that the
+  consuming repository generates from an August copy of v0 and does not consume v1. The
+  corpus is now the v1 document at its latest published version. SPEC-C-1's text changes
+  by the course's CORPUS amendment (owner's words naming the version); the v0 pins leave
+  the corpus in that landing. The consuming repository moves onto v1 before any swap.
 - **Next work: PICTURE (the course's todo).** One repeatable command that shows what Castr
   does on each document, judged from outside Castr; the MEASURE probe is its first drawing.
   It is the owner's "what working looks like". No owner interaction is pending. The

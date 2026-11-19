@@ -130,6 +130,10 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   notification, or with a bounded interval. And I applied SPEC-I-1 (stop, ask, amend) to a
   conversation: that clause is for work that depends on a silent clause, not for an owner's
   question about what good looks like.
+- **Owner ruling, 19 November, verbatim: "Drop v0, latest v1 only".** It came from a plain
+  answer to a plain question ("what are the two Oak documents?") that put two facts side
+  by side: the owner had named v1, and the consumer uses an old v0 copy. Stating the facts
+  and my own treatment of them drew a ruling in five words; no card was involved.
 - **Process, for the fleet rule.** Two readers, default tier, read-only: 286k and 224k
   tokens (the estimate from the earlier legs was about 180k each, so the pair ran over the
   500k line that calls for a design review first; a third planned reader was dropped

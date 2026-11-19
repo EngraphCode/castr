@@ -120,7 +120,10 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    picture: documents down the side, what a consumer takes across the top, each cell right,
    refused in plain words with its place, wrong, missing or crashed. The MEASURE probe is
    its first drawing; it lands asserting the cells already right and grows with the code.
-   Nothing waits on the owner now. One owner step lies ahead: before MOVE, the course's
+   On 19 November the owner ruled "Drop v0, latest v1 only": the picture's Oak row is the
+   v1 document. SPEC-C-1 names both documents until the course's CORPUS amendment lands,
+   which needs the owner's approval in words naming the version. One more owner step lies
+   ahead: before MOVE, the course's
    HOME todo changes section 10's "early in the course" by an amendment the owner approves
    in words.
 2. **The example-input library continues at EC-1**, the pin record's shape for many
