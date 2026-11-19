@@ -77,6 +77,16 @@ repository before acting.
   have: about 26,500 of 35,655 product lines are the model or written against its shape, so
   what moves after being made correct is mostly code not yet written; the owner's word of
   18 November (make it correct here) stands until the owner says otherwise.
+- **EC-0 of the example-input library, 19 November 2026.** `ATTRIBUTION.md` names the
+  OpenAPI Initiative, the Swagger Petstore authors and Oak National Academy;
+  `docs/THIRD_PARTY_NOTICES.md` gives each licence, the source commit each unchanged file
+  matches, and how Castr changed the five it has changed (four OpenAPI Initiative files
+  and the Petstore file, which now opens with the notice Apache 2.0 asks for). It also
+  covers an earlier Oak document held outside the corpus (`arbitrary/oak-api.json`) and
+  the files under `normalized/` that Castr derives from third-party documents. Every claim
+  was re-read from the source repositories that day. The fetch script and its dependency
+  are gone: a newer copy of an example is a new pin recorded in the notices file. The
+  plan is in `active/` and continues at EC-1.
 - **picomatch on 18 November 2026 at 17:43 UTC.** The GitHub Advisory Database withdrew
   GHSA-fc5q-39xc-vjpf at 15:38 UTC that day; the maintainer calls the report "not a
   vulnerability"; upstream issues #234 and #247 are open and no release follows 4.0.7. Alert
