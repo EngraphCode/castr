@@ -3,7 +3,7 @@ title: Example-input library — a wide variety of pinned input documents
 status: current
 lane: current
 created: 2026-09-25
-last_updated: 2026-11-18
+last_updated: 2026-11-19
 owner_directive: >-
   Owner, 2026-09-25: "We also need a wide variety of example input schemas to
   test against"; "If the openapi-ts test suits is suitable and appropriately
@@ -71,8 +71,8 @@ what Castr must work with before it moves, and the card's answer says what worki
 them means: "Never wrong, never crashes (Recommended)". On every OpenAPI document in the
 library, each construct is converted exactly, checked against an independent validator, or
 refused with a located rejection; full support stays required only for the two Oak
-documents. That standard is named in the specification by the course's TERMS amendment,
-and the reader that holds the library to it is one of the legs the course's PLOT writes.
+documents. That is SPEC-PR-2, which binds every construct, checked on these documents. The
+rows the library adds to the course's PICTURE are where it shows.
 This plan still pins documents and adds no reader. Its OpenAPI tranches (EC-1, EC-2, EC-3
 and EC-6) come first; its JSON Schema tranches (EC-4, EC-5 and EC-7) wait for SPEC-C-2.
 

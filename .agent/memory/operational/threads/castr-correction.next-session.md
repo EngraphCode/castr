@@ -55,12 +55,28 @@ repository before acting.
   documents are each converted exactly or refused with a located rejection, before MOVE. A
   repair that adds no text-building goes into today's code; new writer output is built as
   syntax-tree nodes; the model changes only after its design (SPEC-N-1) is an approved
-  amendment. The course's order is now TERMS, PLOT, the legs PLOT writes, MOVE.
-- **Next owner interaction: TERMS.** An amendment the owner approves in words, naming the
-  version: §10 moves Castr once SPEC-C-1's first acceptance part passes here, in place of
-  "early in the course"; working, working well and correct are defined; the library's
-  standard is named. Draft it, show the owner each changed sentence, record the approval per
-  SPEC-CC-2. Until it is approved §10 stands as written and MOVE does not start.
+  amendment. The course's order is now PICTURE, PLOT, the legs PLOT writes, HOME, MOVE.
+- **OWNER CORRECTION, 19 November 2026, verbatim:** "Reflecting the decision back to me is
+  not helpful. Use the cognitive skills to break down the questions, analyse them, review
+  them from multiple perspectives, and form better questions. This process must involve
+  stepping back, identifying assumptions and frames and deeply challenging them. Once the
+  better questions exist, use the principles and cognitive skills to run them through the
+  decision matrix. Read the Directives for guidance on our philopsophies". It answered a
+  draft amendment (0.6.0) that defined working, working well and correct by quoting card
+  labels; the draft is withdrawn and no amendment is pending. The cards' answers stand as
+  what the first two decision lenses force, not as questions that needed asking. Read OCE's
+  `principles.md`, `user-collaboration.md`, `definition-of-delivery.md`, `tdd-as-design.md`
+  and the rules `present-verdicts-not-menus` and `design-from-impact-not-the-cowpath`
+  before putting anything to the owner: a recommendation-bearing decision is not a
+  question, and joint reflection is discussed in prose.
+- **Next work: PICTURE (the course's todo).** One repeatable command that shows what Castr
+  does on each document, judged from outside Castr; the MEASURE probe is its first drawing.
+  It is the owner's "what working looks like". No owner interaction is pending. The
+  specification needs one phrase changed (§10, "early in the course"), by an approved
+  amendment before MOVE (the course's HOME todo). Put to the owner on 19 November as a fact they did not
+  have: about 26,500 of 35,655 product lines are the model or written against its shape, so
+  what moves after being made correct is mostly code not yet written; the owner's word of
+  18 November (make it correct here) stands until the owner says otherwise.
 - **picomatch on 18 November 2026 at 17:43 UTC.** The GitHub Advisory Database withdrew
   GHSA-fc5q-39xc-vjpf at 15:38 UTC that day; the maintainer calls the report "not a
   vulnerability"; upstream issues #234 and #247 are open and no release follows 4.0.7. Alert
@@ -132,8 +148,8 @@ repository before acting.
   branch's approval records with `main`'s and fails if any is missing, which needs CI to
   fetch `main`. Each forced dependency floor and the import-x patch name their own removal
   condition in `pnpm-workspace.yaml`.
-- **Next owner interaction (superseded on 18 November 2026: the reflection ran, and the next
-  one is TERMS, above):** the reflection on MEASURE's table, which decides what travels
+- **Next owner interaction (superseded on 18 November 2026: the reflection ran; the bullets
+  above carry what follows it):** the reflection on MEASURE's table, which decides what travels
   into OCE; run it with the owner as concept exploration over the table, not as a decision
   matrix (owner: "Measure without making decisions, drop the thresholds, we figure out what
   we have, then we reflect on it"). Until then the work needs no owner decision: the

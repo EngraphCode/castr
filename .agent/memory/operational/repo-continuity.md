@@ -68,14 +68,16 @@ first: correct includes how the code is built, SPEC-C-1's first acceptance part 
 this repository on both Oak documents before MOVE, and the example library's OpenAPI
 documents are each converted exactly or refused with a located rejection. The
 [course](../../plans/active/castr-course.md) carries the decisions in "Order of the legs",
-with a new TERMS leg (the amendment that defines the terms and changes §10) ahead of PLOT.
+with a PICTURE leg ahead of PLOT. On 19 November the owner sent back a draft amendment that
+only reflected those decisions; the course records the correction and what stepping back
+found, including that most of today's product code is replaced by the construction rules.
 
 ## Active threads
 
-| Thread                                                       | Role and next step                                                                                         | Latest identity                                                                                               |
-| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| [Castr correction](threads/castr-correction.next-session.md) | TERMS, the amendment the owner approves in words; then PLOT, the legs it writes, CURRENCY, RULES and MOVE. | claude-code / claude-fable-5-2 / Ingot binds Patina / alert cure, RATIFY landing, MEASURE, 0.5.2 / 2026-11-18 |
-| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                             | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23      |
+| Thread                                                       | Role and next step                                                                                    | Latest identity                                                                                               |
+| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| [Castr correction](threads/castr-correction.next-session.md) | PICTURE, the command that shows what Castr does; then PLOT, its legs, CURRENCY, RULES, HOME and MOVE. | claude-code / claude-fable-5-2 / Ingot binds Patina / alert cure, RATIFY landing, MEASURE, 0.5.2 / 2026-11-18 |
+| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                        | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23      |
 
 ## Paused threads and historical records
 
@@ -107,17 +109,18 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-1. **TERMS: draft the amendment and take it to the owner.** The reflection of 18 November
-   2026 began with the owner's ruling, verbatim: "I don't want to move the code until we
-   have defined what working and working well looks like, what correctness means, and
-   explored if we can reach that state in isolation. Moving broken code into another repo
-   seems like it can only cause further problems". It ended with three decisions by card
-   (the [course](../../plans/active/castr-course.md), "Order of the legs"). The amendment
-   carries them into the specification: §10 moves Castr once SPEC-C-1's first acceptance
-   part passes here, in place of "early in the course"; working, working well and correct
-   are defined; the example library's standard is named. The owner approves it in words,
-   naming the version (SPEC-CC-2). PLOT follows it. The
-   [thread record](threads/castr-correction.next-session.md) carries each leg's state.
+1. **PICTURE: one repeatable command that shows what Castr does, judged from outside it.**
+   The owner asked on 18 November 2026 what working, working well and correct look like.
+   The seat answered with cards and a draft amendment, and on 19 November the owner sent it
+   back, verbatim: "Reflecting the decision back to me is not helpful." (the whole
+   correction is in the [thread record](threads/castr-correction.next-session.md) and the
+   [course](../../plans/active/castr-course.md), "Order of the legs"). The answer is a
+   picture: documents down the side, what a consumer takes across the top, each cell right,
+   refused in plain words with its place, wrong, missing or crashed. The MEASURE probe is
+   its first drawing; it lands asserting the cells already right and grows with the code.
+   Nothing waits on the owner now. One owner step lies ahead: before MOVE, the course's
+   HOME todo changes section 10's "early in the course" by an amendment the owner approves
+   in words.
 2. **The example-input library starts at EC-0**, attribution and third-party notices
    ([its plan](../../plans/current/example-input-library.md)). Since 18 November its OpenAPI
    tranches precede MOVE and its JSON Schema tranches wait for SPEC-C-2. The owner asked
