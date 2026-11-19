@@ -1,6 +1,6 @@
 # Example-input corpus sources — survey of 25 September 2026
 
-Evidence base for the plan `.agent/plans/current/example-input-library.md`: candidate sources of
+Evidence base for the plan `.agent/plans/active/example-input-library.md`: candidate sources of
 real-world and edge-case input documents for Castr, each with its pin (repository and commit, or
 served URL), licence and gotchas, as read on 25 September 2026. Commissioned by the owner's words of
 that day: "We also need a wide variety of example input schemas to test against" and "If the
