@@ -22,8 +22,9 @@ source commit each file matches, and how Castr has changed the ones it has chang
 
 ## OpenAPI Examples (`openapi/`)
 
-These are the OpenAPI Initiative's examples; the notices file is their record. The v3.0 and
-v3.1 examples are held as YAML and as JSON.
+Most of these are the OpenAPI Initiative's examples; the notices file is their record and
+lists the three files that are not. The v3.0 and v3.1 examples are held as YAML and as
+JSON, each with the source's Markdown page.
 
 ### Included Examples
 

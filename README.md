@@ -61,6 +61,7 @@ evidence and repair ownership.
 
 ## Licence
 
-Castr is under the [MIT licence](./LICENSE). The example documents it holds were written by
-others: [ATTRIBUTION.md](./ATTRIBUTION.md) names them, and
-[the third-party notices](./docs/THIRD_PARTY_NOTICES.md) give their licences.
+Castr is under the [MIT licence](./LICENSE). Most of the example documents it holds were
+written by others: [ATTRIBUTION.md](./ATTRIBUTION.md) names them, and
+[the third-party notices](./docs/THIRD_PARTY_NOTICES.md) give their licences and list the
+files that are not third-party.
