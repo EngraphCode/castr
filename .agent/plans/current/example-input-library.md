@@ -71,9 +71,8 @@ what Castr must work with before it moves, and the card's answer says what worki
 them means: "Never wrong, never crashes (Recommended)". On every OpenAPI document in the
 library, each construct is converted exactly, checked against an independent validator, or
 refused with a located rejection; full support stays required only for the two Oak
-documents. That is SPEC-PR-2, which already binds every construct, checked on these
-documents; it needs no amendment (the one drafted on 19 November was sent back by the
-owner). The rows the library adds to the course's PICTURE are where it shows.
+documents. That is SPEC-PR-2, which binds every construct, checked on these documents. The
+rows the library adds to the course's PICTURE are where it shows.
 This plan still pins documents and adds no reader. Its OpenAPI tranches (EC-1, EC-2, EC-3
 and EC-6) come first; its JSON Schema tranches (EC-4, EC-5 and EC-7) wait for SPEC-C-2.
 
