@@ -102,6 +102,34 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   remains; a second run leaves `git status` clean; old and new validators run over the same
   recorded live responses decide every value alike, and each difference is one somebody
   chose; a refresh against the served document followed by a build passes.
+- **EC-0 picked up on 19 November (the example library's attribution).** Each provenance
+  claim in the survey of 25 September was re-read from the source repositories before it
+  was written into `docs/THIRD_PARTY_NOTICES.md`. Found beyond the plan: `v3.2/tictactoe.yaml`
+  is a fourth modified OpenAPI Initiative file (the 3.1 file with its `openapi` field
+  changed); `lib/examples/swagger/petstore.yaml` is third-party too (Apache 2.0, modified in
+  Castr twice, and matching no upstream revision on any branch even as first committed), so
+  it now carries the modification notice the licence asks for; and the fetch script was
+  already broken, because `lib/package.json` pointed it at a path where no file exists.
+- **One more third-party file, found by listing every fixture directory before committing
+  the claim "this file names them".** `lib/tests-transforms/__fixtures__/arbitrary/oak-api.json`
+  is an Oak v0 document (`info.version` 0.5.0-18a779a2, in Castr unchanged since 19 January
+  2026, fetch date not recorded), and `normalized/` holds Castr's output for it and for five
+  of the examples. Both are now in the notices file. A completeness claim in an
+  attribution file is checked against the whole tree, not against the plan's list.
+- **Tool feedback, commit queue.** A move cannot be committed with both paths declared:
+  `verify-staged` reads the staged name-status with rename detection, sees one renamed
+  path, and reports the old path as missing from the staged set. Setting `diff.renames` to
+  false for the one command (through `GIT_CONFIG_COUNT`, `GIT_CONFIG_KEY_0` and
+  `GIT_CONFIG_VALUE_0`) makes git report a removal and an addition, which matches the
+  declared files. Also: every pre-commit hook scans every tracked file, so two removals in
+  two commits need the second file still on disk during the first commit. The owner of
+  the queue is the Practice tooling lane, which is stopped in this repository; this note
+  is the record until that lane reopens.
+- **Two more mistakes of 19 November.** I left a tight waiting loop running in the
+  background while a push gate ran and stopped it within a minute; wait on the harness's
+  notification, or with a bounded interval. And I applied SPEC-I-1 (stop, ask, amend) to a
+  conversation: that clause is for work that depends on a silent clause, not for an owner's
+  question about what good looks like.
 - **Process, for the fleet rule.** Two readers, default tier, read-only: 286k and 224k
   tokens (the estimate from the earlier legs was about 180k each, so the pair ran over the
   500k line that calls for a design review first; a third planned reader was dropped

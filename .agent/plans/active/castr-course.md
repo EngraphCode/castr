@@ -116,7 +116,7 @@ by decision card. Each answer below is the option the owner chose, in the card's
   and MOVE does not start.
 - **What working with other example documents means:** "Never wrong, never crashes
   (Recommended)". On every OpenAPI document in the
-  [example library](../current/example-input-library.md), each construct is converted
+  [example library](example-input-library.md), each construct is converted
   exactly, checked against an independent validator, or refused with a located rejection.
   Full support stays required only for the two Oak documents, so SPEC-C-1 stays finite. The
   library's JSON Schema documents wait for SPEC-C-2.
@@ -262,7 +262,10 @@ The measured evidence behind the specification is in
 
 The specification, the course plan, the review record, the engineering doctrine Castr
 needs that the new repository lacks, and the product code with its history, made correct
-here first (the reflection, 18 November 2026). Every other
+here first (the reflection, 18 November 2026). The corpus and the example library travel
+with their provenance validator, `ATTRIBUTION.md` and `docs/THIRD_PARTY_NOTICES.md`, and so
+does [the example-input library plan](example-input-library.md) with its survey while any
+of its todos is open. Every other
 statement of Castr's destination, fidelity contract or capability list (the review record
 lists them) is left behind or rewritten to state the specification's position, once, in
 the new repository. The owner approved rewriting the contradicting passages of

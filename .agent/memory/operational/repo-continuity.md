@@ -60,7 +60,9 @@ MIT text in the owner's own name, and to scrub the seven user-home paths from th
 napkins. The scrub landed with #125 (`SHA:f17e6e8f`) and the licence file, the MIT text
 alone by the owner's ruling, with #126 (`SHA:c3669e36`). The seat settled the rest; each
 disposition is in the napkin's entry for that pass. The
-[example-input library](../../plans/current/example-input-library.md) proceeds from EC-0.
+[example-input library](../../plans/active/example-input-library.md) began on 19 November
+with EC-0: `ATTRIBUTION.md` and `docs/THIRD_PARTY_NOTICES.md` record who wrote the example
+documents Castr holds, their licences, and which files Castr has modified.
 
 The reflection ran the same day. The owner asked whether their request held tensions; the
 seat found six and the owner decided three by card. The code travels, made correct here
@@ -74,10 +76,10 @@ found, including that most of today's product code is replaced by the constructi
 
 ## Active threads
 
-| Thread                                                       | Role and next step                                                                                    | Latest identity                                                                                               |
-| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| [Castr correction](threads/castr-correction.next-session.md) | PICTURE, the command that shows what Castr does; then PLOT, its legs, CURRENCY, RULES, HOME and MOVE. | claude-code / claude-fable-5-2 / Ingot binds Patina / alert cure, RATIFY landing, MEASURE, 0.5.2 / 2026-11-18 |
-| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                        | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23      |
+| Thread                                                       | Role and next step                                                                                    | Latest identity                                                                                          |
+| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [Castr correction](threads/castr-correction.next-session.md) | PICTURE, the command that shows what Castr does; then PLOT, its legs, CURRENCY, RULES, HOME and MOVE. | claude-code / claude-fable-5-2 / Ingot binds Patina / MEASURE, 0.5.2, the correction, EC-0 / 2026-11-19  |
+| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                        | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23 |
 
 ## Paused threads and historical records
 
@@ -121,10 +123,13 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    Nothing waits on the owner now. One owner step lies ahead: before MOVE, the course's
    HOME todo changes section 10's "early in the course" by an amendment the owner approves
    in words.
-2. **The example-input library starts at EC-0**, attribution and third-party notices
-   ([its plan](../../plans/current/example-input-library.md)). Since 18 November its OpenAPI
-   tranches precede MOVE and its JSON Schema tranches wait for SPEC-C-2. The owner asked
-   for it on 25 September 2026 and reads one sentence of the course in EC-0's pull request.
+2. **The example-input library continues at EC-1**, the pin record's shape for many
+   sources ([its plan](../../plans/active/example-input-library.md)). EC-0, attribution and
+   third-party notices, is done: a newer copy of any example is a new pin recorded in the
+   notices file, and the directory is never re-fetched as a whole. Its OpenAPI tranches
+   precede MOVE and its JSON Schema tranches wait for SPEC-C-2. The owner asked for the
+   library on 25 September 2026; the course's "MOVE: what travels" names what travels
+   with it.
 3. **The picomatch alert was still open on 18 November at 17:43 UTC, and its advisory is
    withdrawn** (GHSA-fc5q-39xc-vjpf; withdrawn at 15:38 UTC that day). Read the alert's
    state, the advisory and the latest release at session open and at every merge: the owner

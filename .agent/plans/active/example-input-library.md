@@ -1,7 +1,7 @@
 ---
 title: Example-input library — a wide variety of pinned input documents
-status: current
-lane: current
+status: active
+lane: active
 created: 2026-09-25
 last_updated: 2026-11-19
 owner_directive: >-
@@ -13,7 +13,7 @@ owner_directive: >-
 todos:
   - id: EC-0
     content: ATTRIBUTION.md at the repository root (source authors by name with public references) and docs/THIRD_PARTY_NOTICES.md (licence texts) are created, covering the OpenAPI Initiative examples already in lib/examples/openapi (unchanged files at their commit, modified files marked) and the Oak documents; the examples fetcher and its README instruction are retired; where the course's MOVE leg has not yet run, its section names the corpus, the library, their validator, both files, and this plan with its survey while any of its todos is open
-    status: pending
+    status: completed
     depends_on: []
   - id: EC-1
     content: The pin record's shape for many sources (repository kind, json and yaml, openapi and fragment kinds, a library directory beside the corpus with one source directory each, a notice per entry, the summary line), proved by the first pinned source, openapi-typescript's fixture files (MIT)

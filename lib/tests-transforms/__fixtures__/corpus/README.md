@@ -52,9 +52,9 @@ The documents are Oak National Academy's. Oak's API documentation says the API i
 "for free on the Open Government License" (`https://open-api.thenational.academy/docs`, read
 25 September 2026), and the documents' own endpoint descriptions say lesson content is under
 OGL v3.0 with attribution required. The pinned documents are reproduced here under the
-[Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/):
-contains public sector information licensed under the Open Government Licence v3.0,
-© Oak National Academy. The terms page the documents cite,
+Open Government Licence v3.0; the licence notice is in
+[the third-party notices](../../../../docs/THIRD_PARTY_NOTICES.md) and Oak is named in
+[ATTRIBUTION.md](../../../../ATTRIBUTION.md). The terms page the documents cite,
 `https://open-api.thenational.academy/docs/about-oaks-api/terms`, served no content on
 25 September 2026.
 
