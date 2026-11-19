@@ -3,7 +3,7 @@ title: Castr course — from the present code to the specification
 status: active
 lane: active
 created: 2026-09-21
-last_updated: 2026-11-18
+last_updated: 2026-11-19
 destination: docs/SPECIFICATION.md
 owner_directive: >-
   Owner, 2026-09-21: "Before we go further we stop, and we define a destination,
@@ -31,8 +31,8 @@ todos:
     content: "The coverage table for SPEC-C-1: what today's generator does on both Oak documents at their latest published versions, its Zod output loaded under the latest Zod 4, scored against the source document by an independent validator, never against the libraries being replaced; it makes no decision (owner's decision card, 2 November 2026: 'Measure without making decisions, drop the thresholds, we figure out what we have, then we reflect on it'); the owner and the agent then reflect on it and decide what travels; a throwaway probe, nothing red enters any repository; run on 18 November 2026 against the documents served that day (v1 1.1.1, v0 0.11.2), its table is .agent/analysis-and-reports/measure-2026-11-18.md; the reflection of 18 November 2026 decided that the code travels, made correct in this repository first (see Order of the legs)"
     status: completed
     depends_on: [RATIFY]
-  - id: TERMS
-    content: "An amendment to the specification, approved by the owner in words, that carries what the reflection of 18 November 2026 decided: section 10 says Castr moves once SPEC-C-1's first acceptance part passes in this repository, in place of 'early in the course'; working, working well and correct are defined; and the example library's standard is named, never wrong and never crashing on its OpenAPI documents; the per-construct tables (SPEC-N-5) and the model's structure (SPEC-N-1) are later amendments that PLOT sequences"
+  - id: PICTURE
+    content: "One repeatable command that shows what Castr does, judged from outside Castr: documents down the side (the two Oak documents, then the example documents), what a consumer takes across the top (types, validators, endpoint definitions, the run's report), and in each cell right, refused with a plain reason and its place, wrong, missing or crashed; the MEASURE probe of 18 November 2026 is its first drawing; it lands in the repository asserting the cells that are already right and grows with the code that makes more cells right, so nothing red is ever committed; it is what the owner asked for on 18 November (what working looks like) and it replaces the TERMS amendment drafted on 19 November, which the owner sent back"
     status: pending
     depends_on: [MEASURE]
   - id: RULES
@@ -40,13 +40,13 @@ todos:
     status: pending
     depends_on: [CURRENCY, PROBE]
   - id: MOVE
-    content: Held by the owner's decisions of 18 November 2026 until SPEC-C-1's first acceptance part passes in this repository on both Oak documents and the example library's standard holds on its OpenAPI documents (see Order of the legs); section 10 of the specification says 'early in the course' until TERMS amends it. Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces and is fully integrated there (owner, 2 November 2026); what travels is the code, made correct here (the reflection, 18 November 2026); the specification travels as the only description of the destination, and its SPEC-CC-3 check is given a home in OCE; the approval record covers the specification's exact bytes, so if its arrival in OCE changes any byte above its change log (OCE's formatter or markdownlint), the move carries a format-only amendment approved in words (SPEC-CC-1); this repository is archived
+    content: Held by the owner's decisions of 18 November 2026 until SPEC-C-1's first acceptance part passes in this repository on both Oak documents and the example library's standard holds on its OpenAPI documents (see Order of the legs); section 10 of the specification says 'early in the course', one phrase that changes by an approved amendment when one is next needed. Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces and is fully integrated there (owner, 2 November 2026); what travels is the code, made correct here (the reflection, 18 November 2026); the specification travels as the only description of the destination, and its SPEC-CC-3 check is given a home in OCE; the approval record covers the specification's exact bytes, so if its arrival in OCE changes any byte above its change log (OCE's formatter or markdownlint), the move carries a format-only amendment approved in words (SPEC-CC-1); this repository is archived
     status: pending
     depends_on: [RULES, PLOT]
   - id: PLOT
     content: The legs to SPEC-C-1's first acceptance part are written into this plan from the MEASURE table and the model design (SPEC-N-1), each with an observable exit state, and reviewed by assumptions-expert; they run in this repository, before MOVE (owner's decision card, 18 November 2026), and they include the proof of SPEC-G-4 on both Oak documents as a check of Castr's own, the reader that holds the example library to its standard, and checks derived from what the consuming workspaces expect
     status: pending
-    depends_on: [TERMS]
+    depends_on: [PICTURE]
 ---
 
 # Castr course
@@ -107,9 +107,9 @@ by decision card. Each answer below is the option the owner chose, in the card's
   changes.
 - **How much must be true here before the move:** "Oak documents pass here first
   (Recommended)". SPEC-C-1's first acceptance part passes in this repository on both Oak
-  documents before MOVE. Section 10 of the specification says "early in the course"; TERMS
-  amends it, and until the owner approves that amendment the sentence stands as written and
-  MOVE does not start.
+  documents before MOVE. Section 10 of the specification says "early in the course"; that
+  phrase changes by an approved amendment, and until then the sentence stands as written
+  and MOVE does not start.
 - **What working with other example documents means:** "Never wrong, never crashes
   (Recommended)". On every OpenAPI document in the
   [example library](../current/example-input-library.md), each construct is converted
@@ -118,7 +118,7 @@ by decision card. Each answer below is the option the owner chose, in the card's
   library's JSON Schema documents wait for SPEC-C-2.
 
 What travels is therefore the code, made correct here. The order is now ALERTS, RATIFY,
-MEASURE and the reflection (all done but ALERTS's standing check), TERMS, PLOT, the legs
+MEASURE and the reflection (all done but ALERTS's standing check), PICTURE, PLOT, the legs
 PLOT writes, MOVE; CURRENCY and RULES still precede MOVE, and PLOT places them among its
 legs. Three things follow that the seat wrote and the owner can strike:
 
@@ -135,11 +135,44 @@ legs. Three things follow that the seat wrote and the owner can strike:
   objects are always closed; SPEC-P-1 says neither.
 
 The three tensions the seat did not card: "working well" is defined nowhere and the
-per-construct tables (SPEC-N-5) and the model's structure (SPEC-N-1) are unwritten, so the
-definitions are amendments (TERMS, then the ones PLOT sequences); a definition cannot land
+per-construct tables (SPEC-N-5) and the model's structure (SPEC-N-1) are unwritten, and
+those are amendments that PLOT sequences; a definition cannot land
 as a failing check, so each check lands with the cure that passes it; and this repository
 can prove only the first of SPEC-C-1's two acceptance parts, so PLOT's legs include checks
 derived from what the consuming workspaces expect.
+
+Owner correction, 19 November 2026. That day the seat sent two more cards (what working
+well is; what else holds the move), drafted an amendment that defined working, working well
+and correct by quoting the cards' labels beside clause numbers, and asked the owner to
+approve it. The owner sent it back, verbatim: "Reflecting the decision back to me is not
+helpful. Use the cognitive skills to break down the questions, analyse them, review them
+from multiple perspectives, and form better questions. This process must involve stepping
+back, identifying assumptions and frames and deeply challenging them. Once the better
+questions exist, use the principles and cognitive skills to run them through the decision
+matrix. Read the Directives for guidance on our philopsophies". What stepping back found:
+
+- **The cards were not questions.** Each carried the seat's recommendation first, and each
+  recommended answer is what the first two decision lenses force (excellence over
+  expediency; strict, everywhere). They stand as the seat's dispositions under the lenses.
+  The other options should never have been offered.
+- **The owner asked what working looks like, and that is a picture.** The MEASURE table was
+  its first drawing. PICTURE in the todos replaces the amendment: one repeatable command,
+  judged from outside Castr. Working is every Oak cell right, with the consuming
+  repository's own generation step running on the result. Working well is no cell wrong
+  and no crash on any other document, with every refusal in plain words and its place.
+  Correct is the decision an independent validator makes on the document itself, and code
+  built as §9 requires, which the picture cannot show.
+- **The specification needs one phrase changed**, §10's "early in the course". Everything
+  else the draft added is already there in other words (SPEC-PR-2, SPEC-PR-8, §9 and
+  SPEC-C-1's acceptance).
+- **"The code travels" had not been examined.** Measured that day, about 26,500 of 35,655
+  product lines under `lib/src` are the model or are written against its shape, and §9
+  replaces the model. What moves after being made correct is mostly code not yet written.
+  The owner's word of 18 November is to make it correct here; the seat follows that word
+  and has put the measurement to the owner, who did not have it when giving the word.
+- **Where code lives and where it is judged are separate.** The consuming repository's
+  generation step can be run locally against a Castr build with no file moved, so the
+  second half of SPEC-C-1's acceptance can be rehearsed before MOVE.
 
 ## RATIFY: how the specification is ratified
 
@@ -277,7 +310,7 @@ before the ruling, is pull request #109.
   output, with no verdict; then the owner's reflection decides what travels.
 - **RULES:** OCE's lint rules pass, with no suppression, on the code that travels; or, if
   nothing travels, the leg is closed with that reason.
-- **TERMS:** the amendment is approved in words, recorded per SPEC-CC-2, and on `main`.
+- **PICTURE:** the command is on `main`, anyone can run it, and its output is the table.
 - **MOVE:** Castr's gates pass inside the new repository and this repository is archived.
 - **PROBE:** the table is saved and every row is backed by the command that produced it.
 - **CURRENCY:** in the code that travels, only the named holds are outdated, `pnpm audit`
