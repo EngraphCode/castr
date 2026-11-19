@@ -6,20 +6,24 @@ This directory contains OpenAPI and Swagger specification examples used for inte
 
 ```text
 lib/examples/
-├── openapi/          # Official OpenAPI 3.x examples (fetched)
+├── openapi/          # OpenAPI Initiative examples, and three files that are not theirs
 │   ├── v3.0/        # OpenAPI 3.0.x examples
-│   └── v3.1/        # OpenAPI 3.1.x examples
-└── swagger/          # Legacy Swagger/OpenAPI examples (committed)
-    └── petstore.yaml # Full Swagger Petstore 3.0.3 spec
+│   ├── v3.1/        # OpenAPI 3.1.x examples
+│   ├── v3.2/        # One OpenAPI 3.2.0 example
+│   └── multi-file/  # A document split across two files
+├── custom/           # Examples written for Castr
+└── swagger/
+    └── petstore.yaml # Swagger Petstore, an OpenAPI 3.0.3 document
 ```
+
+Who wrote these files is in [ATTRIBUTION.md](../../ATTRIBUTION.md). Their licences, the
+source commit each file matches, and how Castr has changed the ones it has changed, are in
+[docs/THIRD_PARTY_NOTICES.md](../../docs/THIRD_PARTY_NOTICES.md).
 
 ## OpenAPI Examples (`openapi/`)
 
-**Source:** Official examples from the OpenAPI Initiative
-
-- Repository: <https://github.com/OAI/learn.openapis.org/tree/main/examples>
-- Fetched via: `pnpm fetch:examples` (runs `lib/examples-fetcher.ts`)
-- **These files are committed** to ensure tests work out of the box
+These are the OpenAPI Initiative's examples; the notices file is their record. The v3.0 and
+v3.1 examples are held as YAML and as JSON.
 
 ### Included Examples
 
@@ -37,28 +41,19 @@ lib/examples/
 - `webhook-example.yaml` - OpenAPI 3.1 webhooks feature
 - `non-oauth-scopes.yaml` - Non-OAuth security schemes
 
-### Updating Examples
+### Changing an example
 
-To fetch the latest examples from the OpenAPI Initiative:
+These files are pinned: the notices file names the source commit each one matches. A newer
+copy of an example is a new pin, with its source commit recorded in the notices file in the
+same change. The directory is never re-fetched as a whole.
 
-```bash
-pnpm fetch:examples
-```
-
-This will:
-
-1. Clone the latest examples from GitHub
-2. Remove Swagger v2.0 specs (we only test OpenAPI 3.x)
-3. Remove JSON files (we only use YAML to avoid duplicate tests)
-4. Place them in `lib/examples/openapi/`
-
-**Note:** While we store only YAML examples, this library **fully supports both JSON and YAML** input formats. This is verified in `src/characterisation/input-format.char.test.ts`.
+Castr reads both JSON and YAML. That is verified in
+`src/characterisation/input-format.char.test.ts`.
 
 ## Swagger Examples (`swagger/`)
 
-**Manually curated examples that don't fit the OpenAPI 3.x structure:**
-
-- `petstore.yaml` - The comprehensive Swagger Petstore 3.0.3 specification
+- `petstore.yaml` - The Swagger Petstore OpenAPI 3.0.3 document, modified in Castr (the
+  notices file is its record)
   - Used for extensive snapshot testing
   - More complete than the simple OpenAPI examples
   - Includes: tags, security schemes, full CRUD operations, etc.

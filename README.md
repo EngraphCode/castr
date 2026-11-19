@@ -58,3 +58,9 @@ Start with [CONTRIBUTING.md](./CONTRIBUTING.md), the [Practice bridge](./.agent/
 and the [verification contract](./.agent/directives/DEFINITION_OF_DONE.md). The
 bridge routes contributors to current work, governing authority, implementation
 evidence and repair ownership.
+
+## Licence
+
+Castr is under the [MIT licence](./LICENSE). The example documents it holds were written by
+others: [ATTRIBUTION.md](./ATTRIBUTION.md) names them, and
+[the third-party notices](./docs/THIRD_PARTY_NOTICES.md) give their licences.
