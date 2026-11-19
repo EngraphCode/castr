@@ -36,7 +36,7 @@ todos:
     status: pending
     depends_on: [MEASURE]
   - id: CORPUS
-    content: "SPEC-C-1 names both Oak documents as the corpus; the owner ruled on 19 November 2026 'Drop v0, latest v1 only'; an approved amendment, in the owner's words naming the version (SPEC-CC-2), makes the corpus the v1 document at its latest published version, and the same landing takes the v0 pins and their provenance entries out of the corpus"
+    content: "SPEC-C-1 names both Oak documents as the corpus; the owner ruled on 19 November 2026 'Drop v0, latest v1 only'; an approved amendment, in the owner's words naming the version (SPEC-CC-2), makes the corpus the v1 document at its latest published version, and the same landing leaves the corpus holding one pin, the latest v1 document: the v0 pins and the earlier v1 pin leave with their provenance entries"
     status: pending
     depends_on: []
   - id: HOME
@@ -330,7 +330,7 @@ before the ruling, is pull request #109.
   nothing travels, the leg is closed with that reason.
 - **PICTURE:** the command is on `main`, anyone can run it, and its output is the table.
 - **CORPUS:** the amendment is approved in words, recorded per SPEC-CC-2, and on `main`,
-  with the corpus holding v1 pins only.
+  with the corpus holding one pin, the latest v1 document.
 - **HOME:** the amendment is approved in words, recorded per SPEC-CC-2, and on `main`.
 - **MOVE:** Castr's gates pass inside the new repository and this repository is archived.
 - **PROBE:** the table is saved and every row is backed by the command that produced it.
