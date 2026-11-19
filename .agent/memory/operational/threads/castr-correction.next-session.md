@@ -77,7 +77,8 @@ repository before acting.
   the corpus in that landing. The consuming repository moves onto v1 before any swap.
 - **Next work: PICTURE (the course's todo).** One repeatable command that shows what Castr
   does on each document, judged from outside Castr; the MEASURE probe is its first drawing.
-  It is the owner's "what working looks like". No owner interaction is pending. The
+  It is the owner's "what working looks like". One owner interaction is pending: the approval of the CORPUS amendment, in words naming
+  the version. The
   specification needs one phrase changed (§10, "early in the course"), by an approved
   amendment before MOVE (the course's HOME todo). Put to the owner on 19 November as a fact they did not
   have: about 26,500 of 35,655 product lines are the model or written against its shape, so

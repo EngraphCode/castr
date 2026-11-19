@@ -67,7 +67,7 @@ documents Castr holds, their licences, and which files Castr has modified.
 The reflection ran the same day. The owner asked whether their request held tensions; the
 seat found six and the owner decided three by card. The code travels, made correct here
 first: correct includes how the code is built, SPEC-C-1's first acceptance part passes in
-this repository on both Oak documents before MOVE, and the example library's OpenAPI
+this repository on Oak's latest v1 document before MOVE (the owner dropped v0 on 19 November), and the example library's OpenAPI
 documents are each converted exactly or refused with a located rejection. The
 [course](../../plans/active/castr-course.md) carries the decisions in "Order of the legs",
 with a PICTURE leg ahead of PLOT. On 19 November the owner sent back a draft amendment that
