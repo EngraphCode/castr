@@ -131,9 +131,9 @@ PLOT writes, HOME, MOVE; CURRENCY and RULES still precede MOVE, and PLOT places 
 legs. Three things follow that the seat wrote and the owner can strike:
 
 - The owner's sentence names v1, and on 19 November 2026 the owner ruled, verbatim: "Drop
-  v0, latest v1 only". The corpus is Oak's v1 document at its latest published version.
-  SPEC-C-1 still names both documents until the CORPUS amendment lands; work is scoped to
-  v1 from the ruling.
+  v0, latest v1 only". The work is scoped to Oak's v1 document at its latest published
+  version from that ruling. SPEC-C-1 names both documents, and both remain the formal
+  corpus, until the CORPUS amendment lands.
 - The card on the move named the Oak documents, and the owner's sentence names the example
   documents beside them, so the library's standard is read as part of the state reached
   before MOVE.
