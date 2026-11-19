@@ -32,9 +32,13 @@ todos:
     status: completed
     depends_on: [RATIFY]
   - id: PICTURE
-    content: "One repeatable command that shows what Castr does, judged from outside Castr: documents down the side (the two Oak documents, then the example documents), what a consumer takes across the top (types, validators, endpoint definitions, the run's report), and in each cell right, refused with a plain reason and its place, wrong, missing or crashed; the MEASURE probe of 18 November 2026 is its first drawing; it lands in the repository asserting the cells that are already right and grows with the code that makes more cells right, so nothing red is ever committed; it is what the owner asked for on 18 November 2026: what working, working well and correct look like"
+    content: "One repeatable command that shows what Castr does, judged from outside Castr: documents down the side (Oak's latest v1 document, then the example documents), what a consumer takes across the top (types, validators, endpoint definitions, the run's report), and in each cell right, refused with a plain reason and its place, wrong, missing or crashed; the MEASURE probe of 18 November 2026 is its first drawing; it lands in the repository asserting the cells that are already right and grows with the code that makes more cells right, so nothing red is ever committed; it is what the owner asked for on 18 November 2026: what working, working well and correct look like"
     status: pending
     depends_on: [MEASURE]
+  - id: CORPUS
+    content: "SPEC-C-1 names both Oak documents as the corpus; the owner ruled on 19 November 2026 'Drop v0, latest v1 only'; an approved amendment, in the owner's words naming the version (SPEC-CC-2), makes the corpus the v1 document at its latest published version, and the same landing takes the v0 pins and their provenance entries out of the corpus"
+    status: pending
+    depends_on: []
   - id: HOME
     content: "Section 10 of the specification says when Castr moves; its phrase 'early in the course' is changed by an approved amendment, in the owner's words naming the version (SPEC-CC-2), so that the specification says what this course's Order of the legs says: Castr moves after it is working, working well and correct in its own repository; it is the last step before MOVE, after the legs PLOT writes, and PLOT places it behind its final leg"
     status: pending
@@ -44,13 +48,13 @@ todos:
     status: pending
     depends_on: [CURRENCY, PROBE]
   - id: MOVE
-    content: Held by the owner's decisions of 18 November 2026 until SPEC-C-1's first acceptance part passes in this repository on both Oak documents and the example library's standard holds on its OpenAPI documents (see Order of the legs); section 10 of the specification says 'early in the course' until HOME amends it. Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces and is fully integrated there (owner, 2 November 2026); what travels is the code, made correct here (the reflection, 18 November 2026); the specification travels as the only description of the destination, and its SPEC-CC-3 check is given a home in OCE; the approval record covers the specification's exact bytes, so if its arrival in OCE changes any byte above its change log (OCE's formatter or markdownlint), the move carries a format-only amendment approved in words (SPEC-CC-1); this repository is archived
+    content: Held by the owner's decisions of 18 November 2026 until SPEC-C-1's first acceptance part passes in this repository on Oak's latest v1 document and the example library's standard holds on its OpenAPI documents (see Order of the legs); section 10 of the specification says 'early in the course' until HOME amends it. Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces and is fully integrated there (owner, 2 November 2026); what travels is the code, made correct here (the reflection, 18 November 2026); the specification travels as the only description of the destination, and its SPEC-CC-3 check is given a home in OCE; the approval record covers the specification's exact bytes, so if its arrival in OCE changes any byte above its change log (OCE's formatter or markdownlint), the move carries a format-only amendment approved in words (SPEC-CC-1); this repository is archived
     status: pending
     depends_on: [RULES, PLOT, HOME]
   - id: PLOT
-    content: The legs to SPEC-C-1's first acceptance part are written into this plan from the MEASURE table and the model design (SPEC-N-1), each with an observable exit state, and reviewed by assumptions-expert; they run in this repository, before MOVE (owner's decision card, 18 November 2026), and they include the proof of SPEC-G-4 on both Oak documents as a check of Castr's own, the reader that holds the example library to its standard, and checks derived from what the consuming workspaces expect
+    content: The legs to SPEC-C-1's first acceptance part are written into this plan from the MEASURE table and the model design (SPEC-N-1), each with an observable exit state, and reviewed by assumptions-expert; they run in this repository, before MOVE (owner's decision card, 18 November 2026), and they include the proof of SPEC-G-4 on Oak's latest v1 document as a check of Castr's own, the reader that holds the example library to its standard, and checks derived from what the consuming workspaces expect
     status: pending
-    depends_on: [PICTURE]
+    depends_on: [PICTURE, CORPUS]
 ---
 
 # Castr course
@@ -110,15 +114,15 @@ by decision card. Each answer below is the option the owner chose, in the card's
   syntax-tree nodes; the model is redesigned by an approved amendment (SPEC-N-1) before it
   changes.
 - **How much must be true here before the move:** "Oak documents pass here first
-  (Recommended)". SPEC-C-1's first acceptance part passes in this repository on both Oak
-  documents before MOVE. Section 10 of the specification says "early in the course"; that
+  (Recommended)". SPEC-C-1's first acceptance part passes in this repository on Oak's
+  latest v1 document before MOVE. Section 10 of the specification says "early in the course"; that
   phrase changes by an approved amendment, and until then the sentence stands as written
   and MOVE does not start.
 - **What working with other example documents means:** "Never wrong, never crashes
   (Recommended)". On every OpenAPI document in the
   [example library](example-input-library.md), each construct is converted
   exactly, checked against an independent validator, or refused with a located rejection.
-  Full support stays required only for the two Oak documents, so SPEC-C-1 stays finite. The
+  Full support stays required only for Oak's v1 document, so SPEC-C-1 stays finite. The
   library's JSON Schema documents wait for SPEC-C-2.
 
 What travels is therefore the code, made correct here. The order is now ALERTS, RATIFY,
@@ -126,8 +130,10 @@ MEASURE and the reflection (all done but ALERTS's standing check), PICTURE, PLOT
 PLOT writes, HOME, MOVE; CURRENCY and RULES still precede MOVE, and PLOT places them among its
 legs. Three things follow that the seat wrote and the owner can strike:
 
-- The owner's sentence names v1. SPEC-C-1 requires both documents, v1 first, and both stay:
-  they gave the same result in every row of the MEASURE table.
+- The owner's sentence names v1, and on 19 November 2026 the owner ruled, verbatim: "Drop
+  v0, latest v1 only". The corpus is Oak's v1 document at its latest published version.
+  SPEC-C-1 still names both documents until the CORPUS amendment lands; work is scoped to
+  v1 from the ruling.
 - The card on the move named the Oak documents, and the owner's sentence names the example
   documents beside them, so the library's standard is read as part of the state reached
   before MOVE.
@@ -164,7 +170,8 @@ Measured that day, and the legs PLOT writes account for each:
 - About 26,500 of 35,655 product lines under `lib/src` are the model or are written
   against its shape, and §9 replaces the model. What moves after being made correct is
   mostly code not yet written. The owner's word of 18 November is to make it correct here.
-- The consuming repository generates from Oak's v0 document, from a copy last changed on
+- The consuming repository generates from Oak's v0 document (so SPEC-C-1's second
+  acceptance part needs it moved onto v1 first, a change in that repository), from a copy last changed on
   3 August 2026 that it alters before generating, and does not consume v1. The served
   documents have 3 named components where that copy has 33, and its code addresses
   validators by component name, so moving it onto a served document is a change of its
@@ -322,6 +329,8 @@ before the ruling, is pull request #109.
 - **RULES:** OCE's lint rules pass, with no suppression, on the code that travels; or, if
   nothing travels, the leg is closed with that reason.
 - **PICTURE:** the command is on `main`, anyone can run it, and its output is the table.
+- **CORPUS:** the amendment is approved in words, recorded per SPEC-CC-2, and on `main`,
+  with the corpus holding v1 pins only.
 - **HOME:** the amendment is approved in words, recorded per SPEC-CC-2, and on `main`.
 - **MOVE:** Castr's gates pass inside the new repository and this repository is archived.
 - **PROBE:** the table is saved and every row is backed by the command that produced it.
