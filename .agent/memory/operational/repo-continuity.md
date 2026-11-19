@@ -74,10 +74,10 @@ found, including that most of today's product code is replaced by the constructi
 
 ## Active threads
 
-| Thread                                                       | Role and next step                                                                                        | Latest identity                                                                                               |
-| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| [Castr correction](threads/castr-correction.next-session.md) | PICTURE, the command that shows what Castr does; then PLOT, the legs it writes, CURRENCY, RULES and MOVE. | claude-code / claude-fable-5-2 / Ingot binds Patina / alert cure, RATIFY landing, MEASURE, 0.5.2 / 2026-11-18 |
-| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                            | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23      |
+| Thread                                                       | Role and next step                                                                                    | Latest identity                                                                                               |
+| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| [Castr correction](threads/castr-correction.next-session.md) | PICTURE, the command that shows what Castr does; then PLOT, its legs, CURRENCY, RULES, HOME and MOVE. | claude-code / claude-fable-5-2 / Ingot binds Patina / alert cure, RATIFY landing, MEASURE, 0.5.2 / 2026-11-18 |
+| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                        | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23      |
 
 ## Paused threads and historical records
 
@@ -118,7 +118,9 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    picture: documents down the side, what a consumer takes across the top, each cell right,
    refused in plain words with its place, wrong, missing or crashed. The MEASURE probe is
    its first drawing; it lands asserting the cells already right and grows with the code.
-   No amendment is pending and nothing waits on the owner.
+   Nothing waits on the owner now. One owner step lies ahead: before MOVE, the course's
+   HOME todo changes section 10's "early in the course" by an amendment the owner approves
+   in words.
 2. **The example-input library starts at EC-0**, attribution and third-party notices
    ([its plan](../../plans/current/example-input-library.md)). Since 18 November its OpenAPI
    tranches precede MOVE and its JSON Schema tranches wait for SPEC-C-2. The owner asked
