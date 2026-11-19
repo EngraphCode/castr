@@ -16,9 +16,11 @@ lib/examples/
     └── petstore.yaml # Swagger Petstore, an OpenAPI 3.0.3 document
 ```
 
-Who wrote these files is in [ATTRIBUTION.md](../../ATTRIBUTION.md). Their licences, the
-source commit each file matches, and how Castr has changed the ones it has changed, are in
-[docs/THIRD_PARTY_NOTICES.md](../../docs/THIRD_PARTY_NOTICES.md).
+The third-party files here are attributed in [ATTRIBUTION.md](../../ATTRIBUTION.md).
+[docs/THIRD_PARTY_NOTICES.md](../../docs/THIRD_PARTY_NOTICES.md) gives their licences and,
+where it is known, the source commit each file matches and how Castr has changed it; it
+says plainly where an origin is not recorded. `custom/` was written for Castr and is under
+Castr's own licence.
 
 ## OpenAPI Examples (`openapi/`)
 
