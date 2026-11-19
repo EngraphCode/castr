@@ -36,9 +36,9 @@ todos:
     status: pending
     depends_on: [MEASURE]
   - id: HOME
-    content: "Section 10 of the specification says when Castr moves; its phrase 'early in the course' is changed by an approved amendment, in the owner's words naming the version (SPEC-CC-2), to say that Castr moves once it works in its own repository; MOVE waits for it"
+    content: "Section 10 of the specification says when Castr moves; its phrase 'early in the course' is changed by an approved amendment, in the owner's words naming the version (SPEC-CC-2), so that the specification says what this course's Order of the legs says: Castr moves after it is working, working well and correct in its own repository; it is the last step before MOVE, after the legs PLOT writes, and PLOT places it behind its final leg"
     status: pending
-    depends_on: []
+    depends_on: [PLOT]
   - id: RULES
     content: "Only if code travels: OCE's lint rules are adopted in this repository for the code that travels, starting from the PROBE table, and that code is fixed until they pass with no suppression (SPEC-G-3), before MOVE; the owner's decision card, 2 November 2026: 'At move the OCE rules will apply, the point of applying them early is to fix issues in isolation before moving', and the owner confirmed by card the same day that this reading (after the reflection and CURRENCY, travelling code only, before MOVE) is right"
     status: pending
