@@ -18,11 +18,6 @@
     "allowSyntheticDefaultImports": true,
     "strictPropertyInitialization": false
   },
-  "include": [
-    "src/**/*",
-    "eslint.config.ts",
-    "scripts/examples-fetcher.mts",
-    "scripts/profile-doctor-runtime.mts"
-  ],
+  "include": ["src/**/*", "eslint.config.ts", "scripts/profile-doctor-runtime.mts"],
   "exclude": ["node_modules", "**/*.typegen.ts", "example", "tests", "dist"]
 }

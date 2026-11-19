@@ -73,7 +73,6 @@
     "qg": "pnpm secrets:scan && pnpm build && pnpm format:check && pnpm type-check && pnpm lint && pnpm madge:circular && pnpm madge:orphans && pnpm depcruise && pnpm knip && pnpm markdownlint-check:root && pnpm portability:check && pnpm packaging:check && pnpm skills:check && pnpm agents:check && pnpm repo-validators:check && pnpm test:all",
     "check": "pnpm clean && pnpm install --frozen-lockfile && pnpm fix && pnpm qg",
     "check:ci": "pnpm clean && pnpm install --frozen-lockfile && pnpm qg",
-    "fetch:examples": "turbo fetch:examples",
     "postinstall": "tsx agent-tools/src/bootstrap/bootstrap.ts",
     "prepare": "husky",
     "agent-tools:pr-watch": "pnpm --filter @engraph/agent-tools pr-watch"

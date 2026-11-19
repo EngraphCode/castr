@@ -275,9 +275,6 @@ importers:
       ajv-draft-04:
         specifier: ^1.0.0
         version: 1.0.0(ajv@8.20.0)
-      degit:
-        specifier: ^3.8.0
-        version: 3.8.0
       dependency-cruiser:
         specifier: ^18.2.0
         version: 18.2.0
@@ -2074,11 +2071,6 @@ packages:
 
   defaults@1.0.4:
     resolution: {integrity: sha512-eFuaLoy/Rxalv2kr+lqMlUnrDWV+3j4pljOIJgLIhI058IQfWJ7vXhyEIHu+HtC738klGALYxOKDO0bQP3tg8A==}
-
-  degit@3.8.0:
-    resolution: {integrity: sha512-ZHJCvLjT0B9mo3Z7wX/luIJBLiO0N4ZkTvZTST72FAoDhUVBCmGWuOvlMRHJGEc1G3PDqE1Dk9UP5ExQCV5XzQ==}
-    engines: {node: '>=20.0.0'}
-    hasBin: true
 
   depd@2.0.0:
     resolution: {integrity: sha512-g7nH6P6dyDioJogAAGprGpCtVImJhpPk/roCzdb3fIh61/s/nPsfR6onyMwkCAR/OlC3yBC0lESvUoQEAssIrw==}
@@ -5705,8 +5697,6 @@ snapshots:
   defaults@1.0.4:
     dependencies:
       clone: 1.0.4
-
-  degit@3.8.0: {}
 
   depd@2.0.0: {}
 
