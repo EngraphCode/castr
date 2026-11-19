@@ -60,7 +60,8 @@ is the bytes its pin record names, with its source, commit, licence and notice r
 and the corpus validator recomputes all of it on every run. The library is not a corpus in
 the specification's sense: a corpus is the documents a capability is proved against, and
 these are a capability's corpus only when the owner names them in the specification. Until
-then nothing reads them but the validator: the Oak v1 entries remain SPEC-C-1's corpus, and
+then nothing reads them but the validator: the Oak entries remain SPEC-C-1's corpus (both
+documents until the course's CORPUS amendment lands, then the latest v1 document), and
 this plan puts about 460 files into the repository with no reader. That is what the owner
 asked for, documents to test against, and the tests that read them belong to the course's
 legs and to the owner's later naming.
