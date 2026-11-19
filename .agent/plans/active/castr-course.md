@@ -126,7 +126,7 @@ by decision card. Each answer below is the option the owner chose, in the card's
   library's JSON Schema documents wait for SPEC-C-2.
 
 What travels is therefore the code, made correct here. The order is now ALERTS, RATIFY,
-MEASURE and the reflection (all done but ALERTS's standing check), PICTURE, PLOT, the legs
+MEASURE and the reflection (all done but ALERTS's standing check), PICTURE, CORPUS, PLOT, the legs
 PLOT writes, HOME, MOVE; CURRENCY and RULES still precede MOVE, and PLOT places them among its
 legs. Three things follow that the seat wrote and the owner can strike:
 
@@ -186,7 +186,7 @@ Measured that day, and the legs PLOT writes account for each:
 - Today every refusal a user sees is a stack trace, and two invalid fixtures are accepted
   silently (the program run on 39 documents).
 
-The order is ALERTS, RATIFY, MEASURE and the reflection, PICTURE, PLOT, the legs PLOT
+The order is ALERTS, RATIFY, MEASURE and the reflection, PICTURE, CORPUS, PLOT, the legs PLOT
 writes, HOME, MOVE.
 
 ## RATIFY: how the specification is ratified
