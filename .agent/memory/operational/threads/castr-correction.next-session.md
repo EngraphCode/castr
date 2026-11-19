@@ -72,9 +72,10 @@ repository before acting.
 - **OWNER RULING, 19 November 2026, verbatim: "Drop v0, latest v1 only".** Asked what the
   two Oak documents are, the owner was told that SPEC-C-1 requires both and that the
   consuming repository generates from an August copy of v0 and does not consume v1. The
-  corpus is now the v1 document at its latest published version. SPEC-C-1's text changes
-  by the course's CORPUS amendment (owner's words naming the version); the v0 pins leave
-  the corpus in that landing. The consuming repository moves onto v1 before any swap.
+  work is scoped to the v1 document at its latest published version, and both documents
+  remain the formal corpus until the amendment lands. SPEC-C-1's text changes
+  by the course's CORPUS amendment (owner's words naming the version); the v0 pins and the
+  earlier v1 pin leave the corpus in that landing. The consuming repository moves onto v1 before any swap.
 - **Next work: PICTURE (the course's todo).** One repeatable command that shows what Castr
   does on each document, judged from outside Castr; the MEASURE probe is its first drawing.
   It is the owner's "what working looks like". One owner interaction is pending: the approval of the CORPUS amendment, in words naming
