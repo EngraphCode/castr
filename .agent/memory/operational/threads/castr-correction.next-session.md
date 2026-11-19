@@ -41,6 +41,33 @@ repository before acting.
   start until both are done. Every statement of the course's order further down this record
   predates the ruling; the course plan carries the hold, and the legs before MOVE are
   rewritten when the reflection settles them.
+- **THE REFLECTION'S DECISIONS, 18 November 2026 (owner, by card), which replace "until both
+  are done" in the bullet above.** Asked what "in isolation" meant, the owner said, verbatim:
+  "I mean make the Castr code in Castr as correct as we can, and working with Oak documents
+  (specifically the latest v1 open api spec for the curriculum api) and a variety of other
+  examples specs, which I assume corresponds to the example input library. Are there any
+  tensions or inconsistencies in my request?" The seat found six tensions (the napkin's
+  entry lists them) and carded three. The owner chose: correct includes how the code is
+  built, "As the specification says (Recommended)"; before the move, "Oak documents pass
+  here first (Recommended)"; other example documents, "Never wrong, never crashes
+  (Recommended)". So the code travels, made correct here: SPEC-C-1's first acceptance part
+  passes in this repository on both Oak documents, and the example library's OpenAPI
+  documents are each converted exactly or refused with a located rejection, before MOVE. A
+  repair that adds no text-building goes into today's code; new writer output is built as
+  syntax-tree nodes; the model changes only after its design (SPEC-N-1) is an approved
+  amendment. The course's order is now TERMS, PLOT, the legs PLOT writes, MOVE.
+- **Next owner interaction: TERMS.** An amendment the owner approves in words, naming the
+  version: §10 moves Castr once SPEC-C-1's first acceptance part passes here, in place of
+  "early in the course"; working, working well and correct are defined; the library's
+  standard is named. Draft it, show the owner each changed sentence, record the approval per
+  SPEC-CC-2. Until it is approved §10 stands as written and MOVE does not start.
+- **picomatch on 18 November 2026 at 17:43 UTC.** The GitHub Advisory Database withdrew
+  GHSA-fc5q-39xc-vjpf at 15:38 UTC that day; the maintainer calls the report "not a
+  vulnerability"; upstream issues #234 and #247 are open and no release follows 4.0.7. Alert
+  122 was still open. The owner asked for a daily check: read the alert's state, the
+  advisory and the latest release at session open and at every merge (the session's cron
+  job does not outlive the session). If GitHub closes the alert, SPEC-G-1 still names it and
+  removing the name is an amendment the owner approves; the alert is never dismissed.
 - **The matrix pass of 18 November 2026.** The owner had the items left open by that day's
   work run through OCE's decision matrix. Three survived, all the owner's: what travels (the
   reflection), whether this public repository gets a licence file, and whether the
@@ -105,7 +132,8 @@ repository before acting.
   branch's approval records with `main`'s and fails if any is missing, which needs CI to
   fetch `main`. Each forced dependency floor and the import-x patch name their own removal
   condition in `pnpm-workspace.yaml`.
-- **Next owner interaction:** the reflection on MEASURE's table, which decides what travels
+- **Next owner interaction (superseded on 18 November 2026: the reflection ran, and the next
+  one is TERMS, above):** the reflection on MEASURE's table, which decides what travels
   into OCE; run it with the owner as concept exploration over the table, not as a decision
   matrix (owner: "Measure without making decisions, drop the thresholds, we figure out what
   we have, then we reflect on it"). Until then the work needs no owner decision: the

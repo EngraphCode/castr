@@ -2,6 +2,78 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-11-18 (the reflection: tensions in the owner's request, three cards, picomatch withdrawn — Ingot binds Patina / 194219, claude-code)
+
+- **Owner, 18 November 2026, verbatim**, asked which of two things "in isolation" meant: "I
+  mean make the Castr code in Castr as correct as we can, and working with Oak documents
+  (specifically the latest v1 open api spec for the curriculum api) and a variety of other
+  examples specs, which I assume corresponds to the example input library. Are there any
+  tensions or inconsistencies in my request?" And on the alert: "For picomatch I think we
+  just have to check daily for a fix, maybe check that there is a ticket for it on their
+  repo".
+- **Six tensions, found by reading the specification, the course, the MEASURE table, the
+  library plan and the code in full.** A second reader was given the same documents and not
+  my list. It runs on the same model and the same sources, so its agreement corroborates the
+  reading and is not independent evidence. It found the five I had (1 to 4 and 6 below) and
+  added number 5.
+  1. "Correct" means what the output does or how the code is built, and the specification
+     binds both ("§9 binds the present code today"; SPEC-AR-3 approves no exception).
+  2. The owner's words hold three gates on the move: defined and explored, not broken,
+     correct and working. The third is SPEC-C-1's first acceptance part, which is all of the
+     building, and it contradicts §10's "early in the course".
+  3. The library plan pins about 460 documents and reads none, so "working with" them was
+     undefined, with two readings an order of magnitude apart.
+  4. "Working well" is defined nowhere; SPEC-N-5 and SPEC-N-1 are unwritten; a definition
+     cannot land as a failing check.
+  5. "Move the code" assumes the code travels, which the course had left to the reflection.
+  6. This repository can prove only the first of SPEC-C-1's two acceptance parts.
+- **Owner's answers by card, 18 November 2026, each the option chosen, in the card's
+  words.** Whether correct includes how the code is built: "As the specification says
+  (Recommended)". How much must be true here before the move: "Oak documents pass here first
+  (Recommended)". What working with other example documents means: "Never wrong, never
+  crashes (Recommended)". The course's "Order of the legs" carries each with its
+  consequence, and the three readings there that are mine and the owner can strike.
+- **Not tensions.** "Specifically the latest v1" sits inside SPEC-C-1's "v1 first", and both
+  documents stay. The hold extends the owner's reasoning of 2 November for the lint rules.
+  "Nothing more goes into the present writer code" was an agent's wording.
+- **Code facts read first-hand on 18 November (`main` at `SHA:02aa21e0`).**
+  - The Zod and TypeScript writers add declarations through ts-morph and write every
+    expression as text: 85 and 48 `CodeBlockWriter` calls. No file under `lib/src` builds an
+    expression as syntax-tree nodes.
+  - The model's node carries a mandatory `zodChain` holding rendered Zod text
+    (`ir/models/schema.ts`), and its fields are the OpenAPI and JSON Schema keywords.
+  - The `const` defect is a parser omission: no file under `parsers/openapi` reads `const`,
+    while the model has the field and the Zod writer already writes `z.literal`. Its cure
+    adds no text-building.
+  - Both whole documents fail at a deliberate `throw` in
+    `parsers/openapi/builder/builder.additional-properties.ts`, which implements
+    `object-semantics.ts`'s "one object model only"; SPEC-P-1 names four.
+  - `README.md` says strictness does not authorise closing an object whose source permits
+    additional properties, and `principles.md` says objects are always closed. SPEC-P-1
+    says neither. Their rewrite was tied to MOVE and now happens here.
+  - Both pins matched what Oak served at 17:38 UTC.
+- **picomatch.** The GitHub Advisory Database withdrew GHSA-fc5q-39xc-vjpf on 18 November at
+  15:38 UTC, the day specification 0.5.2 named it. The maintainer had replied on a fix pull
+  request on 21 October that it is "not a vulnerability". Upstream issues #234 and #247 ask
+  for a fix and are open, about fourteen fix pull requests are open, none is merged, and
+  4.0.7 is still the latest release. Alert 122 was still open at 17:43 UTC. The daily check
+  is a cron job in this session: it expires after seven days and ends with the session, so a
+  successor reads the alert at session open and at every merge. If GitHub closes the alert,
+  SPEC-G-1 still names it, and removing the name is an amendment the owner approves.
+- **Mistakes.**
+  - I offered the owner a pair, "today's code on the Oak documents, or the specified design
+    first". The owner's answer took neither, and the specification already answered half of
+    it. A question about the destination starts from the specification's clauses.
+  - I had told the owner what the specification defines "from recollection, not a full
+    re-read". The full read found the two sentences the answer turns on: §10's "early in the
+    course" and §12's "§9 binds the present code today".
+  - The matrix pass settled "MEASURE's defects are not cured in the present code" partly on
+    "a cure inside the present writers is work on a design the specification replaces". The
+    `const` defect is in the parser. I classified a defect's location without reading the
+    code ([inherited-classification-is-a-claim-to-measure](patterns/inherited-classification-is-a-claim-to-measure.md)).
+- **Surprise.** The reflection's next step is an amendment, not code: every term the owner
+  asked to define is specification content, and the model cannot change until its design is.
+
 ## 2026-11-18 (open items through the OCE decision matrix — Ingot binds Patina / 194219, claude-code)
 
 - **Owner instruction (18 November 2026, verbatim):** "use the OCE principles and skills to
