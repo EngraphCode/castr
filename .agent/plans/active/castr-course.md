@@ -125,8 +125,10 @@ by decision card. Each answer below is the option the owner chose, in the card's
   checked against an independent validator. A refusal, in plain words with its place, is
   for an invalid document or an exclusion the owner approves. This replaces the card of
   18 November, which allowed a located refusal of any construct.
-  Full support stays required only for Oak's v1 document, so SPEC-C-1 stays finite. The
-  library's JSON Schema documents wait for SPEC-C-2.
+  By specification 0.7.0 (SPEC-PR-6) the boundary of support is the source format: nothing
+  unbuilt is reachable from any valid OpenAPI document. Oak's v1 document stays SPEC-C-1's
+  corpus, the proof that Castr works for Oak today. The library's JSON Schema documents
+  wait for SPEC-C-2.
 
 What travels is therefore the code, made correct here. The order is now ALERTS, RATIFY,
 MEASURE and the reflection (all done but ALERTS's standing check), CORPUS, PICTURE, PLOT, the legs
