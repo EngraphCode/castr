@@ -1,9 +1,9 @@
 ---
 title: Castr destination specification
 id: castr-specification
-version: 0.5.2
+version: 0.6.0
 status: ratified
-date: 2026-11-18
+date: 2026-11-20
 owner: Jim Cresswell
 approvers:
   - Jim Cresswell
@@ -234,11 +234,8 @@ scope-and-fidelity table is written into this document and its corpus passes §8
 > We want OpenAPI -> Zod + TS in order to be able to replace existing libraries in OCE with
 > Castr, the Zod + TS -> MCP is already handled in OCE and it can stay that way for now.
 
-Corpus: the Oak API specification, both documents, each at its latest published version and
-pinned: v1 first, and v0. The owner, 25 September 2026: "Castr needs to be able to process
-both Oak API specs, although the V1 spec is the higher priority and there is wiggle room on
-supporting the V0 spec if needed." The owner, 2 November 2026: "Require both, and require
-that latest version of both".
+Corpus: the Oak API specification's v1 document, at its latest published version and
+pinned. The owner, 19 November 2026: "Drop v0, latest v1 only".
 
 Castr produces, from a document given as a file or as a document value:
 
@@ -257,7 +254,7 @@ or treats `default` as a status, and an exact code takes precedence over a range
 Accepted when:
 
 1. in Castr's own checks, generation from the corpus, compilation and execution of the
-   output, and the proof of SPEC-G-4 all pass on both documents, each pinned at the version
+   output, and the proof of SPEC-G-4 all pass on that document, pinned at the version
    its source publishes when acceptance is claimed; and a check made by Castr, reading the
    source document independently of Castr's parser, confirms that every boundary the output
    describes matches the source: its address, method and identity, its parameter locations
@@ -313,7 +310,7 @@ the owner names them.
   Castr supplies reaches the vulnerable code. A named alert stays open and is never
   dismissed. It holds merges again, without amendment, once its advisory names a patched
   version old enough to install under the repository's release-age setting. Named:
-  GHSA-fc5q-39xc-vjpf (picomatch), 18 November 2026.
+  none.
 
 - **SPEC-G-2 Destination green.** This specification is met only while `main` has zero
   open static-analysis issues of any type or severity, zero security findings awaiting
@@ -538,3 +535,4 @@ Verified against Zod 4.5.4 on 21 September 2026 by executing each construct.
 | 0.5.0   | 2026-11-02 | Owner decisions of 2 November 2026 by decision card: 30 cards, 28 on checklist clauses and two on mismatches raised by the Engraph Open Curriculum Ecosystem; cards 17 to 20 settled by the owner's word "In each case take the default", cards 21 to 30 on one card that listed each clause with its recommended answer; one further card on how SPEC-AR-3's "ask why" binds. Confirmed as written: every other checklist clause. Changed: SPEC-PR-7's diagnostic; new SPEC-P-6 (a source `default` is an annotation, with a warning for each); SPEC-P-1 labels the closed reading a profile decision and SPEC-G-4 applies it; SPEC-G-4 and SPEC-G-5 name what they report; SPEC-C-1 adds a boundary check and requires both Oak documents at their latest versions; OpenAPI is written at 3.2.1; the extractability condition in §10 is struck. Added from the owner's words of the same day: SPEC-PR-8 and the SPEC-AR-3 ruling with its exception rule, its scope set by the owner to the compiler, the decompiler and their associated state and systems, not logging. The checklist section is removed. Wording the drafting agent wrote, which is the owner's to confirm at approval: SPEC-P-6's body, SPEC-PR-8's body, SPEC-AR-3's definition and exception sentences, SPEC-P-1's two new sentences, SPEC-PR-7's named contents, the reporting sentences in SPEC-G-4 and SPEC-G-5, SPEC-G-4's closing transformation, SPEC-C-1's version and boundary-check wording, and "the latest release on 2 November 2026". | Jim Cresswell, 2026-11-02, in a working session: "I approve draft 0.5.0 , if we need to review and change it later that is fine." SHA-256 of the text above this log: `f7dc66610dec0bca320a5c50eacc7d75115d757038c09a8be0f3e4de5452edb2` |
 | 0.5.1   | 2026-11-02 | SPEC-CC-3 reads its latest approved record as the latest ever approved: from the first ratification (version 0.5.0) the check also fails when the change log holds no approval record, so an approval row can never be removed. Owner's decision card of 2 November 2026, after the pre-execution review of the check showed that deleting the 0.5.0 row and setting the status back to draft would otherwise pass. Nothing else changes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Jim Cresswell, 2026-11-02, in a working session: "I approve 0.5.1". SHA-256 of the text above this log: `f3c2470345b40c1dbf4c628508bf9ba9c43c47fe227dd12b708e19fe4683d305`                                                               |
 | 0.5.2   | 2026-11-18 | SPEC-G-1 gains a second paragraph: an open dependency alert holds merges unless the clause names it, and an alert is named only by amendment, only while its advisory names no patched version and nothing a user of Castr supplies reaches the vulnerable code; a named alert stays open, is never dismissed, and holds merges again once a patched version is old enough to install. The clause names GHSA-fc5q-39xc-vjpf (picomatch), raised on 18 November 2026 for every release up to 4.0.7, the latest: a measured generation run loaded picomatch and made no call into it, it cannot be removed because the test runner, the lint parser and the build depend on it, and upstream had published no fix. Owner's decision card of 18 November 2026 ("Amend SPEC-G-1"), after one adversarial review of the wording. SPEC-G-2 is unchanged. Nothing else changes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Jim Cresswell, 2026-11-18, in a working session: "I approve version 0.5.2". SHA-256 of the text above this log: `3317a18924b6bf2140d996063480cecfc164e774cc86e1d428420722516a599c`                                                       |
+| 0.6.0   | 2026-11-20 | SPEC-C-1's corpus becomes the Oak API specification's v1 document at its latest published version, and its first acceptance part reads "on that document": the owner ruled on 19 November 2026 "Drop v0, latest v1 only". SPEC-G-1 names no alert: GitHub closed the alert on GHSA-fc5q-39xc-vjpf on 19 November 2026 after the advisory was withdrawn, and the owner asked on 20 November that it no longer be tracked. Nothing else changes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Jim Cresswell, 2026-11-20, in a working session: "I approve 0.6.0". SHA-256 of the text above this log: `d76c683ff46753e31c975ee766a788eaacbee2c9ea70524c447b4efc5621f63a`                                                               |
