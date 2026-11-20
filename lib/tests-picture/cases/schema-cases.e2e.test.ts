@@ -13,10 +13,9 @@ import { loadDefinition } from '../rows/definitions.js';
 import { pictureRows } from '../rows/picture-rows.js';
 
 import { coverageOf } from './coverage.js';
-import { referenceFor } from './reference.js';
+import { inertCases } from './inert.js';
 import { RIGHT_TODAY } from './right-today.js';
 import { rowsWith, runSchemaCases } from './run-schema-cases.js';
-import { documentFor } from './schema-case.js';
 import { SCHEMA_CASES } from './schema-cases.js';
 
 describe('the cases for the rows of a schema', () => {
@@ -27,17 +26,8 @@ describe('the cases for the rows of a schema', () => {
   });
 
   it('gives every case a value its schema accepts and a value it refuses', () => {
-    const inert = SCHEMA_CASES.filter((schemaCase) => {
-      const reference = referenceFor(documentFor(schemaCase));
-      if (!reference.readable) {
-        return false;
-      }
-      const decisions = schemaCase.samples.map((sample) => reference.accepts(sample));
-      return !decisions.includes(true) || !decisions.includes(false);
-    });
-
     // `true` as a schema accepts every value: no sample can be refused.
-    expect(inert.map((schemaCase) => schemaCase.rowId)).toEqual(['text:`true` as a schema']);
+    expect(inertCases(SCHEMA_CASES)).toEqual(['text:`true` as a schema']);
   });
 
   // One test runs Castr once and holds both facts about its cells, so no result is

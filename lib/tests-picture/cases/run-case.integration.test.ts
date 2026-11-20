@@ -14,25 +14,21 @@ const maxLength: SchemaCase = {
   samples: ['ab', 'abc'],
 };
 
-function converting(accepts: (value: unknown) => boolean): Convert {
-  return () => Promise.resolve({ kind: 'validator', accepts });
-}
+const accepted: SchemaCase = { ...maxLength, samples: ['a', 'ab'] };
+
+/** A stand-in for Castr that emits a validator accepting every value. */
+const acceptingEverything: Convert = () =>
+  Promise.resolve({ kind: 'validator', accepts: () => true });
 
 describe('runCase', () => {
   it('is right where Castr decides every sample as the reference does', async () => {
-    const cell = await runCase(
-      maxLength,
-      converting((value) => typeof value === 'string' && value.length <= 2),
-    );
+    const cell = await runCase(accepted, acceptingEverything);
 
     expect(cell).toEqual({ verdict: 'right', detail: '' });
   });
 
   it('is wrong where Castr ignores the construct', async () => {
-    const cell = await runCase(
-      maxLength,
-      converting((value) => typeof value === 'string'),
-    );
+    const cell = await runCase(maxLength, acceptingEverything);
 
     expect(cell).toEqual({
       verdict: 'wrong',
@@ -78,10 +74,12 @@ describe('runCase', () => {
   });
 
   it('is crashed where the validator Castr emitted throws on a sample', async () => {
-    const cell = await runCase(
-      maxLength,
-      converting(() => {
-        throw new TypeError('x is not a function');
+    const cell = await runCase(maxLength, () =>
+      Promise.resolve({
+        kind: 'validator',
+        accepts: () => {
+          throw new TypeError('x is not a function');
+        },
       }),
     );
 
