@@ -6,16 +6,19 @@ import { cellForThrown, judge, onOneLine, type Cell, type Decision } from './ver
 
 /**
  * What Castr made of a case's document: a validator that decides a value; nothing, where
- * Castr ran and emitted no validator for the shape; or output that does not load.
+ * Castr ran and emitted no validator for the shape; what Castr threw while generating;
+ * or output that does not load.
  */
 export type Converted =
   | { readonly kind: 'validator'; readonly accepts: (value: unknown) => boolean }
+  | { readonly kind: 'threw'; readonly thrown: unknown }
   | { readonly kind: 'no validator' }
   | { readonly kind: 'output does not load'; readonly reason: string };
 
 /**
  * Runs Castr on a document and loads the validator it generated for the case's shape.
- * It rejects with whatever Castr threw while generating.
+ * It rejects only where the harness itself fails, as where a file cannot be written:
+ * that stops the run, and is never a cell.
  */
 export type Convert = (document: UnknownRecord) => Promise<Converted>;
 
@@ -29,11 +32,9 @@ export async function runCase(schemaCase: SchemaCase, convert: Convert): Promise
   if (!reference.readable) {
     return { verdict: 'not judged', detail: reference.reason };
   }
-  let converted: Converted;
-  try {
-    converted = await convert(document);
-  } catch (error) {
-    return cellForThrown(error);
+  const converted = await convert(document);
+  if (converted.kind === 'threw') {
+    return cellForThrown(converted.thrown);
   }
   if (converted.kind === 'no validator') {
     return { verdict: 'missing', detail: 'Castr emitted no validator for the shape' };

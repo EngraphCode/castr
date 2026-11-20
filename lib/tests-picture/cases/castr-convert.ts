@@ -4,7 +4,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { z } from 'zod';
 
-import { generateZodClientFromOpenAPI } from '../../src/index.js';
+import { generateZodClientFromOpenAPI, type GenerationResult } from '../../src/index.js';
 import type { UnknownRecord } from '../../src/shared/type-utils/types.js';
 
 import type { Convert, Converted } from './run-case.js';
@@ -55,17 +55,22 @@ export async function createCastrConvert(): Promise<{
     const input = join(directory, `case-${String(count)}.json`);
     const output = join(directory, `case-${String(count)}.ts`);
     await writeFile(input, JSON.stringify(document), 'utf8');
-    const result = await generateZodClientFromOpenAPI({
-      input,
-      disableWriteToFile: true,
-      template: 'schemas-only',
-    }).catch((error: unknown) => {
+    let result: GenerationResult;
+    try {
+      // Only what Castr itself throws is a cell. A failure to write a file, on either
+      // side of this call, rejects and stops the run.
+      result = await generateZodClientFromOpenAPI({
+        input,
+        disableWriteToFile: true,
+        template: 'schemas-only',
+      });
+    } catch (error) {
       // The directory is new on every run; a message must not differ from run to run.
       if (error instanceof Error) {
         error.message = error.message.replaceAll(directory + sep, '');
       }
-      throw error;
-    });
+      return { kind: 'threw', thrown: error };
+    }
     if (result.type !== 'single') {
       return { kind: 'no validator' };
     }

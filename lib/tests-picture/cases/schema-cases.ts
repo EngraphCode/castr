@@ -50,7 +50,8 @@ export const SCHEMA_CASES: readonly SchemaCase[] = [
   keyword('exclusiveMinimum', { type: 'number', exclusiveMinimum: 3 }, [3.1, 3]),
   keyword('maxLength', { type: 'string', maxLength: 2 }, ['ab', 'abc', '😀😀', '😀😀😀']),
   keyword('minLength', { type: 'string', minLength: 2 }, ['ab', 'a', '😀😀', '😀']),
-  keyword('pattern', { type: 'string', pattern: '^a+$' }, ['aa', 'ab', '']),
+  // A pattern is matched by code point: `.` is one astral character, not half of one.
+  keyword('pattern', { type: 'string', pattern: '^.$' }, ['a', '😀', 'ab', '']),
   keyword('maxItems', { type: 'array', maxItems: 1 }, [[], [1], [1, 2]]),
   keyword('minItems', { type: 'array', minItems: 1 }, [[1], []]),
   keyword('uniqueItems', { type: 'array', uniqueItems: true }, [
@@ -210,7 +211,13 @@ export const SCHEMA_CASES: readonly SchemaCase[] = [
   format('uri-reference', '/a/b', String.raw`not a uri \ ^`),
   format('iri', 'https://example.com/ä', 'not an iri'),
   format('iri-reference', '/ä/b', String.raw`not an iri \ ^`),
-  format('uuid', '123e4567-e89b-12d3-a456-426614174000', 'not-a-uuid'),
+  // RFC 4122's grammar is any hexadecimal digits: the version and variant are not fixed.
+  format(
+    'uuid',
+    '123e4567-e89b-12d3-a456-426614174000',
+    '123e4567-e89b-02d3-a456-426614174000',
+    'not-a-uuid',
+  ),
   format('uri-template', '/a/{b}', '/a/{b'),
   format('json-pointer', '/a/b', 'a/b'),
   format('relative-json-pointer', '1/a', '/a'),

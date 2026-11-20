@@ -1,5 +1,6 @@
 /**
- * How one case becomes one cell, with Castr replaced by a simple stand-in.
+ * How one case becomes one cell: the real reference validator, with Castr replaced by a
+ * simple stand-in passed as an argument. No file is read or written.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -50,13 +51,17 @@ describe('runCase', () => {
   });
 
   it('is refused where Castr raises an error of its own', async () => {
-    const cell = await runCase(maxLength, () => Promise.reject(new Error('Cannot proceed.')));
+    const cell = await runCase(maxLength, () =>
+      Promise.resolve({ kind: 'threw', thrown: new Error('Cannot proceed.') }),
+    );
 
     expect(cell).toEqual({ verdict: 'refused', detail: 'Cannot proceed.' });
   });
 
   it('is crashed where Castr fails with a fault of the runtime', async () => {
-    const cell = await runCase(maxLength, () => Promise.reject(new TypeError('x is undefined')));
+    const cell = await runCase(maxLength, () =>
+      Promise.resolve({ kind: 'threw', thrown: new TypeError('x is undefined') }),
+    );
 
     expect(cell).toEqual({ verdict: 'crashed', detail: 'x is undefined' });
   });
@@ -84,6 +89,12 @@ describe('runCase', () => {
       verdict: 'crashed',
       detail: `Castr's validator threw on "ab": x is not a function`,
     });
+  });
+
+  it('rejects, and gives no cell, where the harness itself fails', async () => {
+    await expect(
+      runCase(maxLength, () => Promise.reject(new Error('ENOSPC: no space left on device'))),
+    ).rejects.toThrow('ENOSPC');
   });
 
   it('is missing where Castr emitted no validator for the shape', async () => {
