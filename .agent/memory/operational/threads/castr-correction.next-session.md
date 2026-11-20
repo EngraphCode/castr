@@ -77,12 +77,15 @@ repository before acting.
   approves; the example documents are the proof for constructs Oak does not use yet. Next:
   a first enumeration ran on 20 November
   ([its report](../../../analysis-and-reports/constructs-2026-11-20.md)): of 94 constructs,
-  44 right, 14 wrong, 19 crashed, 4 not measurable alone and 13 not judged, none refused in plain words. Pending, in order: the
-  seat drafts the amendment that makes "every valid construct converts" the requirement
-  (not yet written), then the owner approves it in words naming the version.
+  44 right, 14 wrong, 19 crashed, 4 not measurable alone and 13 not judged, none refused in plain words. Specification
+  0.7.0, approved on 20 November 2026 ("I approve 0.7.0"), makes the standard SPEC-PR-6:
+  no `NOT-YET-BUILT` rejection is reachable from any valid document of the source format,
+  and the required check runs one case for every construct kind the scope-and-fidelity
+  table lists. Something the target cannot express stays a located rejection and is
+  listed in that table, which the owner approves.
 - **Next work: PICTURE (the course's todo).** One repeatable command that shows what Castr
   does on each document, judged from outside Castr; the MEASURE probe is its first drawing.
-  It is the owner's "what working looks like". One owner interaction lies ahead, the approval of that amendment once it is drafted. The
+  It is the owner's "what working looks like". No owner interaction is pending. The
   specification needs one phrase changed (§10, "early in the course"), by an approved
   amendment before MOVE (the course's HOME todo). Put to the owner on 19 November as a fact they did not
   have: about 26,500 of 35,655 product lines are the model or written against its shape, so
