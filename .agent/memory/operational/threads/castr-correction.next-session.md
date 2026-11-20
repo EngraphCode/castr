@@ -129,6 +129,103 @@ repository before acting.
     the PICTURE command: `discriminator.defaultMapping` (3.2), and one row for each of
     the five values of `xml.nodeType` (3.2: `element`, `attribute`, `text`, `cdata`,
     `none`). Every 3.2 field in the report's section F still needs a class.
+  - **Six decisions, by question prompt, 20 November 2026.** The owner asked: "please
+    present me with your questions, give me enough context with each one to make a
+    decision without having to read through the chat history". The answers are decisions
+    about what the specification will say. None is an approval of specification text;
+    that still needs the owner's own words naming a version (SPEC-CC-2).
+    1. Rows that fit none of the four classes (126 for Zod): "Add a fifth class", for
+       meaning outside what a target is for, barred from schema keywords, `type` values
+       and `format` values.
+    2. The 26 Zod rows that need a check function Castr writes: "Carried; Castr marks its
+       checks", so a later Zod reader can recognise them and read them back.
+    3. A `format` value Castr has no checker for: "Carry and report". It is an annotation,
+       named in the run report, never a refusal; SPEC-P-3 gains a sentence.
+    4. Integers. The owner first answered, verbatim: "I need you to suggest the best
+       options here, step back and consider the intended impact and desired user value
+       first. Whatever we decide, it must be clearly communicated, especially if it is a
+       transformation that means the reverse transformation does not give back the
+       original semantic meaning". The seat proposed one profile clause for every
+       integer, not an int64 rule, and the owner answered "Accept the clause": the model
+       keeps the integer exactly; Zod and TypeScript write `number` and Zod asserts a
+       safe integer, so a too-large value is refused and never accepted rounded; the run
+       report, the TypeScript comment and a Zod annotation state the narrowing; reading
+       that Zod back gives `integer, format: int64` again. A `bigint` output mode is a
+       later capability. This is not what the code does today: the present Zod and
+       TypeScript writers emit `bigint` for `int64`, and that code changes to `number`
+       under this decision.
+    5. What the reader refuses by design (an unread dialect, OpenAPI 2.0, an invalid
+       document): "Add a third kind" of rejection. It never counts toward `NOT-YET-BUILT`
+       and its cases are listed in the specification.
+    6. Versions that must be complete before OpenAPI to Zod and TypeScript is done: "3.1
+       and 3.2". 3.0 follows later. So every 3.2 row in the report's section F needs a
+       class, and the Read column's 3.0.x needs words for what it means until then.
+
+    A draft amendment carrying all six in nine changes was written the same day and one
+    adversarial review broke it before the owner saw it; it is withdrawn. What the
+    redraft must hold, from that review:
+    - A rule quantified over a hand list reopens the 0.7.0 loophole. "A `format` value
+      the table does not list is an annotation" lets a missing row weaken silently. The
+      rule is: a value no specification of the source format defines is an annotation; a
+      defined value with no row or no checker is `NOT-YET-BUILT`; a construct met in a
+      valid document with no row is `NOT-YET-BUILT`.
+    - A case may end in `NOT-YET-BUILT` naming its row, or the check is red by design.
+    - "Ends as its class defines" needs an ending per class, and a case must state its
+      construct so that deleting it changes a decision or an annotation. Carried as
+      structure and outside the target each need a proof that the value is held.
+    - The fifth class's bar is the decided, mechanical one, extended to boundary slots
+      and to naming. `xml` and `xml.nodeType` are said about a shape and are reclassed as
+      carried as structure. The four rows the parser spends (`openapi`,
+      `jsonSchemaDialect`, `$schema`, `$vocabulary`) are computed kinds with no class;
+      the owner has not decided them.
+    - `NOT-READ`: validity is decided by a conforming validator independent of Castr's
+      parser; the subset and value-domain cases arise only from a Zod source; a valid
+      OpenAPI or JSON Schema document at a listed version never receives it; its cases
+      sit in a numbered clause.
+    - The published definitions are named and pinned, with an extraction rule and a list
+      of corrections (`link.body` is `server`). Zod has none; Appendix A is its row
+      source.
+    - Integers: the true statement is that integers outside the safe range collide and a
+      JSON parser returns the nearest; a non-integer that a double cannot hold is rounded
+      before any validator sees it and cannot be refused, which the owner has not
+      decided; a source bound, `const` or `enum` member beyond the range is documentation
+      and never a number; a Zod reader reads a Zod integer as unbounded, a stated profile
+      reading; "an integer" is every schema whose `type` admits `integer`.
+    - The mark holds the construct and its arguments as data, and a marked function that
+      is not the one Castr emits is refused. Section 11's "executable Zod refinements"
+      needs its exception. No marked-check row can be built before SPEC-N-3 states the
+      mark.
+    - A 3.0.x document is refused before any construct is read, with one rejection
+      naming a numbered later capability; section 6 and SPEC-PR-6's "granularity" need
+      words.
+    - Serialisation rows are outside the target for Zod and TypeScript, and SPEC-C-1's
+      first acceptance part requires them proved. The endpoint definitions have no table,
+      so they are proved only on the corpus document. The owner has not decided this.
+    - The rules bind nothing while SPEC-N-5 is unwritten, so the vocabulary lands with the
+      tables, not before them.
+
+    The owner decided those three points by question prompt the same day, numbered on
+    from the six above:
+    - **Seven.** A decimal with more digits than a JavaScript number holds is rounded by
+      the JSON parser before any validator sees it: "Declare once, per run". The
+      specification states the limit as a profile decision for JavaScript targets and
+      every run's report carries one plain statement of it. The model still holds numbers
+      exactly.
+    - **Eight.** Serialisation rules: "Yes, a third column". Every row is classed for the
+      endpoint definitions as well as for Zod and TypeScript; serialisation rows are
+      carried there and each has a case that runs. A generator's output has a table as a
+      format's does.
+    - **Nine.** The four rows the parser spends (`openapi`, `jsonSchemaDialect`,
+      `$schema`, `$vocabulary`): "A separate sixth outcome". The fifth class keeps the
+      owner's bar as stated (no schema keyword at all), and a named outcome, read, covers
+      these four declarations.
+
+    Next: the PICTURE command, whose cells use the five classes and the read outcome as
+    proposals, in three columns (Zod, TypeScript, the endpoint definitions), and whose
+    cases show which rows hold. The amendment follows it, in parts small enough to close:
+    the reader's rejections and versions; numbers in JavaScript targets; the table
+    vocabulary together with the tables.
+
   - **For the owner, said and not yet answered:** `principles.md` contradicts itself
     (its four rules against "objects are always closed" and against `patternProperties`
     to TypeScript as a correct refusal) and needs the owner's approval to edit. The
