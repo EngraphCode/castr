@@ -120,8 +120,8 @@ repository before acting.
   - **The row list is written (20 November, on the owner's word "go ahead with PICTURE's
     row list").** It is
     [picture-rows-2026-11-20.md](../../../analysis-and-reports/picture-rows-2026-11-20.md):
-    268 rows with a proposed class each, and seven findings for the owner. The largest:
-    116 rows (document content, serialisation rules, things said about a boundary) fit
+    273 rows with a proposed class each, and seven findings for the owner. The largest:
+    125 rows (document content, serialisation rules, things said about a boundary) fit
     none of the four classes for a Zod target; 26 Zod rows need a check function Castr
     writes; 3.0 and 3.2 documents add rows that have no class yet. Next: the owner's
     answers to those findings, then the PICTURE command with one case per row.
