@@ -12,7 +12,7 @@ owner_directive: >-
   excellence in engineering and software design and architecture."
 todos:
   - id: ALERTS
-    content: 'Dependency alerts on main reach zero through dependency-update pull requests that land without analysis; while main has an alert that holds merges, nothing else merges (SPEC-G-1). Done on 2 November 2026: #117 (SHA:31f49532) cured 30, #118 (SHA:acd9d2b0) the six raised after it; main had zero open alerts at 15:00Z and pnpm audit reported none. A new alert reopens the leg. Reopened on 13 November 2026 by two alerts on @hono/node-server, cured by #119 (SHA:d3077124) on 18 November; open again that day on picomatch (GHSA-fc5q-39xc-vjpf), which has no patched release; specification 0.5.2 names that alert in SPEC-G-1, so it does not hold merges until its advisory names a patched version old enough to install, and its cure then goes first; the alert is named only while nothing a user of Castr supplies reaches the vulnerable code, so a change that makes picomatch reachable from user input ends that and needs the owner; on 18 November 2026 at 15:38 UTC the GitHub Advisory Database withdrew the advisory, after the maintainer had called the report not a vulnerability, no release follows 4.0.7, and the alert was still open at 17:43 UTC; if GitHub closes it, the name in SPEC-G-1 is removed only by an amendment the owner approves'
+    content: 'Dependency alerts on main reach zero through dependency-update pull requests that land without analysis; while main has an alert that holds merges, nothing else merges (SPEC-G-1). Done on 2 November 2026: #117 (SHA:31f49532) cured 30, #118 (SHA:acd9d2b0) the six raised after it; main had zero open alerts at 15:00Z and pnpm audit reported none. A new alert reopens the leg. Reopened on 13 November 2026 by two alerts on @hono/node-server, cured by #119 (SHA:d3077124) on 18 November; main has no open alerts'
     status: pending
     depends_on: []
   - id: PROBE
@@ -24,7 +24,7 @@ todos:
     status: pending
     depends_on: [PLOT]
   - id: RATIFY
-    content: "The owner approved draft 0.5.0 in this repository's working session on 2 November 2026 ('I approve draft 0.5.0 , if we need to review and change it later that is fine.'), recorded per SPEC-CC-2 with its SHA-256 at SHA:0e2ca07a; the owner then approved 0.5.1 ('I approve 0.5.1'), which reads SPEC-CC-3's latest approved record as the latest ever approved, recorded at SHA:1a7631ac; the SPEC-CC-3 check is written (SHA:5d264896) and enforces that reading; all of it landed on main with #120 (SHA:3ff0fd2e) on 18 November 2026, at version 0.5.2, which the owner approved that day ('I approve version 0.5.2') to name the picomatch alert in SPEC-G-1"
+    content: "The owner approved draft 0.5.0 in this repository's working session on 2 November 2026 ('I approve draft 0.5.0 , if we need to review and change it later that is fine.'), recorded per SPEC-CC-2 with its SHA-256 at SHA:0e2ca07a; the owner then approved 0.5.1 ('I approve 0.5.1'), which reads SPEC-CC-3's latest approved record as the latest ever approved, recorded at SHA:1a7631ac; the SPEC-CC-3 check is written (SHA:5d264896) and enforces that reading; all of it landed on main with #120 (SHA:3ff0fd2e) on 18 November 2026, at version 0.5.2, which the owner approved that day ('I approve version 0.5.2')"
     status: completed
     depends_on: [ALERTS]
   - id: MEASURE
@@ -226,20 +226,7 @@ eslint-plugin-import-x. By the owner's decision card ("Patch import-x"), pull re
 forces minimatch 11, glob 14 and KaTeX 0.19 and patches import-x with the change in
 upstream pull request un-ts/eslint-plugin-import-x#570; each forced floor and the patch go
 once their consumers declare the patched major. Two alerts on `@hono/node-server` arrived
-on 13 November 2026 and #119 cured them on 18 November (`SHA:d3077124`). Dependabot then
-raised a high alert on picomatch (GHSA-fc5q-39xc-vjpf) covering every release up to 4.0.7,
-the latest, so no dependency-update pull request can cure it until upstream publishes a
-patched release; the leg stays open. Specification 0.5.2, approved on 18 November 2026, names
-that alert in SPEC-G-1: it does not hold merges until its advisory names a patched version old
-enough to install, and its cure then goes first. The clause names the alert only while
-nothing a user of Castr supplies reaches the vulnerable code; a change that would let user
-input reach picomatch ends that condition and goes to the owner before it merges. On
-18 November 2026 at 15:38 UTC the GitHub Advisory Database withdrew the advisory. The
-maintainer had replied on a fix pull request on 21 October that it is "not a vulnerability";
-upstream issues #234 and #247 ask for a fix and are open, about fourteen fix pull requests
-are open and none is merged, and no release follows 4.0.7. Alert 122 was still open at
-17:43 UTC. The owner asked that day for a daily check; if GitHub closes the alert, the name
-in SPEC-G-1 is removed only by an amendment the owner approves. Pull request #109, the identity-chain cure, merged after #111
+on 13 November 2026 and #119 cured them on 18 November (`SHA:d3077124`). Pull request #109, the identity-chain cure, merged after #111
 (`SHA:8b0aa438`) at the end of its second review round. The owner's ruling on #109 was
 "land it frozen". From it the agent drew a working rule, which is the agent's wording and
 not the owner's: nothing more goes into the present writer code, and a review finding
