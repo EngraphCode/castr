@@ -6,12 +6,14 @@ consumer takes: the Zod validators, the TypeScript types and the endpoint defini
 Each cell says whether Castr is right, refuses in plain words, is wrong, emits nothing or
 crashes.
 
-This directory is being built in steps. It holds the rows so far.
+This directory is being built in steps. It holds the rows and the outcome proposed for
+each. No case runs Castr yet, so no cell says what Castr does today.
 
 ## Run it
 
 ```bash
-pnpm test:picture
+pnpm picture        # print the rows and their proposed outcomes as tables
+pnpm test:picture   # check the rows are whole and the proposals keep to the bars
 ```
 
 ## Where the rows come from
@@ -33,7 +35,9 @@ document schema spells the Link Object's `server` field as `body`;
 [`rows/published-rows.ts`](rows/published-rows.ts) corrects that by name, and the reading
 reports a correction that stops applying. Constructs that only the specifications' text
 defines (the values of `format`, boolean schemas, a keyword no vocabulary defines) cannot
-be computed and are listed by hand when the rows gain their proposed outcomes.
+be computed. They are listed by hand in [`rows/schema-proposals.ts`](rows/schema-proposals.ts),
+each with the section that defines it, and are the part of the rows most likely to be
+missing one.
 
 The two dialect files and the format-assertion vocabulary are pinned with the rest and
 no code reads them yet.
@@ -56,6 +60,30 @@ files and states facts the specifications give, so a rule that loses a field or 
 two objects on the real definitions fails. A reference with no target, a correction that
 stops applying and fields declared where the reading does not look are all reported, and
 that test fails on any report.
+
+## The proposed outcomes
+
+Every row has a proposed outcome in each of three columns: the Zod output, the TypeScript
+output and the endpoint definitions. An outcome is one of the specification's four
+classes (carried, carried as structure, carried by companion, unexpressible), or one of
+two the owner decided on 20 November 2026 and the specification does not yet hold:
+
+- **outside the target:** the target is not a place for this part of meaning. No part of
+  a schema is ever outside a target.
+- **read:** a declaration a reader spends in reading. There are four: `openapi`,
+  `jsonSchemaDialect`, `$schema` and `$vocabulary`.
+
+The proposals are in [`rows/schema-proposals.ts`](rows/schema-proposals.ts) and
+[`rows/object-proposals.ts`](rows/object-proposals.ts). They are proposals: the
+specification's scope-and-fidelity tables are not yet written, and nothing here amends
+it. [`rows/table.ts`](rows/table.ts) joins them to the computed rows and reports:
+
+- a computed row with no proposal, and a proposal for a row that was not computed;
+- a part of a schema proposed as outside a target;
+- a row proposed as read that is not one of the four, and one of the four proposed as
+  anything else.
+
+[`rows/picture-rows.e2e.test.ts`](rows/picture-rows.e2e.test.ts) fails on any report.
 
 ## A newer definition
 
