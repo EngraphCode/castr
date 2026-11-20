@@ -25,3 +25,12 @@ The Oak Curriculum API documents under `lib/tests-transforms/__fixtures__/corpus
 earlier one at `lib/tests-transforms/__fixtures__/arbitrary/oak-api.json`, are Oak National
 Academy's, served at <https://open-api.thenational.academy>. They are reproduced under the
 Open Government Licence v3.0.
+
+## The publishers of the formats' definitions
+
+The files under `lib/tests-picture/__fixtures__/definitions/` are the published
+definitions of the formats Castr reads. Those named `oas-` are the OpenAPI Initiative's,
+served at <https://spec.openapis.org/oas/> and reproduced under the Apache License 2.0.
+Those named `jsonschema-2020-12-` are the JSON Schema Specification Authors', served at
+<https://json-schema.org/draft/2020-12/meta/> and reproduced under the 3-clause BSD
+licence.

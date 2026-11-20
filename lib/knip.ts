@@ -1,7 +1,11 @@
 import type { KnipConfig } from 'knip';
 
 const config: KnipConfig = {
-  entry: ['tests-transforms/**/*.test.ts', 'tests-snapshot/**/*.test.ts'],
+  entry: [
+    'tests-transforms/**/*.test.ts',
+    'tests-snapshot/**/*.test.ts',
+    'tests-picture/**/*.test.ts',
+  ],
   project: ['src/**/*.ts'],
   ignoreBinaries: ['tsx'],
   ignoreDependencies: ['madge'],
