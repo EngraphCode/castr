@@ -124,6 +124,39 @@ repository before acting.
     `.agent/analysis-and-reports/constructs-2026-11-20.md`. The withdrawn draft and the
     commit helper live only in the session scratchpad; the helper's two tricks are in the
     napkin (the `diff.renames` setting for moves; staging removals by name first).
+- **WRAP, 20 November 2026: what the loss scan found beyond the state above.**
+  - **Promises the seat made, each forwarded here.** Answer and resolve #134's three
+    threads. Rehearse the consumer's generation step against a Castr build with no file
+    moved (said on 19 November, never run). Run the cases owed to the command (offset
+    date-times, astral characters in length limits, a closed-object `allOf` over a shared
+    property, whether non-validating keywords are carried). Bring the owner the exact
+    before and after of any amendment only after adversarial review. Say to the owner
+    when a first measurement is provisional.
+  - **Inference, not observation.** Why GitHub closed alert 122 (the seat's reading: the
+    lockfile change in #130 made it re-read a withdrawn advisory). That the parser drops
+    `discriminator`, `deprecated`, `readOnly` and `writeOnly` (a reviewer's report plus a
+    text search that finds no mention of the last two; not traced). That Oak's toolchain
+    bounds which constructs it can emit (an idea for ordering the rows, never checked).
+    The consumer-side reader's count of 18 rewrites and their classes (a subagent's
+    report; two of its facts were verified, the rest were not).
+  - **What the scan cannot see.** The session was compacted once; anything from before
+    18 November that the summary dropped is not in this record unless the napkin holds
+    it. The two subagents' contexts are gone; only their reports survive, quoted in the
+    napkin. Review bots read diffs, not the whole tree.
+  - **Where outside eyes caught what the seat missed (point scrutiny here).** Every
+    amendment draft (0.6.0 draft of 19 November, 0.7.0, 0.8.0) had a loophole of one
+    shape: a check quantified over a list nothing forces to be complete. Every first
+    measurement moved under review. Plan and record edits left a stale sentence elsewhere
+    in the same file on most pull requests: after changing a scope or a count, search the
+    whole estate for the old wording before pushing.
+  - **Index of homes.** Decisions and the owner's words: this record and the course's
+    "Order of the legs". Mistakes, tool notes and owed cases: the napkin's entries of 19
+    and 20 November. Measurements: `.agent/analysis-and-reports/measure-2026-11-18.md`
+    and `constructs-2026-11-20.md`. Provenance: `docs/THIRD_PARTY_NOTICES.md`. Private
+    owner rulings stay in the seat's per-user memory, outside version control.
+  - **Fixed point.** A further pass re-finds only the promises and inferences listed
+    here; the recursion closes. Deep consolidation is not run, by the owner's ruling of
+    1 November 2026 (recorded in the continuity file).
 - **Next work: PICTURE (the course's todo).** One repeatable command that shows what Castr
   does on each document, judged from outside Castr; the MEASURE probe is its first drawing.
   It is the owner's "what working looks like". No approval is waiting on the owner today; one lies ahead, named next. The
