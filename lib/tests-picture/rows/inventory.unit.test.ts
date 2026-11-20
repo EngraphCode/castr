@@ -5,7 +5,7 @@
 
 import { describe, it, expect } from 'vitest';
 
-import { readInventory, readKeywords, type InventoryOptions } from './inventory.js';
+import { readInventory, readKeywords, readTypeValues, type InventoryOptions } from './inventory.js';
 
 const OPTIONS: InventoryOptions = {
   rootName: 'document',
@@ -120,7 +120,7 @@ describe('readInventory', () => {
     expect(inventory.objects[2]?.fields.map((field) => field.name)).toEqual(['authorizationUrl']);
   });
 
-  it('reads a choice between two references as no object with fields', () => {
+  it('does not make an object of a choice between two references', () => {
     const inventory = readInventory(
       {
         $defs: {
@@ -136,12 +136,11 @@ describe('readInventory', () => {
       OPTIONS,
     );
 
-    expect(inventory.objects[1]).toEqual({
-      name: 'header-or-reference',
-      fields: [],
-      keyedBy: [],
-      extensible: false,
-    });
+    expect(inventory.objects.map((object) => object.name)).toEqual([
+      'document',
+      'reference',
+      'header',
+    ]);
     expect(inventory.folded).toEqual([]);
   });
 
@@ -272,6 +271,19 @@ describe('readInventory', () => {
     expect(inventory.problems).toEqual([
       'server.variables declares fields inline; they are not counted',
     ]);
+  });
+});
+
+describe('readTypeValues', () => {
+  it('lists the values the validation meta-schema allows for type', () => {
+    expect(readTypeValues({ $defs: { simpleTypes: { enum: ['string', 'array'] } } })).toEqual([
+      'array',
+      'string',
+    ]);
+  });
+
+  it('lists nothing for a meta-schema that does not define them', () => {
+    expect(readTypeValues({})).toEqual([]);
   });
 });
 

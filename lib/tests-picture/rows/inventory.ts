@@ -87,7 +87,7 @@ function refOf(node: unknown): string | undefined {
  *   it.
  * - A reference that is a field's value is another object and is not followed. When it
  *   points inside the same definition, that target is an object of its own.
- * - A definition that is a choice between two references is not an object.
+ * - A definition that is a choice between two references, or a list, is not an object.
  * - A field's own value schema is never searched for further fields of the object.
  */
 export function readInventory(schema: JsonObject, options: InventoryOptions): Inventory {
@@ -225,6 +225,16 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
     }
   }
 
+  // A definition that is a choice between two references is one object or the other.
+  const noteChoice = (definition: JsonObject): void => {
+    for (const branch of [definition['then'], definition['else']]) {
+      const target = refOf(branch);
+      if (target !== undefined) {
+        noteValueRef(target);
+      }
+    }
+  };
+
   // A definition that is a list of other objects declares no fields of its own.
   const isList = (definition: JsonObject): boolean => definition['type'] === 'array';
 
@@ -235,16 +245,7 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
 
   const describe = (name: string, definition: JsonObject, ref: string | undefined): ObjectKind => {
     const acc: Collected = { name, fields: new Map(), keyedBy: new Set(), extensible: false };
-    if (isChoice(definition)) {
-      for (const branch of [definition['then'], definition['else']]) {
-        const target = refOf(branch);
-        if (target !== undefined) {
-          noteValueRef(target);
-        }
-      }
-    } else {
-      walk(definition, acc, new Set(ref === undefined ? [] : [ref]));
-    }
+    walk(definition, acc, new Set(ref === undefined ? [] : [ref]));
     for (const correction of options.corrections) {
       if (correction.object !== name) {
         continue;
@@ -280,6 +281,10 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
         noteValueRefsIn(definition);
         continue;
       }
+      if (isChoice(definition)) {
+        noteChoice(definition);
+        continue;
+      }
       const ref = `${DEFS_PREFIX}${name}`;
       found.push({ ref, kind: describe(name, definition, ref) });
     }
@@ -312,6 +317,16 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
 export interface KeywordKind {
   readonly vocabulary: string;
   readonly keyword: string;
+}
+
+/**
+ * The values `type` may take, as the validation vocabulary's meta-schema lists them.
+ */
+export function readTypeValues(validationMetaSchema: JsonObject): readonly string[] {
+  const definitions = validationMetaSchema['$defs'];
+  const simpleTypes = isJsonObject(definitions) ? definitions['simpleTypes'] : undefined;
+  const values = isJsonObject(simpleTypes) ? simpleTypes['enum'] : undefined;
+  return Array.isArray(values) ? values.map(String).sort(byName) : [];
 }
 
 /**

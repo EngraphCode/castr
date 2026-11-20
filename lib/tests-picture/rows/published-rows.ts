@@ -2,6 +2,7 @@ import type { Definition } from './definitions.js';
 import {
   readInventory,
   readKeywords,
+  readTypeValues,
   type Correction,
   type Inventory,
   type KeywordKind,
@@ -40,6 +41,13 @@ export type DefinitionReader = (file: string) => Definition;
  */
 export function schemaKeywords(read: DefinitionReader): readonly KeywordKind[] {
   return VOCABULARIES.flatMap(([vocabulary, file]) => readKeywords(vocabulary, read(file).schema));
+}
+
+/**
+ * The seven values `type` may take. Each is a construct of its own.
+ */
+export function schemaTypeValues(read: DefinitionReader): readonly string[] {
+  return readTypeValues(read('jsonschema-2020-12-validation.json').schema);
 }
 
 /**

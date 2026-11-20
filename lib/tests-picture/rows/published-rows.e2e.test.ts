@@ -20,6 +20,7 @@ import {
   openApi32Objects,
   openApi32SchemaVocabulary,
   schemaKeywords,
+  schemaTypeValues,
 } from './published-rows.js';
 
 function objectNamed(inventory: Inventory, name: string): ObjectKind {
@@ -63,6 +64,18 @@ describe('JSON Schema 2020-12 keywords', () => {
 
     expect(keywords).toHaveLength(57);
     expect(new Set(keywords.map((entry) => entry.keyword)).size).toBe(57);
+  });
+
+  it('lists the seven values of type', () => {
+    expect(schemaTypeValues(loadDefinition)).toEqual([
+      'array',
+      'boolean',
+      'integer',
+      'null',
+      'number',
+      'object',
+      'string',
+    ]);
   });
 
   it('places a keyword in the vocabulary that defines it', () => {
@@ -148,9 +161,12 @@ describe('OpenAPI 3.1 objects', () => {
     ]);
   });
 
-  it('does not treat a choice between an object and a reference as an object with fields', () => {
-    expect(fieldNames(inventory, 'parameter-or-reference')).toEqual([]);
+  it('does not count a choice between an object and a reference as an object', () => {
+    const names = inventory.objects.map((candidate) => candidate.name);
+
+    expect(names.filter((name) => name.endsWith('-or-reference'))).toEqual([]);
     expect(fieldNames(inventory, 'reference')).toEqual(['$ref', 'description', 'summary']);
+    expect(names).toHaveLength(34);
   });
 
   it('records how the entries of a map are keyed', () => {
