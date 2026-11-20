@@ -108,12 +108,15 @@ repository before acting.
     profile exclusion) need a rejection kind of their own; unknown keywords, `x-`
     extensions and unlisted `format` values need explicit rows; SPEC-C-1's acceptance
     words change with SPEC-G-4. No amendment is before the owner.
-  - **Next work, in order.** Write the scope-and-fidelity table first (SPEC-N-5): compute
-    the construct kinds of OpenAPI 3.1 from its published definition (the 57 keywords of
-    the 2020-12 vocabularies shipped with Ajv, plus OpenAPI's own fields), propose each
-    row's class for the pairs of SPEC-C-1, and bring that to the owner. Only then draft
-    the amendment against it, reviewed adversarially before the owner is asked for
-    words. The PICTURE command is that table made executable.
+  - **Next work, in the course's order (PICTURE, then PLOT).** PICTURE is next, and its
+    first part is its row list: compute the construct kinds of OpenAPI 3.1 from its
+    published definition (the 57 keywords of the 2020-12 vocabularies shipped with Ajv,
+    plus OpenAPI's own fields), propose each row's class for the pairs of SPEC-C-1, and
+    bring that list to the owner. The PICTURE command is that list made executable. The
+    list is a proposal in a report; writing it into the specification as the
+    scope-and-fidelity table (SPEC-N-5) is an amendment, and PLOT sequences it, as the
+    course says. Any amendment is drafted against the list and reviewed adversarially
+    before the owner is asked for words.
   - **For the owner, said and not yet answered:** `principles.md` contradicts itself
     (its four rules against "objects are always closed" and against `patternProperties`
     to TypeScript as a correct refusal) and needs the owner's approval to edit. The

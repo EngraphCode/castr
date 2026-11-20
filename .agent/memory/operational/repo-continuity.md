@@ -114,9 +114,10 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 0. **Read "STATE AT THE PAUSE" in the
    [thread record](threads/castr-correction.next-session.md) first.** On 20 November 2026
    the seat stopped at the owner's word with #134 open and a draft amendment withdrawn.
-   The next work is the scope-and-fidelity table (SPEC-N-5), computed from OpenAPI 3.1's
-   published definition and taken to the owner, before the command below and before any
-   further amendment.
+   The next work is PICTURE, below, and its first part is its row list: the construct
+   kinds computed from OpenAPI 3.1's published definition, with a proposed class per row,
+   taken to the owner. Writing that list into the specification as the scope-and-fidelity
+   table (SPEC-N-5) is an amendment that PLOT sequences, as the course says.
 1. **PICTURE: one repeatable command that shows what Castr does, judged from outside it.**
    The owner asked on 18 November 2026 what working, working well and correct look like.
    The seat answered with cards and a draft amendment, and on 19 November the owner sent it
