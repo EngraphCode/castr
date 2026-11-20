@@ -56,14 +56,14 @@ Three more labels appear in the tables. They are this report's and are not class
 
 ## What the list shows
 
-1. **The four classes do not cover 125 of the 273 rows for Zod, and 112 for TypeScript.**
+1. **The four classes do not cover 126 of the 278 rows for Zod, and 113 for TypeScript.**
    The classes describe a construct the target is asked to express. Most of an OpenAPI
    document is not that:
    - 76 rows are document content (`info`, `servers`, `tags`, security schemes, links).
      The specification says the model carries it and the OpenAPI writer writes it back.
      Zod and TypeScript have no place for it, and refusing it would refuse every
      document.
-   - 22 rows are serialisation rules (`style`, `explode`, `allowReserved`, `encoding`,
+   - 23 rows are serialisation rules (`style`, `explode`, `allowReserved`, `encoding`,
      `xml`). The specification calls a parameter's serialisation rule meaning. Neither
      target can say it; the endpoint definitions are the natural place, and their content
      is not yet specified.
@@ -124,6 +124,9 @@ Three more labels appear in the tables. They are this report's and are not class
 
 ## Limits
 
+- Review found a row missing or wrongly classed in each of four rounds, and this version
+  holds every correction. More are likely. The list is finished in the PICTURE command,
+  where each row has a case that runs; it is not finished by further reading.
 - The classes are a proposal made by reading, not by running anything. The
   [construct report](constructs-2026-11-20.md) holds what Castr does today for 94
   constructs; this list has more rows than that report measured.
@@ -148,10 +151,10 @@ Three more labels appear in the tables. They are this report's and are not class
 
 ### Counts
 
-Rows with a proposed class: 273 (57 keywords, 7 type values, 27 format values, 11 other schema rows, 145 fields, which make 163 rows because a field with a fixed set of values is one row per value, and 8 keyed-entry rows, over 43 objects).
+Rows with a proposed class: 278 (57 keywords, 7 type values, 27 format values, 16 other schema rows, 145 fields, which make 163 rows because a field with a fixed set of values is one row per value, and 8 keyed-entry rows, over 43 objects).
 
-- To Zod: carried 65; carried, by a check Castr writes 26; structure 52; companion 0; unexpressible 0; no class fits 125; read by the parser 5.
-- To TypeScript: carried 37; carried, by a check Castr writes 0; structure 35; companion 84; unexpressible 0; no class fits 112; read by the parser 5.
+- To Zod: carried 69; carried, by a check Castr writes 26; structure 52; companion 0; unexpressible 0; no class fits 126; read by the parser 5.
+- To TypeScript: carried 38; carried, by a check Castr writes 0; structure 35; companion 87; unexpressible 0; no class fits 113; read by the parser 5.
 
 ### A. Schema keywords (computed: the 2020-12 vocabularies)
 
@@ -195,8 +198,8 @@ Rows with a proposed class: 273 (57 keywords, 7 type values, 27 format values, 1
 | `unevaluatedItems`      | unevaluated       | carried, by a check Castr writes | companion          | Becomes the tuple's rest where the parser can settle it; a check otherwise.                                          |
 | `unevaluatedProperties` | unevaluated       | carried, by a check Castr writes | companion          | Becomes the unknown-key policy where the parser can settle it; a check otherwise.                                    |
 | `type`                  | validation        | carried                          | carried            | One row per value, below. `integer` is the companion's in TypeScript.                                                |
-| `const`                 | validation        | carried                          | carried            | Any JSON value: an object or array is written as a closed shape of literals.                                         |
-| `enum`                  | validation        | carried                          | carried            | Members of any JSON type.                                                                                            |
+| `const`                 | validation        | carried                          | carried            | A primitive value. An object or array value is its own row in section D.                                             |
+| `enum`                  | validation        | carried                          | carried            | Primitive members. An object or array member is its own row in section D.                                            |
 | `multipleOf`            | validation        | carried                          | companion          | Zod divides in binary floating point; SPEC-G-4 decides whether that agrees with exact decimals.                      |
 | `maximum`               | validation        | carried                          | companion          |                                                                                                                      |
 | `exclusiveMaximum`      | validation        | carried                          | companion          |                                                                                                                      |
@@ -261,19 +264,24 @@ Rows with a proposed class: 273 (57 keywords, 7 type values, 27 format values, 1
 
 ### D. Schema rows the two definitions do not list (from prose; not computed)
 
-| Construct                                                     | To Zod             | To TypeScript      | Source                 | Note                                                                                          |
-| ------------------------------------------------------------- | ------------------ | ------------------ | ---------------------- | --------------------------------------------------------------------------------------------- |
-| `true` and `false` as a schema                                | carried            | carried            | JSON Schema Core 4.3.2 | `z.unknown()` and `z.never()`.                                                                |
-| a list of types (`type: [..]`)                                | carried            | carried            | Validation 6.1.1       |                                                                                               |
-| a keyword no vocabulary defines                               | structure          | companion          | Core 6.5               | Collected as an annotation and named in the run report; never a refusal.                      |
-| `x-` extension on a schema                                    | structure          | companion          | OpenAPI 3.1, 4.9       | Named among the parts of meaning (specification section 3).                                   |
-| `x-` extension on any other object                            | no class fits      | no class fits      | OpenAPI 3.1, 4.9       |                                                                                               |
-| `discriminator` (`propertyName`, `mapping`)                   | structure          | structure          | OpenAPI 3.1, 4.8.25    | A hint in 3.1: it changes no accepted value.                                                  |
-| `xml` (`name`, `namespace`, `prefix`, `attribute`, `wrapped`) | no class fits      | no class fits      | OpenAPI 3.1, 4.8.26    | How a value is serialised as XML.                                                             |
-| `externalDocs` on a schema                                    | structure          | companion          | OpenAPI 3.1, 4.8.24.2  |                                                                                               |
-| `example` on a schema (deprecated)                            | structure          | companion          | OpenAPI 3.1, 4.8.24.2  |                                                                                               |
-| `nullable` (3.0 documents only)                               | carried            | carried            | OpenAPI 3.0.4, 4.7.24  | Read as a union with `null`.                                                                  |
-| `jsonSchemaDialect` naming a dialect section 6 does not list  | read by the parser | read by the parser | OpenAPI 3.1, 4.8.1     | The document is valid and Castr cannot read its schemas. This needs the third rejection kind. |
+| Construct                                                      | To Zod             | To TypeScript      | Source                                           | Note                                                                                                            |
+| -------------------------------------------------------------- | ------------------ | ------------------ | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| `true` as a schema                                             | carried            | carried            | JSON Schema Core 4.3.2                           | Every value: `z.unknown()`.                                                                                     |
+| `false` as a schema                                            | carried            | carried            | JSON Schema Core 4.3.2                           | No value: `z.never()`.                                                                                          |
+| `const` or an `enum` member that is an object or array         | carried            | companion          | Validation 6.1.2, 6.1.3                          | TypeScript types are structural: a value with an extra key is assignable, so exact equality is the companion's. |
+| a list of types (`type: [..]`)                                 | carried            | carried            | Validation 6.1.1                                 |                                                                                                                 |
+| a keyword no vocabulary defines                                | structure          | companion          | Core 6.5                                         | Collected as an annotation and named in the run report; never a refusal.                                        |
+| `x-` extension on a schema                                     | structure          | companion          | OpenAPI 3.1, 4.9                                 | Named among the parts of meaning (specification section 3).                                                     |
+| `x-` extension on any other object                             | no class fits      | no class fits      | OpenAPI 3.1, 4.9                                 |                                                                                                                 |
+| `discriminator` (`propertyName`, `mapping`)                    | structure          | structure          | OpenAPI 3.1, 4.8.25                              | A hint in 3.1: it changes no accepted value.                                                                    |
+| `xml` (`name`, `namespace`, `prefix`, `attribute`, `wrapped`)  | no class fits      | no class fits      | OpenAPI 3.1, 4.8.26                              | How a value is serialised as XML.                                                                               |
+| `externalDocs` on a schema                                     | structure          | companion          | OpenAPI 3.1, 4.8.24.2                            |                                                                                                                 |
+| `example` on a schema (deprecated)                             | structure          | companion          | OpenAPI 3.1, 4.8.24.2                            |                                                                                                                 |
+| `exclusiveMinimum: true` beside `minimum` (3.0 documents only) | carried            | companion          | OpenAPI 3.0.4, 4.7.24; draft-04 Validation 5.1.3 | A boolean that changes how `minimum` is read.                                                                   |
+| `exclusiveMaximum: true` beside `maximum` (3.0 documents only) | carried            | companion          | OpenAPI 3.0.4, 4.7.24; draft-04 Validation 5.1.2 | As above.                                                                                                       |
+| `xml.nodeType` (3.2 documents only)                            | no class fits      | no class fits      | OpenAPI 3.2, XML Object                          | With `xml`: how a value is serialised as XML.                                                                   |
+| `nullable` (3.0 documents only)                                | carried            | carried            | OpenAPI 3.0.4, 4.7.24                            | Read as a union with `null`.                                                                                    |
+| `jsonSchemaDialect` naming a dialect section 6 does not list   | read by the parser | read by the parser | OpenAPI 3.1, 4.8.1                               | The document is valid and Castr cannot read its schemas. This needs the third rejection kind.                   |
 
 ### E. OpenAPI objects and their fields (computed: the 3.1 document schema)
 
@@ -801,8 +809,8 @@ export const keywordClass = {
   ],
   // validation
   type: ['C', 'C', "One row per value, below. `integer` is the companion's in TypeScript."],
-  const: ['C', 'C', 'Any JSON value: an object or array is written as a closed shape of literals.'],
-  enum: ['C', 'C', 'Members of any JSON type.'],
+  const: ['C', 'C', 'A primitive value. An object or array value is its own row in section D.'],
+  enum: ['C', 'C', 'Primitive members. An object or array member is its own row in section D.'],
   multipleOf: [
     'C',
     'K',
@@ -843,12 +851,14 @@ export const typeClass = {
 
 // Rows the two machine-readable definitions do not list. Each names its source.
 export const proseRows = [
+  ['`true` as a schema', 'C', 'C', 'JSON Schema Core 4.3.2', 'Every value: `z.unknown()`.'],
+  ['`false` as a schema', 'C', 'C', 'JSON Schema Core 4.3.2', 'No value: `z.never()`.'],
   [
-    '`true` and `false` as a schema',
+    '`const` or an `enum` member that is an object or array',
     'C',
-    'C',
-    'JSON Schema Core 4.3.2',
-    '`z.unknown()` and `z.never()`.',
+    'K',
+    'Validation 6.1.2, 6.1.3',
+    "TypeScript types are structural: a value with an extra key is assignable, so exact equality is the companion's.",
   ],
   ['a list of types (`type: [..]`)', 'C', 'C', 'Validation 6.1.1', ''],
   [
@@ -882,6 +892,27 @@ export const proseRows = [
   ],
   ['`externalDocs` on a schema', 'S', 'K', 'OpenAPI 3.1, 4.8.24.2', ''],
   ['`example` on a schema (deprecated)', 'S', 'K', 'OpenAPI 3.1, 4.8.24.2', ''],
+  [
+    '`exclusiveMinimum: true` beside `minimum` (3.0 documents only)',
+    'C',
+    'K',
+    'OpenAPI 3.0.4, 4.7.24; draft-04 Validation 5.1.3',
+    'A boolean that changes how `minimum` is read.',
+  ],
+  [
+    '`exclusiveMaximum: true` beside `maximum` (3.0 documents only)',
+    'C',
+    'K',
+    'OpenAPI 3.0.4, 4.7.24; draft-04 Validation 5.1.2',
+    'As above.',
+  ],
+  [
+    '`xml.nodeType` (3.2 documents only)',
+    'N',
+    'N',
+    'OpenAPI 3.2, XML Object',
+    'With `xml`: how a value is serialised as XML.',
+  ],
   [
     '`nullable` (3.0 documents only)',
     'C',
