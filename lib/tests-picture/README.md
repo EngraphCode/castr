@@ -111,7 +111,7 @@ The cell is what comparing their decisions gives ([`cases/verdict.ts`](cases/ver
 | not judged | The reference has no checker for the case, so nothing is claimed.                 |
 
 A right cell means Castr agreed with the reference on that case's samples. The count of
-right cells is therefore an upper bound: review of the first cases moved six cells from
+right cells is therefore an upper bound: review of the first cases moved seven cells from
 right to wrong by supplying a sample that told the two validators apart, and a sharper
 sample can move more. It does not
 mean the construct is right in every combination, and it is not the proof the
