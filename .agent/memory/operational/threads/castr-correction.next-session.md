@@ -236,10 +236,11 @@ repository before acting.
     integrated into OCE's at the move. The owner then added, verbatim: "if the
     contradictions are likely to detract from the efforts to improve Castr, then fix
     them". They were: "objects are always closed" is the cause of the largest block of
-    crashes. The fix aligns three statements in `principles.md` with the specification
-    (unknown-key policies per SPEC-P-1; `patternProperties` to TypeScript is carried by
-    companion; `int64` to JSON Schema is carried) and says the specification governs
-    where the two differ. Nothing else in that file changes.
+    crashes. The fix aligns three statements in `principles.md` with the specification:
+    unknown-key policies follow SPEC-P-1; refusing `patternProperties` to TypeScript as
+    impossible is wrong, and its class is not settled, because the tables that class each
+    construct are unwritten (SPEC-N-5); `int64` to JSON Schema is not a refusal. The file
+    now says the specification governs where the two differ. Nothing else in that file changes.
   - **For the owner, said and not yet answered:** The owner's three facts of 19 November (most code not yet written; the consumer uses v0;
     a correct Castr is stricter than today's validators) were given and drew the v1-only
     ruling; where the new code is written was not revisited.
