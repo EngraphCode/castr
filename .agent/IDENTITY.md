@@ -1,11 +1,16 @@
 # Castr: Identity, Semantics, and Policy
 
 > [!IMPORTANT]
-> [The specification](../docs/SPECIFICATION.md) governs, and it replaces the strict-only
-> object doctrine stated in this file. Its SPEC-P-1 gives an object exactly one of four
-> policies for unknown keys (closed, open, constrained to a shape, stripped). All four are
-> meanings: an object that states no policy is read as closed, and an object that states
-> one is carried as it states and is never refused for it.
+> [The specification](../docs/SPECIFICATION.md) governs, and it replaces the strict-only object doctrine
+> stated in this file. Its SPEC-P-1 gives an object exactly one of four policies for
+> unknown keys (closed, open, constrained to a shape, stripped). All four are meanings:
+> an object that states no policy is read as closed, and an object that states one is
+> carried as it states and is never refused for it.
+>
+> The body of this file is left as it was. It describes what today's code does, which is
+> stricter than the specification: it accepts and writes closed objects only. It is a
+> record of that code and is not the contract for new work. Where it says a non-strict
+> object is rejected, or that only `z.strictObject` is written, new work follows SPEC-P-1.
 
 > [!IMPORTANT]
 > On 2026-04-16, product direction was clarified: Castr must accept and emit

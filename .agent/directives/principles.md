@@ -154,7 +154,7 @@ Zod → TypeScript    (constrained by what TypeScript can express)
 Fail-fast is for **genuinely impossible** output mappings:
 
 - ✅ **Correct fail-fast**: a closed object composed with `allOf` → JSON Schema Draft-07 → that dialect has no keyword that closes an object across composition, so the writer gives a located rejection (specification, SPEC-P-1).
-- ✅ **Correct semantic output**: `patternProperties` → TypeScript → an index signature in the type, with the pattern enforced by the Zod output of the same run. TypeScript cannot check a key against a pattern, so the specification classes this as carried by companion; it is not a refusal.
+- ❌ **Incorrect fail-fast**: `patternProperties` → TypeScript → "genuinely impossible". TypeScript cannot check a key against a pattern, but it can show an index signature, and the specification has a class, carried by companion, for a constraint a target cannot enforce while the same run's Zod output does. The table that classes each construct is not yet written (specification, SPEC-N-5), so the class for this one is not settled; a refusal is not the answer in the meantime.
 - ✅ **Correct semantic output**: `integer` with `format: int64` → JSON Schema → `type: integer` with `format: int64`. JSON Schema carries it.
 - ✅ **Correct semantic output**: `patternProperties` → Zod → `.refine()` with runtime regex validation — Zod CAN express this semantically.
 - ✅ **Correct semantic output**: `booleanSchema: true` → Zod → `z.any()` — the accept-everything schema maps to z.any().
