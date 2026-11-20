@@ -12,7 +12,7 @@ owner_directive: >-
   excellence in engineering and software design and architecture."
 todos:
   - id: ALERTS
-    content: 'Dependency alerts on main reach zero through dependency-update pull requests that land without analysis; while main has an alert that holds merges, nothing else merges (SPEC-G-1). Done on 2 November 2026: #117 (SHA:31f49532) cured 30, #118 (SHA:acd9d2b0) the six raised after it; main had zero open alerts at 15:00Z and pnpm audit reported none. A new alert reopens the leg. Reopened on 13 November 2026 by two alerts on @hono/node-server, cured by #119 (SHA:d3077124) on 18 November; open again that day on picomatch (GHSA-fc5q-39xc-vjpf), which has no patched release; specification 0.5.2 names that alert in SPEC-G-1, so it does not hold merges until its advisory names a patched version old enough to install, and its cure then goes first; the alert is named only while nothing a user of Castr supplies reaches the vulnerable code, so a change that makes picomatch reachable from user input ends that and needs the owner; on 18 November 2026 at 15:38 UTC the GitHub Advisory Database withdrew the advisory, after the maintainer had called the report not a vulnerability, no release follows 4.0.7, and the alert was still open at 17:43 UTC; if GitHub closes it, the name in SPEC-G-1 is removed only by an amendment the owner approves'
+    content: 'Dependency alerts on main reach zero through dependency-update pull requests that land without analysis; while main has an alert that holds merges, nothing else merges (SPEC-G-1). Done on 2 November 2026: #117 (SHA:31f49532) cured 30, #118 (SHA:acd9d2b0) the six raised after it; main had zero open alerts at 15:00Z and pnpm audit reported none. A new alert reopens the leg. Reopened on 13 November 2026 by two alerts on @hono/node-server, cured by #119 (SHA:d3077124) on 18 November; main has no open alerts'
     status: pending
     depends_on: []
   - id: PROBE
@@ -24,7 +24,7 @@ todos:
     status: pending
     depends_on: [PLOT]
   - id: RATIFY
-    content: "The owner approved draft 0.5.0 in this repository's working session on 2 November 2026 ('I approve draft 0.5.0 , if we need to review and change it later that is fine.'), recorded per SPEC-CC-2 with its SHA-256 at SHA:0e2ca07a; the owner then approved 0.5.1 ('I approve 0.5.1'), which reads SPEC-CC-3's latest approved record as the latest ever approved, recorded at SHA:1a7631ac; the SPEC-CC-3 check is written (SHA:5d264896) and enforces that reading; all of it landed on main with #120 (SHA:3ff0fd2e) on 18 November 2026, at version 0.5.2, which the owner approved that day ('I approve version 0.5.2') to name the picomatch alert in SPEC-G-1"
+    content: "The owner approved draft 0.5.0 in this repository's working session on 2 November 2026 ('I approve draft 0.5.0 , if we need to review and change it later that is fine.'), recorded per SPEC-CC-2 with its SHA-256 at SHA:0e2ca07a; the owner then approved 0.5.1 ('I approve 0.5.1'), which reads SPEC-CC-3's latest approved record as the latest ever approved, recorded at SHA:1a7631ac; the SPEC-CC-3 check is written (SHA:5d264896) and enforces that reading; all of it landed on main with #120 (SHA:3ff0fd2e) on 18 November 2026, at version 0.5.2, which the owner approved that day ('I approve version 0.5.2')"
     status: completed
     depends_on: [ALERTS]
   - id: MEASURE
@@ -32,9 +32,13 @@ todos:
     status: completed
     depends_on: [RATIFY]
   - id: PICTURE
-    content: "One repeatable command that shows what Castr does, judged from outside Castr: documents down the side (the two Oak documents, then the example documents), what a consumer takes across the top (types, validators, endpoint definitions, the run's report), and in each cell right, refused with a plain reason and its place, wrong, missing or crashed; the MEASURE probe of 18 November 2026 is its first drawing; it lands in the repository asserting the cells that are already right and grows with the code that makes more cells right, so nothing red is ever committed; it is what the owner asked for on 18 November 2026: what working, working well and correct look like"
+    content: "One repeatable command that shows what Castr does, judged from outside Castr: documents down the side (Oak's latest v1 document, by the owner's ruling of 19 November 2026, then the example documents; the picture is a drawing of what Castr does and is not SPEC-C-1's acceptance proof), what a consumer takes across the top (types, validators, endpoint definitions, the run's report), and in each cell right, refused with a plain reason and its place, wrong, missing or crashed; the MEASURE probe of 18 November 2026 is its first drawing; it lands in the repository asserting the cells that are already right and grows with the code that makes more cells right, so nothing red is ever committed; it is what the owner asked for on 18 November 2026: what working, working well and correct look like"
     status: pending
     depends_on: [MEASURE]
+  - id: CORPUS
+    content: "SPEC-C-1's corpus is the Oak API specification's v1 document at its latest published version, by specification 0.6.0, which the owner approved on 20 November 2026 ('I approve 0.6.0') after ruling on 19 November 'Drop v0, latest v1 only'; the corpus holds one pin, the 1.1.1 document"
+    status: completed
+    depends_on: []
   - id: HOME
     content: "Section 10 of the specification says when Castr moves; its phrase 'early in the course' is changed by an approved amendment, in the owner's words naming the version (SPEC-CC-2), so that the specification says what this course's Order of the legs says: Castr moves after it is working, working well and correct in its own repository; it is the last step before MOVE, after the legs PLOT writes, and PLOT places it behind its final leg"
     status: pending
@@ -44,13 +48,13 @@ todos:
     status: pending
     depends_on: [CURRENCY, PROBE]
   - id: MOVE
-    content: Held by the owner's decisions of 18 November 2026 until SPEC-C-1's first acceptance part passes in this repository on both Oak documents and the example library's standard holds on its OpenAPI documents (see Order of the legs); section 10 of the specification says 'early in the course' until HOME amends it. Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces and is fully integrated there (owner, 2 November 2026); what travels is the code, made correct here (the reflection, 18 November 2026); the specification travels as the only description of the destination, and its SPEC-CC-3 check is given a home in OCE; the approval record covers the specification's exact bytes, so if its arrival in OCE changes any byte above its change log (OCE's formatter or markdownlint), the move carries a format-only amendment approved in words (SPEC-CC-1); this repository is archived
+    content: Held by the owner's decisions of 18 November 2026 until SPEC-C-1's first acceptance part passes in this repository on Oak's latest v1 document and the example library's standard holds on its OpenAPI documents (see Order of the legs); section 10 of the specification says 'early in the course' until HOME amends it. Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces and is fully integrated there (owner, 2 November 2026); what travels is the code, made correct here (the reflection, 18 November 2026); the specification travels as the only description of the destination, and its SPEC-CC-3 check is given a home in OCE; the approval record covers the specification's exact bytes, so if its arrival in OCE changes any byte above its change log (OCE's formatter or markdownlint), the move carries a format-only amendment approved in words (SPEC-CC-1); this repository is archived
     status: pending
     depends_on: [RULES, PLOT, HOME]
   - id: PLOT
-    content: The legs to SPEC-C-1's first acceptance part are written into this plan from the MEASURE table and the model design (SPEC-N-1), each with an observable exit state, and reviewed by assumptions-expert; they run in this repository, before MOVE (owner's decision card, 18 November 2026), and they include the proof of SPEC-G-4 on both Oak documents as a check of Castr's own, the reader that holds the example library to its standard, and checks derived from what the consuming workspaces expect
+    content: The legs to SPEC-C-1's first acceptance part are written into this plan from the MEASURE table and the model design (SPEC-N-1), each with an observable exit state, and reviewed by assumptions-expert; they run in this repository, before MOVE (owner's decision card, 18 November 2026), and they include the proof of SPEC-G-4 on Oak's latest v1 document as a check of Castr's own, the reader that holds the example library to its standard, and checks derived from what the consuming workspaces expect
     status: pending
-    depends_on: [PICTURE]
+    depends_on: [PICTURE, CORPUS]
 ---
 
 # Castr course
@@ -110,24 +114,28 @@ by decision card. Each answer below is the option the owner chose, in the card's
   syntax-tree nodes; the model is redesigned by an approved amendment (SPEC-N-1) before it
   changes.
 - **How much must be true here before the move:** "Oak documents pass here first
-  (Recommended)". SPEC-C-1's first acceptance part passes in this repository on both Oak
-  documents before MOVE. Section 10 of the specification says "early in the course"; that
+  (Recommended)". SPEC-C-1's first acceptance part passes in this repository on Oak's
+  latest v1 document before MOVE. Section 10 of the specification says "early in the course"; that
   phrase changes by an approved amendment, and until then the sentence stands as written
   and MOVE does not start.
-- **What working with other example documents means:** "Never wrong, never crashes
-  (Recommended)". On every OpenAPI document in the
-  [example library](example-input-library.md), each construct is converted
-  exactly, checked against an independent validator, or refused with a located rejection.
-  Full support stays required only for the two Oak documents, so SPEC-C-1 stays finite. The
+- **What working with other example documents means:** the owner, 20 November 2026,
+  verbatim: "What I want is to not have to rework Castr if Oak adds an additional, valid
+  field type to their spec". On every OpenAPI document in the
+  [example library](example-input-library.md), each valid construct is converted exactly,
+  checked against an independent validator. A refusal, in plain words with its place, is
+  for an invalid document or an exclusion the owner approves. This replaces the card of
+  18 November, which allowed a located refusal of any construct.
+  Full support stays required only for Oak's v1 document, so SPEC-C-1 stays finite. The
   library's JSON Schema documents wait for SPEC-C-2.
 
 What travels is therefore the code, made correct here. The order is now ALERTS, RATIFY,
-MEASURE and the reflection (all done but ALERTS's standing check), PICTURE, PLOT, the legs
+MEASURE and the reflection (all done but ALERTS's standing check), CORPUS, PICTURE, PLOT, the legs
 PLOT writes, HOME, MOVE; CURRENCY and RULES still precede MOVE, and PLOT places them among its
 legs. Three things follow that the seat wrote and the owner can strike:
 
-- The owner's sentence names v1. SPEC-C-1 requires both documents, v1 first, and both stay:
-  they gave the same result in every row of the MEASURE table.
+- The owner's sentence names v1, and on 19 November 2026 the owner ruled, verbatim: "Drop
+  v0, latest v1 only". The work is scoped to Oak's v1 document at its latest published
+  version; specification 0.6.0, approved on 20 November 2026, makes it SPEC-C-1's corpus.
 - The card on the move named the Oak documents, and the owner's sentence names the example
   documents beside them, so the library's standard is read as part of the state reached
   before MOVE.
@@ -154,8 +162,9 @@ place, wrong, missing or crashed. The MEASURE table is its first drawing.
 - **Working** is every Oak cell right, with the consuming repository's own generation step
   then building on the result, its generator packages removed and nothing rewritten
   afterwards.
-- **Working well** is no cell wrong and no crash on any other document, every refusal in
-  plain words with its place, and a second run changing nothing.
+- **Working well** is every valid construct on every other document converted and right,
+  no crash, a second run changing nothing, and an invalid document refused in plain words
+  with its place.
 - **Correct** is the decision an independent validator makes reading the document itself,
   and code built as §9 requires, which the picture cannot show.
 
@@ -164,7 +173,8 @@ Measured that day, and the legs PLOT writes account for each:
 - About 26,500 of 35,655 product lines under `lib/src` are the model or are written
   against its shape, and §9 replaces the model. What moves after being made correct is
   mostly code not yet written. The owner's word of 18 November is to make it correct here.
-- The consuming repository generates from Oak's v0 document, from a copy last changed on
+- The consuming repository generates from Oak's v0 document (so SPEC-C-1's second
+  acceptance part needs it moved onto v1 first, a change in that repository), from a copy last changed on
   3 August 2026 that it alters before generating, and does not consume v1. The served
   documents have 3 named components where that copy has 33, and its code addresses
   validators by component name, so moving it onto a served document is a change of its
@@ -179,7 +189,7 @@ Measured that day, and the legs PLOT writes account for each:
 - Today every refusal a user sees is a stack trace, and two invalid fixtures are accepted
   silently (the program run on 39 documents).
 
-The order is ALERTS, RATIFY, MEASURE and the reflection, PICTURE, PLOT, the legs PLOT
+The order is ALERTS, RATIFY, MEASURE and the reflection, CORPUS, PICTURE, PLOT, the legs PLOT
 writes, HOME, MOVE.
 
 ## RATIFY: how the specification is ratified
@@ -219,20 +229,7 @@ eslint-plugin-import-x. By the owner's decision card ("Patch import-x"), pull re
 forces minimatch 11, glob 14 and KaTeX 0.19 and patches import-x with the change in
 upstream pull request un-ts/eslint-plugin-import-x#570; each forced floor and the patch go
 once their consumers declare the patched major. Two alerts on `@hono/node-server` arrived
-on 13 November 2026 and #119 cured them on 18 November (`SHA:d3077124`). Dependabot then
-raised a high alert on picomatch (GHSA-fc5q-39xc-vjpf) covering every release up to 4.0.7,
-the latest, so no dependency-update pull request can cure it until upstream publishes a
-patched release; the leg stays open. Specification 0.5.2, approved on 18 November 2026, names
-that alert in SPEC-G-1: it does not hold merges until its advisory names a patched version old
-enough to install, and its cure then goes first. The clause names the alert only while
-nothing a user of Castr supplies reaches the vulnerable code; a change that would let user
-input reach picomatch ends that condition and goes to the owner before it merges. On
-18 November 2026 at 15:38 UTC the GitHub Advisory Database withdrew the advisory. The
-maintainer had replied on a fix pull request on 21 October that it is "not a vulnerability";
-upstream issues #234 and #247 ask for a fix and are open, about fourteen fix pull requests
-are open and none is merged, and no release follows 4.0.7. Alert 122 was still open at
-17:43 UTC. The owner asked that day for a daily check; if GitHub closes the alert, the name
-in SPEC-G-1 is removed only by an amendment the owner approves. Pull request #109, the identity-chain cure, merged after #111
+on 13 November 2026 and #119 cured them on 18 November (`SHA:d3077124`). Pull request #109, the identity-chain cure, merged after #111
 (`SHA:8b0aa438`) at the end of its second review round. The owner's ruling on #109 was
 "land it frozen". From it the agent drew a working rule, which is the agent's wording and
 not the owner's: nothing more goes into the present writer code, and a review finding
@@ -322,6 +319,7 @@ before the ruling, is pull request #109.
 - **RULES:** OCE's lint rules pass, with no suppression, on the code that travels; or, if
   nothing travels, the leg is closed with that reason.
 - **PICTURE:** the command is on `main`, anyone can run it, and its output is the table.
+- **CORPUS:** met by specification 0.6.0; the corpus holds one pin, the latest v1 document.
 - **HOME:** the amendment is approved in words, recorded per SPEC-CC-2, and on `main`.
 - **MOVE:** Castr's gates pass inside the new repository and this repository is archived.
 - **PROBE:** the table is saved and every row is backed by the command that produced it.

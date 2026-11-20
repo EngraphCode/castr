@@ -9,7 +9,7 @@ The destination is [the specification](../../../docs/SPECIFICATION.md) and the c
 [castr-course.md](../../plans/active/castr-course.md). On 21 September 2026 the owner wrote
 off every inherited worktree, orphaned branch and open pull request, and ruled that Castr
 moves into the Engraph Open Curriculum Ecosystem repository as workspaces, after the
-present generator has been measured against the specification. `main` had zero open dependency alerts from #111 until new advisories arrived; on 2 November 2026 it had 30, and #117 and #118 brought it back to zero the same day (SPEC-G-1). Two more arrived on 13 November on `@hono/node-server`; #119 cured them on 18 November 2026. The same day Dependabot raised a high alert on picomatch (GHSA-fc5q-39xc-vjpf) covering every release up to 4.0.7, the latest: no patched release exists, so `main` has one open alert that no pull request can cure yet. Specification 0.5.2, approved by the owner that day, names that alert in SPEC-G-1 so that it does not hold merges while no patched version exists. The platform-neutral autonomous-development experiment stays paused.
+present generator has been measured against the specification. `main` had zero open dependency alerts from #111 until new advisories arrived; on 2 November 2026 it had 30, and #117 and #118 brought it back to zero the same day (SPEC-G-1). Two more arrived on 13 November on `@hono/node-server`; #119 cured them on 18 November 2026. `main` has no open dependency alerts. The platform-neutral autonomous-development experiment stays paused.
 The Practice-enhancement lane in this repository is stopped. On 25 September 2026 the
 categorisation of every lane and plan landed (#113), both served Oak documents were pinned
 as the corpus with a recomputing validator and the specification moved to draft 0.4.1
@@ -67,7 +67,7 @@ documents Castr holds, their licences, and which files Castr has modified.
 The reflection ran the same day. The owner asked whether their request held tensions; the
 seat found six and the owner decided three by card. The code travels, made correct here
 first: correct includes how the code is built, SPEC-C-1's first acceptance part passes in
-this repository on both Oak documents before MOVE, and the example library's OpenAPI
+this repository on Oak's latest v1 document before MOVE (the owner dropped v0 on 19 November), and the example library's OpenAPI
 documents are each converted exactly or refused with a located rejection. The
 [course](../../plans/active/castr-course.md) carries the decisions in "Order of the legs",
 with a PICTURE leg ahead of PLOT. On 19 November the owner sent back a draft amendment that
@@ -120,9 +120,15 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    picture: documents down the side, what a consumer takes across the top, each cell right,
    refused in plain words with its place, wrong, missing or crashed. The MEASURE probe is
    its first drawing; it lands asserting the cells already right and grows with the code.
-   Nothing waits on the owner now. One owner step lies ahead: before MOVE, the course's
-   HOME todo changes section 10's "early in the course" by an amendment the owner approves
-   in words.
+   Specification 0.6.0, approved on 20 November 2026 ("I approve 0.6.0"), makes Oak's latest
+   v1 document the corpus and names no alert in SPEC-G-1. The same day the owner set the
+   standard the picture must show, verbatim: "What I want is to not have to rework Castr if
+   Oak adds an additional, valid field type to their spec". So a valid construct is
+   converted, never refused; the picture's columns are the constructs OpenAPI 3.1 allows;
+   and the example documents must convert fully. That is stricter than the specification
+   and needs an amendment drafted from the enumerated construct list. One more owner step
+   lies ahead: before MOVE, the course's HOME todo changes section 10's "early in the
+   course".
 2. **The example-input library continues at EC-1**, the pin record's shape for many
    sources ([its plan](../../plans/active/example-input-library.md)). EC-0, attribution and
    third-party notices, is done: a newer copy of any example is a new pin recorded in the
@@ -130,18 +136,9 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    precede MOVE and its JSON Schema tranches wait for SPEC-C-2. The owner asked for the
    library on 25 September 2026; the course's "MOVE: what travels" names what travels
    with it.
-3. **The picomatch alert was still open on 18 November at 17:43 UTC, and its advisory is
-   withdrawn** (GHSA-fc5q-39xc-vjpf; withdrawn at 15:38 UTC that day). Read the alert's
-   state, the advisory and the latest release at session open and at every merge: the owner
-   asked for a daily check. If GitHub closes the alert, SPEC-G-1 still names it and removing
-   the name is an amendment the owner approves. While it is open, SPEC-G-1 at 0.5.2 names
-   it, so it does not hold merges while its advisory names no patched version; it is never
-   dismissed. When the advisory names a patched version old enough to install, it holds
-   merges again and its cure, a floor in `pnpm-workspace.yaml`, goes first. The clause names
-   it only while nothing a user of Castr supplies reaches the vulnerable code, so a change
-   that lets user input reach picomatch goes to the owner before it merges. Any other alert
-   holds merges as before; one with no patched version needs the same trace (is the code
-   used, can the function go, can it be done another way) and its own amendment.
+3. **Dependency alerts.** `main` has none open. An alert that arrives holds merges until
+   its cure lands (SPEC-G-1); one with no patched version needs a trace (is the code used,
+   can the function go, can it be done another way) before anything else is decided.
 4. **The SPEC-CC-3 check compares approval records with `main`'s.** An approval record that
    `origin/main` holds must still open the branch's records, in order and with the same
    approver, date, words and digest. The check reads `origin/main` from git, so a checkout

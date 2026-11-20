@@ -3,10 +3,9 @@
 The pinned Oak API documents. The [specification](../../../../docs/SPECIFICATION.md) defines
 a corpus as the documents a capability is proved against, copied into Castr's fixtures and
 pinned by SHA-256, and by source commit where the source has one; a served document records
-its URL and fetch time. SPEC-C-1 names the Oak API specification, v1 first and v0, in the
-owner's words of 25 September 2026: "Castr needs to be able to process both Oak API specs,
-although the V1 spec is the higher priority and there is wiggle room on supporting the V0
-spec if needed."
+its URL and fetch time. SPEC-C-1 names the Oak API specification's v1 document at its
+latest published version, in the owner's words of 19 November 2026: "Drop v0, latest v1
+only".
 
 `provenance.json` is the pin record. The repository validator
 `agent-tools/src/validators/corpus-provenance/validate-corpus-provenance.ts`, run by
@@ -14,32 +13,22 @@ spec if needed."
 fails on a document here that is not pinned. It lives with the repository validators rather
 than in the product test suite because it proves nothing about Castr's behaviour.
 
-No transform scenario parses these documents: `transform-helpers.ts` lists its fixtures by
-name. Neither pair passes the parser (checked on 25 September and 18 November 2026), because every
-document carries a schema-valued `additionalProperties` at its two `check-restricted` 200 responses, which
-the parser rejects.
+No transform scenario parses this document: `transform-helpers.ts` lists its fixtures by
+name. It does not pass the parser (checked on 18 November 2026), because it carries a
+schema-valued `additionalProperties` at its two `check-restricted` 200 responses, which the
+parser rejects.
 
-## Documents
+## Document
 
-| File                                           | What it is                                                                                                                                                                                                                                      |
-| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `oak-curriculum-api-v1-1.1.1.json`             | Oak's v1 document, `info.version` 1.1.1, as served at `https://open-api.thenational.academy/api/v1/swagger.json` on 18 November 2026 at 08:03 UTC. The latest v1.                                                                               |
-| `oak-curriculum-api-v0-0.11.2-2026-11-18.json` | Oak's v0 document, `info.version` 0.11.2, as served at `https://open-api.thenational.academy/api/v0/swagger.json` on 18 November 2026 at 08:03 UTC. The latest v0: the version did not move, the bytes did, so the name carries the fetch date. |
-| `oak-curriculum-api-v1-1.0.1.json`             | Oak's v1 document, `info.version` 1.0.1, as served at `https://open-api.thenational.academy/api/v1/swagger.json` on 25 September 2026 at 12:39 UTC.                                                                                             |
-| `oak-curriculum-api-v0-0.11.2.json`            | Oak's v0 document, `info.version` 0.11.2, as served at `https://open-api.thenational.academy/api/v0/swagger.json` on 25 September 2026 at 15:31 UTC. Its description says v0 is frozen: fixes continue, new endpoints and fields land in v1.    |
+`oak-curriculum-api-v1-1.1.1.json` is Oak's v1 document, `info.version` 1.1.1, as served at
+`https://open-api.thenational.academy/api/v1/swagger.json` on 18 November 2026 at 08:03 UTC.
+It was still what Oak served on 20 November 2026. SPEC-C-1 pins the document at the version
+its source publishes, so a newer served version replaces this pin.
 
-SPEC-C-1 pins each document at the version its source publishes, so the two documents of
-18 November 2026 are the corpus's current pair and the two of 25 September are its history.
-Between the two dates each document changed in examples, descriptions and summaries, v1's
-`info.version` moved from 1.0.1 to 1.1.1, and both lost the `200` response of
-`GET /lessons/{lesson}/assets/{type}`, which now declares only its `302`.
+The server sends no ETag or Last-Modified header, so the SHA-256 is the document's only
+identity.
 
-The server sends no ETag or Last-Modified header for either, so the SHA-256 is each
-document's only identity. On 25 September 2026 the two documents differ only in their server
-URL, eleven example asset URLs, `info.version` and one description sentence; their paths,
-schemas and every measured count are the same.
-
-Both files are one line, the bytes the server gave. `.prettierignore` excludes every
+The file is one line, the bytes the server gave. `.prettierignore` excludes every
 `*.json` here except `provenance.json`, so the pre-commit formatter cannot change them, and
 `.gitattributes` marks them `-text` so no checkout converts their line endings. A changed
 byte changes the hash and fails the validator. A pinned name must be a regular file holding

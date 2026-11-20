@@ -53,14 +53,14 @@ todos:
 
 ## Goal
 
-Castr holds a wide, pinned and licensed library of input documents beyond the two Oak
-documents and its hand-made fixtures: real-world OpenAPI 3.0, 3.1 and 3.2 documents,
+Castr holds a wide, pinned and licensed library of input documents beyond Oak's v1
+document and its hand-made fixtures: real-world OpenAPI 3.0, 3.1 and 3.2 documents,
 feature-named edge cases, and JSON Schema draft-07 and 2020-12 documents. Every document
 is the bytes its pin record names, with its source, commit, licence and notice recorded,
 and the corpus validator recomputes all of it on every run. The library is not a corpus in
 the specification's sense: a corpus is the documents a capability is proved against, and
 these are a capability's corpus only when the owner names them in the specification. Until
-then nothing reads them but the validator: the Oak entries remain SPEC-C-1's corpus, and
+then nothing reads them but the validator: the Oak v1 document remains SPEC-C-1's corpus, and
 this plan puts about 460 files into the repository with no reader. That is what the owner
 asked for, documents to test against, and the tests that read them belong to the course's
 legs and to the owner's later naming.
@@ -68,23 +68,26 @@ legs and to the owner's later naming.
 Owner decision by card, 18 November 2026. The owner's words that day name "a variety of
 other examples specs, which I assume corresponds to the example input library" as part of
 what Castr must work with before it moves, and the card's answer says what working with
-them means: "Never wrong, never crashes (Recommended)". On every OpenAPI document in the
-library, each construct is converted exactly, checked against an independent validator, or
-refused with a located rejection; full support stays required only for the two Oak
-documents. That is SPEC-PR-2, which binds every construct, checked on these documents. The
-rows the library adds to the course's PICTURE are where it shows.
+them means: "Never wrong, never crashes (Recommended)". On 20 November 2026 the owner set a
+stricter standard, verbatim: "What I want is to not have to rework Castr if Oak adds an
+additional, valid field type to their spec". On every OpenAPI document in the library,
+each valid construct is converted exactly, checked against an independent validator; a
+refusal is for an invalid document or an exclusion the owner approves. The library is the
+proof for constructs Oak's v1 document does not use yet. The rows the library adds to the
+course's PICTURE are where it shows. The specification's SPEC-PR-2 is looser and changes
+by an amendment drafted from the enumerated construct list.
 This plan still pins documents and adds no reader. Its OpenAPI tranches (EC-1, EC-2, EC-3
 and EC-6) come first; its JSON Schema tranches (EC-4, EC-5 and EC-7) wait for SPEC-C-2.
 
 ## Mechanism
 
-The corpus directory and its validator exist for the two Oak documents
+The corpus directory and its validator exist for the Oak documents
 (`lib/tests-transforms/__fixtures__/corpus/`). Today the record admits one source kind
 (served), one format (JSON), one document kind (an OpenAPI document with `openapi`,
 `info.title` and `info.version` as strings) and one flat directory. The library lives
 beside it, `lib/tests-transforms/__fixtures__/library/<source>/`, one directory and one
-record per source, and the validator covers both roots; the corpus directory and the Oak
-files in it do not change. Every candidate source needs a repository kind (repository,
+record per source, and the validator covers both roots; this plan does not change the corpus directory or the Oak
+file in it. Every candidate source needs a repository kind (repository,
 commit, path); between them they need YAML, files a document `$ref`s that are not
 documents, JSON Schema documents and JSON Schema test-suite files; and many of them carry
 no `info.title` or a numeric `info.version`, so the hash, not the header, is a pin's
