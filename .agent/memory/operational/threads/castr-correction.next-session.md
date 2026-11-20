@@ -75,8 +75,11 @@ repository before acting.
   construct. Read by the seat as: Castr supports the format; a valid construct is
   converted, never refused; refusal is for invalid documents and exclusions the owner
   approves; the example documents are the proof for constructs Oak does not use yet. Next:
-  enumerate what OpenAPI 3.1 and its JSON Schema dialect allow in a schema, mark today's
-  gaps, and bring the owner that list with a draft amendment.
+  the enumeration ran on 20 November
+  ([its report](../../../analysis-and-reports/constructs-2026-11-20.md)): of 89 constructs,
+  53 right, 13 wrong and 23 crashed, none refused in plain words. The amendment that makes
+  "every valid construct converts" the requirement is drafted from that list and needs the
+  owner's approval in words.
 - **Next work: PICTURE (the course's todo).** One repeatable command that shows what Castr
   does on each document, judged from outside Castr; the MEASURE probe is its first drawing.
   It is the owner's "what working looks like". No owner interaction is pending. The

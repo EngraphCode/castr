@@ -126,7 +126,9 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    Oak adds an additional, valid field type to their spec". So a valid construct is
    converted, never refused; the picture's columns are the constructs OpenAPI 3.1 allows;
    and the example documents must convert fully. That is stricter than the specification
-   and needs an amendment drafted from the enumerated construct list. One more owner step
+   and needs an amendment. The
+   [construct report](../../analysis-and-reports/constructs-2026-11-20.md) of 20 November is
+   the list: 89 constructs, 53 right, 13 wrong, 23 crashed. One more owner step
    lies ahead: before MOVE, the course's HOME todo changes section 10's "early in the
    course".
 2. **The example-input library continues at EC-1**, the pin record's shape for many
