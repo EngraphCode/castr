@@ -129,6 +129,38 @@ repository before acting.
     the PICTURE command: `discriminator.defaultMapping` (3.2), and one row for each of
     the five values of `xml.nodeType` (3.2: `element`, `attribute`, `text`, `cdata`,
     `none`). Every 3.2 field in the report's section F still needs a class.
+  - **Six decisions, by question prompt, 20 November 2026.** The owner asked: "please
+    present me with your questions, give me enough context with each one to make a
+    decision without having to read through the chat history". The answers are decisions
+    about what the specification will say. None is an approval of specification text;
+    that still needs the owner's own words naming a version (SPEC-CC-2).
+    1. Rows that fit none of the four classes (126 for Zod): "Add a fifth class", for
+       meaning outside what a target is for, barred from schema keywords, `type` values
+       and `format` values.
+    2. The 26 Zod rows that need a check function Castr writes: "Carried; Castr marks its
+       checks", so a later Zod reader can recognise them and read them back.
+    3. A `format` value Castr has no checker for: "Carry and report". It is an annotation,
+       named in the run report, never a refusal; SPEC-P-3 gains a sentence.
+    4. Integers. The owner first answered, verbatim: "I need you to suggest the best
+       options here, step back and consider the intended impact and desired user value
+       first. Whatever we decide, it must be clearly communicated, especially if it is a
+       transformation that means the reverse transformation does not give back the
+       original semantic meaning". The seat proposed one profile clause for every
+       integer, not an int64 rule, and the owner answered "Accept the clause": the model
+       keeps the integer exactly; Zod and TypeScript write `number` and Zod asserts a
+       safe integer, so a too-large value is refused and never accepted rounded; the run
+       report, the TypeScript comment and a Zod annotation state the narrowing; reading
+       that Zod back gives `integer, format: int64` again. A `bigint` output mode is a
+       later capability. Today's writers emit `bigint` and change.
+    5. What the reader refuses by design (an unread dialect, OpenAPI 2.0, an invalid
+       document): "Add a third kind" of rejection. It never counts toward `NOT-YET-BUILT`
+       and its cases are listed in the specification.
+    6. Versions that must be complete before OpenAPI to Zod and TypeScript is done: "3.1
+       and 3.2". 3.0 follows later. So every 3.2 row in the report's section F needs a
+       class, and the Read column's 3.0.x needs words for what it means until then.
+       Next: draft the amendment that carries these six, read against every clause on the
+       same promises and attacked by review before the owner is asked for words; then the
+       PICTURE command, whose cells use the five classes.
   - **For the owner, said and not yet answered:** `principles.md` contradicts itself
     (its four rules against "objects are always closed" and against `patternProperties`
     to TypeScript as a correct refusal) and needs the owner's approval to edit. The
