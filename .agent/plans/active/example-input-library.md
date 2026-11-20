@@ -60,8 +60,7 @@ is the bytes its pin record names, with its source, commit, licence and notice r
 and the corpus validator recomputes all of it on every run. The library is not a corpus in
 the specification's sense: a corpus is the documents a capability is proved against, and
 these are a capability's corpus only when the owner names them in the specification. Until
-then nothing reads them but the validator: the Oak entries remain SPEC-C-1's corpus (both
-documents until the course's CORPUS amendment lands, then the latest v1 document), and
+then nothing reads them but the validator: the Oak v1 document remains SPEC-C-1's corpus, and
 this plan puts about 460 files into the repository with no reader. That is what the owner
 asked for, documents to test against, and the tests that read them belong to the course's
 legs and to the owner's later naming.
@@ -85,7 +84,7 @@ The corpus directory and its validator exist for the Oak documents
 `info.title` and `info.version` as strings) and one flat directory. The library lives
 beside it, `lib/tests-transforms/__fixtures__/library/<source>/`, one directory and one
 record per source, and the validator covers both roots; this plan does not change the corpus directory or the Oak
-files in it; the course's CORPUS amendment takes the v0 pins out. Every candidate source needs a repository kind (repository,
+file in it. Every candidate source needs a repository kind (repository,
 commit, path); between them they need YAML, files a document `$ref`s that are not
 documents, JSON Schema documents and JSON Schema test-suite files; and many of them carry
 no `info.title` or a numeric `info.version`, so the hash, not the header, is a pin's
