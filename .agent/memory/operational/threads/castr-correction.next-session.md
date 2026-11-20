@@ -226,6 +226,16 @@ repository before acting.
     the reader's rejections and versions; numbers in JavaScript targets; the table
     vocabulary together with the tables.
 
+  - **Owner ruling, 20 November 2026, on this repository's practice documents.** Asked
+    whether one line might be added to the command list in `principles.md`, the owner
+    answered, verbatim: "Leave it alone, use the OCE Practice, we are here to fix Castr,
+    once we do we move the code into OCE, we integrate anything unique in the Practice
+    into OCE". So: `principles.md` is not edited; sessions here work by OCE's Practice;
+    this repository's own directives, rules and skills are not maintained or extended;
+    effort goes to making Castr correct. What is unique in this repository's Practice is
+    integrated into OCE's at the move. The seat's reading, which the owner has not
+    confirmed: the contradictions found in `principles.md` (below) are therefore not
+    worth an owner decision, since the file does not travel as authority.
   - **For the owner, said and not yet answered:** `principles.md` contradicts itself
     (its four rules against "objects are always closed" and against `patternProperties`
     to TypeScript as a correct refusal) and needs the owner's approval to edit. The
