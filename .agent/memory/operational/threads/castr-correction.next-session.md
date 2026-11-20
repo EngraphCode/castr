@@ -77,7 +77,7 @@ repository before acting.
   approves; the example documents are the proof for constructs Oak does not use yet. Next:
   a first enumeration ran on 20 November
   ([its report](../../../analysis-and-reports/constructs-2026-11-20.md)): of 93 constructs,
-  57 right, 14 wrong and 22 crashed, none refused in plain words. Pending, in order: the
+  57 right, 13 wrong, 20 crashed and 3 not measurable alone, none refused in plain words. Pending, in order: the
   seat drafts the amendment that makes "every valid construct converts" the requirement
   (not yet written), then the owner approves it in words naming the version.
 - **Next work: PICTURE (the course's todo).** One repeatable command that shows what Castr
