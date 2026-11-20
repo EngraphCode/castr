@@ -229,11 +229,13 @@ repository before acting.
   - **PICTURE, state on `main` at 20 November 2026.** Two of its parts have landed, in
     `lib/tests-picture/` (its README says what each file is):
     - **The rows (#138).** Fourteen published definitions of JSON Schema 2020-12 and
-      OpenAPI 3.1 and 3.2, fetched from their publishers and pinned by SHA-256, and the
-      reading that computes keywords, `type` values, objects, fields, fixed values and
-      key patterns from them. The keywords OpenAPI adds to a schema (`discriminator`,
-      `xml`) are computed from the OpenAPI vocabulary files, so the two 3.2 rows owed
-      after #135 are rows.
+      OpenAPI 3.1 and 3.2, fetched from their publishers and pinned by SHA-256. Eleven are
+      read: the reading computes keywords, `type` values, objects, fields, fixed values
+      and key patterns from them. Three are pinned and not yet read by any code: the two
+      OpenAPI dialect files and the JSON Schema format-assertion vocabulary. The keywords
+      OpenAPI adds to a schema are computed from the OpenAPI vocabulary files, so the two
+      families of rows owed after #135 are rows: `discriminator.defaultMapping`, and one
+      row for each of the five values of `xml.nodeType`.
     - **The proposed outcomes (#140).** 317 rows across 3.1 and 3.2, each with a proposed
       outcome for Zod, TypeScript and the endpoint definitions, in the six outcomes the
       owner's nine decisions give. The join reports a computed row with no proposal and a
@@ -243,8 +245,9 @@ repository before acting.
       That is the next part: one case per schema row, generated through Castr and judged
       by an independent validator reading the same document, each cell right, refused,
       wrong, missing or crashed; it lands asserting the cells that are right today. Then
-      the TypeScript and endpoint-definition columns, Oak's document as a row, and the
-      example documents.
+      cases for the TypeScript and endpoint-definition columns (their proposed outcomes are
+      already on `main`; what is missing is anything that runs Castr for them), Oak's
+      document as a row, and the example documents.
     - **Rows only text defines** (25 `format` values, six schema constructs) are
       hand-listed and are the part most likely to be missing a row. The 3.0-only rows of
       the report (`nullable`, `byte`, `binary`, boolean exclusive bounds) are not in the
