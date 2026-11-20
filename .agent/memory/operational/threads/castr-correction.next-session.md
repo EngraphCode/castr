@@ -125,6 +125,10 @@ repository before acting.
     none of the four classes for a Zod target; 26 Zod rows need a check function Castr
     writes; 3.0 and 3.2 documents add rows that have no class yet. Next: the owner's
     answers to those findings, then the PICTURE command with one case per row.
+    It landed with #135 on 20 November. Rows review named after the last change, owed to
+    the PICTURE command: `discriminator.defaultMapping` (3.2), and one row for each of
+    the five values of `xml.nodeType` (3.2: `element`, `attribute`, `text`, `cdata`,
+    `none`). Every 3.2 field in the report's section F still needs a class.
   - **For the owner, said and not yet answered:** `principles.md` contradicts itself
     (its four rules against "objects are always closed" and against `patternProperties`
     to TypeScript as a correct refusal) and needs the owner's approval to edit. The
