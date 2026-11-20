@@ -3,6 +3,13 @@
 > Detailed view of `.agent/directives/requirements.md` (Zod -> IR focus and union semantics)
 > and `.agent/plans/archive/zod4-parser-plan-3.2-complete.md`. If any conflict exists, requirements win.
 
+> [!IMPORTANT]
+> [The specification](../../docs/SPECIFICATION.md) governs, and it replaces the strict-only object doctrine
+> stated in this file. Its SPEC-P-1 gives an object exactly one of four policies for
+> unknown keys (closed, open, constrained to a shape, stripped). All four are meanings:
+> an object that states no policy is read as closed, and an object that states one is
+> carried as it states and is never refused for it.
+
 ---
 
 ## Scope

@@ -1,6 +1,13 @@
 # Castr: Identity, Semantics, and Policy
 
 > [!IMPORTANT]
+> [The specification](../docs/SPECIFICATION.md) governs, and it replaces the strict-only
+> object doctrine stated in this file. Its SPEC-P-1 gives an object exactly one of four
+> policies for unknown keys (closed, open, constrained to a shape, stripped). All four are
+> meanings: an object that states no policy is read as closed, and an object that states
+> one is carried as it states and is never refused for it.
+
+> [!IMPORTANT]
 > On 2026-04-16, product direction was clarified: Castr must accept and emit
 > explicit source `additionalProperties`, but must never invent
 > `additionalProperties` from input that did not declare them. Current

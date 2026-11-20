@@ -233,13 +233,14 @@ repository before acting.
     into OCE". So: `principles.md` is not edited; sessions here work by OCE's Practice;
     this repository's own directives, rules and skills are not maintained or extended;
     effort goes to making Castr correct. What is unique in this repository's Practice is
-    integrated into OCE's at the move. The seat's reading, which the owner has not
-    confirmed: the contradictions found in `principles.md` (below) are therefore not
-    worth an owner decision, since the file does not travel as authority.
-  - **For the owner, said and not yet answered:** `principles.md` contradicts itself
-    (its four rules against "objects are always closed" and against `patternProperties`
-    to TypeScript as a correct refusal) and needs the owner's approval to edit. The
-    owner's three facts of 19 November (most code not yet written; the consumer uses v0;
+    integrated into OCE's at the move. The owner then added, verbatim: "if the
+    contradictions are likely to detract from the efforts to improve Castr, then fix
+    them". They were: "objects are always closed" is the cause of the largest block of
+    crashes. The fix aligns three statements in `principles.md` with the specification
+    (unknown-key policies per SPEC-P-1; `patternProperties` to TypeScript is carried by
+    companion; `int64` to JSON Schema is carried) and says the specification governs
+    where the two differ. Nothing else in that file changes.
+  - **For the owner, said and not yet answered:** The owner's three facts of 19 November (most code not yet written; the consumer uses v0;
     a correct Castr is stricter than today's validators) were given and drew the v1-only
     ruling; where the new code is written was not revisited.
   - **Scratch files are volatile.** The construct probe is preserved in the appendix of
