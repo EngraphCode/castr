@@ -1,6 +1,10 @@
 /**
  * The rows the picture computes from the formats' published definitions.
  *
+ * This test reads the pinned files from the repository, so it is an end-to-end test of
+ * the picture's reading. The reading rules themselves are proved without files in
+ * `inventory.unit.test.ts` and `definitions.unit.test.ts`.
+ *
  * Each test states a fact about OpenAPI 3.1 or 3.2 that the specifications' text gives,
  * so a reading rule that loses a field, merges two objects or follows the wrong reference
  * fails here.
@@ -55,14 +59,16 @@ describe('the pinned definitions', () => {
 
 describe('JSON Schema 2020-12 keywords', () => {
   it('counts the 57 keywords of the seven vocabularies', () => {
-    const keywords = schemaKeywords();
+    const keywords = schemaKeywords(loadDefinition);
 
     expect(keywords).toHaveLength(57);
     expect(new Set(keywords.map((entry) => entry.keyword)).size).toBe(57);
   });
 
   it('places a keyword in the vocabulary that defines it', () => {
-    const byKeyword = new Map(schemaKeywords().map((entry) => [entry.keyword, entry.vocabulary]));
+    const byKeyword = new Map(
+      schemaKeywords(loadDefinition).map((entry) => [entry.keyword, entry.vocabulary]),
+    );
 
     expect(byKeyword.get('$dynamicRef')).toBe('core');
     expect(byKeyword.get('prefixItems')).toBe('applicator');
@@ -75,7 +81,7 @@ describe('JSON Schema 2020-12 keywords', () => {
 });
 
 describe('OpenAPI 3.1 objects', () => {
-  const inventory = openApi31Objects();
+  const inventory = openApi31Objects(loadDefinition);
 
   it('reads every reference the definition uses', () => {
     expect(inventory.problems).toEqual([]);
@@ -162,7 +168,7 @@ describe('OpenAPI 3.1 objects', () => {
 });
 
 describe('OpenAPI 3.2 objects', () => {
-  const inventory = openApi32Objects();
+  const inventory = openApi32Objects(loadDefinition);
 
   it('reads every reference the definition uses', () => {
     expect(inventory.problems).toEqual([]);
@@ -205,7 +211,7 @@ describe('OpenAPI 3.2 objects', () => {
 
 describe('the keywords OpenAPI adds to the schema object', () => {
   it('lists the four of 3.1 with their fields', () => {
-    const inventory = openApi31SchemaVocabulary();
+    const inventory = openApi31SchemaVocabulary(loadDefinition);
 
     expect(inventory.problems).toEqual([]);
     expect(fieldNames(inventory, 'schema')).toEqual([
@@ -225,7 +231,7 @@ describe('the keywords OpenAPI adds to the schema object', () => {
   });
 
   it('adds the default mapping and the five node types of 3.2', () => {
-    const inventory = openApi32SchemaVocabulary();
+    const inventory = openApi32SchemaVocabulary(loadDefinition);
 
     expect(inventory.problems).toEqual([]);
     expect(fieldNames(inventory, 'discriminator')).toContain('defaultMapping');

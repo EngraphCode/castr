@@ -49,9 +49,13 @@ no code reads them yet.
   own (the four parameter locations).
 - A definition that is a choice between an object and a reference is not an object.
 
-[`rows/published-rows.integration.test.ts`](rows/published-rows.integration.test.ts)
-states facts the specifications give, so a reading rule that loses a field or merges two
-objects fails.
+Each rule is proved on a small definition in
+[`rows/inventory.unit.test.ts`](rows/inventory.unit.test.ts), with no file read.
+[`rows/published-rows.e2e.test.ts`](rows/published-rows.e2e.test.ts) then reads the pinned
+files and states facts the specifications give, so a rule that loses a field or merges
+two objects on the real definitions fails. A reference with no target, a correction that
+stops applying and fields declared where the reading does not look are all reported, and
+that test fails on any report.
 
 ## A newer definition
 

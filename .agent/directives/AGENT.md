@@ -133,6 +133,7 @@ Domain experts (castr schema surface):
 - `pnpm test:snapshot`
 - `pnpm test:gen`
 - `pnpm test:transforms`
+- `pnpm test:picture`
 - `pnpm test:e2e`
 
 ## Local Git Hooks

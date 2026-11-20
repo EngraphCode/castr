@@ -65,22 +65,28 @@ export function readPins(): readonly DefinitionPin[] {
 }
 
 /**
- * Reads one pinned definition, refusing bytes that do not match the pin or a document
- * whose own identifier is not the one pinned.
+ * Checks bytes against a pin and parses them, refusing bytes that do not match the pin or
+ * a document whose own identifier is not the one pinned.
+ */
+export function verifyDefinition(pin: DefinitionPin, bytes: Buffer): Definition {
+  const sha256 = createHash('sha256').update(bytes).digest('hex');
+  if (bytes.length !== pin.bytes || sha256 !== pin.sha256) {
+    throw new Error(`${pin.file} does not match its pin: ${String(bytes.length)} bytes, ${sha256}`);
+  }
+  const schema = parseObject(bytes, pin.file);
+  if (schema['$id'] !== pin.id) {
+    throw new Error(`${pin.file} identifies itself as ${String(schema['$id'])}, not ${pin.id}`);
+  }
+  return { pin, schema };
+}
+
+/**
+ * Reads one pinned definition from this repository and verifies it.
  */
 export function loadDefinition(file: string): Definition {
   const pin = readPins().find((candidate) => candidate.file === file);
   if (pin === undefined) {
     throw new Error(`${file} has no pin in provenance.json`);
   }
-  const bytes = readBytes(file);
-  const sha256 = createHash('sha256').update(bytes).digest('hex');
-  if (bytes.length !== pin.bytes || sha256 !== pin.sha256) {
-    throw new Error(`${file} does not match its pin: ${String(bytes.length)} bytes, ${sha256}`);
-  }
-  const schema = parseObject(bytes, file);
-  if (schema['$id'] !== pin.id) {
-    throw new Error(`${file} identifies itself as ${String(schema['$id'])}, not ${pin.id}`);
-  }
-  return { pin, schema };
+  return verifyDefinition(pin, readBytes(file));
 }

@@ -54,6 +54,7 @@ pnpm character
 pnpm test:snapshot
 pnpm test:gen
 pnpm test:transforms
+pnpm test:picture
 pnpm test:e2e
 ```
 

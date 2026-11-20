@@ -106,6 +106,9 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
 
   const noteValueRef = (ref: string): void => {
     usedAsValue.add(ref);
+    if (resolve(ref) === undefined) {
+      problems.push(`a reference has no target: ${ref}`);
+    }
     if (ref.split('/').length > 3) {
       nestedQueue.push(ref);
     }
@@ -180,8 +183,13 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
     if (value === options.extensionRef) {
       acc.extensible = true;
     } else if (!seen.has(value)) {
+      const target = resolve(value);
+      if (target === undefined) {
+        problems.push(`${acc.name} composes a reference that has no target: ${value}`);
+        return;
+      }
       composed.add(value);
-      walk(resolve(value), acc, new Set([...seen, value]));
+      walk(target, acc, new Set([...seen, value]));
     }
   };
 
