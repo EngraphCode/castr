@@ -230,7 +230,11 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   work furthest, and each came from a plain statement of facts, never from a card.
   "A capability is always a pair" and "no unit skips silently" in the entry above are the
   seat's position and a proof obligation, not established facts: review of #134 disputes
-  the first and product code contradicts the second today.
+  the first and product code contradicts the second today. "The one case per construct
+  kind belongs in SPEC-G-4, not SPEC-PR-6" is withdrawn: SPEC-G-4 proves agreement on
+  values over a corpus, and one case per kind is a coverage check over the format's
+  constructs. They are two obligations and each keeps its own clause; what SPEC-G-4 needs
+  is a reach beyond the one-document corpus.
 - **Process, for the fleet rule.** Two readers, default tier, read-only: 286k and 224k
   tokens (the estimate from the earlier legs was about 180k each, so the pair ran over the
   500k line that calls for a design review first; a third planned reader was dropped
