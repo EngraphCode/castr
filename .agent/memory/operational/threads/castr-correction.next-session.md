@@ -202,19 +202,24 @@ repository before acting.
     - The rules bind nothing while SPEC-N-5 is unwritten, so the vocabulary lands with the
       tables, not before them.
 
-    The owner decided those three points by question prompt the same day: 7. A decimal with more digits than a JavaScript number holds is rounded by the JSON
-    parser before any validator sees it: "Declare once, per run". The specification
-    states the limit as a profile decision for JavaScript targets and every run's
-    report carries one plain statement of it. The model still holds numbers exactly. 8. Serialisation rules: "Yes, a third column". Every row is classed for the endpoint
-    definitions as well as for Zod and TypeScript; serialisation rows are carried
-    there and each has a case that runs. A generator's output has a table as a
-    format's does. 9. The four rows the parser spends (`openapi`, `jsonSchemaDialect`, `$schema`,
-    `$vocabulary`): "A separate sixth outcome". The fifth class keeps the owner's bar
-    as stated (no schema keyword at all), and a named outcome, read, covers these
-    four declarations.
+    The owner decided those three points by question prompt the same day, numbered on
+    from the six above:
+    - **Seven.** A decimal with more digits than a JavaScript number holds is rounded by
+      the JSON parser before any validator sees it: "Declare once, per run". The
+      specification states the limit as a profile decision for JavaScript targets and
+      every run's report carries one plain statement of it. The model still holds numbers
+      exactly.
+    - **Eight.** Serialisation rules: "Yes, a third column". Every row is classed for the
+      endpoint definitions as well as for Zod and TypeScript; serialisation rows are
+      carried there and each has a case that runs. A generator's output has a table as a
+      format's does.
+    - **Nine.** The four rows the parser spends (`openapi`, `jsonSchemaDialect`,
+      `$schema`, `$vocabulary`): "A separate sixth outcome". The fifth class keeps the
+      owner's bar as stated (no schema keyword at all), and a named outcome, read, covers
+      these four declarations.
 
-    Next: the PICTURE command, whose cells use the five classes and the read outcome as proposals, in three columns (Zod, TypeScript, the
-    endpoint definitions), and whose
+    Next: the PICTURE command, whose cells use the five classes and the read outcome as
+    proposals, in three columns (Zod, TypeScript, the endpoint definitions), and whose
     cases show which rows hold. The amendment follows it, in parts small enough to close:
     the reader's rejections and versions; numbers in JavaScript targets; the table
     vocabulary together with the tables.
