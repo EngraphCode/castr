@@ -222,6 +222,15 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
     for the impossible. The same file says objects are always closed (the cause of the
     largest block of crashes) and gives `patternProperties` to TypeScript as a correct
     refusal, where the specification's "carried by companion" class applies.
+- **Wrap, 20 November. What this session taught, in three lines.** Twice I asked the
+  owner for words on an amendment I had not first read against the document's own clauses
+  or had attacked (0.7.0, then the 0.8.0 draft that review stopped). I reported first
+  measurements and first analyses as findings and corrected each within the hour. The
+  owner's shortest messages ("Drop v0, latest v1 only"; the no-rework sentence) moved the
+  work furthest, and each came from a plain statement of facts, never from a card.
+  "A capability is always a pair" and "no unit skips silently" in the entry above are the
+  seat's position and a proof obligation, not established facts: review of #134 disputes
+  the first and product code contradicts the second today.
 - **Process, for the fleet rule.** Two readers, default tier, read-only: 286k and 224k
   tokens (the estimate from the earlier legs was about 180k each, so the pair ran over the
   500k line that calls for a design review first; a third planned reader was dropped
