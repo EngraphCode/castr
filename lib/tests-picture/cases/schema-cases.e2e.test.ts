@@ -12,33 +12,14 @@ import { describe, it, expect } from 'vitest';
 import { loadDefinition } from '../rows/definitions.js';
 import { pictureRows } from '../rows/picture-rows.js';
 
-import { createCastrConvert } from './castr-convert.js';
 import { coverageOf } from './coverage.js';
 import { referenceFor } from './reference.js';
 import { RIGHT_TODAY } from './right-today.js';
-import { runCase } from './run-case.js';
+import { rowsWith, runSchemaCases } from './run-schema-cases.js';
 import { documentFor } from './schema-case.js';
 import { SCHEMA_CASES } from './schema-cases.js';
-import type { Cell } from './verdict.js';
 
 describe('the cases for the rows of a schema', () => {
-  async function runEveryCase(): Promise<ReadonlyMap<string, Cell>> {
-    const cells = new Map<string, Cell>();
-    const castr = await createCastrConvert();
-    try {
-      for (const schemaCase of SCHEMA_CASES) {
-        cells.set(schemaCase.rowId, await runCase(schemaCase, castr.convert));
-      }
-    } finally {
-      await castr.dispose();
-    }
-    return cells;
-  }
-
-  function rowsWith(cells: ReadonlyMap<string, Cell>, verdict: Cell['verdict']): string[] {
-    return [...cells].filter(([, cell]) => cell.verdict === verdict).map(([rowId]) => rowId);
-  }
-
   it('has exactly one case for every row whose construct decides a value', () => {
     const { rows } = pictureRows(loadDefinition);
 
@@ -62,7 +43,7 @@ describe('the cases for the rows of a schema', () => {
   // One test runs Castr once and holds both facts about its cells, so no result is
   // shared between tests.
   it('is right on exactly the rows recorded as right, and judges every case it can', async () => {
-    const cells = await runEveryCase();
+    const cells = await runSchemaCases(SCHEMA_CASES);
 
     expect(rowsWith(cells, 'right')).toEqual(RIGHT_TODAY);
     expect(rowsWith(cells, 'not judged')).toEqual([

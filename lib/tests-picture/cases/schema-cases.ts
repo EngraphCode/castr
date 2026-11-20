@@ -32,7 +32,8 @@ export const SCHEMA_CASES: readonly SchemaCase[] = [
   // The values of `type`.
   typeValue('string', ['a', 1, null]),
   typeValue('number', [1.5, 1, 'a']),
-  typeValue('integer', [1, 1.5, 'a']),
+  // An integer beyond the range a double holds exactly is still an integer to the source.
+  typeValue('integer', [1, 9007199254740992, 1.5, 'a']),
   typeValue('boolean', [true, 'true', 0]),
   typeValue('null', [null, 0, '']),
   typeValue('array', [[], [1, 'a'], {}]),
@@ -204,7 +205,8 @@ export const SCHEMA_CASES: readonly SchemaCase[] = [
   format('idn-hostname', 'example.com', 'not a host!'),
   format('ipv4', '127.0.0.1', '999.1.1.1'),
   format('ipv6', '::1', 'zz::1'),
-  format('uri', 'https://example.com/a', 'not a uri'),
+  // RFC 3986 refuses a malformed percent-encoding; a WHATWG URL parser accepts it.
+  format('uri', 'https://example.com/a', 'https://example.com/%ZZ', 'not a uri'),
   format('uri-reference', '/a/b', String.raw`not a uri \ ^`),
   format('iri', 'https://example.com/ä', 'not an iri'),
   format('iri-reference', '/ä/b', String.raw`not an iri \ ^`),

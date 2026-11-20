@@ -7,7 +7,6 @@
 export const RIGHT_TODAY: readonly string[] = [
   'type:string',
   'type:number',
-  'type:integer',
   'type:boolean',
   'type:null',
   'type:array',
@@ -38,7 +37,6 @@ export const RIGHT_TODAY: readonly string[] = [
   'text:format: hostname',
   'text:format: ipv4',
   'text:format: ipv6',
-  'text:format: uri',
   'text:format: uuid',
   'text:format: int32',
   'text:format: float',

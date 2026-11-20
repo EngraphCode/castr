@@ -6,10 +6,8 @@
  * Run with: `pnpm picture`
  */
 
-import { createCastrConvert } from './cases/castr-convert.js';
-import { runCase } from './cases/run-case.js';
+import { runSchemaCases } from './cases/run-schema-cases.js';
 import { SCHEMA_CASES } from './cases/schema-cases.js';
-import type { Cell } from './cases/verdict.js';
 import { loadDefinition } from './rows/definitions.js';
 import { pictureRows } from './rows/picture-rows.js';
 import { renderRows, renderToday } from './rows/render.js';
@@ -20,15 +18,7 @@ if (problems.length > 0) {
   console.error(problems.join('\n'));
   process.exitCode = 1;
 } else {
-  const today = new Map<string, Cell>();
-  const castr = await createCastrConvert();
-  try {
-    for (const schemaCase of SCHEMA_CASES) {
-      today.set(schemaCase.rowId, await runCase(schemaCase, castr.convert));
-    }
-  } finally {
-    await castr.dispose();
-  }
+  const today = await runSchemaCases(SCHEMA_CASES);
   console.log(renderToday(rows, today));
   console.log(renderRows(rows, today));
 }

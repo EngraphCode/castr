@@ -72,6 +72,20 @@ describe('runCase', () => {
     });
   });
 
+  it('is crashed where the validator Castr emitted throws on a sample', async () => {
+    const cell = await runCase(
+      maxLength,
+      converting(() => {
+        throw new TypeError('x is not a function');
+      }),
+    );
+
+    expect(cell).toEqual({
+      verdict: 'crashed',
+      detail: `Castr's validator threw on "ab": x is not a function`,
+    });
+  });
+
   it('is missing where Castr emitted no validator for the shape', async () => {
     const cell = await runCase(maxLength, () => Promise.resolve({ kind: 'no validator' }));
 
