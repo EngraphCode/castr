@@ -124,8 +124,9 @@ Three more labels appear in the tables. They are this report's and are not class
 
 ## Limits
 
-- Review found a row missing or wrongly classed in each of four rounds, and this version
-  holds every correction. More are likely. The list is finished in the PICTURE command,
+- Review found a row missing or wrongly classed in each of four rounds. This version
+  holds the corrections of the first three; the thread record names the rows the fourth
+  raised (two 3.2 additions). More are likely. The list is finished in the PICTURE command,
   where each row has a case that runs; it is not finished by further reading.
 - The classes are a proposal made by reading, not by running anything. The
   [construct report](constructs-2026-11-20.md) holds what Castr does today for 94

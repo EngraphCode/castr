@@ -235,6 +235,16 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   values over a corpus, and one case per kind is a coverage check over the format's
   constructs. They are two obligations and each keeps its own clause; what SPEC-G-4 needs
   is a reach beyond the one-document corpus.
+- **The row list, 20 November (#135).** Four review rounds each found a fault: a miscount
+  of my own, value-bearing fields that needed a row per value, fields reached only
+  through a composed reference, a field the published schema itself misnames (`body` for
+  `server` on a link), and rows only prose defines. Three things to keep. A published
+  machine-readable schema is evidence about a format, not the format: it was wrong once
+  and silent on every schema keyword. A completeness check that validates proposals
+  against the same computed set cannot see what the computation missed. A hand-read list
+  does not converge under review; I set the exit rule after the second round (merge unless
+  one of the seven findings changes) and it held, with later rows recorded as owed to the
+  command that runs a case per row.
 - **Process, for the fleet rule.** Two readers, default tier, read-only: 286k and 224k
   tokens (the estimate from the earlier legs was about 180k each, so the pair ran over the
   500k line that calls for a design review first; a third planned reader was dropped
