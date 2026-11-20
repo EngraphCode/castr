@@ -245,6 +245,22 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   does not converge under review; I set the exit rule after the second round (merge unless
   one of the seven findings changes) and it held, with later rows recorded as owed to the
   command that runs a case per row.
+- **The picture's rows and outcomes, 20 November (#138, #140).** What review found that a
+  reading alone had not: a list read as an object with invented fields; nine
+  object-or-reference choices published as empty objects; a field with one fixed value
+  losing its row; a field marked free because a branch restated its default; keyed-entry
+  proposals that nothing tied to the computed patterns. Each was a place where the
+  completeness check validated against the reading's own output. Two things worked.
+  Fetching the definitions from their publishers turned hand rows into computed ones (the
+  OpenAPI vocabulary files hold `discriminator` and `xml`). Unit tests on small
+  definitions written in the test made each reading rule a stated fact. One note of mine
+  was wrong and a reviewer was right: Zod 4.6.7 counts string length in characters. I had
+  carried the UTF-16 claim from an earlier report without running it; run the claim.
+- **An adversarial review before the owner sees an amendment, 20 November.** One reviewer
+  returned twelve findings on a nine-change draft and it was withdrawn unseen. The largest
+  amendment that has closed in this repository changed one clause. The amendment is now
+  three parts, and the table vocabulary lands with the tables, because a rule about a
+  table binds nothing while the table is unwritten.
 - **Process, for the fleet rule.** Two readers, default tier, read-only: 286k and 224k
   tokens (the estimate from the earlier legs was about 180k each, so the pair ran over the
   500k line that calls for a design review first; a third planned reader was dropped
