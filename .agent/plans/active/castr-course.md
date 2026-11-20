@@ -118,10 +118,13 @@ by decision card. Each answer below is the option the owner chose, in the card's
   latest v1 document before MOVE. Section 10 of the specification says "early in the course"; that
   phrase changes by an approved amendment, and until then the sentence stands as written
   and MOVE does not start.
-- **What working with other example documents means:** "Never wrong, never crashes
-  (Recommended)". On every OpenAPI document in the
-  [example library](example-input-library.md), each construct is converted
-  exactly, checked against an independent validator, or refused with a located rejection.
+- **What working with other example documents means:** the owner, 20 November 2026,
+  verbatim: "What I want is to not have to rework Castr if Oak adds an additional, valid
+  field type to their spec". On every OpenAPI document in the
+  [example library](example-input-library.md), each valid construct is converted exactly,
+  checked against an independent validator. A refusal, in plain words with its place, is
+  for an invalid document or an exclusion the owner approves. This replaces the card of
+  18 November, which allowed a located refusal of any construct.
   Full support stays required only for Oak's v1 document, so SPEC-C-1 stays finite. The
   library's JSON Schema documents wait for SPEC-C-2.
 
@@ -159,8 +162,9 @@ place, wrong, missing or crashed. The MEASURE table is its first drawing.
 - **Working** is every Oak cell right, with the consuming repository's own generation step
   then building on the result, its generator packages removed and nothing rewritten
   afterwards.
-- **Working well** is no cell wrong and no crash on any other document, every refusal in
-  plain words with its place, and a second run changing nothing.
+- **Working well** is every valid construct on every other document converted and right,
+  no crash, a second run changing nothing, and an invalid document refused in plain words
+  with its place.
 - **Correct** is the decision an independent validator makes reading the document itself,
   and code built as §9 requires, which the picture cannot show.
 

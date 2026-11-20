@@ -68,11 +68,14 @@ legs and to the owner's later naming.
 Owner decision by card, 18 November 2026. The owner's words that day name "a variety of
 other examples specs, which I assume corresponds to the example input library" as part of
 what Castr must work with before it moves, and the card's answer says what working with
-them means: "Never wrong, never crashes (Recommended)". On every OpenAPI document in the
-library, each construct is converted exactly, checked against an independent validator, or
-refused with a located rejection; full support stays required only for Oak's v1
-document (the owner, 19 November 2026: "Drop v0, latest v1 only"). That is SPEC-PR-2, which binds every construct, checked on these documents. The
-rows the library adds to the course's PICTURE are where it shows.
+them means: "Never wrong, never crashes (Recommended)". On 20 November 2026 the owner set a
+stricter standard, verbatim: "What I want is to not have to rework Castr if Oak adds an
+additional, valid field type to their spec". On every OpenAPI document in the library,
+each valid construct is converted exactly, checked against an independent validator; a
+refusal is for an invalid document or an exclusion the owner approves. The library is the
+proof for constructs Oak's v1 document does not use yet. The rows the library adds to the
+course's PICTURE are where it shows. The specification's SPEC-PR-2 is looser and changes
+by an amendment drafted from the enumerated construct list.
 This plan still pins documents and adds no reader. Its OpenAPI tranches (EC-1, EC-2, EC-3
 and EC-6) come first; its JSON Schema tranches (EC-4, EC-5 and EC-7) wait for SPEC-C-2.
 
