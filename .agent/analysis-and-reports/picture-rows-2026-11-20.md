@@ -103,7 +103,7 @@ Three more labels appear in the tables. They are this report's and are not class
    that it is carried as an annotation and reported, never refused. A keyword no
    vocabulary defines is the same case, and JSON Schema already says it is an annotation.
 
-6. **Four rows are carried only if SPEC-G-4 agrees.** `multipleOf` (Zod divides in
+6. **Five rows are carried only if SPEC-G-4 agrees.** `multipleOf` (Zod divides in
    binary floating point; the model holds exact decimals), `maxLength` and `minLength`
    (characters against UTF-16 units), `email` (Zod's pattern is narrower than the RFC),
    and `int64` (a JavaScript number is exact only to 2^53). `int64` needs a decision of
