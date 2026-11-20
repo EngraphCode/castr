@@ -123,6 +123,8 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    PICTURE, as the course orders it: the command, with rows for OpenAPI 3.1 and 3.2 and
    columns for Zod, TypeScript and the endpoint definitions. The amendment that carries
    the nine decisions follows it, in three parts, with the tables.
+   The picture's rows and proposed outcomes are on `main` (#138, #140): `pnpm picture`
+   prints 317 rows in three columns. The next part is the cases that run Castr.
 1. **PICTURE: one repeatable command that shows what Castr does, judged from outside it.**
    The owner asked on 18 November 2026 what working, working well and correct look like.
    The seat answered with cards and a draft amendment, and on 19 November the owner sent it
