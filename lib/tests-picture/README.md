@@ -6,14 +6,17 @@ consumer takes: the Zod validators, the TypeScript types and the endpoint defini
 Each cell says whether Castr is right, refuses in plain words, is wrong, emits nothing or
 crashes.
 
-This directory is being built in steps. It holds the rows and the outcome proposed for
-each. No case runs Castr yet, so no cell says what Castr does today.
+This directory is being built in steps. It holds the rows, the outcome proposed for each,
+and a case for every row of a schema whose construct decides which values are accepted.
+Those cases fill one column, the Zod output. The TypeScript and endpoint-definition
+columns, the rows that are carried as structure, the rows of the document outside a
+schema, Oak's document and the example documents have no case yet.
 
 ## Run it
 
 ```bash
-pnpm picture        # print the rows and their proposed outcomes as tables
-pnpm test:picture   # check the rows are whole and the proposals keep to the bars
+pnpm picture        # print what Castr does today, and the rows with their proposed outcomes
+pnpm test:picture   # check the rows are whole, the bars hold, and the cells that are right stay right
 ```
 
 ## Where the rows come from
@@ -84,6 +87,42 @@ it. [`rows/table.ts`](rows/table.ts) joins them to the computed rows and reports
   anything else.
 
 [`rows/picture-rows.e2e.test.ts`](rows/picture-rows.e2e.test.ts) fails on any report.
+
+## The cases
+
+A case is a schema that exercises one construct kind, and sample values the construct
+decides ([`cases/schema-cases.ts`](cases/schema-cases.ts)). Two validators read the same
+whole document:
+
+- **The reference:** Ajv for JSON Schema 2020-12, with `format` asserting. It is
+  independent of Castr ([`cases/reference.ts`](cases/reference.ts)).
+- **Castr:** its public generation function, and the Zod module it generates, loaded and
+  run ([`cases/castr-convert.ts`](cases/castr-convert.ts)).
+
+The cell is what comparing their decisions gives ([`cases/verdict.ts`](cases/verdict.ts)):
+
+| Cell       | Meaning                                                                           |
+| ---------- | --------------------------------------------------------------------------------- |
+| right      | Castr decides every sample as the reference does.                                 |
+| wrong      | Castr decides at least one sample differently; the cell names each.               |
+| refused    | Castr gave an error of its own for a valid document.                              |
+| crashed    | Castr failed with a fault of the runtime, or emitted a module that does not load. |
+| missing    | Castr ran and emitted no validator for the shape.                                 |
+| not judged | The reference has no checker for the case, so nothing is claimed.                 |
+
+A right cell means Castr agreed with the reference on that case's samples. It does not
+mean the construct is right in every combination, and it is not the proof the
+specification asks for (SPEC-G-4, SPEC-G-5).
+
+[`cases/right-today.ts`](cases/right-today.ts) lists the rows that are right today.
+[`cases/schema-cases.e2e.test.ts`](cases/schema-cases.e2e.test.ts) holds that list to
+exactly the rows that are right: a row that stops being right fails it, and so does a row
+that becomes right and is not added. The list records what is true. It does not accept
+the rows that are missing from it. The same test fails if a row that needs a case has
+none, and if a case holds no value its schema refuses.
+
+Four `format` values are not judged, because Ajv has no checker for them (`idn-email`,
+`idn-hostname`, `iri`, `iri-reference`).
 
 ## A newer definition
 
