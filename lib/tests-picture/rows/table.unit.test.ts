@@ -121,8 +121,8 @@ describe('objectRows', () => {
     {
       name: 'parameter',
       fields: [
-        { name: 'in', values: ['path', 'query'] },
-        { name: 'name', values: [] },
+        { name: 'in', values: ['path', 'query'], open: false },
+        { name: 'name', values: [], open: true },
       ],
       keyedBy: [],
       extensible: true,
@@ -132,8 +132,8 @@ describe('objectRows', () => {
     {
       name: 'parameter',
       fields: [
-        { name: 'in', values: ['path', 'query', 'querystring'] },
-        { name: 'name', values: [] },
+        { name: 'in', values: ['path', 'query', 'querystring'], open: false },
+        { name: 'name', values: [], open: true },
       ],
       keyedBy: [],
       extensible: true,
@@ -208,10 +208,46 @@ describe('objectRows', () => {
     ]);
   });
 
-  it('makes a row for each kind of entry an object keys', () => {
-    const responses = inventoryOf([
-      { name: 'responses', fields: [], keyedBy: ['^[1-5]'], extensible: true },
+  it('makes a row for a single fixed value, and none for the field it fixes', () => {
+    const header = inventoryOf([
+      {
+        name: 'header',
+        fields: [{ name: 'style', values: ['simple'], open: false }],
+        keyedBy: [],
+        extensible: true,
+      },
     ]);
+    const result = objectRows(
+      'document',
+      [{ version: '3.1', inventory: header }],
+      new Map<string, ObjectProposals>([['header', { fallback: CARRIED }]]),
+    );
+
+    expect(result.rows.map((row) => row.id)).toEqual(['header.style=simple']);
+  });
+
+  it('makes a row for the field as well where it is also declared without a fixed value', () => {
+    const parameter = inventoryOf([
+      {
+        name: 'parameter',
+        fields: [{ name: 'required', values: ['true'], open: true }],
+        keyedBy: [],
+        extensible: true,
+      },
+    ]);
+    const result = objectRows('document', [{ version: '3.1', inventory: parameter }], proposals);
+
+    expect(result.rows.map((row) => row.id)).toEqual([
+      'parameter.required',
+      'parameter.required=true',
+    ]);
+  });
+
+  const responses = inventoryOf([
+    { name: 'responses', fields: [], keyedBy: ['^[1-5]'], extensible: true },
+  ]);
+
+  it('makes a row for each kind of entry a computed pattern admits', () => {
     const result = objectRows(
       'document',
       [{ version: '3.1', inventory: responses }],
@@ -219,10 +255,15 @@ describe('objectRows', () => {
         [
           'responses',
           {
-            keyed: [
-              ['an exact status code', CARRIED],
-              ['a status range', CARRIED],
-            ],
+            keyed: new Map([
+              [
+                '^[1-5]',
+                [
+                  ['an exact status code', CARRIED],
+                  ['a status range', CARRIED],
+                ],
+              ],
+            ]),
           },
         ],
       ]),
@@ -235,20 +276,71 @@ describe('objectRows', () => {
     ]);
   });
 
-  it('reports keyed entries with no proposal, and a keyed proposal with no entries', () => {
-    const keyed = inventoryOf([{ name: 'paths', fields: [], keyedBy: ['^/'], extensible: true }]);
-    const plain = inventoryOf([{ name: 'info', fields: [], keyedBy: [], extensible: true }]);
+  it('makes one row where two versions key the same kind of entry by different patterns', () => {
+    const older = inventoryOf([
+      { name: 'components', fields: [], keyedBy: ['^(a)$'], extensible: true },
+    ]);
+    const newer = inventoryOf([
+      { name: 'components', fields: [], keyedBy: ['^(a|b)$'], extensible: true },
+    ]);
+    const result = objectRows(
+      'document',
+      [
+        { version: '3.1', inventory: older },
+        { version: '3.2', inventory: newer },
+      ],
+      new Map<string, ObjectProposals>([
+        [
+          'components',
+          {
+            keyed: new Map([
+              ['^(a)$', [['a component name', CARRIED]]],
+              ['^(a|b)$', [['a component name', CARRIED]]],
+            ]),
+          },
+        ],
+      ]),
+    );
 
+    expect(result.problems).toEqual([]);
+    expect(result.rows.map((row) => [row.id, row.versions])).toEqual([
+      ['components[a component name]', ['3.1', '3.2']],
+    ]);
+  });
+
+  it('reports a computed pattern with no proposal, or with an empty one', () => {
     expect(
-      objectRows('document', [{ version: '3.1', inventory: keyed }], new Map()).problems,
-    ).toEqual(['no proposal for the keyed entries of paths']);
+      objectRows('document', [{ version: '3.1', inventory: responses }], new Map()).problems,
+    ).toEqual(['no proposal for the entries of responses keyed by ^[1-5]']);
     expect(
       objectRows(
         'document',
-        [{ version: '3.1', inventory: plain }],
-        new Map<string, ObjectProposals>([['info', { keyed: [['a key', CARRIED]] }]]),
+        [{ version: '3.1', inventory: responses }],
+        new Map<string, ObjectProposals>([['responses', { keyed: new Map([['^[1-5]', []]]) }]]),
       ).problems,
-    ).toEqual(['a proposal names keyed entries that were not computed: info']);
+    ).toEqual(['no proposal for the entries of responses keyed by ^[1-5]']);
+  });
+
+  it('reports a proposal for a pattern that was not computed', () => {
+    const result = objectRows(
+      'document',
+      [{ version: '3.1', inventory: responses }],
+      new Map<string, ObjectProposals>([
+        [
+          'responses',
+          {
+            keyed: new Map([
+              ['^[1-5]', [['a status code', CARRIED]]],
+              ['^[1-9]', [['a status code', CARRIED]]],
+            ]),
+          },
+        ],
+      ]),
+    );
+
+    expect(result.problems).toEqual([
+      'a proposal names entries of responses keyed by a pattern that was not computed: ^[1-9]',
+    ]);
   });
 
   it('carries forward what a reading reported', () => {

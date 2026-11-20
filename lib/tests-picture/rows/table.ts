@@ -129,29 +129,38 @@ export function textRows(group: RowGroup, entries: readonly TextRow[]): RowsResu
 }
 
 interface MergedField {
+  /** The versions that declare the field. */
   readonly versions: string[];
+  /** The versions that declare it without fixing its value. */
+  readonly openIn: string[];
+  /** Each fixed value, with the versions that declare it. */
   readonly values: Map<string, string[]>;
 }
 
 interface MergedObject {
   readonly fields: Map<string, MergedField>;
-  readonly keyedIn: string[];
+  /** Each pattern the object's other entries are keyed by, with the versions declaring it. */
+  readonly keyed: Map<string, string[]>;
 }
 
 function mergeObject(merged: MergedObject, version: string, object: ObjectKind): void {
   for (const field of object.fields) {
     const entry: MergedField = merged.fields.get(field.name) ?? {
       versions: [],
+      openIn: [],
       values: new Map(),
     };
     merged.fields.set(field.name, entry);
     entry.versions.push(version);
+    if (field.open) {
+      entry.openIn.push(version);
+    }
     for (const value of field.values) {
       entry.values.set(value, [...(entry.values.get(value) ?? []), version]);
     }
   }
-  if (object.keyedBy.length > 0) {
-    merged.keyedIn.push(version);
+  for (const pattern of object.keyedBy) {
+    merged.keyed.set(pattern, [...(merged.keyed.get(pattern) ?? []), version]);
   }
 }
 
@@ -161,7 +170,7 @@ function mergeVersions(inventories: readonly VersionedInventory[]): Map<string, 
     for (const object of inventory.objects) {
       const merged: MergedObject = objects.get(object.name) ?? {
         fields: new Map(),
-        keyedIn: [],
+        keyed: new Map(),
       };
       objects.set(object.name, merged);
       mergeObject(merged, version, object);
@@ -177,26 +186,62 @@ function fieldRows(
   field: MergedField,
   coded: Coded,
 ): readonly Row[] {
-  const proposal = proposalOf(coded);
-  const base = { group, source: COMPUTED, proposal };
-  // A field with a fixed set of values is one row per value: each value is a construct
-  // of its own, and a case for the field would exercise one of them.
-  if (field.values.size > 1) {
-    return [...field.values].map(([value, versions]) => ({
-      ...base,
-      id: `${objectName}.${fieldName}=${value}`,
-      label: `${objectName}: ${fieldName}: ${value}`,
-      versions,
-    }));
-  }
-  return [
-    {
+  const base = { group, source: COMPUTED, proposal: proposalOf(coded) };
+  // Each fixed value is a construct of its own: a case for the field would exercise one.
+  const rows: Row[] = [...field.values].map(([value, versions]) => ({
+    ...base,
+    id: `${objectName}.${fieldName}=${value}`,
+    label: `${objectName}: ${fieldName}: ${value}`,
+    versions,
+  }));
+  // The field itself is a row where it has no fixed value, or is also declared without
+  // one (`required` is any boolean, and `true` for a parameter in the path).
+  const generic = field.values.size === 0 ? field.versions : field.openIn;
+  if (generic.length > 0) {
+    rows.unshift({
       ...base,
       id: `${objectName}.${fieldName}`,
       label: `${objectName}: ${fieldName}`,
-      versions: field.versions,
-    },
-  ];
+      versions: generic,
+    });
+  }
+  return rows;
+}
+
+function keyedRows(
+  group: RowGroup,
+  name: string,
+  merged: MergedObject,
+  proposals: ObjectProposals | undefined,
+): RowsResult {
+  const byId = new Map<string, Row>();
+  const problems: string[] = [];
+  for (const [pattern, versions] of merged.keyed) {
+    const kinds = proposals?.keyed?.get(pattern) ?? [];
+    if (kinds.length === 0) {
+      problems.push(`no proposal for the entries of ${name} keyed by ${pattern}`);
+    }
+    for (const [what, coded] of kinds) {
+      const id = `${name}[${what}]`;
+      const earlier = byId.get(id)?.versions ?? [];
+      byId.set(id, {
+        id,
+        group,
+        label: `${name}: an entry keyed by ${what}`,
+        source: COMPUTED,
+        versions: [...earlier, ...versions.filter((version) => !earlier.includes(version))],
+        proposal: proposalOf(coded),
+      });
+    }
+  }
+  for (const pattern of proposals?.keyed?.keys() ?? []) {
+    if (!merged.keyed.has(pattern)) {
+      problems.push(
+        `a proposal names entries of ${name} keyed by a pattern that was not computed: ${pattern}`,
+      );
+    }
+  }
+  return { rows: [...byId.values()], problems };
 }
 
 function objectRowsOf(
@@ -220,25 +265,8 @@ function objectRowsOf(
       problems.push(`a proposal names a field that was not computed: ${name}.${fieldName}`);
     }
   }
-  if (merged.keyedIn.length > 0 && proposals?.keyed === undefined) {
-    problems.push(`no proposal for the keyed entries of ${name}`);
-  }
-  if (merged.keyedIn.length === 0 && proposals?.keyed !== undefined) {
-    problems.push(`a proposal names keyed entries that were not computed: ${name}`);
-  }
-  if (merged.keyedIn.length > 0) {
-    for (const [what, coded] of proposals?.keyed ?? []) {
-      rows.push({
-        id: `${name}[${what}]`,
-        group,
-        label: `${name}: an entry keyed by ${what}`,
-        source: COMPUTED,
-        versions: merged.keyedIn,
-        proposal: proposalOf(coded),
-      });
-    }
-  }
-  return { rows, problems };
+  const keyed = keyedRows(group, name, merged, proposals);
+  return { rows: [...rows, ...keyed.rows], problems: [...problems, ...keyed.problems] };
 }
 
 /**

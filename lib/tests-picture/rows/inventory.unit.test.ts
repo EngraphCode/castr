@@ -35,15 +35,33 @@ describe('readInventory', () => {
       {
         name: 'parameter',
         fields: [
-          { name: 'in', values: ['path', 'query'] },
-          { name: 'name', values: [] },
-          { name: 'style', values: ['simple'] },
+          { name: 'in', values: ['path', 'query'], open: false },
+          { name: 'name', values: [], open: true },
+          { name: 'style', values: ['simple'], open: false },
         ],
         keyedBy: [],
         extensible: false,
       },
     ]);
     expect(inventory.problems).toEqual([]);
+  });
+
+  it('records a field that is fixed in one branch and free in another as open', () => {
+    const inventory = readInventory(
+      {
+        $defs: {
+          parameter: {
+            properties: { required: { type: 'boolean' } },
+            then: { properties: { required: { const: true } } },
+          },
+        },
+      },
+      OPTIONS,
+    );
+
+    expect(inventory.objects[1]?.fields).toEqual([
+      { name: 'required', values: ['true'], open: true },
+    ]);
   });
 
   it('counts a field declared in a branch of a conditional', () => {
@@ -207,7 +225,7 @@ describe('readInventory', () => {
 
     expect(inventory.objects[1]).toEqual({
       name: 'info',
-      fields: [{ name: 'title', values: [] }],
+      fields: [{ name: 'title', values: [], open: true }],
       keyedBy: [],
       extensible: true,
     });

@@ -35,7 +35,7 @@ describe('the picture rows', () => {
     expect(count('format value')).toBe(25);
     expect(count('schema construct')).toBe(6);
     expect(count('schema vocabulary')).toBe(20);
-    expect(count('document')).toBe(201);
+    expect(count('document')).toBe(204);
   });
 
   it('marks the rows only OpenAPI 3.2 declares', () => {
@@ -44,6 +44,22 @@ describe('the picture rows', () => {
     expect(rowWith('discriminator.defaultMapping').versions).toEqual(['3.2']);
     expect(rowWith('xml.nodeType=cdata').versions).toEqual(['3.2']);
     expect(rowWith('parameter.in=query').versions).toEqual(['3.1', '3.2']);
+  });
+
+  it('gives a fixed value its own row, beside the field where the field is also free', () => {
+    const ids = rows.map((row) => row.id);
+
+    expect(ids).toContain('header.style=simple');
+    expect(ids).not.toContain('header.style');
+    expect(ids).toContain('parameter.required');
+    expect(ids).toContain('parameter.required=true');
+    expect(ids).not.toContain('parameter.in');
+  });
+
+  it('keeps an exact status code and a status range as separate rows', () => {
+    expect(rowWith('responses[an exact status code]').versions).toEqual(['3.1', '3.2']);
+    expect(rowWith('responses[a status range]').versions).toEqual(['3.1', '3.2']);
+    expect(rowWith('components[a component name]').versions).toEqual(['3.1', '3.2']);
   });
 
   it('proposes no part of a schema as unexpressible or outside a target', () => {
@@ -84,6 +100,6 @@ describe('the picture rows', () => {
   });
 
   it('counts the rows Zod carries only by a check Castr writes', () => {
-    expect(rows.filter((row) => row.proposal.zodByCastrCheck)).toHaveLength(26);
+    expect(rows.filter((row) => row.proposal.zodByCastrCheck)).toHaveLength(27);
   });
 });

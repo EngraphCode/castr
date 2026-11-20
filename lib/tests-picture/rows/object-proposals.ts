@@ -11,12 +11,13 @@ const XML: Coded = ['S', 'K', 'K', 'How a value is written as XML; said about a 
 
 /**
  * The proposals for one object: a default for its fields, and the fields that differ.
- * `keyed` holds the proposals for the entries the object holds under a pattern or any key.
+ * `keyed` holds, for each pattern the published definition keys the object's other
+ * entries by, the proposals for the kinds of entry that pattern admits.
  */
 export interface ObjectProposals {
   readonly fallback?: Coded;
   readonly fields?: ReadonlyMap<string, Coded>;
-  readonly keyed?: readonly KeyedProposal[];
+  readonly keyed?: ReadonlyMap<string, readonly KeyedProposal[]>;
 }
 
 /**
@@ -24,6 +25,17 @@ export interface ObjectProposals {
  * entries of more than one kind (an exact status code, a status range).
  */
 export type KeyedProposal = readonly [what: string, proposal: Coded];
+
+const ANY_KEY = '*';
+const COMPONENT_NAME: readonly KeyedProposal[] = [
+  ['a component name', ['S', 'S', 'S', 'Its grammar is fixed (SPEC-PR-3).']],
+];
+
+function keyed(
+  ...entries: readonly (readonly [string, readonly KeyedProposal[]])[]
+): ReadonlyMap<string, readonly KeyedProposal[]> {
+  return new Map(entries);
+}
 
 function fields(...entries: readonly (readonly [string, Coded])[]): ReadonlyMap<string, Coded> {
   return new Map(entries);
@@ -66,10 +78,22 @@ export const OBJECT_PROPOSALS: ReadonlyMap<string, ObjectProposals> = new Map<
         ['links', DOC],
         ['securitySchemes', DOC],
       ),
-      keyed: [['a component name', ['S', 'S', 'S', 'Its grammar is fixed (SPEC-PR-3).']]],
+      keyed: keyed(
+        [
+          '^(schemas|responses|parameters|examples|requestBodies|headers|securitySchemes|links|callbacks|pathItems)$',
+          COMPONENT_NAME,
+        ],
+        [
+          '^(?:schemas|responses|parameters|examples|requestBodies|headers|securitySchemes|links|callbacks|pathItems|mediaTypes)$',
+          COMPONENT_NAME,
+        ],
+      ),
     },
   ],
-  ['paths', { keyed: [['a path template', ['S', 'S', 'S', 'The template is the key.']]] }],
+  [
+    'paths',
+    { keyed: keyed(['^/', [['a path template', ['S', 'S', 'S', 'The template is the key.']]]]) },
+  ],
   [
     'path-item',
     {
@@ -128,7 +152,10 @@ export const OBJECT_PROPOSALS: ReadonlyMap<string, ObjectProposals> = new Map<
       ),
     },
   ],
-  ['content', { keyed: [['a media type', ['S', 'S', 'S', 'The media type is the key.']]] }],
+  [
+    'content',
+    { keyed: keyed([ANY_KEY, [['a media type', ['S', 'S', 'S', 'The media type is the key.']]]]) },
+  ],
   [
     'media-type',
     {
@@ -147,10 +174,14 @@ export const OBJECT_PROPOSALS: ReadonlyMap<string, ObjectProposals> = new Map<
     'responses',
     {
       fields: fields(['default', ['S', 'S', 'S', 'Kept apart from every status (SPEC-C-1).']]),
-      keyed: [
-        ['an exact status code', ['S', 'S', 'S', 'Takes precedence over a range (SPEC-C-1).']],
-        ['a status range', ['S', 'S', 'S', 'Never widened from a code or collapsed to one.']],
-      ],
+      // One published pattern admits two kinds of key, which SPEC-C-1 keeps apart.
+      keyed: keyed([
+        '^[1-5](?:[0-9]{2}|XX)$',
+        [
+          ['an exact status code', ['S', 'S', 'S', 'Takes precedence over a range (SPEC-C-1).']],
+          ['a status range', ['S', 'S', 'S', 'Never widened from a code or collapsed to one.']],
+        ],
+      ]),
     },
   ],
   [
@@ -167,7 +198,12 @@ export const OBJECT_PROPOSALS: ReadonlyMap<string, ObjectProposals> = new Map<
   ],
   [
     'callbacks',
-    { keyed: [['a callback expression', ['S', 'S', 'S', 'The expression is the key.']]] },
+    {
+      keyed: keyed([
+        ANY_KEY,
+        [['a callback expression', ['S', 'S', 'S', 'The expression is the key.']]],
+      ]),
+    },
   ],
   ['example', { fallback: EX }],
   ['link', { fallback: DOC }],
@@ -204,19 +240,22 @@ export const OBJECT_PROPOSALS: ReadonlyMap<string, ObjectProposals> = new Map<
   ['oauth-flows/client-credentials', { fallback: DOC }],
   ['oauth-flows/authorization-code', { fallback: DOC }],
   ['oauth-flows/device-authorization', { fallback: DOC }],
-  ['security-requirement', { keyed: [['a security scheme name', DOC]] }],
+  ['security-requirement', { keyed: keyed([ANY_KEY, [['a security scheme name', DOC]]]) }],
   [
     'specification-extensions',
     {
-      keyed: [
+      keyed: keyed([
+        '^x-',
         [
-          'an `x-` extension',
-          ['O', 'O', 'O', 'Outside a schema. On a schema it is said of a shape.'],
+          [
+            'an `x-` extension',
+            ['O', 'O', 'O', 'Outside a schema. On a schema it is said of a shape.'],
+          ],
         ],
-      ],
+      ]),
     },
   ],
-  ['map-of-strings', { keyed: [['an entry of a map of strings', DOC]] }],
+  ['map-of-strings', { keyed: keyed([ANY_KEY, [['an entry of a map of strings', DOC]]]) }],
 ]);
 
 /**
@@ -239,6 +278,11 @@ export const SCHEMA_VOCABULARY_PROPOSALS: ReadonlyMap<string, ObjectProposals> =
   ['xml', { fallback: XML }],
   [
     'extensible',
-    { keyed: [['an `x-` extension', ['S', 'K', 'K', 'On a keyword OpenAPI adds to a schema.']]] },
+    {
+      keyed: keyed([
+        '^x-',
+        [['an `x-` extension', ['S', 'K', 'K', 'On a keyword OpenAPI adds to a schema.']]],
+      ]),
+    },
   ],
 ]);

@@ -7,6 +7,13 @@ import { isJsonObject, membersOf, type JsonObject } from './json.js';
 export interface FieldKind {
   readonly name: string;
   readonly values: readonly string[];
+  /**
+   * True where the definition also declares the field without fixing its value. A
+   * parameter's `required` is any boolean, and `true` where the parameter is in the path:
+   * it is open and has one fixed value. A parameter's `in` is only ever one of its
+   * locations: it is not open.
+   */
+  readonly open: boolean;
 }
 
 /**
@@ -53,9 +60,14 @@ export interface Inventory {
   readonly problems: readonly string[];
 }
 
+interface CollectedField {
+  readonly values: Set<string>;
+  open: boolean;
+}
+
 interface Collected {
   readonly name: string;
-  readonly fields: Map<string, Set<string>>;
+  readonly fields: Map<string, CollectedField>;
   readonly keyedBy: Set<string>;
   extensible: boolean;
 }
@@ -69,6 +81,13 @@ function byName(a: string, b: string): number {
 
 function shortName(ref: string): string {
   return ref.slice(DEFS_PREFIX.length).replaceAll('/$defs/', '/');
+}
+
+/** The values a field's declaration fixes it to, by `enum` or `const`. */
+function fixedValuesOf(declaration: JsonObject): readonly string[] {
+  const allowed = declaration['enum'];
+  const fixed = Array.isArray(allowed) ? allowed.map(String) : [];
+  return 'const' in declaration ? [...fixed, String(declaration['const'])] : fixed;
 }
 
 function refOf(node: unknown): string | undefined {
@@ -124,19 +143,18 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
   };
 
   const collectField = (acc: Collected, name: string, value: unknown): void => {
-    const values = acc.fields.get(name) ?? new Set<string>();
-    acc.fields.set(name, values);
+    const field: CollectedField = acc.fields.get(name) ?? { values: new Set(), open: false };
+    acc.fields.set(name, field);
     if (!isJsonObject(value)) {
+      field.open = true;
       return;
     }
-    const allowed = value['enum'];
-    if (Array.isArray(allowed)) {
-      for (const item of allowed) {
-        values.add(String(item));
-      }
+    const fixed = fixedValuesOf(value);
+    if (fixed.length === 0) {
+      field.open = true;
     }
-    if ('const' in value) {
-      values.add(String(value['const']));
+    for (const item of fixed) {
+      field.values.add(item);
     }
     noteValueRefsIn(value);
     if (isJsonObject(value['properties'])) {
@@ -250,20 +268,24 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
       if (correction.object !== name) {
         continue;
       }
-      const values = acc.fields.get(correction.published);
-      if (values === undefined) {
+      const published = acc.fields.get(correction.published);
+      if (published === undefined) {
         problems.push(`a correction no longer applies: ${name}.${correction.published}`);
         continue;
       }
       acc.fields.delete(correction.published);
-      acc.fields.set(correction.specified, values);
+      acc.fields.set(correction.specified, published);
     }
     return {
       name,
       extensible: acc.extensible,
       keyedBy: [...acc.keyedBy].sort(byName),
       fields: [...acc.fields]
-        .map(([fieldName, values]) => ({ name: fieldName, values: [...values].sort(byName) }))
+        .map(([fieldName, field]) => ({
+          name: fieldName,
+          values: [...field.values].sort(byName),
+          open: field.open,
+        }))
         .sort((a, b) => byName(a.name, b.name)),
     };
   };
