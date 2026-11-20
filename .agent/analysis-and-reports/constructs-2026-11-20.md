@@ -25,8 +25,10 @@ own additions) against today's generator. It decides nothing.
   counts.
 - **A few samples per construct,** so "right" means no disagreement was found, not proof.
 - **One construct at a time.** Each case uses only constructs measured right elsewhere in
-  this report beside the one it names, so one defect is not counted twice. Combinations
-  are not tried.
+  this report beside the one it names. Three constructs cannot be built that way
+  (`minContains` needs `contains`; `unevaluatedProperties` and an `allOf` of objects need
+  open objects); they are marked **not measurable alone** and are not counted as wrong or
+  crashed. Combinations are not tried.
 - **Validators only.** The TypeScript types and the endpoint definitions were not judged.
   Annotation rows show that the keyword does not break validation; whether the annotation
   is carried into the output was not checked.
@@ -35,73 +37,74 @@ own additions) against today's generator. It decides nothing.
 
 ## Result
 
-93 constructs: 57 right, 14 wrong, 22 crashed. No construct was refused in plain words:
-every refusal is a stack trace.
+93 constructs: 57 right, 13 wrong, 20 crashed, and 3 that cannot be measured alone because
+they need a construct that fails. No construct was refused in plain words: every refusal is
+a stack trace.
 
 ### Validation keywords
 
-| Construct                                         | Today   | What happened                                                                    |
-| ------------------------------------------------- | ------- | -------------------------------------------------------------------------------- |
-| `type: string`                                    | right   |                                                                                  |
-| `type: number`                                    | right   |                                                                                  |
-| `type: integer`                                   | right   |                                                                                  |
-| `type: boolean`                                   | right   |                                                                                  |
-| `type: null`                                      | right   |                                                                                  |
-| `type: array`                                     | right   |                                                                                  |
-| `type: object`                                    | right   |                                                                                  |
-| `type (list of types)`                            | right   |                                                                                  |
-| `no type (any value)`                             | right   |                                                                                  |
-| `enum (strings)`                                  | right   |                                                                                  |
-| `enum (mixed types)`                              | right   |                                                                                  |
-| `const (string)`                                  | wrong   | "b": source says invalid, Castr says valid. Emitted `z.unknown()`                |
-| `const (number)`                                  | wrong   | 4: source says invalid, Castr says valid. Emitted `z.unknown()`                  |
-| `const (object)`                                  | wrong   | {"a":2}: source says invalid, Castr says valid. Emitted `z.unknown()`            |
-| `multipleOf`                                      | right   |                                                                                  |
-| `maximum`                                         | right   |                                                                                  |
-| `exclusiveMaximum`                                | right   |                                                                                  |
-| `minimum`                                         | right   |                                                                                  |
-| `exclusiveMinimum`                                | right   |                                                                                  |
-| `maxLength`                                       | right   |                                                                                  |
-| `minLength`                                       | right   |                                                                                  |
-| `pattern`                                         | right   |                                                                                  |
-| `maxItems`                                        | right   |                                                                                  |
-| `minItems`                                        | right   |                                                                                  |
-| `uniqueItems`                                     | wrong   | [1,1]: source says invalid, Castr says valid. Emitted `z.array(z.unknown())`     |
-| `maxProperties`                                   | wrong   | {"a":1,"b":2}: source says invalid, Castr says valid. Emitted `z.strictObject({` |
-| `minProperties`                                   | wrong   | {}: source says invalid, Castr says valid. Emitted `z.strictObject({`            |
-| `maxProperties / minProperties on an open object` | crashed | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));         |
-| `required`                                        | right   |                                                                                  |
-| `dependentRequired`                               | right   |                                                                                  |
-| `minContains / maxContains`                       | crashed | throw new Error(                                                                 |
+| Construct                                         | Today                | What happened                                                                    |
+| ------------------------------------------------- | -------------------- | -------------------------------------------------------------------------------- |
+| `type: string`                                    | right                |                                                                                  |
+| `type: number`                                    | right                |                                                                                  |
+| `type: integer`                                   | right                |                                                                                  |
+| `type: boolean`                                   | right                |                                                                                  |
+| `type: null`                                      | right                |                                                                                  |
+| `type: array`                                     | right                |                                                                                  |
+| `type: object`                                    | right                |                                                                                  |
+| `type (list of types)`                            | right                |                                                                                  |
+| `no type (any value)`                             | right                |                                                                                  |
+| `enum (strings)`                                  | right                |                                                                                  |
+| `enum (mixed types)`                              | right                |                                                                                  |
+| `const (string)`                                  | wrong                | "b": source says invalid, Castr says valid. Emitted `z.unknown()`                |
+| `const (number)`                                  | wrong                | 4: source says invalid, Castr says valid. Emitted `z.unknown()`                  |
+| `const (object)`                                  | wrong                | {"a":2}: source says invalid, Castr says valid. Emitted `z.unknown()`            |
+| `multipleOf`                                      | right                |                                                                                  |
+| `maximum`                                         | right                |                                                                                  |
+| `exclusiveMaximum`                                | right                |                                                                                  |
+| `minimum`                                         | right                |                                                                                  |
+| `exclusiveMinimum`                                | right                |                                                                                  |
+| `maxLength`                                       | right                |                                                                                  |
+| `minLength`                                       | right                |                                                                                  |
+| `pattern`                                         | right                |                                                                                  |
+| `maxItems`                                        | right                |                                                                                  |
+| `minItems`                                        | right                |                                                                                  |
+| `uniqueItems`                                     | wrong                | [1,1]: source says invalid, Castr says valid. Emitted `z.array(z.unknown())`     |
+| `maxProperties`                                   | wrong                | {"a":1,"b":2}: source says invalid, Castr says valid. Emitted `z.strictObject({` |
+| `minProperties`                                   | wrong                | {}: source says invalid, Castr says valid. Emitted `z.strictObject({`            |
+| `maxProperties / minProperties on an open object` | crashed              | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));         |
+| `required`                                        | right                |                                                                                  |
+| `dependentRequired`                               | right                |                                                                                  |
+| `minContains / maxContains`                       | not measurable alone | needs contains, which fails; was: crashed (stack trace)                          |
 
 ### Applicators
 
-| Construct                       | Today   | What happened                                                                             |
-| ------------------------------- | ------- | ----------------------------------------------------------------------------------------- |
-| `properties`                    | right   |                                                                                           |
-| `additionalProperties: false`   | right   |                                                                                           |
-| `additionalProperties: true`    | crashed | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));                  |
-| `additionalProperties: schema`  | crashed | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));                  |
-| `patternProperties`             | crashed | throw new Error(                                                                          |
-| `propertyNames`                 | crashed | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));                  |
-| `items`                         | right   |                                                                                           |
-| `prefixItems`                   | wrong   | ["a"]: source says valid, Castr says invalid. Emitted `z.tuple([z.string(), z.number()])` |
-| `prefixItems with items: false` | right   |                                                                                           |
-| `contains`                      | crashed | throw new Error(                                                                          |
-| `allOf`                         | right   |                                                                                           |
-| `allOf (objects)`               | crashed | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));                  |
-| `anyOf`                         | right   |                                                                                           |
-| `oneOf`                         | right   |                                                                                           |
-| `not`                           | wrong   | "a": source says invalid, Castr says valid. Emitted `z.unknown()`                         |
-| `if / then / else`              | wrong   | 15: source says invalid, Castr says valid. Emitted `z.number()`                           |
-| `dependentSchemas`              | wrong   | {"a":"x","b":"y"}: source says invalid, Castr says valid. Emitted `z`                     |
+| Construct                       | Today                | What happened                                                                             |
+| ------------------------------- | -------------------- | ----------------------------------------------------------------------------------------- |
+| `properties`                    | right                |                                                                                           |
+| `additionalProperties: false`   | right                |                                                                                           |
+| `additionalProperties: true`    | crashed              | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));                  |
+| `additionalProperties: schema`  | crashed              | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));                  |
+| `patternProperties`             | crashed              | throw new Error(                                                                          |
+| `propertyNames`                 | crashed              | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));                  |
+| `items`                         | right                |                                                                                           |
+| `prefixItems`                   | wrong                | ["a"]: source says valid, Castr says invalid. Emitted `z.tuple([z.string(), z.number()])` |
+| `prefixItems with items: false` | right                |                                                                                           |
+| `contains`                      | crashed              | throw new Error(                                                                          |
+| `allOf`                         | right                |                                                                                           |
+| `allOf (objects)`               | not measurable alone | needs open objects, which fails; was: crashed (stack trace)                               |
+| `anyOf`                         | right                |                                                                                           |
+| `oneOf`                         | right                |                                                                                           |
+| `not`                           | wrong                | "a": source says invalid, Castr says valid. Emitted `z.unknown()`                         |
+| `if / then / else`              | wrong                | 15: source says invalid, Castr says valid. Emitted `z.number()`                           |
+| `dependentSchemas`              | wrong                | {"a":"x","b":"y"}: source says invalid, Castr says valid. Emitted `z`                     |
 
 ### Unevaluated
 
-| Construct                      | Today   | What happened                                                                      |
-| ------------------------------ | ------- | ---------------------------------------------------------------------------------- |
-| `unevaluatedProperties: false` | wrong   | {"a":"x","b":1}: source says valid, Castr says invalid. Emitted `z.strictObject({` |
-| `unevaluatedItems: false`      | crashed | throw new Error(                                                                   |
+| Construct                      | Today                | What happened                                               |
+| ------------------------------ | -------------------- | ----------------------------------------------------------- |
+| `unevaluatedProperties: false` | not measurable alone | needs open objects, which fails; was: crashed (stack trace) |
+| `unevaluatedItems: false`      | crashed              | throw new Error(                                            |
 
 ### Core (references and identity)
 
@@ -176,8 +179,7 @@ every refusal is a stack trace.
 - **Silently too loose (the dangerous kind).** `const`, `not`, `if`/`then`/`else`,
   `dependentSchemas`, `uniqueItems`, `maxProperties`, `minProperties` and keywords beside a
   `$ref` all produce a validator that accepts values the source forbids.
-- **Too strict.** `prefixItems` without `items: false`, `unevaluatedProperties`,
-  `format: time` and `format: int64` reject values the source allows. `int64` is emitted as
+- **Too strict.** `prefixItems` without `items: false`, `format: time` and `format: int64` reject values the source allows. `int64` is emitted as
   a big integer, which no JSON number satisfies.
 - **Open objects crash.** Every object that admits unknown keys (`additionalProperties`
   true or a schema, `patternProperties`, `propertyNames`) ends in a stack trace.
@@ -336,6 +338,8 @@ const cases = [
     'validation',
     { type: 'array', contains: N, minContains: 2, maxContains: 3 },
     [[1, 2], [1], [1, 2, 3, 4]],
+    {},
+    'contains',
   ],
   [
     'allOf',
@@ -358,6 +362,8 @@ const cases = [
       ],
     },
     [{ a: 'x', b: 1 }, { a: 'x' }, { b: 1 }],
+    {},
+    'open objects',
   ],
   ['anyOf', 'applicator', { anyOf: [S, N] }, ['a', 1, true]],
   [
@@ -393,7 +399,7 @@ const cases = [
     'unevaluatedProperties: false',
     'unevaluated',
     {
-      allOf: [{ type: 'object', properties: { a: S } }],
+      allOf: [{ type: 'object', properties: { a: S }, additionalProperties: true }],
       properties: { b: N },
       unevaluatedProperties: false,
     },
@@ -401,6 +407,8 @@ const cases = [
       { a: 'x', b: 1 },
       { a: 'x', c: 1 },
     ],
+    {},
+    'open objects',
   ],
   [
     'unevaluatedItems: false',
@@ -450,8 +458,9 @@ const cases = [
   [
     '$anchor',
     'core',
-    { $defs: { n: { $anchor: 'num', type: 'number' } }, type: 'array', items: { $ref: '#num' } },
+    { type: 'array', items: { $ref: '#num' } },
     [[1], ['a']],
+    { U: { $anchor: 'num', type: 'number' } },
   ],
   [
     '$dynamicRef / $dynamicAnchor',
@@ -589,7 +598,7 @@ const cases = [
 ];
 const rows = [];
 let i = 0;
-for (const [name, vocab, schema, samples, extra = {}] of cases) {
+for (const [name, vocab, schema, samples, extra = {}, needs] of cases) {
   const id = `c${String(i++).padStart(2, '0')}`;
   const doc = {
     openapi: '3.1.0',
@@ -678,6 +687,13 @@ for (const [name, vocab, schema, samples, extra = {}] of cases) {
     detail: bad.length ? bad[0] : '',
     src: src.replace('export const T = ', '').slice(0, 80),
   });
+}
+for (const r of rows) {
+  const c = cases.find((k) => k[0] === r.name);
+  if (c[5] && r.verdict !== 'right') {
+    r.detail = `needs ${c[5]}, which fails; was: ${r.verdict}`;
+    r.verdict = 'not measurable alone';
+  }
 }
 writeFileSync('constructs/result.json', JSON.stringify(rows, null, 1));
 const tally = {};
