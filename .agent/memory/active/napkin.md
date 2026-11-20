@@ -182,6 +182,17 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
     rounds; `maxProperties`, `minProperties`, `readOnly`, `writeOnly`, the three `content`
     keywords, `$defs`, `$id`, `$schema` and `$comment` appear nowhere in the OpenAPI
     parser's source (a text search, so a floor).
+  - **Correction the same day, from adversarial review of the draft amendment.** "Zero
+    markers means zero gaps" overclaimed. A count with nothing run under it reads zero
+    over a kind whose row says carried and whose code crashes, and a unit can label unbuilt
+    work `UNEXPRESSIBLE` to keep the count at zero. So the check needs both halves: the
+    kinds computed from the published definitions, and one case per kind per pair that
+    must end in the class its row names, with `UNEXPRESSIBLE` allowed only where the row
+    says so. The "one case per kind" I told the owner to drop is that detector; what was
+    wrong in 0.7.0 was the hand-kept list beneath it. The review also showed the draft
+    cannot land before the tables (SPEC-N-5) and the meaning of "construct kind" exist:
+    until then its check is vacuous or red. A parser's refusals (invalid input, profile
+    exclusions, an unsupported version) fit neither rejection kind as §3 defines them.
   - **Right, by the specification's own proof.** SPEC-G-4 proves agreement "for every
     shape in a capability's corpus", and since 0.6.0 the corpus is one document, so a
     construct Oak does not use must be built (0.7.0) and need never be shown right. That
