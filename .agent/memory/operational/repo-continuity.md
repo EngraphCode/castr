@@ -128,7 +128,7 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    and the example documents must convert fully. That is stricter than the specification
    and needs an amendment. The
    [construct report](../../analysis-and-reports/constructs-2026-11-20.md) of 20 November is
-   a first list: 93 constructs, 56 right, 14 wrong, 20 crashed, 3 not measurable alone. The amendment is not yet
+   a first list: 94 constructs, 57 right, 14 wrong, 19 crashed, 4 not measurable alone; the wrong count is a floor. The amendment is not yet
    drafted. One more owner step
    lies ahead: before MOVE, the course's HOME todo changes section 10's "early in the
    course".
