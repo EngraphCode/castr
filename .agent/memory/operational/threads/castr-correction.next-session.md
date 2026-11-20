@@ -226,6 +226,33 @@ repository before acting.
     the reader's rejections and versions; numbers in JavaScript targets; the table
     vocabulary together with the tables.
 
+  - **PICTURE, state on `main` at 20 November 2026.** Two of its parts have landed, in
+    `lib/tests-picture/` (its README says what each file is):
+    - **The rows (#138).** Fourteen published definitions of JSON Schema 2020-12 and
+      OpenAPI 3.1 and 3.2, fetched from their publishers and pinned by SHA-256, and the
+      reading that computes keywords, `type` values, objects, fields, fixed values and
+      key patterns from them. The keywords OpenAPI adds to a schema (`discriminator`,
+      `xml`) are computed from the OpenAPI vocabulary files, so the two 3.2 rows owed
+      after #135 are rows.
+    - **The proposed outcomes (#140).** 317 rows across 3.1 and 3.2, each with a proposed
+      outcome for Zod, TypeScript and the endpoint definitions, in the six outcomes the
+      owner's nine decisions give. The join reports a computed row with no proposal and a
+      proposal with no row; the bars on the fifth class and on `read` are checked.
+      `pnpm picture` prints the tables and `pnpm test:picture` runs 89 tests.
+    - **Not yet built:** any case that runs Castr. No cell says what Castr does today.
+      That is the next part: one case per schema row, generated through Castr and judged
+      by an independent validator reading the same document, each cell right, refused,
+      wrong, missing or crashed; it lands asserting the cells that are right today. Then
+      the TypeScript and endpoint-definition columns, Oak's document as a row, and the
+      example documents.
+    - **Rows only text defines** (25 `format` values, six schema constructs) are
+      hand-listed and are the part most likely to be missing a row. The 3.0-only rows of
+      the report (`nullable`, `byte`, `binary`, boolean exclusive bounds) are not in the
+      picture, by the owner's decision that 3.1 and 3.2 are the versions to complete.
+    - **A fact that closes an owed case:** the installed Zod (4.6.7) counts a string's
+      length in characters, as JSON Schema does; a one-character limit accepts one astral
+      character. The owed case "astral characters in length limits" is about Castr's own
+      output only.
   - **Owner ruling, 20 November 2026, on this repository's practice documents.** Asked
     whether one line might be added to the command list in `principles.md`, the owner
     answered, verbatim: "Leave it alone, use the OCE Practice, we are here to fix Castr,
