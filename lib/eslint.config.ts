@@ -86,6 +86,7 @@ const testGlobs = [
   '**/__tests__/**',
   '**/tests-snapshot/**/*.ts',
   '**/tests-transforms/**/*.ts',
+  '**/tests-picture/**/*.ts',
   '**/characterisation/**/*.ts',
 ];
 

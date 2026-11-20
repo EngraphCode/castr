@@ -13,3 +13,6 @@ CHANGELOG.md
 # Cache
 .eslintcache
 
+# Pinned published definitions of the formats: the committed bytes are the pin.
+tests-picture/__fixtures__/definitions/*.json
+!tests-picture/__fixtures__/definitions/provenance.json

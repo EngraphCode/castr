@@ -98,3 +98,34 @@ recorded for them.
 - **Licence:** [Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).
   Contains public sector information licensed under the Open Government Licence v3.0.
   © Oak National Academy.
+
+## Published definitions of the formats
+
+- **Files:** the fourteen files pinned in `lib/tests-picture/__fixtures__/definitions/`,
+  unchanged from the bytes their publishers served on 20 November 2026. That directory's
+  `provenance.json` records each file's identifier, URL, fetch time and SHA-256, and
+  [the picture's README](../lib/tests-picture/README.md) says what reads them.
+
+### OpenAPI Initiative schemas
+
+- **Files:** the six whose names begin `oas-`: the OpenAPI 3.1 and 3.2 document schemas,
+  and the vocabulary and dialect each version adds to JSON Schema.
+- **Source:** the OpenAPI Initiative, served at <https://spec.openapis.org/oas/>, and
+  maintained in [OAI/OpenAPI-Specification](https://github.com/OAI/OpenAPI-Specification).
+- **Licence:** Apache License 2.0, the licence of that repository (its `LICENSE` at commit
+  `b9ab1c11c2a295ad7104488b10acdb3bb26828fe`). The licence text is in
+  [third-party-licences/Apache-2.0.txt](third-party-licences/Apache-2.0.txt).
+
+### JSON Schema meta-schemas
+
+- **Files:** the eight whose names begin `jsonschema-2020-12-`: the vocabulary
+  meta-schemas of JSON Schema Draft 2020-12.
+- **Source:** the JSON Schema Specification Authors, served at
+  <https://json-schema.org/draft/2020-12/meta/>, and maintained in
+  [json-schema-org/json-schema-spec](https://github.com/json-schema-org/json-schema-spec).
+  The source's notice reads "Copyright (c) 2022 JSON Schema Specification Authors".
+- **Licence:** that repository's `LICENSE` holds two licences, the 3-clause BSD licence and
+  the Academic Free License version 3.0. The whole file, copied at commit
+  `51326f80900357fe3069beb4f5f575db24c1b9a7`, is in
+  [third-party-licences/json-schema-spec-LICENSE.txt](third-party-licences/json-schema-spec-LICENSE.txt).
+  Castr reproduces these files under the 3-clause BSD licence.

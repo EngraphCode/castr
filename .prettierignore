@@ -8,6 +8,11 @@ tmp/
 lib/tests-transforms/__fixtures__/corpus/*.json
 !lib/tests-transforms/__fixtures__/corpus/provenance.json
 
+# Pinned published definitions of the formats: the committed bytes are the pin, and
+# the picture's own test recomputes their SHA-256 from those bytes.
+lib/tests-picture/__fixtures__/definitions/*.json
+!lib/tests-picture/__fixtures__/definitions/provenance.json
+
 # Dependencies
 node_modules
 .pnpm-store
