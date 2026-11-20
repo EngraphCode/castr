@@ -118,6 +118,8 @@ graph LR
 
 > **GOVERNING PRINCIPLE**: Feature support is defined by **input-output pairs**, and the constraints are primarily set by what the **output format** can represent. The IR is a format-independent superset.
 
+Where this file and [the specification](../../docs/SPECIFICATION.md) differ, the specification governs.
+
 ### The Model
 
 Castr transforms data between format pairs: `Input Format → IR → Output Format`. Each pair has its own compatibility surface:
@@ -151,8 +153,8 @@ Zod → TypeScript    (constrained by what TypeScript can express)
 
 Fail-fast is for **genuinely impossible** output mappings:
 
-- ✅ **Correct fail-fast**: `int64` semantics → JSON Schema has no native carrier → fail-fast with "JSON Schema cannot express int64 semantics"
-- ✅ **Correct fail-fast**: `patternProperties` → TypeScript → "genuinely impossible" — TypeScript has no regex-keyed index signatures; property names are static, not pattern-matched.
+- ✅ **Correct fail-fast**: a closed object composed with `allOf` → JSON Schema Draft-07 → that dialect has no keyword that closes an object across composition, so the writer gives a located rejection (specification, SPEC-P-1).
+- ❌ **Incorrect fail-fast**: `patternProperties` → TypeScript → "genuinely impossible". TypeScript cannot check a key against a pattern, but it can show an index signature, and the specification has a class, carried by companion, for a constraint a target cannot enforce while the same run's Zod output does. The table that classes each construct is not yet written (specification, SPEC-N-5), so the class for this one is not settled; a refusal is not the answer in the meantime.
 - ✅ **Correct semantic output**: `patternProperties` → Zod → `.refine()` with runtime regex validation — Zod CAN express this semantically.
 - ✅ **Correct semantic output**: `booleanSchema: true` → Zod → `z.any()` — the accept-everything schema maps to z.any().
 - ❌ **Incorrect fail-fast**: Any IR keyword → Zod → "unsupported" when `.refine()` could express the semantics. This is an implementation gap, not an impossibility.
@@ -180,7 +182,7 @@ Before any work, always ask:
 
 Every component must enforce the strictest possible validation:
 
-- **Objects**: Always strict — closed-world with explicit properties only (see [IDENTITY.md](../IDENTITY.md))
+- **Objects**: An object that states no policy for unknown keys is read as closed. An object that states one (open, constrained to a shape, or stripped) is carried as it states: all four policies are meanings, and a valid object is never refused for stating one (specification, SPEC-P-1)
 - **Types**: Never allow unknown types to pass silently - validate everything
 - **Schemas**: Require all constraints to match exactly, not loosely
 - **No Coercion**: Never use implicit type coercion (`z.coerce`) unless explicitly requested
