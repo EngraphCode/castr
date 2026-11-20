@@ -74,8 +74,9 @@ additional, valid field type to their spec". On every OpenAPI document in the li
 each valid construct is converted exactly, checked against an independent validator; a
 refusal is for an invalid document or an exclusion the owner approves. The library is the
 proof for constructs Oak's v1 document does not use yet. The rows the library adds to the
-course's PICTURE are where it shows. The specification's SPEC-PR-2 is looser and changes
-by an amendment drafted from the enumerated construct list.
+course's PICTURE are where it shows. Specification 0.7.0 (SPEC-PR-6) requires that nothing
+unbuilt is reachable from any valid document of the source format. That binds constructs,
+not these documents: the library is evidence for it and is still not a corpus.
 This plan still pins documents and adds no reader. Its OpenAPI tranches (EC-1, EC-2, EC-3
 and EC-6) come first; its JSON Schema tranches (EC-4, EC-5 and EC-7) wait for SPEC-C-2.
 

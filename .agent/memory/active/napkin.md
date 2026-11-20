@@ -151,6 +151,14 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   the first counts to the owner as findings before any review, and had to correct them
   three times; a first measurement is reported as provisional. Exit rule set at round four:
   further sampling refinements go to the command, not to more rounds on the report.
+- **Two cases owed to the repeatable command, from review of #132 and not yet run.**
+  A `date-time` with a numeric offset (`+05:00`): Castr emits `z.iso.datetime()`, which is
+  reported to reject offsets. `maxLength`/`minLength` on a string with an astral character
+  (an emoji): JSON Schema counts code points, the emitted `.min()`/`.max()` count UTF-16
+  units. Also owed: an `allOf` of two closed objects over a shared property, and checks
+  that non-validating keywords (annotations, `discriminator`, `xml`, `externalDocs`,
+  content keywords) are carried into the output; the reviewer reports that the parser
+  drops `discriminator`, `deprecated`, `readOnly` and `writeOnly` (not verified here).
 - **Process, for the fleet rule.** Two readers, default tier, read-only: 286k and 224k
   tokens (the estimate from the earlier legs was about 180k each, so the pair ran over the
   500k line that calls for a design review first; a third planned reader was dropped

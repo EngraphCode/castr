@@ -32,7 +32,7 @@ todos:
     status: completed
     depends_on: [RATIFY]
   - id: PICTURE
-    content: "One repeatable command that shows what Castr does, judged from outside Castr: documents down the side (Oak's latest v1 document, by the owner's ruling of 19 November 2026, then the example documents; the picture is a drawing of what Castr does and is not SPEC-C-1's acceptance proof), what a consumer takes across the top (types, validators, endpoint definitions, the run's report), and in each cell right, refused with a plain reason and its place, wrong, missing or crashed; the MEASURE probe of 18 November 2026 is its first drawing; it lands in the repository asserting the cells that are already right and grows with the code that makes more cells right, so nothing red is ever committed; it is what the owner asked for on 18 November 2026: what working, working well and correct look like"
+    content: "One repeatable command that shows what Castr does, judged from outside Castr: rows down the side (Oak's latest v1 document, by the owner's ruling of 19 November 2026, then one row for every construct kind a valid OpenAPI 3.1 schema may use, by specification 0.7.0, then the example documents; the picture is a drawing of what Castr does and is not SPEC-C-1's acceptance proof), what a consumer takes across the top (types, validators, endpoint definitions, the run's report), and in each cell right, refused with a plain reason and its place, wrong, missing or crashed; the MEASURE probe of 18 November 2026 is its first drawing; it lands in the repository asserting the cells that are already right and grows with the code that makes more cells right, so nothing red is ever committed; it is what the owner asked for on 18 November 2026: what working, working well and correct look like"
     status: pending
     depends_on: [MEASURE]
   - id: CORPUS
@@ -48,11 +48,11 @@ todos:
     status: pending
     depends_on: [CURRENCY, PROBE]
   - id: MOVE
-    content: Held by the owner's decisions of 18 November 2026 until SPEC-C-1's first acceptance part passes in this repository on Oak's latest v1 document and the example library's standard holds on its OpenAPI documents (see Order of the legs); section 10 of the specification says 'early in the course' until HOME amends it. Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces and is fully integrated there (owner, 2 November 2026); what travels is the code, made correct here (the reflection, 18 November 2026); the specification travels as the only description of the destination, and its SPEC-CC-3 check is given a home in OCE; the approval record covers the specification's exact bytes, so if its arrival in OCE changes any byte above its change log (OCE's formatter or markdownlint), the move carries a format-only amendment approved in words (SPEC-CC-1); this repository is archived
+    content: Held by the owner's decisions of 18 November 2026 until SPEC-C-1's first acceptance part passes in this repository on Oak's latest v1 document, no construct of the source format is unbuilt (SPEC-PR-6, specification 0.7.0), and the example library's standard holds on its OpenAPI documents (see Order of the legs); section 10 of the specification says 'early in the course' until HOME amends it. Castr moves into the Engraph Open Curriculum Ecosystem repository as workspaces and is fully integrated there (owner, 2 November 2026); what travels is the code, made correct here (the reflection, 18 November 2026); the specification travels as the only description of the destination, and its SPEC-CC-3 check is given a home in OCE; the approval record covers the specification's exact bytes, so if its arrival in OCE changes any byte above its change log (OCE's formatter or markdownlint), the move carries a format-only amendment approved in words (SPEC-CC-1); this repository is archived
     status: pending
     depends_on: [RULES, PLOT, HOME]
   - id: PLOT
-    content: The legs to SPEC-C-1's first acceptance part are written into this plan from the MEASURE table and the model design (SPEC-N-1), each with an observable exit state, and reviewed by assumptions-expert; they run in this repository, before MOVE (owner's decision card, 18 November 2026), and they include the proof of SPEC-G-4 on Oak's latest v1 document as a check of Castr's own, the reader that holds the example library to its standard, and checks derived from what the consuming workspaces expect
+    content: The legs to SPEC-C-1's first acceptance part are written into this plan from the MEASURE table and the model design (SPEC-N-1), each with an observable exit state, and reviewed by assumptions-expert; they run in this repository, before MOVE (owner's decision card, 18 November 2026), and they include the proof of SPEC-G-4 on Oak's latest v1 document as a check of Castr's own, the check of SPEC-PR-6 that runs one case for every construct kind, the reader that holds the example library to its standard, and checks derived from what the consuming workspaces expect
     status: pending
     depends_on: [PICTURE, CORPUS]
 ---
@@ -125,8 +125,10 @@ by decision card. Each answer below is the option the owner chose, in the card's
   checked against an independent validator. A refusal, in plain words with its place, is
   for an invalid document or an exclusion the owner approves. This replaces the card of
   18 November, which allowed a located refusal of any construct.
-  Full support stays required only for Oak's v1 document, so SPEC-C-1 stays finite. The
-  library's JSON Schema documents wait for SPEC-C-2.
+  By specification 0.7.0 (SPEC-PR-6) the boundary of support is the source format: nothing
+  unbuilt is reachable from any valid OpenAPI document. Oak's v1 document stays SPEC-C-1's
+  corpus, the proof that Castr works for Oak today. The library's JSON Schema documents
+  wait for SPEC-C-2.
 
 What travels is therefore the code, made correct here. The order is now ALERTS, RATIFY,
 MEASURE and the reflection (all done but ALERTS's standing check), CORPUS, PICTURE, PLOT, the legs
@@ -134,8 +136,10 @@ PLOT writes, HOME, MOVE; CURRENCY and RULES still precede MOVE, and PLOT places 
 legs. Three things follow that the seat wrote and the owner can strike:
 
 - The owner's sentence names v1, and on 19 November 2026 the owner ruled, verbatim: "Drop
-  v0, latest v1 only". The work is scoped to Oak's v1 document at its latest published
-  version; specification 0.6.0, approved on 20 November 2026, makes it SPEC-C-1's corpus.
+  v0, latest v1 only". Specification 0.6.0, approved on 20 November 2026, makes Oak's v1
+  document at its latest published version SPEC-C-1's corpus. The corpus is not the scope
+  of the work: by specification 0.7.0 the work covers every valid construct of the source
+  format (SPEC-PR-6).
 - The card on the move named the Oak documents, and the owner's sentence names the example
   documents beside them, so the library's standard is read as part of the state reached
   before MOVE.
@@ -162,8 +166,8 @@ place, wrong, missing or crashed. The MEASURE table is its first drawing.
 - **Working** is every Oak cell right, with the consuming repository's own generation step
   then building on the result, its generator packages removed and nothing rewritten
   afterwards.
-- **Working well** is every valid construct on every other document converted and right,
-  no crash, a second run changing nothing, and an invalid document refused in plain words
+- **Working well** is every valid construct of the format converted and right, on its own
+  row and on every other document, no crash, a second run changing nothing, and an invalid document refused in plain words
   with its place.
 - **Correct** is the decision an independent validator makes reading the document itself,
   and code built as §9 requires, which the picture cannot show.
