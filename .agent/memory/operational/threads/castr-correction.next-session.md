@@ -158,9 +158,55 @@ repository before acting.
     6. Versions that must be complete before OpenAPI to Zod and TypeScript is done: "3.1
        and 3.2". 3.0 follows later. So every 3.2 row in the report's section F needs a
        class, and the Read column's 3.0.x needs words for what it means until then.
-       Next: draft the amendment that carries these six, read against every clause on the
-       same promises and attacked by review before the owner is asked for words; then the
-       PICTURE command, whose cells use the five classes.
+
+    A draft amendment carrying all six in nine changes was written the same day and one
+    adversarial review broke it before the owner saw it; it is withdrawn. What the
+    redraft must hold, from that review:
+    - A rule quantified over a hand list reopens the 0.7.0 loophole. "A `format` value
+      the table does not list is an annotation" lets a missing row weaken silently. The
+      rule is: a value no specification of the source format defines is an annotation; a
+      defined value with no row or no checker is `NOT-YET-BUILT`; a construct met in a
+      valid document with no row is `NOT-YET-BUILT`.
+    - A case may end in `NOT-YET-BUILT` naming its row, or the check is red by design.
+    - "Ends as its class defines" needs an ending per class, and a case must state its
+      construct so that deleting it changes a decision or an annotation. Carried as
+      structure and outside the target each need a proof that the value is held.
+    - The fifth class's bar is the decided, mechanical one, extended to boundary slots
+      and to naming. `xml` and `xml.nodeType` are said about a shape and are reclassed as
+      carried as structure. The four rows the parser spends (`openapi`,
+      `jsonSchemaDialect`, `$schema`, `$vocabulary`) are computed kinds with no class;
+      the owner has not decided them.
+    - `NOT-READ`: validity is decided by a conforming validator independent of Castr's
+      parser; the subset and value-domain cases arise only from a Zod source; a valid
+      OpenAPI or JSON Schema document at a listed version never receives it; its cases
+      sit in a numbered clause.
+    - The published definitions are named and pinned, with an extraction rule and a list
+      of corrections (`link.body` is `server`). Zod has none; Appendix A is its row
+      source.
+    - Integers: the true statement is that integers outside the safe range collide and a
+      JSON parser returns the nearest; a non-integer that a double cannot hold is rounded
+      before any validator sees it and cannot be refused, which the owner has not
+      decided; a source bound, `const` or `enum` member beyond the range is documentation
+      and never a number; a Zod reader reads a Zod integer as unbounded, a stated profile
+      reading; "an integer" is every schema whose `type` admits `integer`.
+    - The mark holds the construct and its arguments as data, and a marked function that
+      is not the one Castr emits is refused. Section 11's "executable Zod refinements"
+      needs its exception. No marked-check row can be built before SPEC-N-3 states the
+      mark.
+    - A 3.0.x document is refused before any construct is read, with one rejection
+      naming a numbered later capability; section 6 and SPEC-PR-6's "granularity" need
+      words.
+    - Serialisation rows are outside the target for Zod and TypeScript, and SPEC-C-1's
+      first acceptance part requires them proved. The endpoint definitions have no table,
+      so they are proved only on the corpus document. The owner has not decided this.
+    - The rules bind nothing while SPEC-N-5 is unwritten, so the vocabulary lands with the
+      tables, not before them.
+
+    Next: the PICTURE command, whose cells use the five classes as proposals and whose
+    cases show which rows hold. The amendment follows it, in parts small enough to close:
+    the reader's rejections and versions; numbers in JavaScript targets; the table
+    vocabulary together with the tables.
+
   - **For the owner, said and not yet answered:** `principles.md` contradicts itself
     (its four rules against "objects are always closed" and against `patternProperties`
     to TypeScript as a correct refusal) and needs the owner's approval to edit. The
