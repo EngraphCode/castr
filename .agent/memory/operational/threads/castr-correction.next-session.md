@@ -11,20 +11,14 @@ repository before acting.
   the branch's pull request was not opened on 2 November; it is opened on 18 November.
   #119 cured the two `@hono/node-server` alerts of 13 November (`SHA:d3077124`), with the
   floor at 2.1.7 because upstream's 2.1.7 release closes GHSA-fj57-4f93-cfw6, which 2.1.6
-  leaves open. Dependabot then raised a high alert on picomatch (GHSA-fc5q-39xc-vjpf) for
-  every release up to 4.0.7, the latest; no patched release exists, so `main` has one open
-  alert and SPEC-G-1 holds every other merge. The served Oak documents have moved since
+  leaves open. The served Oak documents have moved since
   the 25 September pins: v1 is `info.version` 1.1.1, and v0 has new bytes under the same
   0.11.2. Neither the pins nor the served documents contain any `allOf`, so the eight
   `allOf` sites the review record measured on 21 September are in no document Castr holds.
 - **Specification 0.5.2, approved on 18 November 2026, verbatim "I approve version 0.5.2":**
-  SPEC-G-1 now says an open alert holds merges unless the clause names it, and names
-  GHSA-fc5q-39xc-vjpf (picomatch). The owner first asked whether picomatch is used, whether
-  the function is needed and whether it can be done another way; the trace found the
-  product loads it and never calls it, the gate tools all depend on it, and upstream's
-  maintainers had not responded in a month. One adversarial review reshaped the wording
-  from a test an agent applies to a list the owner approves. The alert is never dismissed.
-  A future alert with no patched version needs its own amendment, after the same trace.
+  SPEC-G-1 says an open alert holds merges unless the clause names it. An alert with no
+  patched version needs a trace (is the code used, is the function needed, can it be done
+  another way) and its own amendment. An alert is never dismissed.
 - **MEASURE ran on 18 November 2026:**
   [its table](../../../analysis-and-reports/measure-2026-11-18.md) scores today's generator
   on the documents served that day, one operation at a time, against Ajv on the source
@@ -95,13 +89,6 @@ repository before acting.
   was re-read from the source repositories that day. The fetch script and its dependency
   are gone: a newer copy of an example is a new pin recorded in the notices file. The
   plan is in `active/` and continues at EC-1.
-- **picomatch on 18 November 2026 at 17:43 UTC.** The GitHub Advisory Database withdrew
-  GHSA-fc5q-39xc-vjpf at 15:38 UTC that day; the maintainer calls the report "not a
-  vulnerability"; upstream issues #234 and #247 are open and no release follows 4.0.7. Alert
-  122 was still open. The owner asked for a daily check: read the alert's state, the
-  advisory and the latest release at session open and at every merge (the session's cron
-  job does not outlive the session). If GitHub closes the alert, SPEC-G-1 still names it and
-  removing the name is an amendment the owner approves; the alert is never dismissed.
 - **The matrix pass of 18 November 2026.** The owner had the items left open by that day's
   work run through OCE's decision matrix. Three survived, all the owner's: what travels (the
   reflection), whether this public repository gets a licence file, and whether the
