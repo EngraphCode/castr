@@ -44,7 +44,7 @@ export const KEYWORD_PROPOSALS: ReadonlyMap<string, Coded> = new Map<string, Cod
   ['exclusiveMaximum', ['C', 'K', 'K', '']],
   ['minimum', ['C', 'K', 'K', '']],
   ['exclusiveMinimum', ['C', 'K', 'K', '']],
-  ['maxLength', ['C', 'K', 'K', 'JSON Schema counts characters; Zod counts UTF-16 units.']],
+  ['maxLength', ['C', 'K', 'K', 'Both count characters, not UTF-16 units.']],
   ['minLength', ['C', 'K', 'K', 'As `maxLength`.']],
   ['pattern', ['C', 'K', 'K', 'Both are ECMA-262 expressions.']],
   ['maxItems', ['C', 'K', 'K', '']],
