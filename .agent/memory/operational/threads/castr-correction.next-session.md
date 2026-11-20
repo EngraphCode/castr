@@ -155,8 +155,13 @@ repository before acting.
   - **Index of homes.** Decisions and the owner's words: this record and the course's
     "Order of the legs". Mistakes, tool notes and owed cases: the napkin's entries of 19
     and 20 November. Measurements: `.agent/analysis-and-reports/measure-2026-11-18.md`
-    and `constructs-2026-11-20.md`. Provenance: `docs/THIRD_PARTY_NOTICES.md`. Private
-    owner rulings stay in the seat's per-user memory, outside version control.
+    and `constructs-2026-11-20.md`. Provenance: `docs/THIRD_PARTY_NOTICES.md`. The seat's
+    per-user memory holds no ruling made for Castr; every Castr ruling is in this record
+    or the course. It holds standing rulings from the owner's other estate, and those
+    that bind work here are: a question for the owner goes through a question prompt; a
+    reviewing agent's finding is information to test, never authority; a clean, green
+    pull request is merged without asking; a review is requested only when none has
+    arrived or the area is sensitive; history is merged, never rebased.
   - **Fixed point.** A further pass re-finds only the promises and inferences listed
     here; the recursion closes. Deep consolidation is not run, by the owner's ruling of
     1 November 2026 (recorded in the continuity file).
