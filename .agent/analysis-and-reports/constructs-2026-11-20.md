@@ -24,10 +24,13 @@ own additions) against today's generator. It decides nothing.
   `idn-hostname`, `iri` and `iri-reference` are not tried. A case added later changes the
   counts.
 - **A few samples per construct,** so "right" means no disagreement was found, not proof.
+  Review of this report moved several rows from right to wrong by adding one sample, so
+  the wrong count is a floor. The repeatable command that follows this probe samples each
+  construct far more widely and replaces these counts.
 - **One construct at a time.** Each case uses only constructs measured right elsewhere in
-  this report beside the one it names. Three constructs cannot be built that way
-  (`minContains` needs `contains`; `unevaluatedProperties` and an `allOf` of objects need
-  open objects); they are marked **not measurable alone** and are not counted as wrong or
+  this report beside the one it names. Four cases cannot be built that way
+  (`minContains` needs `contains`; `unevaluatedProperties`, an `allOf` of objects and the
+  property counts on an open object need open objects); they are marked **not measurable alone** and are not counted as wrong or
   crashed. Combinations are not tried.
 - **Validators only.** The TypeScript types and the endpoint definitions were not judged.
   Annotation rows show that the keyword does not break validation; whether the annotation
@@ -37,7 +40,7 @@ own additions) against today's generator. It decides nothing.
 
 ## Result
 
-93 constructs: 56 right, 14 wrong, 20 crashed, and 3 that cannot be measured alone because
+94 constructs: 57 right, 14 wrong, 19 crashed, and 4 that cannot be measured alone because
 they need a construct that fails. No construct was refused in plain words: every refusal is
 a stack trace.
 
@@ -72,7 +75,7 @@ a stack trace.
 | `uniqueItems`                                     | wrong                | [1,1]: source says invalid, Castr says valid. Emitted `z.array(z.unknown())`     |
 | `maxProperties`                                   | wrong                | {"a":1,"b":2}: source says invalid, Castr says valid. Emitted `z.strictObject({` |
 | `minProperties`                                   | wrong                | {}: source says invalid, Castr says valid. Emitted `z.strictObject({`            |
-| `maxProperties / minProperties on an open object` | crashed              | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));         |
+| `maxProperties / minProperties on an open object` | not measurable alone | needs open objects, which fails; was: crashed (stack trace)                      |
 | `required`                                        | right                |                                                                                  |
 | `dependentRequired`                               | right                |                                                                                  |
 | `minContains / maxContains`                       | not measurable alone | needs contains, which fails; was: crashed (stack trace)                          |
@@ -172,7 +175,8 @@ a stack trace.
 | ---------------------------- | ----- | ------------- |
 | `discriminator`              | right |               |
 | `discriminator with mapping` | right |               |
-| `externalDocs / xml`         | right |               |
+| `externalDocs`               | right |               |
+| `xml (on a property)`        | right |               |
 
 ## Reading the gaps
 
@@ -281,6 +285,8 @@ const cases = [
     'validation',
     { type: 'object', additionalProperties: true, minProperties: 1, maxProperties: 2 },
     [{ a: 1 }, {}, { a: 1, b: 2, c: 3 }],
+    {},
+    'open objects',
   ],
   ['required', 'validation', O({ a: S }, { required: ['a'] }), [{ a: 'x' }, {}]],
   [
@@ -580,19 +586,23 @@ const cases = [
   [
     '$id with a $ref resolved against it',
     'core',
-    {
-      $id: 'https://example.com/schemas/t',
-      $defs: { n: { $id: 'n', type: 'number' } },
-      type: 'array',
-      items: { $ref: 'n' },
-    },
-    [[1], ['a']],
+    O(
+      { n: { $id: 'n', type: 'number' }, list: { type: 'array', items: { $ref: 'n' } } },
+      { $id: 'https://example.com/schemas/t' },
+    ),
+    [{ list: [1] }, { list: ['a'] }],
   ],
   [
-    'externalDocs / xml',
+    'externalDocs',
     'openapi',
-    { type: 'string', externalDocs: { url: 'https://example.com' }, xml: { name: 't' } },
+    { type: 'string', externalDocs: { url: 'https://example.com' } },
     ['a', 1],
+  ],
+  [
+    'xml (on a property)',
+    'openapi',
+    O({ a: { type: 'string', xml: { name: 'x', attribute: true } } }),
+    [{ a: 'x' }, { a: 1 }],
   ],
 ];
 const rows = [];
