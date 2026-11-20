@@ -159,6 +159,82 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   that non-validating keywords (annotations, `discriminator`, `xml`, `externalDocs`,
   content keywords) are carried into the output; the reviewer reports that the parser
   drops `discriminator`, `deprecated`, `readOnly` and `writeOnly` (not verified here).
+- **20 November, the owner asked for the right answers to two points I had passed on as
+  "could be strengthened" and "the working reading".** Worked with metacognition, concept
+  exploration and reason, against `principles.md` and the specification's own clauses.
+  - **What I had inherited without ratifying.** The reviewer's frame (a check that samples
+    too little needs more samples) and the shape of the old check sentence, which I
+    extended in 0.7.0 by analogy with my probe ("one case for every construct kind"). I
+    never asked what kind of claim SPEC-PR-6 makes. It is a universal over every valid
+    document; a check that runs cases can only ever be evidence for it.
+  - **Two properties I had conflated.** Complete (nothing unbuilt) is a fact about the
+    code's structure and can be shown for every document at once. Right (each built thing
+    decides as the source does) is a fact about behaviour and is only ever evidenced.
+  - **Complete, by structure.** Every refusal is a typed value of one of the two kinds; no
+    unit has a default branch, a silent skip or an unstructured throw (SPEC-AR-5 says this
+    of writers only; SPEC-PR-2 forbids the silent form everywhere); the construct kinds
+    are computed from each format's published definition, never listed by hand. Then the
+    count of `NOT-YET-BUILT` sites is the whole record, and zero means zero for every
+    document, combinations included. First-hand on 20 November: product code holds no
+    `NOT-YET-BUILT` or `UNEXPRESSIBLE` marker at all, so that count reads zero today
+    while the probe found 33 constructs wrong or crashing. The published 2020-12
+    vocabularies hold 57 keywords; my hand list reached 56 of them only after five review
+    rounds; `maxProperties`, `minProperties`, `readOnly`, `writeOnly`, the three `content`
+    keywords, `$defs`, `$id`, `$schema` and `$comment` appear nowhere in the OpenAPI
+    parser's source (a text search, so a floor).
+  - **Correction the same day, from adversarial review of the draft amendment.** "Zero
+    markers means zero gaps" overclaimed. A count with nothing run under it reads zero
+    over a kind whose row says carried and whose code crashes, and a unit can label unbuilt
+    work `UNEXPRESSIBLE` to keep the count at zero. So the check needs both halves: the
+    kinds computed from the published definitions, and one case per kind per pair that
+    must end in the class its row names, with `UNEXPRESSIBLE` allowed only where the row
+    says so. The "one case per kind" I told the owner to drop is that detector; what was
+    wrong in 0.7.0 was the hand-kept list beneath it. The review also showed the draft
+    cannot land before the tables (SPEC-N-5) and the meaning of "construct kind" exist:
+    until then its check is vacuous or red. A parser's refusals (invalid input, profile
+    exclusions, an unsupported version) fit neither rejection kind as §3 defines them.
+  - **Right, by the specification's own proof.** SPEC-G-4 proves agreement "for every
+    shape in a capability's corpus", and since 0.6.0 the corpus is one document, so a
+    construct Oak does not use must be built (0.7.0) and need never be shown right. That
+    hole is larger than the one the reviewer named. SPEC-G-5 already defines an adequate
+    sample (a value that decides differently with and without each constraint, boundary
+    values, and deleting any constraint flips a decision); my probe ignored it, which is
+    why each review round moved a row. The "one case per construct kind" belongs in
+    SPEC-G-4, not SPEC-PR-6.
+  - **Generators.** SPEC-PR-6 ends "Capability granularity is the directed pair", and
+    `principles.md` says support is defined by input-output pairs. The definition of an
+    advertised capability says "a directed format pair or generator", which gives a
+    generator no input side. A capability is a pair: a format read, and a format written
+    or an artefact generated. Totality belongs to each unit over its own input (a parser
+    over documents, a writer or generator over the model); completeness belongs to the
+    pair.
+  - **The loop signal I misread.** Five review rounds on #132 that each moved a row by one
+    sample were a dynamics signal that the instrument did not fit the claim. I set an exit
+    rule and merged. The shared cause was hand-written cases and samples standing in for
+    a computed list and for SPEC-G-5.
+  - **Read before drafting an amendment.** 0.7.0 was drafted from the owner's sentence and
+    my probe. `principles.md` (the four rules of the input-output pair model) already
+    stated the owner's standard, and SPEC-AR-2, SPEC-AR-5, SPEC-G-5 and SPEC-G-7 already
+    held most of the answer. An amendment is drafted against every clause that touches the
+    same promise, and reviewed adversarially before the owner is asked for words.
+  - **Contradictions inside `principles.md`, which needs the owner's approval to edit.**
+    Its four rules say every valid input feature must parse and that failing fast is only
+    for the impossible. The same file says objects are always closed (the cause of the
+    largest block of crashes) and gives `patternProperties` to TypeScript as a correct
+    refusal, where the specification's "carried by companion" class applies.
+- **Wrap, 20 November. What this session taught, in three lines.** Twice I asked the
+  owner for words on an amendment I had not first read against the document's own clauses
+  or had attacked (0.7.0, then the 0.8.0 draft that review stopped). I reported first
+  measurements and first analyses as findings and corrected each within the hour. The
+  owner's shortest messages ("Drop v0, latest v1 only"; the no-rework sentence) moved the
+  work furthest, and each came from a plain statement of facts, never from a card.
+  "A capability is always a pair" and "no unit skips silently" in the entry above are the
+  seat's position and a proof obligation, not established facts: review of #134 disputes
+  the first and product code contradicts the second today. "The one case per construct
+  kind belongs in SPEC-G-4, not SPEC-PR-6" is withdrawn: SPEC-G-4 proves agreement on
+  values over a corpus, and one case per kind is a coverage check over the format's
+  constructs. They are two obligations and each keeps its own clause; what SPEC-G-4 needs
+  is a reach beyond the one-document corpus.
 - **Process, for the fleet rule.** Two readers, default tier, read-only: 286k and 224k
   tokens (the estimate from the earlier legs was about 180k each, so the pair ran over the
   500k line that calls for a design review first; a third planned reader was dropped

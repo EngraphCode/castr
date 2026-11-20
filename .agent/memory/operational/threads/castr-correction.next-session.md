@@ -83,6 +83,88 @@ repository before acting.
   and the required check runs one case for every construct kind the scope-and-fidelity
   table lists. Something the target cannot express stays a located rejection and is
   listed in that table, which the owner approves.
+- **STATE AT THE PAUSE, 20 November 2026 (owner asked the seat to stop and wrap).**
+  - `main` is at specification 0.7.0 (#133). Merged on 19 and 20 November: #129 to #133.
+    No dependency alert is open; the daily picomatch check is deleted at the owner's word.
+  - **Pull request #134 is open and not merged** (branch
+    `chore/continuity-check-and-generators`, napkin and this record only). Its last commit
+    is local and not pushed. Three review threads are open on it. Dispositions the seat
+    reached and has not yet posted: (1) Codex says a generator should stay a capability
+    of its own, total over the model, and not be recast as a pair; this is a real
+    counter-position to the seat's "a capability is always a pair" and is NOT settled:
+    take it to the next amendment draft as an open design point, do not resolve it by
+    assertion. (2) Copilot says the napkin states "no silent skip" as if established while
+    product code has default branches that return `undefined` or emit `unknown`
+    (`writers/typescript/type-writer/core.ts`) and hand-kept construct lists; taken, the
+    entry states a proof obligation, not a fact. (3) Copilot says "one case per construct
+    kind" should stay a requirement of its own and not move into SPEC-G-4; taken, it
+    matches the adversarial review.
+  - **Draft amendment 0.8.0 is withdrawn before the owner saw its text.** An adversarial
+    review (20 November) found it weaker than 0.7.0 as drafted. What survives: the proof
+    in SPEC-G-4 must reach beyond the one-document corpus; the check needs both a
+    construct list computed from each format's published definition and one case per kind
+    per pair that must end in the class its row names; `UNEXPRESSIBLE` is allowed only
+    where a row says so; a parser's refusals (invalid input, an unsupported version, a
+    profile exclusion) need a rejection kind of their own; unknown keywords, `x-`
+    extensions and unlisted `format` values need explicit rows; SPEC-C-1's acceptance
+    words change with SPEC-G-4. No amendment is before the owner.
+  - **Next work, in the course's order (PICTURE, then PLOT).** PICTURE is next, and its
+    first part is its row list: compute the construct kinds of OpenAPI 3.1 from its
+    published definition (the 57 keywords of the 2020-12 vocabularies shipped with Ajv,
+    plus OpenAPI's own fields), propose each row's class for the pairs of SPEC-C-1, and
+    bring that list to the owner. The PICTURE command is that list made executable. The
+    list is a proposal in a report; writing it into the specification as the
+    scope-and-fidelity table (SPEC-N-5) is an amendment, and PLOT sequences it, as the
+    course says. Any amendment is drafted against the list and reviewed adversarially
+    before the owner is asked for words.
+  - **For the owner, said and not yet answered:** `principles.md` contradicts itself
+    (its four rules against "objects are always closed" and against `patternProperties`
+    to TypeScript as a correct refusal) and needs the owner's approval to edit. The
+    owner's three facts of 19 November (most code not yet written; the consumer uses v0;
+    a correct Castr is stricter than today's validators) were given and drew the v1-only
+    ruling; where the new code is written was not revisited.
+  - **Scratch files are volatile.** The construct probe is preserved in the appendix of
+    `.agent/analysis-and-reports/constructs-2026-11-20.md`. The withdrawn draft and the
+    commit helper live only in the session scratchpad; the helper's two tricks are in the
+    napkin (the `diff.renames` setting for moves; staging removals by name first).
+- **WRAP, 20 November 2026: what the loss scan found beyond the state above.**
+  - **Promises the seat made, each forwarded here.** Answer and resolve #134's three
+    threads. Rehearse the consumer's generation step against a Castr build with no file
+    moved (said on 19 November, never run). Run the cases owed to the command (offset
+    date-times, astral characters in length limits, a closed-object `allOf` over a shared
+    property, whether non-validating keywords are carried). Bring the owner the exact
+    before and after of any amendment only after adversarial review. Say to the owner
+    when a first measurement is provisional.
+  - **Inference, not observation.** Why GitHub closed alert 122 (the seat's reading: the
+    lockfile change in #130 made it re-read a withdrawn advisory). That the parser drops
+    `discriminator`, `deprecated`, `readOnly` and `writeOnly` (a reviewer's report plus a
+    text search that finds no mention of the last two; not traced). That Oak's toolchain
+    bounds which constructs it can emit (an idea for ordering the rows, never checked).
+    The consumer-side reader's count of 18 rewrites and their classes (a subagent's
+    report; two of its facts were verified, the rest were not).
+  - **What the scan cannot see.** The session was compacted once; anything from before
+    18 November that the summary dropped is not in this record unless the napkin holds
+    it. The two subagents' contexts are gone; only their reports survive, quoted in the
+    napkin. Review bots read diffs, not the whole tree.
+  - **Where outside eyes caught what the seat missed (point scrutiny here).** Every
+    amendment draft (0.6.0 draft of 19 November, 0.7.0, 0.8.0) had a loophole of one
+    shape: a check quantified over a list nothing forces to be complete. Every first
+    measurement moved under review. Plan and record edits left a stale sentence elsewhere
+    in the same file on most pull requests: after changing a scope or a count, search the
+    whole estate for the old wording before pushing.
+  - **Index of homes.** Decisions and the owner's words: this record and the course's
+    "Order of the legs". Mistakes, tool notes and owed cases: the napkin's entries of 19
+    and 20 November. Measurements: `.agent/analysis-and-reports/measure-2026-11-18.md`
+    and `constructs-2026-11-20.md`. Provenance: `docs/THIRD_PARTY_NOTICES.md`. The seat's
+    per-user memory holds no ruling made for Castr; every Castr ruling is in this record
+    or the course. It holds standing rulings from the owner's other estate, and those
+    that bind work here are: a question for the owner goes through a question prompt; a
+    reviewing agent's finding is information to test, never authority; a clean, green
+    pull request is merged without asking; a review is requested only when none has
+    arrived or the area is sensitive; history is merged, never rebased.
+  - **Fixed point.** A further pass re-finds only the promises and inferences listed
+    here; the recursion closes. Deep consolidation is not run, by the owner's ruling of
+    1 November 2026 (recorded in the continuity file).
 - **Next work: PICTURE (the course's todo).** One repeatable command that shows what Castr
   does on each document, judged from outside Castr; the MEASURE probe is its first drawing.
   It is the owner's "what working looks like". No approval is waiting on the owner today; one lies ahead, named next. The
