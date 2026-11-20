@@ -143,6 +143,14 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   "never wrong, never crashes" card of 18 November was a cheap option I recommended.
 - **Tool note.** The specification's hash covers the text above the change-log heading,
   and the phrase "## Change log" also appears inside SPEC-CC-2, so cut at the heading line.
+- **20 November, the construct probe and its review loop.** Four review rounds on a
+  throwaway probe each moved the counts by one or two: cases built on a construct that
+  already fails, and cases sampled too thinly to show a defect. Two rules for the
+  repeatable command: a case uses only scaffolding already measured right, and each
+  construct is sampled at its edges (empty, shorter, longer, boundary). I also reported
+  the first counts to the owner as findings before any review, and had to correct them
+  three times; a first measurement is reported as provisional. Exit rule set at round four:
+  further sampling refinements go to the command, not to more rounds on the report.
 - **Process, for the fleet rule.** Two readers, default tier, read-only: 286k and 224k
   tokens (the estimate from the earlier legs was about 180k each, so the pair ran over the
   500k line that calls for a design review first; a third planned reader was dropped

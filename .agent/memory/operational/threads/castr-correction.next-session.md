@@ -75,11 +75,14 @@ repository before acting.
   construct. Read by the seat as: Castr supports the format; a valid construct is
   converted, never refused; refusal is for invalid documents and exclusions the owner
   approves; the example documents are the proof for constructs Oak does not use yet. Next:
-  enumerate what OpenAPI 3.1 and its JSON Schema dialect allow in a schema, mark today's
-  gaps, and bring the owner that list with a draft amendment.
+  a first enumeration ran on 20 November
+  ([its report](../../../analysis-and-reports/constructs-2026-11-20.md)): of 94 constructs,
+  44 right, 14 wrong, 19 crashed, 4 not measurable alone and 13 not judged, none refused in plain words. Pending, in order: the
+  seat drafts the amendment that makes "every valid construct converts" the requirement
+  (not yet written), then the owner approves it in words naming the version.
 - **Next work: PICTURE (the course's todo).** One repeatable command that shows what Castr
   does on each document, judged from outside Castr; the MEASURE probe is its first drawing.
-  It is the owner's "what working looks like". No owner interaction is pending. The
+  It is the owner's "what working looks like". One owner interaction lies ahead, the approval of that amendment once it is drafted. The
   specification needs one phrase changed (§10, "early in the course"), by an approved
   amendment before MOVE (the course's HOME todo). Put to the owner on 19 November as a fact they did not
   have: about 26,500 of 35,655 product lines are the model or written against its shape, so
