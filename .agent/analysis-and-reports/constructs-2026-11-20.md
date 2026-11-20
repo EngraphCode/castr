@@ -1,9 +1,9 @@
 # Construct coverage: what a schema may say, and what today's Castr does with it, 20 November 2026
 
 The owner, 20 November 2026: "What I want is to not have to rework Castr if Oak adds an
-additional, valid field type to their spec". This report lists what OpenAPI 3.1 allows in a
-schema (the JSON Schema 2020-12 vocabularies, the formats, and OpenAPI's own additions) and
-shows what today's generator does with each. It decides nothing.
+additional, valid field type to their spec". This report tries the keywords OpenAPI 3.1
+allows in a schema (the JSON Schema 2020-12 vocabularies, the common formats, and OpenAPI's
+own additions) against today's generator. It decides nothing.
 
 ## What ran
 
@@ -16,52 +16,63 @@ shows what today's generator does with each. It decides nothing.
   schema and decided each sample value. A cell is **right** when Castr's validator and Ajv
   agree on every sample, **wrong** when they disagree on one, and **crashed** when the
   generator exited with a stack trace.
-- **Limits:** a few samples per construct, so "right" means no disagreement was found, not
-  proof. Constructs were tried one at a time, not in combination. Only the validator was
-  judged: the TypeScript types and the endpoint definitions were not. Annotation rows show
-  that the keyword does not break validation; whether the annotation is carried into the
-  output was not checked. Objects state their unknown-key policy so that SPEC-P-1's reading
-  of an unstated policy does not enter.
+
+## Limits
+
+- **It is a first list, not the whole surface.** `$vocabulary` is left out because it has
+  meaning only in a meta-schema. Formats are the ones `ajv-formats` can judge; `idn-email`,
+  `idn-hostname`, `iri` and `iri-reference` are not tried. A case added later changes the
+  counts.
+- **A few samples per construct,** so "right" means no disagreement was found, not proof.
+- **One construct at a time.** Each case uses only constructs measured right elsewhere in
+  this report beside the one it names, so one defect is not counted twice. Combinations
+  are not tried.
+- **Validators only.** The TypeScript types and the endpoint definitions were not judged.
+  Annotation rows show that the keyword does not break validation; whether the annotation
+  is carried into the output was not checked.
+- **Objects state their unknown-key policy,** so SPEC-P-1's reading of an unstated policy
+  does not enter.
 
 ## Result
 
-89 constructs: 53 right, 13 wrong, 23 crashed. No construct was refused in plain words:
+93 constructs: 57 right, 14 wrong, 22 crashed. No construct was refused in plain words:
 every refusal is a stack trace.
 
 ### Validation keywords
 
-| Construct                   | Today   | What happened                                                                |
-| --------------------------- | ------- | ---------------------------------------------------------------------------- |
-| `type: string`              | right   |                                                                              |
-| `type: number`              | right   |                                                                              |
-| `type: integer`             | right   |                                                                              |
-| `type: boolean`             | right   |                                                                              |
-| `type: null`                | right   |                                                                              |
-| `type: array`               | right   |                                                                              |
-| `type: object`              | crashed | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));     |
-| `type (list of types)`      | right   |                                                                              |
-| `no type (any value)`       | right   |                                                                              |
-| `enum (strings)`            | right   |                                                                              |
-| `enum (mixed types)`        | right   |                                                                              |
-| `const (string)`            | wrong   | "b": source says invalid, Castr says valid. Emitted `z.unknown()`            |
-| `const (number)`            | wrong   | 4: source says invalid, Castr says valid. Emitted `z.unknown()`              |
-| `const (object)`            | wrong   | {"a":2}: source says invalid, Castr says valid. Emitted `z.unknown()`        |
-| `multipleOf`                | right   |                                                                              |
-| `maximum`                   | right   |                                                                              |
-| `exclusiveMaximum`          | right   |                                                                              |
-| `minimum`                   | right   |                                                                              |
-| `exclusiveMinimum`          | right   |                                                                              |
-| `maxLength`                 | right   |                                                                              |
-| `minLength`                 | right   |                                                                              |
-| `pattern`                   | right   |                                                                              |
-| `maxItems`                  | right   |                                                                              |
-| `minItems`                  | right   |                                                                              |
-| `uniqueItems`               | wrong   | [1,1]: source says invalid, Castr says valid. Emitted `z.array(z.unknown())` |
-| `maxProperties`             | crashed | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));     |
-| `minProperties`             | crashed | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));     |
-| `required`                  | right   |                                                                              |
-| `dependentRequired`         | right   |                                                                              |
-| `minContains / maxContains` | crashed | throw new Error(                                                             |
+| Construct                                         | Today   | What happened                                                                    |
+| ------------------------------------------------- | ------- | -------------------------------------------------------------------------------- |
+| `type: string`                                    | right   |                                                                                  |
+| `type: number`                                    | right   |                                                                                  |
+| `type: integer`                                   | right   |                                                                                  |
+| `type: boolean`                                   | right   |                                                                                  |
+| `type: null`                                      | right   |                                                                                  |
+| `type: array`                                     | right   |                                                                                  |
+| `type: object`                                    | right   |                                                                                  |
+| `type (list of types)`                            | right   |                                                                                  |
+| `no type (any value)`                             | right   |                                                                                  |
+| `enum (strings)`                                  | right   |                                                                                  |
+| `enum (mixed types)`                              | right   |                                                                                  |
+| `const (string)`                                  | wrong   | "b": source says invalid, Castr says valid. Emitted `z.unknown()`                |
+| `const (number)`                                  | wrong   | 4: source says invalid, Castr says valid. Emitted `z.unknown()`                  |
+| `const (object)`                                  | wrong   | {"a":2}: source says invalid, Castr says valid. Emitted `z.unknown()`            |
+| `multipleOf`                                      | right   |                                                                                  |
+| `maximum`                                         | right   |                                                                                  |
+| `exclusiveMaximum`                                | right   |                                                                                  |
+| `minimum`                                         | right   |                                                                                  |
+| `exclusiveMinimum`                                | right   |                                                                                  |
+| `maxLength`                                       | right   |                                                                                  |
+| `minLength`                                       | right   |                                                                                  |
+| `pattern`                                         | right   |                                                                                  |
+| `maxItems`                                        | right   |                                                                                  |
+| `minItems`                                        | right   |                                                                                  |
+| `uniqueItems`                                     | wrong   | [1,1]: source says invalid, Castr says valid. Emitted `z.array(z.unknown())`     |
+| `maxProperties`                                   | wrong   | {"a":1,"b":2}: source says invalid, Castr says valid. Emitted `z.strictObject({` |
+| `minProperties`                                   | wrong   | {}: source says invalid, Castr says valid. Emitted `z.strictObject({`            |
+| `maxProperties / minProperties on an open object` | crashed | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));         |
+| `required`                                        | right   |                                                                                  |
+| `dependentRequired`                               | right   |                                                                                  |
+| `minContains / maxContains`                       | crashed | throw new Error(                                                                 |
 
 ### Applicators
 
@@ -94,17 +105,19 @@ every refusal is a stack trace.
 
 ### Core (references and identity)
 
-| Construct                      | Today   | What happened                                                                       |
-| ------------------------------ | ------- | ----------------------------------------------------------------------------------- |
-| `schema true`                  | right   |                                                                                     |
-| `schema false`                 | crashed | throw new Error('Schema '${name}' not found in ${formatSearchLocations(xExtKey)}'); |
-| `$ref to a component`          | right   |                                                                                     |
-| `$ref with sibling keywords`   | wrong   | "abcd": source says invalid, Castr says valid. Emitted `U`                          |
-| `$ref, recursive`              | right   |                                                                                     |
-| `$defs with a local $ref`      | crashed | throw new Error('Schema '${name}' not found in ${formatSearchLocations(xExtKey)}'); |
-| `$anchor`                      | crashed | throw new Error(                                                                    |
-| `$dynamicRef / $dynamicAnchor` | crashed | throw new Error(                                                                    |
-| `$comment`                     | right   |                                                                                     |
+| Construct                             | Today   | What happened                                                                       |
+| ------------------------------------- | ------- | ----------------------------------------------------------------------------------- |
+| `schema true`                         | right   |                                                                                     |
+| `schema false`                        | crashed | throw new Error('Schema '${name}' not found in ${formatSearchLocations(xExtKey)}'); |
+| `$ref to a component`                 | right   |                                                                                     |
+| `$ref with sibling keywords`          | wrong   | "abcd": source says invalid, Castr says valid. Emitted `U`                          |
+| `$ref, recursive`                     | right   |                                                                                     |
+| `$defs with a local $ref`             | crashed | throw new Error('Schema '${name}' not found in ${formatSearchLocations(xExtKey)}'); |
+| `$anchor`                             | crashed | throw new Error(                                                                    |
+| `$dynamicRef / $dynamicAnchor`        | crashed | throw new Error(                                                                    |
+| `$comment`                            | right   |                                                                                     |
+| `$schema`                             | right   |                                                                                     |
+| `$id with a $ref resolved against it` | crashed | return new Error('Failed to load OpenAPI document (${descriptor}): ${message}', {   |
 
 ### Formats
 
@@ -152,26 +165,29 @@ every refusal is a stack trace.
 
 ### OpenAPI additions
 
-| Construct            | Today | What happened                                                                                   |
-| -------------------- | ----- | ----------------------------------------------------------------------------------------------- |
-| `discriminator`      | wrong | {"kind":"cat","barks":true}: source says invalid, Castr says valid. Emitted `z.xor([Cat, Dog])` |
-| `externalDocs / xml` | right |                                                                                                 |
+| Construct                    | Today | What happened |
+| ---------------------------- | ----- | ------------- |
+| `discriminator`              | right |               |
+| `discriminator with mapping` | right |               |
+| `externalDocs / xml`         | right |               |
 
 ## Reading the gaps
 
 - **Silently too loose (the dangerous kind).** `const`, `not`, `if`/`then`/`else`,
-  `dependentSchemas`, `uniqueItems`, keywords beside a `$ref`, and `discriminator` over
-  closed branches all produce a validator that accepts values the source forbids.
+  `dependentSchemas`, `uniqueItems`, `maxProperties`, `minProperties` and keywords beside a
+  `$ref` all produce a validator that accepts values the source forbids.
 - **Too strict.** `prefixItems` without `items: false`, `unevaluatedProperties`,
   `format: time` and `format: int64` reject values the source allows. `int64` is emitted as
   a big integer, which no JSON number satisfies.
 - **Open objects crash.** Every object that admits unknown keys (`additionalProperties`
-  true or a schema, `patternProperties`, `propertyNames`, `maxProperties`, `minProperties`
-  on an open object) ends in a stack trace. `patternProperties` is refused on the grounds
-  that TypeScript cannot express it.
-- **References beyond components crash.** `$defs`, `$anchor`, `$dynamicRef`.
+  true or a schema, `patternProperties`, `propertyNames`) ends in a stack trace.
+  `patternProperties` is refused on the grounds that TypeScript cannot express it.
+- **References beyond components crash.** `$defs`, `$anchor`, `$dynamicRef`, and a `$ref`
+  resolved against a nested `$id`.
 - **Eight formats crash,** including `byte`, `binary` and `password`, which OpenAPI
   documents commonly use.
+- **`discriminator` is right** when its branches are told apart by a keyword that works
+  (a one-value `enum`). With `const` branches it fails, because `const` does.
 
 ## Appendix. The probe
 
@@ -214,12 +230,7 @@ const cases = [
   ['type: boolean', 'validation', { type: 'boolean' }, [true, 'true', 0]],
   ['type: null', 'validation', { type: 'null' }, [null, 0, '']],
   ['type: array', 'validation', { type: 'array' }, [[], [1, 'a'], {}]],
-  [
-    'type: object',
-    'validation',
-    { type: 'object', additionalProperties: true },
-    [{}, { a: 1 }, []],
-  ],
+  ['type: object', 'validation', O({ a: S }), [{}, { a: 'x' }, [], 'a']],
   ['type (list of types)', 'validation', { type: ['string', 'null'] }, ['a', null, 1]],
   ['no type (any value)', 'validation', {}, [1, 'a', null, {}, []]],
   ['schema true', 'core', true, [1, 'a', null]],
@@ -257,14 +268,15 @@ const cases = [
   [
     'maxProperties',
     'validation',
-    { type: 'object', additionalProperties: true, maxProperties: 1 },
+    O({ a: N, b: N }, { maxProperties: 1 }),
     [{ a: 1 }, { a: 1, b: 2 }],
   ],
+  ['minProperties', 'validation', O({ a: N, b: N }, { minProperties: 1 }), [{ a: 1 }, {}]],
   [
-    'minProperties',
+    'maxProperties / minProperties on an open object',
     'validation',
-    { type: 'object', additionalProperties: true, minProperties: 1 },
-    [{ a: 1 }, {}],
+    { type: 'object', additionalProperties: true, minProperties: 1, maxProperties: 2 },
+    [{ a: 1 }, {}, { a: 1, b: 2, c: 3 }],
   ],
   ['required', 'validation', O({ a: S }, { required: ['a'] }), [{ a: 'x' }, {}]],
   [
@@ -470,11 +482,38 @@ const cases = [
     ],
     {
       Cat: O(
-        { kind: { const: 'cat' }, purrs: { type: 'boolean' } },
+        { kind: { enum: ['cat'] }, purrs: { type: 'boolean' } },
         { required: ['kind', 'purrs'] },
       ),
       Dog: O(
-        { kind: { const: 'dog' }, barks: { type: 'boolean' } },
+        { kind: { enum: ['dog'] }, barks: { type: 'boolean' } },
+        { required: ['kind', 'barks'] },
+      ),
+    },
+  ],
+  [
+    'discriminator with mapping',
+    'openapi',
+    {
+      oneOf: [{ $ref: '#/components/schemas/Cat' }, { $ref: '#/components/schemas/Dog' }],
+      discriminator: {
+        propertyName: 'kind',
+        mapping: { cat: '#/components/schemas/Cat', dog: '#/components/schemas/Dog' },
+      },
+    },
+    [
+      { kind: 'cat', purrs: true },
+      { kind: 'dog', barks: true },
+      { kind: 'cat', barks: true },
+      { kind: 'fish' },
+    ],
+    {
+      Cat: O(
+        { kind: { enum: ['cat'] }, purrs: { type: 'boolean' } },
+        { required: ['kind', 'purrs'] },
+      ),
+      Dog: O(
+        { kind: { enum: ['dog'] }, barks: { type: 'boolean' } },
         { required: ['kind', 'barks'] },
       ),
     },
@@ -524,6 +563,23 @@ const cases = [
   ],
   ['examples / example', 'annotation', { type: 'string', examples: ['a'], example: 'a' }, ['a', 1]],
   ['$comment', 'core', { type: 'string', $comment: 'c' }, ['a', 1]],
+  [
+    '$schema',
+    'core',
+    { $schema: 'https://json-schema.org/draft/2020-12/schema', type: 'string' },
+    ['a', 1],
+  ],
+  [
+    '$id with a $ref resolved against it',
+    'core',
+    {
+      $id: 'https://example.com/schemas/t',
+      $defs: { n: { $id: 'n', type: 'number' } },
+      type: 'array',
+      items: { $ref: 'n' },
+    },
+    [[1], ['a']],
+  ],
   [
     'externalDocs / xml',
     'openapi',
