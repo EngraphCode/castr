@@ -118,9 +118,11 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    kinds computed from OpenAPI 3.1's published definition, with a proposed class per row,
    taken to the owner. Writing that list into the specification as the scope-and-fidelity
    table (SPEC-N-5) is an amendment that PLOT sequences, as the course says.
-   The row list landed on 20 November (#135) and the owner decided six questions from it
-   by prompt the same day; the thread record holds them. The next work is the amendment
-   that carries those six, then the PICTURE command.
+   The row list landed on 20 November (#135) and the owner decided nine questions from it
+   by prompt the same day; the thread record holds all nine. The next work is still
+   PICTURE, as the course orders it: the command, with rows for OpenAPI 3.1 and 3.2 and
+   columns for Zod, TypeScript and the endpoint definitions. The amendment that carries
+   the nine decisions follows it, in three parts, with the tables.
 1. **PICTURE: one repeatable command that shows what Castr does, judged from outside it.**
    The owner asked on 18 November 2026 what working, working well and correct look like.
    The seat answered with cards and a draft amendment, and on 19 November the owner sent it

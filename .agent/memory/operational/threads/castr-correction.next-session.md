@@ -151,7 +151,9 @@ repository before acting.
        safe integer, so a too-large value is refused and never accepted rounded; the run
        report, the TypeScript comment and a Zod annotation state the narrowing; reading
        that Zod back gives `integer, format: int64` again. A `bigint` output mode is a
-       later capability. Today's writers emit `bigint` and change.
+       later capability. This is not what the code does today: the present Zod and
+       TypeScript writers emit `bigint` for `int64`, and that code changes to `number`
+       under this decision.
     5. What the reader refuses by design (an unread dialect, OpenAPI 2.0, an invalid
        document): "Add a third kind" of rejection. It never counts toward `NOT-YET-BUILT`
        and its cases are listed in the specification.
