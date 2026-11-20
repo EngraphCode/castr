@@ -124,6 +124,12 @@ that becomes right and is not added. The list records what is true. It does not 
 the rows that are missing from it. The same test fails if a row that needs a case has
 none, and if a case holds no value its schema refuses.
 
+The reference is not the source. Where Ajv is looser than the text that defines a
+construct, a case cannot show Castr wrong by it, and a sample that only exposes Ajv's
+looseness is left out: Ajv accepts every number for `format: float`, so a number beyond the
+single-precision range, which Castr's output refuses, is not a sample. Those cells need a
+second reference, or a case judged against the text.
+
 Four `format` values are not judged, because Ajv has no checker for them (`idn-email`,
 `idn-hostname`, `iri`, `iri-reference`).
 

@@ -198,7 +198,8 @@ export const SCHEMA_CASES: readonly SchemaCase[] = [
   format('date-time', '2026-11-20T09:00:00+01:00', 'yesterday'),
   format('date', '2026-11-20', '20/11/2026'),
   format('time', '09:00:00Z', '9am'),
-  format('duration', 'P1D', 'one day'),
+  // RFC 3339's grammar for a duration has whole seconds only.
+  format('duration', 'P1D', 'PT0.5S', 'one day'),
   // RFC 5321 allows `!` in the local part; a check narrower than the format refuses it.
   format('email', 'a@example.com', 'a!b@example.com', 'not an email'),
   format('idn-email', 'a@example.com', 'not an email'),

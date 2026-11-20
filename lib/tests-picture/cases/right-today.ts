@@ -32,7 +32,6 @@ export const RIGHT_TODAY: readonly string[] = [
   'keyword:$ref',
   'keyword:format',
   'text:format: date',
-  'text:format: duration',
   'text:format: hostname',
   'text:format: ipv4',
   'text:format: ipv6',

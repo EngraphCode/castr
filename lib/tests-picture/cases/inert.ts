@@ -12,8 +12,8 @@ export function inertCases(cases: readonly SchemaCase[]): readonly string[] {
   for (const schemaCase of cases) {
     const reference = referenceFor(documentFor(schemaCase));
     if (reference.readable) {
-      const decisions = schemaCase.samples.map((sample) => reference.accepts(sample));
-      if (!decisions.includes(true) || !decisions.includes(false)) {
+      const decisions = new Set(schemaCase.samples.map((sample) => reference.accepts(sample)));
+      if (!decisions.has(true) || !decisions.has(false)) {
         inert.push(schemaCase.rowId);
       }
     }
