@@ -29,19 +29,21 @@ own additions) against today's generator. It decides nothing.
   construct far more widely and replaces these counts.
 - **One construct at a time.** Each case uses only constructs measured right elsewhere in
   this report beside the one it names. Four cases cannot be built that way
-  (`minContains` needs `contains`; `unevaluatedProperties`, an `allOf` of objects and the
-  property counts on an open object need open objects); they are marked **not measurable alone** and are not counted as wrong or
+  (`minContains` needs `contains`; `unevaluatedProperties`, an `allOf` of objects with
+  different properties and the property counts on an open object need open objects); they are marked **not measurable alone** and are not counted as wrong or
   crashed. Combinations are not tried.
 - **Validators only.** The TypeScript types and the endpoint definitions were not judged.
-  Annotation rows show that the keyword does not break validation; whether the annotation
-  is carried into the output was not checked.
+  A keyword that does not change which values are valid (annotations, content keywords,
+  `discriminator`, `xml`, `externalDocs`) cannot be judged by comparing decisions, so its
+  row says **not judged**: the generator did not fail on it, and nothing more is known.
 - **Objects state their unknown-key policy,** so SPEC-P-1's reading of an unstated policy
   does not enter.
 
 ## Result
 
-94 constructs: 57 right, 14 wrong, 19 crashed, and 4 that cannot be measured alone because
-they need a construct that fails. No construct was refused in plain words: every refusal is
+94 constructs: 44 right, 14 wrong, 19 crashed, 4 that cannot be measured alone because
+they need a construct that fails, and 13 not judged because the keyword does not change which
+values are valid. No construct was refused in plain words: every refusal is
 a stack trace.
 
 ### Validation keywords
@@ -82,25 +84,25 @@ a stack trace.
 
 ### Applicators
 
-| Construct                       | Today                | What happened                                                                             |
-| ------------------------------- | -------------------- | ----------------------------------------------------------------------------------------- |
-| `properties`                    | right                |                                                                                           |
-| `additionalProperties: false`   | right                |                                                                                           |
-| `additionalProperties: true`    | crashed              | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));                  |
-| `additionalProperties: schema`  | crashed              | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));                  |
-| `patternProperties`             | crashed              | throw new Error(                                                                          |
-| `propertyNames`                 | crashed              | throw new Error(                                                                          |
-| `items`                         | right                |                                                                                           |
-| `prefixItems`                   | wrong                | ["a"]: source says valid, Castr says invalid. Emitted `z.tuple([z.string(), z.number()])` |
-| `prefixItems with items: false` | wrong                | ["a"]: source says valid, Castr says invalid. Emitted `z.tuple([z.string(), z.number()])` |
-| `contains`                      | crashed              | throw new Error(                                                                          |
-| `allOf`                         | right                |                                                                                           |
-| `allOf (objects)`               | not measurable alone | needs open objects, which fails; was: crashed (stack trace)                               |
-| `anyOf`                         | right                |                                                                                           |
-| `oneOf`                         | right                |                                                                                           |
-| `not`                           | wrong                | "a": source says invalid, Castr says valid. Emitted `z.unknown()`                         |
-| `if / then / else`              | wrong                | 15: source says invalid, Castr says valid. Emitted `z.number()`                           |
-| `dependentSchemas`              | wrong                | {"a":"x","b":"y"}: source says invalid, Castr says valid. Emitted `z`                     |
+| Construct                                   | Today                | What happened                                                                             |
+| ------------------------------------------- | -------------------- | ----------------------------------------------------------------------------------------- |
+| `properties`                                | right                |                                                                                           |
+| `additionalProperties: false`               | right                |                                                                                           |
+| `additionalProperties: true`                | crashed              | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));                  |
+| `additionalProperties: schema`              | crashed              | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));                  |
+| `patternProperties`                         | crashed              | throw new Error(                                                                          |
+| `propertyNames`                             | crashed              | throw new Error(                                                                          |
+| `items`                                     | right                |                                                                                           |
+| `prefixItems`                               | wrong                | ["a"]: source says valid, Castr says invalid. Emitted `z.tuple([z.string(), z.number()])` |
+| `prefixItems with items: false`             | wrong                | ["a"]: source says valid, Castr says invalid. Emitted `z.tuple([z.string(), z.number()])` |
+| `contains`                                  | crashed              | throw new Error(                                                                          |
+| `allOf`                                     | right                |                                                                                           |
+| `allOf (objects with different properties)` | not measurable alone | needs open objects, which fails; was: crashed (stack trace)                               |
+| `anyOf`                                     | right                |                                                                                           |
+| `oneOf`                                     | right                |                                                                                           |
+| `not`                                       | wrong                | "a": source says invalid, Castr says valid. Emitted `z.unknown()`                         |
+| `if / then / else`                          | wrong                | 15: source says invalid, Castr says valid. Emitted `z.number()`                           |
+| `dependentSchemas`                          | wrong                | {"a":"x","b":"y"}: source says invalid, Castr says valid. Emitted `z`                     |
 
 ### Unevaluated
 
@@ -111,19 +113,19 @@ a stack trace.
 
 ### Core (references and identity)
 
-| Construct                             | Today   | What happened                                                                       |
-| ------------------------------------- | ------- | ----------------------------------------------------------------------------------- |
-| `schema true`                         | right   |                                                                                     |
-| `schema false`                        | crashed | throw new Error('Schema '${name}' not found in ${formatSearchLocations(xExtKey)}'); |
-| `$ref to a component`                 | right   |                                                                                     |
-| `$ref with sibling keywords`          | wrong   | "abcd": source says invalid, Castr says valid. Emitted `U`                          |
-| `$ref, recursive`                     | right   |                                                                                     |
-| `$defs with a local $ref`             | crashed | throw new Error('Schema '${name}' not found in ${formatSearchLocations(xExtKey)}'); |
-| `$anchor`                             | crashed | throw new Error(                                                                    |
-| `$dynamicRef / $dynamicAnchor`        | crashed | throw new Error(                                                                    |
-| `$comment`                            | right   |                                                                                     |
-| `$schema`                             | right   |                                                                                     |
-| `$id with a $ref resolved against it` | crashed | return new Error('Failed to load OpenAPI document (${descriptor}): ${message}', {   |
+| Construct                             | Today      | What happened                                                                            |
+| ------------------------------------- | ---------- | ---------------------------------------------------------------------------------------- |
+| `schema true`                         | right      |                                                                                          |
+| `schema false`                        | crashed    | throw new Error('Schema '${name}' not found in ${formatSearchLocations(xExtKey)}');      |
+| `$ref to a component`                 | right      |                                                                                          |
+| `$ref with sibling keywords`          | wrong      | "abcd": source says invalid, Castr says valid. Emitted `U`                               |
+| `$ref, recursive`                     | right      |                                                                                          |
+| `$defs with a local $ref`             | crashed    | throw new Error('Schema '${name}' not found in ${formatSearchLocations(xExtKey)}');      |
+| `$anchor`                             | crashed    | throw new Error(                                                                         |
+| `$dynamicRef / $dynamicAnchor`        | crashed    | throw new Error(                                                                         |
+| `$comment`                            | not judged | validation is unaffected; whether the keyword is carried into the output was not checked |
+| `$schema`                             | not judged | validation is unaffected; whether the keyword is carried into the output was not checked |
+| `$id with a $ref resolved against it` | crashed    | return new Error('Failed to load OpenAPI document (${descriptor}): ${message}', {        |
 
 ### Formats
 
@@ -154,29 +156,29 @@ a stack trace.
 
 ### Content
 
-| Construct                            | Today | What happened |
-| ------------------------------------ | ----- | ------------- |
-| `contentEncoding / contentMediaType` | right |               |
-| `contentSchema`                      | right |               |
+| Construct                            | Today      | What happened                                                                            |
+| ------------------------------------ | ---------- | ---------------------------------------------------------------------------------------- |
+| `contentEncoding / contentMediaType` | not judged | validation is unaffected; whether the keyword is carried into the output was not checked |
+| `contentSchema`                      | not judged | validation is unaffected; whether the keyword is carried into the output was not checked |
 
 ### Annotations
 
-| Construct              | Today | What happened |
-| ---------------------- | ----- | ------------- |
-| `title / description`  | right |               |
-| `default`              | right |               |
-| `deprecated`           | right |               |
-| `readOnly / writeOnly` | right |               |
-| `examples / example`   | right |               |
+| Construct              | Today      | What happened                                                                            |
+| ---------------------- | ---------- | ---------------------------------------------------------------------------------------- |
+| `title / description`  | not judged | validation is unaffected; whether the keyword is carried into the output was not checked |
+| `default`              | not judged | validation is unaffected; whether the keyword is carried into the output was not checked |
+| `deprecated`           | not judged | validation is unaffected; whether the keyword is carried into the output was not checked |
+| `readOnly / writeOnly` | not judged | validation is unaffected; whether the keyword is carried into the output was not checked |
+| `examples / example`   | not judged | validation is unaffected; whether the keyword is carried into the output was not checked |
 
 ### OpenAPI additions
 
-| Construct                    | Today | What happened |
-| ---------------------------- | ----- | ------------- |
-| `discriminator`              | right |               |
-| `discriminator with mapping` | right |               |
-| `externalDocs`               | right |               |
-| `xml (on a property)`        | right |               |
+| Construct                    | Today      | What happened                                                                            |
+| ---------------------------- | ---------- | ---------------------------------------------------------------------------------------- |
+| `discriminator`              | not judged | validation is unaffected; whether the keyword is carried into the output was not checked |
+| `discriminator with mapping` | not judged | validation is unaffected; whether the keyword is carried into the output was not checked |
+| `externalDocs`               | not judged | validation is unaffected; whether the keyword is carried into the output was not checked |
+| `xml (on a property)`        | not judged | validation is unaffected; whether the keyword is carried into the output was not checked |
 
 ## Reading the gaps
 
@@ -194,8 +196,9 @@ a stack trace.
   resolved against a nested `$id`.
 - **Eight formats crash,** including `byte`, `binary` and `password`, which OpenAPI
   documents commonly use.
-- **`discriminator` is right** when its branches are told apart by a keyword that works
-  (a one-value `enum`). With `const` branches it fails, because `const` does.
+- **`discriminator` is not judged.** With branches told apart by a one-value `enum` the
+  validator decides correctly, but the `oneOf` alone explains that; whether the
+  discriminator itself is read was not checked.
 
 ## Appendix. The probe
 
