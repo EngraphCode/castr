@@ -7,6 +7,14 @@ import { isJsonObject, membersOf, type JsonObject } from './json.js';
 export interface FieldKind {
   readonly name: string;
   readonly values: readonly string[];
+  /**
+   * True where a declaration that applies to every instance leaves the field's value
+   * free, and none that applies to every instance fixes it. A parameter's `required` is
+   * any boolean, and `true` where the parameter is in the path: it is open and has one
+   * fixed value. A parameter's `in` is only ever one of its locations: it is not open. A
+   * field whose fixed values are restated with a default in a branch is not open either.
+   */
+  readonly open: boolean;
 }
 
 /**
@@ -53,9 +61,34 @@ export interface Inventory {
   readonly problems: readonly string[];
 }
 
+interface CollectedField {
+  readonly values: Set<string>;
+  /** Some declaration that always applies fixes the field's value. */
+  fixedAlways: boolean;
+  /** Some declaration that always applies leaves the field's value free. */
+  freeAlways: boolean;
+}
+
+/** Where the walk is: the references it has composed, and whether it is in a branch. */
+interface Scope {
+  readonly seen: ReadonlySet<string>;
+  /** True inside a branch that applies to some instances of the object only. */
+  readonly conditional: boolean;
+}
+
+/** Keywords whose subschemas apply to some instances of the object only. */
+const BRANCHING: ReadonlySet<string> = new Set([
+  'if',
+  'then',
+  'else',
+  'dependentSchemas',
+  'oneOf',
+  'anyOf',
+]);
+
 interface Collected {
   readonly name: string;
-  readonly fields: Map<string, Set<string>>;
+  readonly fields: Map<string, CollectedField>;
   readonly keyedBy: Set<string>;
   extensible: boolean;
 }
@@ -69,6 +102,13 @@ function byName(a: string, b: string): number {
 
 function shortName(ref: string): string {
   return ref.slice(DEFS_PREFIX.length).replaceAll('/$defs/', '/');
+}
+
+/** The values a field's declaration fixes it to, by `enum` or `const`. */
+function fixedValuesOf(declaration: JsonObject): readonly string[] {
+  const allowed = declaration['enum'];
+  const fixed = Array.isArray(allowed) ? allowed.map(String) : [];
+  return 'const' in declaration ? [...fixed, String(declaration['const'])] : fixed;
 }
 
 function refOf(node: unknown): string | undefined {
@@ -123,20 +163,23 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
     }
   };
 
-  const collectField = (acc: Collected, name: string, value: unknown): void => {
-    const values = acc.fields.get(name) ?? new Set<string>();
-    acc.fields.set(name, values);
+  const collectField = (acc: Collected, name: string, value: unknown, scope: Scope): void => {
+    const field: CollectedField = acc.fields.get(name) ?? {
+      values: new Set(),
+      fixedAlways: false,
+      freeAlways: false,
+    };
+    acc.fields.set(name, field);
+    const fixed = isJsonObject(value) ? fixedValuesOf(value) : [];
+    for (const item of fixed) {
+      field.values.add(item);
+    }
+    if (!scope.conditional) {
+      field.fixedAlways ||= fixed.length > 0;
+      field.freeAlways ||= fixed.length === 0;
+    }
     if (!isJsonObject(value)) {
       return;
-    }
-    const allowed = value['enum'];
-    if (Array.isArray(allowed)) {
-      for (const item of allowed) {
-        values.add(String(item));
-      }
-    }
-    if ('const' in value) {
-      values.add(String(value['const']));
     }
     noteValueRefsIn(value);
     if (isJsonObject(value['properties'])) {
@@ -152,12 +195,12 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
     acc.keyedBy.add(pattern);
   };
 
-  type Visit = (value: unknown, acc: Collected, seen: ReadonlySet<string>) => void;
+  type Visit = (value: unknown, acc: Collected, scope: Scope) => void;
 
-  const visitProperties: Visit = (value, acc) => {
+  const visitProperties: Visit = (value, acc, scope) => {
     if (isJsonObject(value)) {
       for (const [name, field] of membersOf(value)) {
-        collectField(acc, name, field);
+        collectField(acc, name, field, scope);
       }
     }
   };
@@ -176,20 +219,20 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
     }
   };
 
-  const visitRef: Visit = (value, acc, seen) => {
+  const visitRef: Visit = (value, acc, scope) => {
     if (typeof value !== 'string') {
       return;
     }
     if (value === options.extensionRef) {
       acc.extensible = true;
-    } else if (!seen.has(value)) {
+    } else if (!scope.seen.has(value)) {
       const target = resolve(value);
       if (target === undefined) {
         problems.push(`${acc.name} composes a reference that has no target: ${value}`);
         return;
       }
       composed.add(value);
-      walk(target, acc, new Set([...seen, value]));
+      walk(target, acc, { ...scope, seen: new Set([...scope.seen, value]) });
     }
   };
 
@@ -209,10 +252,10 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
     ['not', skip],
   ]);
 
-  function walk(node: unknown, acc: Collected, seen: ReadonlySet<string>): void {
+  function walk(node: unknown, acc: Collected, scope: Scope): void {
     if (Array.isArray(node)) {
       for (const item of node) {
-        walk(item, acc, seen);
+        walk(item, acc, scope);
       }
       return;
     }
@@ -221,7 +264,7 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
     }
     for (const [key, value] of membersOf(node)) {
       const visit = visitors.get(key) ?? walk;
-      visit(value, acc, seen);
+      visit(value, acc, BRANCHING.has(key) ? { ...scope, conditional: true } : scope);
     }
   }
 
@@ -245,25 +288,29 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
 
   const describe = (name: string, definition: JsonObject, ref: string | undefined): ObjectKind => {
     const acc: Collected = { name, fields: new Map(), keyedBy: new Set(), extensible: false };
-    walk(definition, acc, new Set(ref === undefined ? [] : [ref]));
+    walk(definition, acc, { seen: new Set(ref === undefined ? [] : [ref]), conditional: false });
     for (const correction of options.corrections) {
       if (correction.object !== name) {
         continue;
       }
-      const values = acc.fields.get(correction.published);
-      if (values === undefined) {
+      const published = acc.fields.get(correction.published);
+      if (published === undefined) {
         problems.push(`a correction no longer applies: ${name}.${correction.published}`);
         continue;
       }
       acc.fields.delete(correction.published);
-      acc.fields.set(correction.specified, values);
+      acc.fields.set(correction.specified, published);
     }
     return {
       name,
       extensible: acc.extensible,
       keyedBy: [...acc.keyedBy].sort(byName),
       fields: [...acc.fields]
-        .map(([fieldName, values]) => ({ name: fieldName, values: [...values].sort(byName) }))
+        .map(([fieldName, field]) => ({
+          name: fieldName,
+          values: [...field.values].sort(byName),
+          open: field.freeAlways && !field.fixedAlways,
+        }))
         .sort((a, b) => byName(a.name, b.name)),
     };
   };

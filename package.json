@@ -50,6 +50,7 @@
     "character": "turbo character",
     "test:transforms": "turbo test:transforms",
     "test:picture": "turbo test:picture",
+    "picture": "pnpm -s --filter @engraph/castr picture",
     "test:e2e": "turbo test:e2e",
     "madge:circular": "turbo madge:circular",
     "madge:orphans": "turbo madge:orphans",
