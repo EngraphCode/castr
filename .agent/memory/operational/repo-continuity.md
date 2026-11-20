@@ -76,10 +76,10 @@ found, including that most of today's product code is replaced by the constructi
 
 ## Active threads
 
-| Thread                                                       | Role and next step                                                                                                                                  | Latest identity                                                                                          |
-| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| [Castr correction](threads/castr-correction.next-session.md) | PICTURE, the command that shows what Castr does; with CORPUS, the amendment awaiting approval; then PLOT, its legs, CURRENCY, RULES, HOME and MOVE. | claude-code / claude-fable-5-2 / Ingot binds Patina / MEASURE, 0.5.2, the correction, EC-0 / 2026-11-19  |
-| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                                                                      | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23 |
+| Thread                                                       | Role and next step                                                                                    | Latest identity                                                                                          |
+| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [Castr correction](threads/castr-correction.next-session.md) | PICTURE, the command that shows what Castr does; then PLOT, its legs, CURRENCY, RULES, HOME and MOVE. | claude-code / claude-fable-5-2 / Ingot binds Patina / MEASURE, 0.5.2, the correction, EC-0 / 2026-11-19  |
+| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                        | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23 |
 
 ## Paused threads and historical records
 
@@ -120,12 +120,15 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    picture: documents down the side, what a consumer takes across the top, each cell right,
    refused in plain words with its place, wrong, missing or crashed. The MEASURE probe is
    its first drawing; it lands asserting the cells already right and grows with the code.
-   On 19 November the owner ruled "Drop v0, latest v1 only": the picture's Oak row is the
-   v1 document. SPEC-C-1 names both documents until the course's CORPUS amendment lands,
-   which needs the owner's approval in words naming the version. One more owner step lies
-   ahead: before MOVE, the course's
-   HOME todo changes section 10's "early in the course" by an amendment the owner approves
-   in words.
+   Specification 0.6.0, approved on 20 November 2026 ("I approve 0.6.0"), makes Oak's latest
+   v1 document the corpus and names no alert in SPEC-G-1. The same day the owner set the
+   standard the picture must show, verbatim: "What I want is to not have to rework Castr if
+   Oak adds an additional, valid field type to their spec". So a valid construct is
+   converted, never refused; the picture's columns are the constructs OpenAPI 3.1 allows;
+   and the example documents must convert fully. That is stricter than the specification
+   and needs an amendment drafted from the enumerated construct list. One more owner step
+   lies ahead: before MOVE, the course's HOME todo changes section 10's "early in the
+   course".
 2. **The example-input library continues at EC-1**, the pin record's shape for many
    sources ([its plan](../../plans/active/example-input-library.md)). EC-0, attribution and
    third-party notices, is done: a newer copy of any example is a new pin recorded in the

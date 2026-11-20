@@ -63,17 +63,23 @@ repository before acting.
   and the rules `present-verdicts-not-menus` and `design-from-impact-not-the-cowpath`
   before putting anything to the owner: a recommendation-bearing decision is not a
   question, and joint reflection is discussed in prose.
-- **OWNER RULING, 19 November 2026, verbatim: "Drop v0, latest v1 only".** Asked what the
-  two Oak documents are, the owner was told that SPEC-C-1 requires both and that the
-  consuming repository generates from an August copy of v0 and does not consume v1. The
-  work is scoped to the v1 document at its latest published version, and both documents
-  remain the formal corpus until the amendment lands. SPEC-C-1's text changes
-  by the course's CORPUS amendment (owner's words naming the version); the v0 pins and the
-  earlier v1 pin leave the corpus in that landing. The consuming repository moves onto v1 before any swap.
+- **OWNER RULING, 19 November 2026, verbatim: "Drop v0, latest v1 only".** Specification
+  0.6.0, approved on 20 November 2026 ("I approve 0.6.0"), makes the v1 document at its
+  latest published version SPEC-C-1's corpus; the corpus holds one pin (1.1.1). It also
+  takes the picomatch advisory's name out of SPEC-G-1: GitHub closed that alert on
+  19 November and the owner said "we don't need to track a non-problem". The consuming
+  repository generates from an August copy of v0 and moves onto v1 before any swap.
+- **OWNER'S STANDARD, 20 November 2026, verbatim: "What I want is to not have to rework
+  Castr if Oak adds an additional, valid field type to their spec".** It answered the
+  seat's statement that reference documents may be refused where Oak does not use a
+  construct. Read by the seat as: Castr supports the format; a valid construct is
+  converted, never refused; refusal is for invalid documents and exclusions the owner
+  approves; the example documents are the proof for constructs Oak does not use yet. Next:
+  enumerate what OpenAPI 3.1 and its JSON Schema dialect allow in a schema, mark today's
+  gaps, and bring the owner that list with a draft amendment.
 - **Next work: PICTURE (the course's todo).** One repeatable command that shows what Castr
   does on each document, judged from outside Castr; the MEASURE probe is its first drawing.
-  It is the owner's "what working looks like". One owner interaction is pending: the approval of the CORPUS amendment, in words naming
-  the version. The
+  It is the owner's "what working looks like". No owner interaction is pending. The
   specification needs one phrase changed (§10, "early in the course"), by an approved
   amendment before MOVE (the course's HOME todo). Put to the owner on 19 November as a fact they did not
   have: about 26,500 of 35,655 product lines are the model or written against its shape, so
