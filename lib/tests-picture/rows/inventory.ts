@@ -8,10 +8,11 @@ export interface FieldKind {
   readonly name: string;
   readonly values: readonly string[];
   /**
-   * True where the definition also declares the field without fixing its value. A
-   * parameter's `required` is any boolean, and `true` where the parameter is in the path:
-   * it is open and has one fixed value. A parameter's `in` is only ever one of its
-   * locations: it is not open.
+   * True where a declaration that applies to every instance leaves the field's value
+   * free, and none that applies to every instance fixes it. A parameter's `required` is
+   * any boolean, and `true` where the parameter is in the path: it is open and has one
+   * fixed value. A parameter's `in` is only ever one of its locations: it is not open. A
+   * field whose fixed values are restated with a default in a branch is not open either.
    */
   readonly open: boolean;
 }
@@ -62,8 +63,28 @@ export interface Inventory {
 
 interface CollectedField {
   readonly values: Set<string>;
-  open: boolean;
+  /** Some declaration that always applies fixes the field's value. */
+  fixedAlways: boolean;
+  /** Some declaration that always applies leaves the field's value free. */
+  freeAlways: boolean;
 }
+
+/** Where the walk is: the references it has composed, and whether it is in a branch. */
+interface Scope {
+  readonly seen: ReadonlySet<string>;
+  /** True inside a branch that applies to some instances of the object only. */
+  readonly conditional: boolean;
+}
+
+/** Keywords whose subschemas apply to some instances of the object only. */
+const BRANCHING: ReadonlySet<string> = new Set([
+  'if',
+  'then',
+  'else',
+  'dependentSchemas',
+  'oneOf',
+  'anyOf',
+]);
 
 interface Collected {
   readonly name: string;
@@ -142,19 +163,23 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
     }
   };
 
-  const collectField = (acc: Collected, name: string, value: unknown): void => {
-    const field: CollectedField = acc.fields.get(name) ?? { values: new Set(), open: false };
+  const collectField = (acc: Collected, name: string, value: unknown, scope: Scope): void => {
+    const field: CollectedField = acc.fields.get(name) ?? {
+      values: new Set(),
+      fixedAlways: false,
+      freeAlways: false,
+    };
     acc.fields.set(name, field);
-    if (!isJsonObject(value)) {
-      field.open = true;
-      return;
-    }
-    const fixed = fixedValuesOf(value);
-    if (fixed.length === 0) {
-      field.open = true;
-    }
+    const fixed = isJsonObject(value) ? fixedValuesOf(value) : [];
     for (const item of fixed) {
       field.values.add(item);
+    }
+    if (!scope.conditional) {
+      field.fixedAlways ||= fixed.length > 0;
+      field.freeAlways ||= fixed.length === 0;
+    }
+    if (!isJsonObject(value)) {
+      return;
     }
     noteValueRefsIn(value);
     if (isJsonObject(value['properties'])) {
@@ -170,12 +195,12 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
     acc.keyedBy.add(pattern);
   };
 
-  type Visit = (value: unknown, acc: Collected, seen: ReadonlySet<string>) => void;
+  type Visit = (value: unknown, acc: Collected, scope: Scope) => void;
 
-  const visitProperties: Visit = (value, acc) => {
+  const visitProperties: Visit = (value, acc, scope) => {
     if (isJsonObject(value)) {
       for (const [name, field] of membersOf(value)) {
-        collectField(acc, name, field);
+        collectField(acc, name, field, scope);
       }
     }
   };
@@ -194,20 +219,20 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
     }
   };
 
-  const visitRef: Visit = (value, acc, seen) => {
+  const visitRef: Visit = (value, acc, scope) => {
     if (typeof value !== 'string') {
       return;
     }
     if (value === options.extensionRef) {
       acc.extensible = true;
-    } else if (!seen.has(value)) {
+    } else if (!scope.seen.has(value)) {
       const target = resolve(value);
       if (target === undefined) {
         problems.push(`${acc.name} composes a reference that has no target: ${value}`);
         return;
       }
       composed.add(value);
-      walk(target, acc, new Set([...seen, value]));
+      walk(target, acc, { ...scope, seen: new Set([...scope.seen, value]) });
     }
   };
 
@@ -227,10 +252,10 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
     ['not', skip],
   ]);
 
-  function walk(node: unknown, acc: Collected, seen: ReadonlySet<string>): void {
+  function walk(node: unknown, acc: Collected, scope: Scope): void {
     if (Array.isArray(node)) {
       for (const item of node) {
-        walk(item, acc, seen);
+        walk(item, acc, scope);
       }
       return;
     }
@@ -239,7 +264,7 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
     }
     for (const [key, value] of membersOf(node)) {
       const visit = visitors.get(key) ?? walk;
-      visit(value, acc, seen);
+      visit(value, acc, BRANCHING.has(key) ? { ...scope, conditional: true } : scope);
     }
   }
 
@@ -263,7 +288,7 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
 
   const describe = (name: string, definition: JsonObject, ref: string | undefined): ObjectKind => {
     const acc: Collected = { name, fields: new Map(), keyedBy: new Set(), extensible: false };
-    walk(definition, acc, new Set(ref === undefined ? [] : [ref]));
+    walk(definition, acc, { seen: new Set(ref === undefined ? [] : [ref]), conditional: false });
     for (const correction of options.corrections) {
       if (correction.object !== name) {
         continue;
@@ -284,7 +309,7 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
         .map(([fieldName, field]) => ({
           name: fieldName,
           values: [...field.values].sort(byName),
-          open: field.open,
+          open: field.freeAlways && !field.fixedAlways,
         }))
         .sort((a, b) => byName(a.name, b.name)),
     };

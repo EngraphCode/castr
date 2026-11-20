@@ -35,7 +35,7 @@ describe('the picture rows', () => {
     expect(count('format value')).toBe(25);
     expect(count('schema construct')).toBe(6);
     expect(count('schema vocabulary')).toBe(20);
-    expect(count('document')).toBe(204);
+    expect(count('document')).toBe(202);
   });
 
   it('marks the rows only OpenAPI 3.2 declares', () => {
@@ -54,6 +54,8 @@ describe('the picture rows', () => {
     expect(ids).toContain('parameter.required');
     expect(ids).toContain('parameter.required=true');
     expect(ids).not.toContain('parameter.in');
+    expect(ids).not.toContain('parameter.style');
+    expect(ids).not.toContain('encoding.style');
   });
 
   it('keeps an exact status code and a status range as separate rows', () => {

@@ -64,6 +64,44 @@ describe('readInventory', () => {
     ]);
   });
 
+  it('does not open a field whose fixed values are restated without one in a branch', () => {
+    const inventory = readInventory(
+      {
+        $defs: {
+          encoding: {
+            properties: { style: { enum: ['form', 'deepObject'] } },
+            dependentSchemas: { style: { properties: { style: { default: 'form' } } } },
+          },
+        },
+      },
+      OPTIONS,
+    );
+
+    expect(inventory.objects[1]?.fields).toEqual([
+      { name: 'style', values: ['deepObject', 'form'], open: false },
+    ]);
+  });
+
+  it('does not open a field that is declared only in branches', () => {
+    const inventory = readInventory(
+      {
+        $defs: {
+          header: {
+            dependentSchemas: {
+              schema: { properties: { style: { const: 'simple' }, explode: { type: 'boolean' } } },
+            },
+          },
+        },
+      },
+      OPTIONS,
+    );
+
+    expect(inventory.objects[1]?.fields).toEqual([
+      { name: 'explode', values: [], open: false },
+      { name: 'style', values: ['simple'], open: false },
+    ]);
+  });
+
   it('counts a field declared in a branch of a conditional', () => {
     const inventory = readInventory(
       {
