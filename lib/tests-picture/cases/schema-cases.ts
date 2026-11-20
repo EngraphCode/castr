@@ -16,11 +16,11 @@ function typeValue(name: string, samples: readonly unknown[]): SchemaCase {
   return { rowId: `type:${name}`, schema: { type: name }, samples };
 }
 
-function format(name: string, accepted: string, refused: string): SchemaCase {
+function format(name: string, ...samples: readonly string[]): SchemaCase {
   return {
     rowId: `text:format: ${name}`,
     schema: { type: 'string', format: name },
-    samples: [accepted, refused],
+    samples,
   };
 }
 
@@ -164,13 +164,31 @@ export const SCHEMA_CASES: readonly SchemaCase[] = [
     components: { Named: { type: 'string', minLength: 2 } },
     samples: ['ab', 'a', 1],
   },
+  // The outer schema overrides the tree's `node` anchor and closes every node. A reader
+  // that treats `$dynamicRef` as `$ref` leaves the nested node open, so the third sample
+  // tells the two apart.
   keyword(
     '$dynamicRef',
     {
+      $id: 'https://castr.invalid/strict-tree',
       $dynamicAnchor: 'node',
-      ...closed({ next: { $dynamicRef: '#node' }, value: NUMBER }),
+      $ref: 'tree',
+      unevaluatedProperties: false,
+      $defs: {
+        tree: {
+          $id: 'tree',
+          $dynamicAnchor: 'node',
+          type: 'object',
+          properties: { value: NUMBER, next: { $dynamicRef: '#node' } },
+        },
+      },
     },
-    [{ value: 1 }, { value: 1, next: { value: 2 } }, { value: 1, next: { value: 'x' } }],
+    [
+      { value: 1 },
+      { value: 1, next: { value: 2 } },
+      { value: 1, next: { value: 2, extra: 1 } },
+      { value: 1, next: { value: 'x' } },
+    ],
   ),
 
   // `format`.
@@ -179,16 +197,17 @@ export const SCHEMA_CASES: readonly SchemaCase[] = [
   format('date', '2026-11-20', '20/11/2026'),
   format('time', '09:00:00Z', '9am'),
   format('duration', 'P1D', 'one day'),
-  format('email', 'a@example.com', 'not an email'),
+  // RFC 5321 allows `!` in the local part; a check narrower than the format refuses it.
+  format('email', 'a@example.com', 'a!b@example.com', 'not an email'),
   format('idn-email', 'a@example.com', 'not an email'),
   format('hostname', 'example.com', 'not a host!'),
   format('idn-hostname', 'example.com', 'not a host!'),
   format('ipv4', '127.0.0.1', '999.1.1.1'),
   format('ipv6', '::1', 'zz::1'),
   format('uri', 'https://example.com/a', 'not a uri'),
-  format('uri-reference', '/a/b', 'not a uri \\ ^'),
+  format('uri-reference', '/a/b', String.raw`not a uri \ ^`),
   format('iri', 'https://example.com/ä', 'not an iri'),
-  format('iri-reference', '/ä/b', 'not an iri \\ ^'),
+  format('iri-reference', '/ä/b', String.raw`not an iri \ ^`),
   format('uuid', '123e4567-e89b-12d3-a456-426614174000', 'not-a-uuid'),
   format('uri-template', '/a/{b}', '/a/{b'),
   format('json-pointer', '/a/b', 'a/b'),

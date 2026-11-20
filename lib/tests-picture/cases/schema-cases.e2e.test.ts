@@ -7,7 +7,7 @@
  * rows that are right.
  */
 
-import { afterAll, beforeAll, describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vitest';
 
 import { loadDefinition } from '../rows/definitions.js';
 import { pictureRows } from '../rows/picture-rows.js';
@@ -22,20 +22,22 @@ import { SCHEMA_CASES } from './schema-cases.js';
 import type { Cell } from './verdict.js';
 
 describe('the cases for the rows of a schema', () => {
-  const cells = new Map<string, Cell>();
-  let dispose: () => Promise<void> = () => Promise.resolve();
-
-  beforeAll(async () => {
+  async function runEveryCase(): Promise<ReadonlyMap<string, Cell>> {
+    const cells = new Map<string, Cell>();
     const castr = await createCastrConvert();
-    dispose = castr.dispose;
-    for (const schemaCase of SCHEMA_CASES) {
-      cells.set(schemaCase.rowId, await runCase(schemaCase, castr.convert));
+    try {
+      for (const schemaCase of SCHEMA_CASES) {
+        cells.set(schemaCase.rowId, await runCase(schemaCase, castr.convert));
+      }
+    } finally {
+      await castr.dispose();
     }
-  });
+    return cells;
+  }
 
-  afterAll(async () => {
-    await dispose();
-  });
+  function rowsWith(cells: ReadonlyMap<string, Cell>, verdict: Cell['verdict']): string[] {
+    return [...cells].filter(([, cell]) => cell.verdict === verdict).map(([rowId]) => rowId);
+  }
 
   it('has exactly one case for every row whose construct decides a value', () => {
     const { rows } = pictureRows(loadDefinition);
@@ -57,18 +59,13 @@ describe('the cases for the rows of a schema', () => {
     expect(inert.map((schemaCase) => schemaCase.rowId)).toEqual(['text:`true` as a schema']);
   });
 
-  it('is right today on exactly the rows recorded as right', () => {
-    const right = [...cells].filter(([, cell]) => cell.verdict === 'right').map(([rowId]) => rowId);
+  // One test runs Castr once and holds both facts about its cells, so no result is
+  // shared between tests.
+  it('is right on exactly the rows recorded as right, and judges every case it can', async () => {
+    const cells = await runEveryCase();
 
-    expect(right).toEqual(RIGHT_TODAY);
-  });
-
-  it('judges every case the reference validator can check', () => {
-    const notJudged = [...cells]
-      .filter(([, cell]) => cell.verdict === 'not judged')
-      .map(([rowId]) => rowId);
-
-    expect(notJudged).toEqual([
+    expect(rowsWith(cells, 'right')).toEqual(RIGHT_TODAY);
+    expect(rowsWith(cells, 'not judged')).toEqual([
       'text:format: idn-email',
       'text:format: idn-hostname',
       'text:format: iri',

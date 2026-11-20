@@ -4,7 +4,7 @@
 
 import { describe, it, expect } from 'vitest';
 
-import { cellForThrown, firstLine, judge } from './verdict.js';
+import { cellForThrown, judge, onOneLine } from './verdict.js';
 
 describe('judge', () => {
   it('is right where the two validators decide every sample alike', () => {
@@ -33,10 +33,10 @@ describe('judge', () => {
 });
 
 describe('cellForThrown', () => {
-  it('reads an error Castr raised as a refusal, in its own first line', () => {
-    expect(cellForThrown(new Error('Unsupported string format "regex".\n  at somewhere'))).toEqual({
+  it('reads an error Castr raised as a refusal, with its whole message on one line', () => {
+    expect(cellForThrown(new Error('Invalid document:\n\n  Issue: no target'))).toEqual({
       verdict: 'refused',
-      detail: 'Unsupported string format "regex".',
+      detail: 'Invalid document: Issue: no target',
     });
   });
 
@@ -56,9 +56,9 @@ describe('cellForThrown', () => {
   });
 });
 
-describe('firstLine', () => {
-  it('keeps the part of a message before its first line break', () => {
-    expect(firstLine('one\ntwo')).toBe('one');
-    expect(firstLine('')).toBe('');
+describe('onOneLine', () => {
+  it('joins the lines of a message, without the blank ones or their indentation', () => {
+    expect(onOneLine('one\n\n  two\n')).toBe('one two');
+    expect(onOneLine('')).toBe('');
   });
 });

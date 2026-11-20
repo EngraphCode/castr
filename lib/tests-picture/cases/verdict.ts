@@ -56,11 +56,14 @@ export function cellForThrown(thrown: unknown): Cell {
     return { verdict: 'crashed', detail: `threw a value that is not an error: ${String(thrown)}` };
   }
   const isFault = RUNTIME_FAULTS.some((fault) => thrown instanceof fault);
-  return { verdict: isFault ? 'crashed' : 'refused', detail: firstLine(thrown.message) };
+  return { verdict: isFault ? 'crashed' : 'refused', detail: onOneLine(thrown.message) };
 }
 
-/** The first line of a message, which is the part written for a reader. */
-export function firstLine(text: string): string {
-  const [line = ''] = text.split('\n');
-  return line;
+/** A message on one line, so that it fits a cell. A reason is often not on the first. */
+export function onOneLine(text: string): string {
+  return text
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line !== '')
+    .join(' ');
 }

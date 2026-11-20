@@ -32,8 +32,8 @@ export async function runCase(schemaCase: SchemaCase, convert: Convert): Promise
   let converted: Converted;
   try {
     converted = await convert(document);
-  } catch (thrown) {
-    return cellForThrown(thrown);
+  } catch (error) {
+    return cellForThrown(error);
   }
   if (converted.kind === 'no validator') {
     return { verdict: 'missing', detail: 'Castr emitted no validator for the shape' };

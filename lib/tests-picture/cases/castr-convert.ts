@@ -1,5 +1,5 @@
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { join, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { z } from 'zod';
@@ -9,7 +9,7 @@ import type { UnknownRecord } from '../../src/shared/type-utils/types.js';
 
 import type { Convert, Converted } from './run-case.js';
 import { CASE_COMPONENT } from './schema-case.js';
-import { firstLine } from './verdict.js';
+import { onOneLine } from './verdict.js';
 
 const TEMP_ROOT = fileURLToPath(new URL('../.tmp/', import.meta.url));
 
@@ -24,13 +24,13 @@ function validatorIn(moduleExports: unknown): Converted {
   return { kind: 'validator', accepts: (value) => exported.safeParse(value).success };
 }
 
-async function load(modulePath: string): Promise<Converted> {
+async function load(modulePath: string, directory: string): Promise<Converted> {
   let loaded: unknown;
   try {
     loaded = await import(pathToFileURL(modulePath).href);
   } catch (error) {
-    const reason = error instanceof Error ? firstLine(error.message) : String(error);
-    return { kind: 'output does not load', reason };
+    const reason = error instanceof Error ? onOneLine(error.message) : String(error);
+    return { kind: 'output does not load', reason: reason.replaceAll(directory + sep, '') };
   }
   return validatorIn(loaded);
 }
@@ -59,12 +59,18 @@ export async function createCastrConvert(): Promise<{
       input,
       disableWriteToFile: true,
       template: 'schemas-only',
+    }).catch((error: unknown) => {
+      // The directory is new on every run; a message must not differ from run to run.
+      if (error instanceof Error) {
+        error.message = error.message.replaceAll(directory + sep, '');
+      }
+      throw error;
     });
     if (result.type !== 'single') {
       return { kind: 'no validator' };
     }
     await writeFile(output, result.content, 'utf8');
-    return load(output);
+    return load(output, directory);
   };
 
   return { convert, dispose: () => rm(directory, { recursive: true, force: true }) };
