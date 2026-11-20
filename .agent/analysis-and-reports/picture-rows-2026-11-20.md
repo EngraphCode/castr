@@ -22,10 +22,10 @@ SPEC-C-1: OpenAPI to Zod and OpenAPI to TypeScript.
   meta-schemas, read from the copies ajv 8.20.0 ships. 57 keywords, and the seven values
   of `type`.
 - **OpenAPI objects and fields:** every property name any branch of each object
-  definition declares in the OpenAPI 3.1 document schema
+  definition declares, and every fixed value such a property may take, in the OpenAPI 3.1 document schema
   (`https://spec.openapis.org/oas/3.1/schema/2022-10-07`), read from the copy
-  `@scalar/openapi-validator` 0.1.0 ships. 40 objects, 132 fields, and 15 objects whose
-  entries are keyed by a pattern or by any key.
+  `@scalar/openapi-validator` 0.1.0 ships. 40 objects, 132 fields that make 150 rows, and 15
+  objects whose entries are keyed by a pattern or by any key.
 - **Rows from prose:** the values of `format`, the OpenAPI base vocabulary
   (`discriminator`, `xml`, `externalDocs`, `example`), boolean schemas, unknown keywords
   and extensions are defined in the specifications' text and in no machine-readable file
@@ -54,20 +54,22 @@ Three more labels appear in the tables. They are this report's and are not class
 
 ## What the list shows
 
-1. **The four classes do not cover 100 of the 247 rows for Zod, and 87 for TypeScript.**
+1. **The four classes do not cover 116 of the 268 rows for Zod, and 103 for TypeScript.**
    The classes describe a construct the target is asked to express. Most of an OpenAPI
    document is not that:
-   - 62 rows are document content (`info`, `servers`, `tags`, security schemes, links).
+   - 68 rows are document content (`info`, `servers`, `tags`, security schemes, links).
      The specification says the model carries it and the OpenAPI writer writes it back.
      Zod and TypeScript have no place for it, and refusing it would refuse every
      document.
-   - 15 rows are serialisation rules (`style`, `explode`, `allowReserved`, `encoding`,
+   - 24 rows are serialisation rules (`style`, `explode`, `allowReserved`, `encoding`,
      `xml`). The specification calls a parameter's serialisation rule meaning. Neither
      target can say it; the endpoint definitions are the natural place, and their content
      is not yet specified.
    - 13 rows are things said about a boundary (an operation's `summary`, a parameter's
      `description`). TypeScript can show a comment. Zod has no schema to attach them to.
    - 10 rows are examples of bodies and parameters, and extensions outside schemas.
+   - 1 row is the 3.0 format `binary`: raw octets, which are not a value in the
+     specification's sense.
 
    My position: the table needs a fifth class for meaning that lies outside a target's
    subject, with a guard that it can never be given to a schema keyword, a `type` value
@@ -107,15 +109,17 @@ Three more labels appear in the tables. They are this report's and are not class
    binary floating point; the model holds exact decimals), `maxLength` and `minLength`
    (characters against UTF-16 units), `email` (Zod's pattern is narrower than the RFC),
    and `int64` (a JavaScript number is exact only to 2^53). `int64` needs a decision of
-   its own, because the value domain in SPEC-P-5 excludes `bigint`.
+   its own: the value domain in SPEC-P-5 excludes `bigint`, and today's TypeScript writer
+   emits `bigint` for it, a type `JSON.parse` never returns.
 
 7. **OpenAPI is three formats in the "read" column.** Section 6 reads 3.0.x, 3.1.x and
    3.2.x, and SPEC-PR-6 measures against "any valid document of its source format". 3.2
    adds 26 fields and values to the 3.1 list (among them `query` and
    `additionalOperations` on a path item, `itemSchema` on a media type, and the
    `querystring` location); three further entries in section F are 3.1 rows that the 3.2
-   schema regroups. 3.0 adds `nullable` and reads four keywords by draft-04's
-   rules. Section F lists them. They have no proposed class yet.
+   schema regroups. They have no proposed class yet. 3.0 adds `nullable` and the formats
+   `byte` and `binary`, which sections C and D class, and reads four keywords by
+   draft-04's rules.
 
 ## Limits
 
@@ -127,9 +131,11 @@ Three more labels appear in the tables. They are this report's and are not class
 - The OpenAPI document schema does not validate the schema object ("without schema
   validation", in its own description). The schema rows come from the JSON Schema
   vocabularies and from prose.
-- A field that two branches of one object declare is one row. A field whose meaning
-  changes with a sibling (a parameter with `schema` against one with `content`) is still
-  one row.
+- A field with a fixed set of values is one row per value (a parameter's four locations,
+  its seven styles), because one case for the field would exercise one value. A field
+  that two branches of one object declare is one row, and a field whose meaning changes
+  with a sibling's value (`explode` under each `style`) is still one row: those need
+  cases in combination, as the next limit says.
 - No row is given for a combination of keywords. The construct report found defects that
   exist only in combination (a closed object under `allOf`; keywords beside `$ref`). The
   PICTURE command needs cases for those in addition to one per row.
@@ -138,10 +144,10 @@ Three more labels appear in the tables. They are this report's and are not class
 
 ### Counts
 
-Rows with a proposed class: 247 (57 keywords, 7 type values, 25 format values, 11 other schema rows, 132 fields and 15 keyed-entry rows over 40 objects).
+Rows with a proposed class: 268 (57 keywords, 7 type values, 27 format values, 11 other schema rows, 132 fields, which make 150 rows because a field with a fixed set of values is one row per value, and 16 keyed-entry rows, over 40 objects).
 
-- To Zod: carried 64; carried, by a check Castr writes 26; structure 52; companion 0; unexpressible 0; no class fits 100; read by the parser 5.
-- To TypeScript: carried 37; carried, by a check Castr writes 0; structure 35; companion 83; unexpressible 0; no class fits 87; read by the parser 5.
+- To Zod: carried 65; carried, by a check Castr writes 26; structure 56; companion 0; unexpressible 0; no class fits 116; read by the parser 5.
+- To TypeScript: carried 37; carried, by a check Castr writes 0; structure 39; companion 84; unexpressible 0; no class fits 103; read by the parser 5.
 
 ### A. Schema keywords (computed: the 2020-12 vocabularies)
 
@@ -219,33 +225,35 @@ Rows with a proposed class: 247 (57 keywords, 7 type values, 25 format values, 1
 
 ### C. Values of `format` (from prose; not computed)
 
-| Value                   | To Zod                           | To TypeScript | Source           | Note                                                                                                                                   |
-| ----------------------- | -------------------------------- | ------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `date-time`             | carried                          | companion     | Validation 7.3.1 | `z.iso.datetime` with offsets allowed.                                                                                                 |
-| `date`                  | carried                          | companion     | Validation 7.3.1 |                                                                                                                                        |
-| `time`                  | carried                          | companion     | Validation 7.3.1 | RFC 3339 full-time has an offset; `z.iso.time` refuses one, so a pattern is written.                                                   |
-| `duration`              | carried                          | companion     | Validation 7.3.1 |                                                                                                                                        |
-| `email`                 | carried                          | companion     | Validation 7.3.2 | Zod's pattern is narrower than RFC 5321; SPEC-G-4 decides.                                                                             |
-| `idn-email`             | carried, by a check Castr writes | companion     | Validation 7.3.2 |                                                                                                                                        |
-| `hostname`              | carried                          | companion     | Validation 7.3.3 |                                                                                                                                        |
-| `idn-hostname`          | carried, by a check Castr writes | companion     | Validation 7.3.3 |                                                                                                                                        |
-| `ipv4`                  | carried                          | companion     | Validation 7.3.4 |                                                                                                                                        |
-| `ipv6`                  | carried                          | companion     | Validation 7.3.4 |                                                                                                                                        |
-| `uri`                   | carried, by a check Castr writes | companion     | Validation 7.3.5 | `z.url` follows the WHATWG parser, not RFC 3986.                                                                                       |
-| `uri-reference`         | carried, by a check Castr writes | companion     | Validation 7.3.5 |                                                                                                                                        |
-| `iri`                   | carried, by a check Castr writes | companion     | Validation 7.3.5 |                                                                                                                                        |
-| `iri-reference`         | carried, by a check Castr writes | companion     | Validation 7.3.5 |                                                                                                                                        |
-| `uuid`                  | carried                          | companion     | Validation 7.3.5 | `z.guid`: RFC 4122 form with no version check.                                                                                         |
-| `uri-template`          | carried, by a check Castr writes | companion     | Validation 7.3.6 |                                                                                                                                        |
-| `json-pointer`          | carried, by a check Castr writes | companion     | Validation 7.3.7 |                                                                                                                                        |
-| `relative-json-pointer` | carried, by a check Castr writes | companion     | Validation 7.3.7 |                                                                                                                                        |
-| `regex`                 | carried, by a check Castr writes | companion     | Validation 7.3.8 |                                                                                                                                        |
-| `int32`                 | carried                          | companion     | OpenAPI 3.1, 4.3 |                                                                                                                                        |
-| `int64`                 | carried                          | companion     | OpenAPI 3.1, 4.3 | A JavaScript number is exact only to 2^53; the value domain (SPEC-P-5) holds numbers exactly, so this row needs a decision of its own. |
-| `float`                 | carried                          | companion     | OpenAPI 3.1, 4.3 |                                                                                                                                        |
-| `double`                | carried                          | companion     | OpenAPI 3.1, 4.3 |                                                                                                                                        |
-| `password`              | structure                        | companion     | OpenAPI 3.1, 4.3 | A hint to user interfaces; it asserts nothing.                                                                                         |
-| any other value         | structure                        | companion     | OpenAPI 3.1, 4.3 | Carried as an annotation and named in the run report; never a refusal. SPEC-P-3 does not say this yet.                                 |
+| Value                   | To Zod                           | To TypeScript | Source             | Note                                                                                                                                                                                                                                           |
+| ----------------------- | -------------------------------- | ------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `date-time`             | carried                          | companion     | Validation 7.3.1   | `z.iso.datetime` with offsets allowed.                                                                                                                                                                                                         |
+| `date`                  | carried                          | companion     | Validation 7.3.1   |                                                                                                                                                                                                                                                |
+| `time`                  | carried                          | companion     | Validation 7.3.1   | RFC 3339 full-time has an offset; `z.iso.time` refuses one, so a pattern is written.                                                                                                                                                           |
+| `duration`              | carried                          | companion     | Validation 7.3.1   |                                                                                                                                                                                                                                                |
+| `email`                 | carried                          | companion     | Validation 7.3.2   | Zod's pattern is narrower than RFC 5321; SPEC-G-4 decides.                                                                                                                                                                                     |
+| `idn-email`             | carried, by a check Castr writes | companion     | Validation 7.3.2   |                                                                                                                                                                                                                                                |
+| `hostname`              | carried                          | companion     | Validation 7.3.3   |                                                                                                                                                                                                                                                |
+| `idn-hostname`          | carried, by a check Castr writes | companion     | Validation 7.3.3   |                                                                                                                                                                                                                                                |
+| `ipv4`                  | carried                          | companion     | Validation 7.3.4   |                                                                                                                                                                                                                                                |
+| `ipv6`                  | carried                          | companion     | Validation 7.3.4   |                                                                                                                                                                                                                                                |
+| `uri`                   | carried, by a check Castr writes | companion     | Validation 7.3.5   | `z.url` follows the WHATWG parser, not RFC 3986.                                                                                                                                                                                               |
+| `uri-reference`         | carried, by a check Castr writes | companion     | Validation 7.3.5   |                                                                                                                                                                                                                                                |
+| `iri`                   | carried, by a check Castr writes | companion     | Validation 7.3.5   |                                                                                                                                                                                                                                                |
+| `iri-reference`         | carried, by a check Castr writes | companion     | Validation 7.3.5   |                                                                                                                                                                                                                                                |
+| `uuid`                  | carried                          | companion     | Validation 7.3.5   | `z.guid`: RFC 4122 form with no version check.                                                                                                                                                                                                 |
+| `uri-template`          | carried, by a check Castr writes | companion     | Validation 7.3.6   |                                                                                                                                                                                                                                                |
+| `json-pointer`          | carried, by a check Castr writes | companion     | Validation 7.3.7   |                                                                                                                                                                                                                                                |
+| `relative-json-pointer` | carried, by a check Castr writes | companion     | Validation 7.3.7   |                                                                                                                                                                                                                                                |
+| `regex`                 | carried, by a check Castr writes | companion     | Validation 7.3.8   |                                                                                                                                                                                                                                                |
+| `int32`                 | carried                          | companion     | OpenAPI 3.1, 4.3   |                                                                                                                                                                                                                                                |
+| `int64`                 | carried                          | companion     | OpenAPI 3.1, 4.3   | Needs a decision of its own. A JavaScript number is exact only to 2^53, and the value domain (SPEC-P-5) excludes `bigint`. Today's writers emit `bigint` for it in TypeScript and in Zod, which types a value that `JSON.parse` never returns. |
+| `float`                 | carried                          | companion     | OpenAPI 3.1, 4.3   |                                                                                                                                                                                                                                                |
+| `double`                | carried                          | companion     | OpenAPI 3.1, 4.3   |                                                                                                                                                                                                                                                |
+| `password`              | structure                        | companion     | OpenAPI 3.1, 4.3   | A hint to user interfaces; it asserts nothing.                                                                                                                                                                                                 |
+| `byte`                  | carried                          | companion     | OpenAPI 3.0.4, 4.4 | A base64 string (`z.base64`). 3.1 says this with `contentEncoding`.                                                                                                                                                                            |
+| `binary`                | no class fits                    | no class fits | OpenAPI 3.0.4, 4.4 | Raw octets: the body is not a JSON value, so it is outside the value domain (SPEC-P-5). 3.1 says this with a media type and no schema. Needs a decision.                                                                                       |
+| any other value         | structure                        | companion     | OpenAPI 3.1, 4.3   | Carried as an annotation and named in the run report; never a refusal. SPEC-P-3 does not say this yet.                                                                                                                                         |
 
 ### D. Schema rows the two definitions do not list (from prose; not computed)
 
@@ -265,155 +273,174 @@ Rows with a proposed class: 247 (57 keywords, 7 type values, 25 format values, 1
 
 ### E. OpenAPI objects and their fields (computed: the 3.1 document schema)
 
-| Object                   | Field                                                                                          | To Zod             | To TypeScript      | Note                                                                                            |
-| ------------------------ | ---------------------------------------------------------------------------------------------- | ------------------ | ------------------ | ----------------------------------------------------------------------------------------------- |
-| openapi (document root)  | `components`                                                                                   | structure          | structure          |                                                                                                 |
-| openapi (document root)  | `externalDocs`                                                                                 | no class fits      | no class fits      | Document content.                                                                               |
-| openapi (document root)  | `info`                                                                                         | no class fits      | no class fits      | Document content.                                                                               |
-| openapi (document root)  | `jsonSchemaDialect`                                                                            | read by the parser | read by the parser | Selects the dialect its schemas are read in.                                                    |
-| openapi (document root)  | `openapi`                                                                                      | read by the parser | read by the parser | Selects the version the document is read as.                                                    |
-| openapi (document root)  | `paths`                                                                                        | structure          | structure          | Each path template is a key.                                                                    |
-| openapi (document root)  | `security`                                                                                     | no class fits      | no class fits      | Document content.                                                                               |
-| openapi (document root)  | `servers`                                                                                      | no class fits      | no class fits      | Document content.                                                                               |
-| openapi (document root)  | `tags`                                                                                         | no class fits      | no class fits      | Document content.                                                                               |
-| openapi (document root)  | `webhooks`                                                                                     | structure          | structure          |                                                                                                 |
-| openapi (document root)  | entries keyed by any key                                                                       | structure          | structure          |                                                                                                 |
-| info                     | `contact`                                                                                      | no class fits      | no class fits      | Document content.                                                                               |
-| info                     | `description`                                                                                  | no class fits      | no class fits      | Document content.                                                                               |
-| info                     | `license`                                                                                      | no class fits      | no class fits      | Document content.                                                                               |
-| info                     | `summary`                                                                                      | no class fits      | no class fits      | Document content.                                                                               |
-| info                     | `termsOfService`                                                                               | no class fits      | no class fits      | Document content.                                                                               |
-| info                     | `title`                                                                                        | no class fits      | no class fits      | Document content.                                                                               |
-| info                     | `version`                                                                                      | no class fits      | no class fits      | Document content.                                                                               |
-| contact                  | `email`                                                                                        | no class fits      | no class fits      | Document content.                                                                               |
-| contact                  | `name`                                                                                         | no class fits      | no class fits      | Document content.                                                                               |
-| contact                  | `url`                                                                                          | no class fits      | no class fits      | Document content.                                                                               |
-| license                  | `identifier`                                                                                   | no class fits      | no class fits      | Document content.                                                                               |
-| license                  | `name`                                                                                         | no class fits      | no class fits      | Document content.                                                                               |
-| license                  | `url`                                                                                          | no class fits      | no class fits      | Document content.                                                                               |
-| server                   | `description`                                                                                  | no class fits      | no class fits      | Document content.                                                                               |
-| server                   | `url`                                                                                          | no class fits      | no class fits      | Document content.                                                                               |
-| server                   | `variables`                                                                                    | no class fits      | no class fits      | Document content.                                                                               |
-| server                   | entries keyed by any key                                                                       | no class fits      | no class fits      | Document content.                                                                               |
-| server-variable          | `default`                                                                                      | no class fits      | no class fits      | Document content.                                                                               |
-| server-variable          | `description`                                                                                  | no class fits      | no class fits      | Document content.                                                                               |
-| server-variable          | `enum`                                                                                         | no class fits      | no class fits      | Document content.                                                                               |
-| components               | `callbacks`                                                                                    | structure          | structure          | A named component stays named (SPEC-PR-3).                                                      |
-| components               | `examples`                                                                                     | no class fits      | no class fits      |                                                                                                 |
-| components               | `headers`                                                                                      | structure          | structure          | A named component stays named (SPEC-PR-3).                                                      |
-| components               | `links`                                                                                        | no class fits      | no class fits      | Document content.                                                                               |
-| components               | `parameters`                                                                                   | structure          | structure          | A named component stays named (SPEC-PR-3).                                                      |
-| components               | `pathItems`                                                                                    | structure          | structure          | A named component stays named (SPEC-PR-3).                                                      |
-| components               | `requestBodies`                                                                                | structure          | structure          | A named component stays named (SPEC-PR-3).                                                      |
-| components               | `responses`                                                                                    | structure          | structure          | A named component stays named (SPEC-PR-3).                                                      |
-| components               | `schemas`                                                                                      | carried            | carried            | Each named schema is written once.                                                              |
-| components               | `securitySchemes`                                                                              | no class fits      | no class fits      | Document content.                                                                               |
-| components               | entries keyed by any key                                                                       | structure          | structure          |                                                                                                 |
-| paths                    | entries keyed by `^/`                                                                          | structure          | structure          | The path template is the key.                                                                   |
-| path-item                | `delete`                                                                                       | structure          | structure          | The method is a key.                                                                            |
-| path-item                | `description`                                                                                  | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
-| path-item                | `get`                                                                                          | structure          | structure          | The method is a key.                                                                            |
-| path-item                | `head`                                                                                         | structure          | structure          | The method is a key.                                                                            |
-| path-item                | `options`                                                                                      | structure          | structure          | The method is a key.                                                                            |
-| path-item                | `parameters`                                                                                   | carried            | carried            | Apply to every operation of the path.                                                           |
-| path-item                | `patch`                                                                                        | structure          | structure          | The method is a key.                                                                            |
-| path-item                | `post`                                                                                         | structure          | structure          | The method is a key.                                                                            |
-| path-item                | `put`                                                                                          | structure          | structure          | The method is a key.                                                                            |
-| path-item                | `servers`                                                                                      | no class fits      | no class fits      | Document content.                                                                               |
-| path-item                | `summary`                                                                                      | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
-| path-item                | `trace`                                                                                        | structure          | structure          | The method is a key.                                                                            |
-| operation                | `callbacks`                                                                                    | structure          | structure          |                                                                                                 |
-| operation                | `deprecated`                                                                                   | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
-| operation                | `description`                                                                                  | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
-| operation                | `externalDocs`                                                                                 | no class fits      | no class fits      | Document content.                                                                               |
-| operation                | `operationId`                                                                                  | structure          | structure          | The boundary's identity.                                                                        |
-| operation                | `parameters`                                                                                   | carried            | carried            |                                                                                                 |
-| operation                | `requestBody`                                                                                  | carried            | carried            |                                                                                                 |
-| operation                | `responses`                                                                                    | carried            | carried            |                                                                                                 |
-| operation                | `security`                                                                                     | no class fits      | no class fits      | Document content.                                                                               |
-| operation                | `servers`                                                                                      | no class fits      | no class fits      | Document content.                                                                               |
-| operation                | `summary`                                                                                      | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
-| operation                | `tags`                                                                                         | no class fits      | no class fits      | Document content.                                                                               |
-| operation                | entries keyed by any key                                                                       | structure          | structure          |                                                                                                 |
-| external-documentation   | `description`                                                                                  | no class fits      | no class fits      | Document content.                                                                               |
-| external-documentation   | `url`                                                                                          | no class fits      | no class fits      | Document content.                                                                               |
-| parameter                | `allowEmptyValue`                                                                              | no class fits      | no class fits      | A serialisation rule.                                                                           |
-| parameter                | `allowReserved`                                                                                | no class fits      | no class fits      | A serialisation rule.                                                                           |
-| parameter                | `content`                                                                                      | carried            | carried            | Keyed by media type.                                                                            |
-| parameter                | `deprecated`                                                                                   | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
-| parameter                | `description`                                                                                  | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
-| parameter                | `explode`                                                                                      | no class fits      | no class fits      | A serialisation rule.                                                                           |
-| parameter                | `in` (`cookie`, `header`, `path`, `query`)                                                     | structure          | structure          | Four locations, each a key.                                                                     |
-| parameter                | `name`                                                                                         | structure          | structure          |                                                                                                 |
-| parameter                | `required`                                                                                     | carried            | carried            |                                                                                                 |
-| parameter                | `schema`                                                                                       | carried            | carried            |                                                                                                 |
-| parameter                | `style` (`deepObject`, `form`, `label`, `matrix`, `pipeDelimited`, `simple`, `spaceDelimited`) | no class fits      | no class fits      | A serialisation rule.                                                                           |
-| request-body             | `content`                                                                                      | carried            | carried            | Keyed by media type.                                                                            |
-| request-body             | `description`                                                                                  | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
-| request-body             | `required`                                                                                     | carried            | carried            |                                                                                                 |
-| content                  | entries keyed by any key                                                                       | structure          | structure          | The media type is the key.                                                                      |
-| media-type               | `encoding`                                                                                     | no class fits      | no class fits      | A serialisation rule.                                                                           |
-| media-type               | `schema`                                                                                       | carried            | carried            |                                                                                                 |
-| media-type               | entries keyed by any key                                                                       | no class fits      | no class fits      | A serialisation rule.                                                                           |
-| encoding                 | `allowReserved`                                                                                | no class fits      | no class fits      | A serialisation rule.                                                                           |
-| encoding                 | `contentType`                                                                                  | no class fits      | no class fits      | A serialisation rule.                                                                           |
-| encoding                 | `explode`                                                                                      | no class fits      | no class fits      | A serialisation rule.                                                                           |
-| encoding                 | `headers`                                                                                      | no class fits      | no class fits      | A serialisation rule.                                                                           |
-| encoding                 | `style` (`deepObject`, `form`, `pipeDelimited`, `spaceDelimited`)                              | no class fits      | no class fits      | A serialisation rule.                                                                           |
-| encoding                 | entries keyed by any key                                                                       | no class fits      | no class fits      | A serialisation rule.                                                                           |
-| responses                | `default`                                                                                      | structure          | structure          | Kept apart from every status (SPEC-C-1).                                                        |
-| responses                | entries keyed by `^[1-5](?:[0-9]{2}\|XX)$`                                                     | structure          | structure          | An exact code or a range; neither becomes the other.                                            |
-| response                 | `content`                                                                                      | carried            | carried            | Keyed by media type.                                                                            |
-| response                 | `description`                                                                                  | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
-| response                 | `headers`                                                                                      | carried            | carried            |                                                                                                 |
-| response                 | `links`                                                                                        | no class fits      | no class fits      | Document content.                                                                               |
-| response                 | entries keyed by any key                                                                       | structure          | structure          |                                                                                                 |
-| callbacks                | entries keyed by any key                                                                       | structure          | structure          | The expression is the key.                                                                      |
-| example                  | `description`                                                                                  | no class fits      | no class fits      | An example of a body or parameter, not of a schema.                                             |
-| example                  | `externalValue`                                                                                | no class fits      | no class fits      | An example of a body or parameter, not of a schema.                                             |
-| example                  | `summary`                                                                                      | no class fits      | no class fits      | An example of a body or parameter, not of a schema.                                             |
-| example                  | `value`                                                                                        | no class fits      | no class fits      | An example of a body or parameter, not of a schema.                                             |
-| link                     | `body`                                                                                         | no class fits      | no class fits      | Document content.                                                                               |
-| link                     | `description`                                                                                  | no class fits      | no class fits      | Document content.                                                                               |
-| link                     | `operationId`                                                                                  | no class fits      | no class fits      | Document content.                                                                               |
-| link                     | `operationRef`                                                                                 | no class fits      | no class fits      | Document content.                                                                               |
-| link                     | `parameters`                                                                                   | no class fits      | no class fits      | Document content.                                                                               |
-| link                     | `requestBody`                                                                                  | no class fits      | no class fits      | Document content.                                                                               |
-| header                   | `content`                                                                                      | carried            | carried            |                                                                                                 |
-| header                   | `deprecated`                                                                                   | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
-| header                   | `description`                                                                                  | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
-| header                   | `explode`                                                                                      | no class fits      | no class fits      | A serialisation rule.                                                                           |
-| header                   | `required`                                                                                     | carried            | carried            |                                                                                                 |
-| header                   | `schema`                                                                                       | carried            | carried            |                                                                                                 |
-| header                   | `style`                                                                                        | no class fits      | no class fits      | A serialisation rule.                                                                           |
-| tag                      | `description`                                                                                  | no class fits      | no class fits      | Document content.                                                                               |
-| tag                      | `externalDocs`                                                                                 | no class fits      | no class fits      | Document content.                                                                               |
-| tag                      | `name`                                                                                         | no class fits      | no class fits      | Document content.                                                                               |
-| reference                | `$ref`                                                                                         | carried            | carried            | Written as a reference (SPEC-PR-3).                                                             |
-| reference                | `description`                                                                                  | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
-| reference                | `summary`                                                                                      | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
-| security-scheme          | `bearerFormat`                                                                                 | no class fits      | no class fits      | Document content.                                                                               |
-| security-scheme          | `description`                                                                                  | no class fits      | no class fits      | Document content.                                                                               |
-| security-scheme          | `flows`                                                                                        | no class fits      | no class fits      | Document content.                                                                               |
-| security-scheme          | `in` (`cookie`, `header`, `query`)                                                             | no class fits      | no class fits      | Document content.                                                                               |
-| security-scheme          | `name`                                                                                         | no class fits      | no class fits      | Document content.                                                                               |
-| security-scheme          | `openIdConnectUrl`                                                                             | no class fits      | no class fits      | Document content.                                                                               |
-| security-scheme          | `scheme`                                                                                       | no class fits      | no class fits      | Document content.                                                                               |
-| security-scheme          | `type` (`apiKey`, `http`, `mutualTLS`, `oauth2`, `openIdConnect`)                              | no class fits      | no class fits      | Document content.                                                                               |
-| oauth-flows              | `authorizationCode`                                                                            | no class fits      | no class fits      | Document content.                                                                               |
-| oauth-flows              | `authorizationUrl`                                                                             | no class fits      | no class fits      | Document content.                                                                               |
-| oauth-flows              | `clientCredentials`                                                                            | no class fits      | no class fits      | Document content.                                                                               |
-| oauth-flows              | `implicit`                                                                                     | no class fits      | no class fits      | Document content.                                                                               |
-| oauth-flows              | `password`                                                                                     | no class fits      | no class fits      | Document content.                                                                               |
-| oauth-flows              | `refreshUrl`                                                                                   | no class fits      | no class fits      | Document content.                                                                               |
-| oauth-flows              | `scopes`                                                                                       | no class fits      | no class fits      | Document content.                                                                               |
-| oauth-flows              | `tokenUrl`                                                                                     | no class fits      | no class fits      | Document content.                                                                               |
-| security-requirement     | entries keyed by any key                                                                       | no class fits      | no class fits      | Document content.                                                                               |
-| specification-extensions | entries keyed by `^x-`                                                                         | no class fits      | no class fits      | On a schema it is carried as structure; see the rows the definitions do not list.               |
-| examples                 | `example`                                                                                      | no class fits      | no class fits      | An example of a body or parameter, not of a schema.                                             |
-| examples                 | `examples`                                                                                     | no class fits      | no class fits      | An example of a body or parameter, not of a schema.                                             |
-| examples                 | entries keyed by any key                                                                       | no class fits      | no class fits      |                                                                                                 |
-| map-of-strings           | entries keyed by any key                                                                       | no class fits      | no class fits      | Document content.                                                                               |
+| Object                   | Field                                          | To Zod             | To TypeScript      | Note                                                                                            |
+| ------------------------ | ---------------------------------------------- | ------------------ | ------------------ | ----------------------------------------------------------------------------------------------- |
+| openapi (document root)  | `components`                                   | structure          | structure          |                                                                                                 |
+| openapi (document root)  | `externalDocs`                                 | no class fits      | no class fits      | Document content.                                                                               |
+| openapi (document root)  | `info`                                         | no class fits      | no class fits      | Document content.                                                                               |
+| openapi (document root)  | `jsonSchemaDialect`                            | read by the parser | read by the parser | Selects the dialect its schemas are read in.                                                    |
+| openapi (document root)  | `openapi`                                      | read by the parser | read by the parser | Selects the version the document is read as.                                                    |
+| openapi (document root)  | `paths`                                        | structure          | structure          | Each path template is a key.                                                                    |
+| openapi (document root)  | `security`                                     | no class fits      | no class fits      | Document content.                                                                               |
+| openapi (document root)  | `servers`                                      | no class fits      | no class fits      | Document content.                                                                               |
+| openapi (document root)  | `tags`                                         | no class fits      | no class fits      | Document content.                                                                               |
+| openapi (document root)  | `webhooks`                                     | structure          | structure          |                                                                                                 |
+| openapi (document root)  | entries keyed by any key                       | structure          | structure          |                                                                                                 |
+| info                     | `contact`                                      | no class fits      | no class fits      | Document content.                                                                               |
+| info                     | `description`                                  | no class fits      | no class fits      | Document content.                                                                               |
+| info                     | `license`                                      | no class fits      | no class fits      | Document content.                                                                               |
+| info                     | `summary`                                      | no class fits      | no class fits      | Document content.                                                                               |
+| info                     | `termsOfService`                               | no class fits      | no class fits      | Document content.                                                                               |
+| info                     | `title`                                        | no class fits      | no class fits      | Document content.                                                                               |
+| info                     | `version`                                      | no class fits      | no class fits      | Document content.                                                                               |
+| contact                  | `email`                                        | no class fits      | no class fits      | Document content.                                                                               |
+| contact                  | `name`                                         | no class fits      | no class fits      | Document content.                                                                               |
+| contact                  | `url`                                          | no class fits      | no class fits      | Document content.                                                                               |
+| license                  | `identifier`                                   | no class fits      | no class fits      | Document content.                                                                               |
+| license                  | `name`                                         | no class fits      | no class fits      | Document content.                                                                               |
+| license                  | `url`                                          | no class fits      | no class fits      | Document content.                                                                               |
+| server                   | `description`                                  | no class fits      | no class fits      | Document content.                                                                               |
+| server                   | `url`                                          | no class fits      | no class fits      | Document content.                                                                               |
+| server                   | `variables`                                    | no class fits      | no class fits      | Document content.                                                                               |
+| server                   | entries keyed by any key                       | no class fits      | no class fits      | Document content.                                                                               |
+| server-variable          | `default`                                      | no class fits      | no class fits      | Document content.                                                                               |
+| server-variable          | `description`                                  | no class fits      | no class fits      | Document content.                                                                               |
+| server-variable          | `enum`                                         | no class fits      | no class fits      | Document content.                                                                               |
+| components               | `callbacks`                                    | structure          | structure          | A named component stays named (SPEC-PR-3).                                                      |
+| components               | `examples`                                     | no class fits      | no class fits      |                                                                                                 |
+| components               | `headers`                                      | structure          | structure          | A named component stays named (SPEC-PR-3).                                                      |
+| components               | `links`                                        | no class fits      | no class fits      | Document content.                                                                               |
+| components               | `parameters`                                   | structure          | structure          | A named component stays named (SPEC-PR-3).                                                      |
+| components               | `pathItems`                                    | structure          | structure          | A named component stays named (SPEC-PR-3).                                                      |
+| components               | `requestBodies`                                | structure          | structure          | A named component stays named (SPEC-PR-3).                                                      |
+| components               | `responses`                                    | structure          | structure          | A named component stays named (SPEC-PR-3).                                                      |
+| components               | `schemas`                                      | carried            | carried            | Each named schema is written once.                                                              |
+| components               | `securitySchemes`                              | no class fits      | no class fits      | Document content.                                                                               |
+| components               | entries keyed by any key                       | structure          | structure          |                                                                                                 |
+| paths                    | entries keyed by `^/`                          | structure          | structure          | The path template is the key.                                                                   |
+| path-item                | `delete`                                       | structure          | structure          | The method is a key.                                                                            |
+| path-item                | `description`                                  | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
+| path-item                | `get`                                          | structure          | structure          | The method is a key.                                                                            |
+| path-item                | `head`                                         | structure          | structure          | The method is a key.                                                                            |
+| path-item                | `options`                                      | structure          | structure          | The method is a key.                                                                            |
+| path-item                | `parameters`                                   | carried            | carried            | Apply to every operation of the path.                                                           |
+| path-item                | `patch`                                        | structure          | structure          | The method is a key.                                                                            |
+| path-item                | `post`                                         | structure          | structure          | The method is a key.                                                                            |
+| path-item                | `put`                                          | structure          | structure          | The method is a key.                                                                            |
+| path-item                | `servers`                                      | no class fits      | no class fits      | Document content.                                                                               |
+| path-item                | `summary`                                      | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
+| path-item                | `trace`                                        | structure          | structure          | The method is a key.                                                                            |
+| operation                | `callbacks`                                    | structure          | structure          |                                                                                                 |
+| operation                | `deprecated`                                   | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
+| operation                | `description`                                  | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
+| operation                | `externalDocs`                                 | no class fits      | no class fits      | Document content.                                                                               |
+| operation                | `operationId`                                  | structure          | structure          | The boundary's identity.                                                                        |
+| operation                | `parameters`                                   | carried            | carried            |                                                                                                 |
+| operation                | `requestBody`                                  | carried            | carried            |                                                                                                 |
+| operation                | `responses`                                    | carried            | carried            |                                                                                                 |
+| operation                | `security`                                     | no class fits      | no class fits      | Document content.                                                                               |
+| operation                | `servers`                                      | no class fits      | no class fits      | Document content.                                                                               |
+| operation                | `summary`                                      | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
+| operation                | `tags`                                         | no class fits      | no class fits      | Document content.                                                                               |
+| operation                | entries keyed by any key                       | structure          | structure          |                                                                                                 |
+| external-documentation   | `description`                                  | no class fits      | no class fits      | Document content.                                                                               |
+| external-documentation   | `url`                                          | no class fits      | no class fits      | Document content.                                                                               |
+| parameter                | `allowEmptyValue`                              | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| parameter                | `allowReserved`                                | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| parameter                | `content`                                      | carried            | carried            | Keyed by media type.                                                                            |
+| parameter                | `deprecated`                                   | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
+| parameter                | `description`                                  | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
+| parameter                | `explode`                                      | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| parameter                | `in: cookie`                                   | structure          | structure          | Four locations, each a key.                                                                     |
+| parameter                | `in: header`                                   | structure          | structure          | Four locations, each a key.                                                                     |
+| parameter                | `in: path`                                     | structure          | structure          | Four locations, each a key.                                                                     |
+| parameter                | `in: query`                                    | structure          | structure          | Four locations, each a key.                                                                     |
+| parameter                | `name`                                         | structure          | structure          |                                                                                                 |
+| parameter                | `required`                                     | carried            | carried            |                                                                                                 |
+| parameter                | `schema`                                       | carried            | carried            |                                                                                                 |
+| parameter                | `style: deepObject`                            | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| parameter                | `style: form`                                  | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| parameter                | `style: label`                                 | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| parameter                | `style: matrix`                                | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| parameter                | `style: pipeDelimited`                         | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| parameter                | `style: simple`                                | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| parameter                | `style: spaceDelimited`                        | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| request-body             | `content`                                      | carried            | carried            | Keyed by media type.                                                                            |
+| request-body             | `description`                                  | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
+| request-body             | `required`                                     | carried            | carried            |                                                                                                 |
+| content                  | entries keyed by any key                       | structure          | structure          | The media type is the key.                                                                      |
+| media-type               | `encoding`                                     | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| media-type               | `schema`                                       | carried            | carried            |                                                                                                 |
+| media-type               | entries keyed by any key                       | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| encoding                 | `allowReserved`                                | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| encoding                 | `contentType`                                  | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| encoding                 | `explode`                                      | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| encoding                 | `headers`                                      | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| encoding                 | `style: deepObject`                            | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| encoding                 | `style: form`                                  | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| encoding                 | `style: pipeDelimited`                         | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| encoding                 | `style: spaceDelimited`                        | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| encoding                 | entries keyed by any key                       | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| responses                | `default`                                      | structure          | structure          | Kept apart from every status (SPEC-C-1).                                                        |
+| responses                | entry keyed by an exact status code (`200`)    | structure          | structure          | Takes precedence over a range (SPEC-C-1).                                                       |
+| responses                | entry keyed by a status range (`1XX` to `5XX`) | structure          | structure          | Never widened from a code or collapsed to one.                                                  |
+| response                 | `content`                                      | carried            | carried            | Keyed by media type.                                                                            |
+| response                 | `description`                                  | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
+| response                 | `headers`                                      | carried            | carried            |                                                                                                 |
+| response                 | `links`                                        | no class fits      | no class fits      | Document content.                                                                               |
+| response                 | entries keyed by any key                       | structure          | structure          |                                                                                                 |
+| callbacks                | entries keyed by any key                       | structure          | structure          | The expression is the key.                                                                      |
+| example                  | `description`                                  | no class fits      | no class fits      | An example of a body or parameter, not of a schema.                                             |
+| example                  | `externalValue`                                | no class fits      | no class fits      | An example of a body or parameter, not of a schema.                                             |
+| example                  | `summary`                                      | no class fits      | no class fits      | An example of a body or parameter, not of a schema.                                             |
+| example                  | `value`                                        | no class fits      | no class fits      | An example of a body or parameter, not of a schema.                                             |
+| link                     | `body`                                         | no class fits      | no class fits      | Document content.                                                                               |
+| link                     | `description`                                  | no class fits      | no class fits      | Document content.                                                                               |
+| link                     | `operationId`                                  | no class fits      | no class fits      | Document content.                                                                               |
+| link                     | `operationRef`                                 | no class fits      | no class fits      | Document content.                                                                               |
+| link                     | `parameters`                                   | no class fits      | no class fits      | Document content.                                                                               |
+| link                     | `requestBody`                                  | no class fits      | no class fits      | Document content.                                                                               |
+| header                   | `content`                                      | carried            | carried            |                                                                                                 |
+| header                   | `deprecated`                                   | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
+| header                   | `description`                                  | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
+| header                   | `explode`                                      | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| header                   | `required`                                     | carried            | carried            |                                                                                                 |
+| header                   | `schema`                                       | carried            | carried            |                                                                                                 |
+| header                   | `style`                                        | no class fits      | no class fits      | A serialisation rule.                                                                           |
+| tag                      | `description`                                  | no class fits      | no class fits      | Document content.                                                                               |
+| tag                      | `externalDocs`                                 | no class fits      | no class fits      | Document content.                                                                               |
+| tag                      | `name`                                         | no class fits      | no class fits      | Document content.                                                                               |
+| reference                | `$ref`                                         | carried            | carried            | Written as a reference (SPEC-PR-3).                                                             |
+| reference                | `description`                                  | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
+| reference                | `summary`                                      | no class fits      | companion          | Said about a boundary, not about a schema: Zod has no place for it; TypeScript shows a comment. |
+| security-scheme          | `bearerFormat`                                 | no class fits      | no class fits      | Document content.                                                                               |
+| security-scheme          | `description`                                  | no class fits      | no class fits      | Document content.                                                                               |
+| security-scheme          | `flows`                                        | no class fits      | no class fits      | Document content.                                                                               |
+| security-scheme          | `in: cookie`                                   | no class fits      | no class fits      | Document content.                                                                               |
+| security-scheme          | `in: header`                                   | no class fits      | no class fits      | Document content.                                                                               |
+| security-scheme          | `in: query`                                    | no class fits      | no class fits      | Document content.                                                                               |
+| security-scheme          | `name`                                         | no class fits      | no class fits      | Document content.                                                                               |
+| security-scheme          | `openIdConnectUrl`                             | no class fits      | no class fits      | Document content.                                                                               |
+| security-scheme          | `scheme`                                       | no class fits      | no class fits      | Document content.                                                                               |
+| security-scheme          | `type: apiKey`                                 | no class fits      | no class fits      | Document content.                                                                               |
+| security-scheme          | `type: http`                                   | no class fits      | no class fits      | Document content.                                                                               |
+| security-scheme          | `type: mutualTLS`                              | no class fits      | no class fits      | Document content.                                                                               |
+| security-scheme          | `type: oauth2`                                 | no class fits      | no class fits      | Document content.                                                                               |
+| security-scheme          | `type: openIdConnect`                          | no class fits      | no class fits      | Document content.                                                                               |
+| oauth-flows              | `authorizationCode`                            | no class fits      | no class fits      | Document content.                                                                               |
+| oauth-flows              | `authorizationUrl`                             | no class fits      | no class fits      | Document content.                                                                               |
+| oauth-flows              | `clientCredentials`                            | no class fits      | no class fits      | Document content.                                                                               |
+| oauth-flows              | `implicit`                                     | no class fits      | no class fits      | Document content.                                                                               |
+| oauth-flows              | `password`                                     | no class fits      | no class fits      | Document content.                                                                               |
+| oauth-flows              | `refreshUrl`                                   | no class fits      | no class fits      | Document content.                                                                               |
+| oauth-flows              | `scopes`                                       | no class fits      | no class fits      | Document content.                                                                               |
+| oauth-flows              | `tokenUrl`                                     | no class fits      | no class fits      | Document content.                                                                               |
+| security-requirement     | entries keyed by any key                       | no class fits      | no class fits      | Document content.                                                                               |
+| specification-extensions | entries keyed by `^x-`                         | no class fits      | no class fits      | On a schema it is carried as structure; see the rows the definitions do not list.               |
+| examples                 | `example`                                      | no class fits      | no class fits      | An example of a body or parameter, not of a schema.                                             |
+| examples                 | `examples`                                     | no class fits      | no class fits      | An example of a body or parameter, not of a schema.                                             |
+| examples                 | entries keyed by any key                       | no class fits      | no class fits      |                                                                                                 |
+| map-of-strings           | entries keyed by any key                       | no class fits      | no class fits      | Document content.                                                                               |
 
 Objects with no field of their own (a choice between an object and a reference, or the schema object, whose rows are A to D): path-item-or-reference, parameter-or-reference, request-body-or-reference, response-or-reference, callbacks-or-reference, example-or-reference, link-or-reference, header-or-reference, schema, security-scheme-or-reference.
 
@@ -455,7 +482,7 @@ The 3.0 schema object (`https://spec.openapis.org/oas/3.0/schema/2021-09-28`) li
 
 ## Appendix: the programs
 
-Run from any directory with the repository root as the argument: `node rows.mjs <root> > rows.json`, then `node report.mjs rows.json`.
+The three programs are not checked in as files; the PICTURE command replaces them. To rerun them, save each block below under the name given, in one directory outside the repository, then run `node rows.mjs <repository root> > rows.json` and `node report.mjs rows.json`. `report.mjs` exits 1 and names the row when a computed row has no proposal.
 
 `rows.mjs`:
 
@@ -829,11 +856,25 @@ export const formatRows = [
     'C',
     'K',
     'OpenAPI 3.1, 4.3',
-    'A JavaScript number is exact only to 2^53; the value domain (SPEC-P-5) holds numbers exactly, so this row needs a decision of its own.',
+    "Needs a decision of its own. A JavaScript number is exact only to 2^53, and the value domain (SPEC-P-5) excludes `bigint`. Today's writers emit `bigint` for it in TypeScript and in Zod, which types a value that `JSON.parse` never returns.",
   ],
   ['float', 'C', 'K', 'OpenAPI 3.1, 4.3', ''],
   ['double', 'C', 'K', 'OpenAPI 3.1, 4.3', ''],
   ['password', 'S', 'K', 'OpenAPI 3.1, 4.3', 'A hint to user interfaces; it asserts nothing.'],
+  [
+    'byte',
+    'C',
+    'K',
+    'OpenAPI 3.0.4, 4.4',
+    'A base64 string (`z.base64`). 3.1 says this with `contentEncoding`.',
+  ],
+  [
+    'binary',
+    'N',
+    'N',
+    'OpenAPI 3.0.4, 4.4',
+    'Raw octets: the body is not a JSON value, so it is outside the value domain (SPEC-P-5). 3.1 says this with a media type and no schema. Needs a decision.',
+  ],
   [
     'any other value',
     'S',
@@ -917,7 +958,20 @@ export const objectClass = {
   encoding: { _: SER, '{pattern}': SER },
   responses: {
     default: ['S', 'S', 'Kept apart from every status (SPEC-C-1).'],
-    '{pattern}': ['S', 'S', 'An exact code or a range; neither becomes the other.'],
+    '{pattern}': [
+      [
+        'entry keyed by an exact status code (`200`)',
+        'S',
+        'S',
+        'Takes precedence over a range (SPEC-C-1).',
+      ],
+      [
+        'entry keyed by a status range (`1XX` to `5XX`)',
+        'S',
+        'S',
+        'Never widened from a code or collapsed to one.',
+      ],
+    ],
   },
   response: {
     content: ['C', 'C', 'Keyed by media type.'],
@@ -1048,6 +1102,8 @@ table(
 out.push('### E. OpenAPI objects and their fields (computed: the 3.1 document schema)', '');
 let fieldCount = 0;
 let patternCount = 0;
+let valueCount = 0;
+let valueFields = 0;
 const empty = [];
 const oLines = [];
 const seenObjects = new Set();
@@ -1068,12 +1124,21 @@ for (const o of rows.objects) {
       problems.push(`no proposal for ${o.object}.${f.field}`);
       continue;
     }
+    // A field with a fixed set of values is one row per value: each value is its own
+    // meaning, and one case for the field would exercise only one of them.
+    if (f.values.length > 1) {
+      valueFields++;
+      for (const v of f.values) {
+        valueCount++;
+        count(c[0], c[1]);
+        oLines.push(
+          `| ${o.object} | \`${f.field}: ${v}\` | ${cell(c[0])} | ${cell(c[1])} | ${c[2]} |`,
+        );
+      }
+      continue;
+    }
     count(c[0], c[1]);
-    const values =
-      f.values.length > 1 ? ' (' + f.values.map((v) => '`' + v + '`').join(', ') + ')' : '';
-    oLines.push(
-      `| ${o.object} | \`${f.field}\`${values} | ${cell(c[0])} | ${cell(c[1])} | ${c[2]} |`,
-    );
+    oLines.push(`| ${o.object} | \`${f.field}\` | ${cell(c[0])} | ${cell(c[1])} | ${c[2]} |`);
   }
   const keyed = o.patterns.filter((p) => !p.startsWith('^(schemas|'));
   if (keyed.length) {
@@ -1081,7 +1146,13 @@ for (const o of rows.objects) {
     const c = cls['{pattern}'];
     used.add('{pattern}');
     if (!c) problems.push(`no proposal for the keyed entries of ${o.object}`);
-    else {
+    else if (Array.isArray(c[0])) {
+      patternCount += c.length - 1;
+      for (const [label, z, t, note] of c) {
+        count(z, t);
+        oLines.push(`| ${o.object} | ${label} | ${cell(z)} | ${cell(t)} | ${note} |`);
+      }
+    } else {
       count(c[0], c[1]);
       const what = [...new Set(keyed.map((p) => p.split(' -> ')[0]))]
         .map((p) => (p === '*' ? 'any key' : '`' + p.replaceAll('|', '\\|') + '`'))
@@ -1128,13 +1199,23 @@ const line = (t) =>
 out.unshift(
   '### Counts',
   '',
-  `Rows with a proposed class: ${total} (${rows.keywords.length} keywords, ${rows.typeValues.length} type values, ${formatRows.length} format values, ${proseRows.length} other schema rows, ${fieldCount} fields and ${patternCount} keyed-entry rows over ${rows.objects.length} objects).`,
+  `Rows with a proposed class: ${total} (${rows.keywords.length} keywords, ${rows.typeValues.length} type values, ${formatRows.length} format values, ${proseRows.length} other schema rows, ${fieldCount} fields, which make ${fieldCount - valueFields + valueCount} rows because a field with a fixed set of values is one row per value, and ${patternCount} keyed-entry rows, over ${rows.objects.length} objects).`,
   '',
   `- To Zod: ${line(tally.zod)}.`,
   `- To TypeScript: ${line(tally.ts)}.`,
   '',
 );
 
+if (process.env.GROUPS) {
+  const g = {};
+  for (const l of out)
+    if (l.startsWith('|') && l.includes('no class fits')) {
+      const cols = l.split(' | ');
+      const key = `${cols.at(-3)} / ${cols.at(-2)} / ${cols.at(-1).replace(' |', '').slice(0, 40)}`;
+      g[key] = (g[key] ?? 0) + 1;
+    }
+  console.error(JSON.stringify(g, null, 1));
+}
 if (problems.length) {
   console.error(problems.join('\n'));
   process.exit(1);
