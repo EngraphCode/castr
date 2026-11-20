@@ -184,6 +184,17 @@ describe('OpenAPI 3.2 objects', () => {
     expect(valuesOf(inventory, 'parameter', 'style')).toContain('cookie');
   });
 
+  it('does not count a list of parameters as an object', () => {
+    expect(inventory.objects.map((candidate) => candidate.name)).not.toContain('parameters');
+    expect(valuesOf(inventory, 'parameter', 'in')).toEqual([
+      'cookie',
+      'header',
+      'path',
+      'query',
+      'querystring',
+    ]);
+  });
+
   it('adds the device authorization flow', () => {
     expect(fieldNames(inventory, 'oauth-flows')).toContain('deviceAuthorization');
     expect(fieldNames(inventory, 'oauth-flows/device-authorization')).toContain(

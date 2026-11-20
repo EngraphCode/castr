@@ -47,7 +47,7 @@ function toPin(entry: unknown): DefinitionPin {
     typeof bytes !== 'number' ||
     typeof sha256 !== 'string'
   ) {
-    throw new Error('provenance.json holds an entry without file, id, bytes and sha256');
+    throw new TypeError('provenance.json holds an entry without file, id, bytes and sha256');
   }
   return { file, id, bytes, sha256 };
 }
@@ -59,7 +59,7 @@ export function readPins(): readonly DefinitionPin[] {
   const record = parseObject(readBytes('provenance.json'), 'provenance.json');
   const { definitions } = record;
   if (!Array.isArray(definitions)) {
-    throw new Error('provenance.json has no definitions list');
+    throw new TypeError('provenance.json has no definitions list');
   }
   return definitions.map(toPin);
 }

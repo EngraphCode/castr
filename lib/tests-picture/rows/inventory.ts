@@ -62,8 +62,13 @@ interface Collected {
 
 const DEFS_PREFIX = '#/$defs/';
 
+/** Orders names the same way on every machine. */
+function byName(a: string, b: string): number {
+  return a.localeCompare(b, 'en');
+}
+
 function shortName(ref: string): string {
-  return ref.slice(DEFS_PREFIX.length).split('/$defs/').join('/');
+  return ref.slice(DEFS_PREFIX.length).replaceAll('/$defs/', '/');
 }
 
 function refOf(node: unknown): string | undefined {
@@ -144,7 +149,59 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
     acc.keyedBy.add(pattern);
   };
 
-  const walk = (node: unknown, acc: Collected, seen: ReadonlySet<string>): void => {
+  type Visit = (value: unknown, acc: Collected, seen: ReadonlySet<string>) => void;
+
+  const visitProperties: Visit = (value, acc) => {
+    if (isJsonObject(value)) {
+      for (const [name, field] of membersOf(value)) {
+        collectField(acc, name, field);
+      }
+    }
+  };
+
+  const visitPatternProperties: Visit = (value, acc) => {
+    if (isJsonObject(value)) {
+      for (const [pattern, entry] of membersOf(value)) {
+        collectKeyed(acc, pattern, entry);
+      }
+    }
+  };
+
+  const visitAdditionalProperties: Visit = (value, acc) => {
+    if (isJsonObject(value)) {
+      collectKeyed(acc, '*', value);
+    }
+  };
+
+  const visitRef: Visit = (value, acc, seen) => {
+    if (typeof value !== 'string') {
+      return;
+    }
+    if (value === options.extensionRef) {
+      acc.extensible = true;
+    } else if (!seen.has(value)) {
+      composed.add(value);
+      walk(resolve(value), acc, new Set([...seen, value]));
+    }
+  };
+
+  const skip: Visit = () => undefined;
+
+  // Keywords that do not state a field of the object being read: nested definitions,
+  // which are objects of their own, and schemas that describe a value or a predicate.
+  const visitors = new Map<string, Visit>([
+    ['properties', visitProperties],
+    ['patternProperties', visitPatternProperties],
+    ['additionalProperties', visitAdditionalProperties],
+    ['$ref', visitRef],
+    ['$defs', skip],
+    ['items', skip],
+    ['prefixItems', skip],
+    ['contains', skip],
+    ['not', skip],
+  ]);
+
+  function walk(node: unknown, acc: Collected, seen: ReadonlySet<string>): void {
     if (Array.isArray(node)) {
       for (const item of node) {
         walk(item, acc, seen);
@@ -155,39 +212,13 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
       return;
     }
     for (const [key, value] of membersOf(node)) {
-      if (key === '$defs') {
-        continue;
-      }
-      if (key === 'properties' && isJsonObject(value)) {
-        for (const [name, field] of membersOf(value)) {
-          collectField(acc, name, field);
-        }
-        continue;
-      }
-      if (key === 'patternProperties' && isJsonObject(value)) {
-        for (const [pattern, entry] of membersOf(value)) {
-          collectKeyed(acc, pattern, entry);
-        }
-        continue;
-      }
-      if (key === 'additionalProperties') {
-        if (isJsonObject(value)) {
-          collectKeyed(acc, '*', value);
-        }
-        continue;
-      }
-      if (key === '$ref' && typeof value === 'string') {
-        if (value === options.extensionRef) {
-          acc.extensible = true;
-        } else if (!seen.has(value)) {
-          composed.add(value);
-          walk(resolve(value), acc, new Set([...seen, value]));
-        }
-        continue;
-      }
-      walk(value, acc, seen);
+      const visit = visitors.get(key) ?? walk;
+      visit(value, acc, seen);
     }
-  };
+  }
+
+  // A definition that is a list of other objects declares no fields of its own.
+  const isList = (definition: JsonObject): boolean => definition['type'] === 'array';
 
   const isChoice = (definition: JsonObject): boolean =>
     !isJsonObject(definition['properties']) &&
@@ -221,10 +252,10 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
     return {
       name,
       extensible: acc.extensible,
-      keyedBy: [...acc.keyedBy].sort(),
+      keyedBy: [...acc.keyedBy].sort(byName),
       fields: [...acc.fields]
-        .map(([fieldName, values]) => ({ name: fieldName, values: [...values].sort() }))
-        .sort((a, b) => a.name.localeCompare(b.name)),
+        .map(([fieldName, values]) => ({ name: fieldName, values: [...values].sort(byName) }))
+        .sort((a, b) => byName(a.name, b.name)),
     };
   };
 
@@ -234,10 +265,15 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
   const definitions = schema['$defs'];
   if (isJsonObject(definitions)) {
     for (const [name, definition] of membersOf(definitions)) {
-      if (isJsonObject(definition)) {
-        const ref = `${DEFS_PREFIX}${name}`;
-        found.push({ ref, kind: describe(name, definition, ref) });
+      if (!isJsonObject(definition)) {
+        continue;
       }
+      if (isList(definition)) {
+        noteValueRefsIn(definition);
+        continue;
+      }
+      const ref = `${DEFS_PREFIX}${name}`;
+      found.push({ ref, kind: describe(name, definition, ref) });
     }
   }
   const described = new Set<string>();
@@ -257,7 +293,7 @@ export function readInventory(schema: JsonObject, options: InventoryOptions): In
     objects: found
       .filter((entry) => entry.ref === undefined || !folded.includes(entry.ref))
       .map((entry) => entry.kind),
-    folded: folded.map(shortName).sort(),
+    folded: folded.map(shortName).sort(byName),
     problems,
   };
 }
