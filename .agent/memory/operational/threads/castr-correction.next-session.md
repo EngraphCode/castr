@@ -239,7 +239,8 @@ repository before acting.
     crashes. The fix aligns three statements in `principles.md` with the specification:
     unknown-key policies follow SPEC-P-1; refusing `patternProperties` to TypeScript as
     impossible is wrong, and its class is not settled, because the tables that class each
-    construct are unwritten (SPEC-N-5); `int64` to JSON Schema is not a refusal. The file
+    construct are unwritten (SPEC-N-5); the `int64` to JSON Schema example is removed,
+    its class being unsettled for the same reason. The file
     now says the specification governs where the two differ. Nothing else in that file changes.
   - **For the owner, said and not yet answered:** The owner's three facts of 19 November (most code not yet written; the consumer uses v0;
     a correct Castr is stricter than today's validators) were given and drew the v1-only
