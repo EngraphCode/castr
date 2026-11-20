@@ -117,6 +117,14 @@ repository before acting.
     scope-and-fidelity table (SPEC-N-5) is an amendment, and PLOT sequences it, as the
     course says. Any amendment is drafted against the list and reviewed adversarially
     before the owner is asked for words.
+  - **The row list is written (20 November, on the owner's word "go ahead with PICTURE's
+    row list").** It is
+    [picture-rows-2026-11-20.md](../../../analysis-and-reports/picture-rows-2026-11-20.md):
+    278 rows with a proposed class each, and seven findings for the owner. The largest:
+    126 rows (document content, serialisation rules, things said about a boundary) fit
+    none of the four classes for a Zod target; 26 Zod rows need a check function Castr
+    writes; 3.0 and 3.2 documents add rows that have no class yet. Next: the owner's
+    answers to those findings, then the PICTURE command with one case per row.
   - **For the owner, said and not yet answered:** `principles.md` contradicts itself
     (its four rules against "objects are always closed" and against `patternProperties`
     to TypeScript as a correct refusal) and needs the owner's approval to edit. The
