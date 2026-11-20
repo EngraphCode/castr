@@ -37,7 +37,7 @@ own additions) against today's generator. It decides nothing.
 
 ## Result
 
-93 constructs: 57 right, 13 wrong, 20 crashed, and 3 that cannot be measured alone because
+93 constructs: 56 right, 14 wrong, 20 crashed, and 3 that cannot be measured alone because
 they need a construct that fails. No construct was refused in plain words: every refusal is
 a stack trace.
 
@@ -86,10 +86,10 @@ a stack trace.
 | `additionalProperties: true`    | crashed              | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));                  |
 | `additionalProperties: schema`  | crashed              | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));                  |
 | `patternProperties`             | crashed              | throw new Error(                                                                          |
-| `propertyNames`                 | crashed              | throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));                  |
+| `propertyNames`                 | crashed              | throw new Error(                                                                          |
 | `items`                         | right                |                                                                                           |
 | `prefixItems`                   | wrong                | ["a"]: source says valid, Castr says invalid. Emitted `z.tuple([z.string(), z.number()])` |
-| `prefixItems with items: false` | right                |                                                                                           |
+| `prefixItems with items: false` | wrong                | ["a"]: source says valid, Castr says invalid. Emitted `z.tuple([z.string(), z.number()])` |
 | `contains`                      | crashed              | throw new Error(                                                                          |
 | `allOf`                         | right                |                                                                                           |
 | `allOf (objects)`               | not measurable alone | needs open objects, which fails; was: crashed (stack trace)                               |
@@ -179,10 +179,12 @@ a stack trace.
 - **Silently too loose (the dangerous kind).** `const`, `not`, `if`/`then`/`else`,
   `dependentSchemas`, `uniqueItems`, `maxProperties`, `minProperties` and keywords beside a
   `$ref` all produce a validator that accepts values the source forbids.
-- **Too strict.** `prefixItems` without `items: false`, `format: time` and `format: int64` reject values the source allows. `int64` is emitted as
+- **Too strict.** `prefixItems`, with or without `items: false` (a shorter array is valid
+  and the emitted tuple rejects it), `format: time` and `format: int64` reject values the source allows. `int64` is emitted as
   a big integer, which no JSON number satisfies.
 - **Open objects crash.** Every object that admits unknown keys (`additionalProperties`
-  true or a schema, `patternProperties`, `propertyNames`) ends in a stack trace.
+  true or a schema, `patternProperties`) ends in a stack trace. `propertyNames` crashes
+  on a closed object too.
   `patternProperties` is refused on the grounds that TypeScript cannot express it.
 - **References beyond components crash.** `$defs`, `$anchor`, `$dynamicRef`, and a `$ref`
   resolved against a nested `$id`.
@@ -313,24 +315,21 @@ const cases = [
   [
     'propertyNames',
     'applicator',
-    { type: 'object', additionalProperties: true, propertyNames: { pattern: '^[a-z]+$' } },
-    [{ ab: 1 }, { A1: 1 }],
+    O({ ab: N, A1: N }, { propertyNames: { pattern: '^[a-z]+$' } }),
+    [{ ab: 1 }, { A1: 1 }, {}],
   ],
   ['items', 'applicator', { type: 'array', items: S }, [['a'], ['a', 1], []]],
   [
     'prefixItems',
     'applicator',
     { type: 'array', prefixItems: [S, N] },
-    [['a', 1], [1, 'a'], ['a']],
+    [['a', 1], [1, 'a'], ['a'], ['a', 1, true]],
   ],
   [
     'prefixItems with items: false',
     'applicator',
     { type: 'array', prefixItems: [S, N], items: false },
-    [
-      ['a', 1],
-      ['a', 1, 2],
-    ],
+    [['a', 1], ['a', 1, 2], ['a'], []],
   ],
   ['contains', 'applicator', { type: 'array', contains: N }, [['a', 1], ['a']]],
   [
