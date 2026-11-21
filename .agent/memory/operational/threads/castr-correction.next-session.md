@@ -128,8 +128,8 @@ address.
 
 The commit helper. A successor sets its own name, identifier, session prefix, platform
 and model. The two claims files are ignored by git, so a fresh checkout has neither and
-the helper creates them. It refuses a path or a subject that the shell would split or
-read as more than text, because it builds its commands as text:
+the helper creates them. Because it builds its commands as text, it takes a path made only of letters, digits and
+`. _ / @ + -`, and refuses a subject the shell would read as more than text:
 
 ```sh
 #!/bin/sh
@@ -138,13 +138,15 @@ read as more than text, because it builds its commands as text:
 set -u
 SUBJ="$1"; MSG="$2"; shift 2
 [ -r "$MSG" ] || { echo "message file not readable"; exit 1; }
-for f in "$SUBJ" "$@"; do
+for f in "$SUBJ"; do
   case "$f" in
     *[\"\'\`\$\\\;\&\|\<\>\*\?]*) echo "refused, not plain text: $f"; exit 1 ;;
   esac
 done
 for f in "$@"; do
-  case "$f" in *[[:space:]]*) echo "refused, has a space: $f"; exit 1 ;; esac
+  case "$f" in
+    *[!A-Za-z0-9._/@+-]*) echo "refused, not a plain path: $f"; exit 1 ;;
+  esac
 done
 WHO="--agent-name \"$AGENT_NAME\" --platform $PLATFORM --model $MODEL"
 WHO="$WHO --session-id-prefix $SESSION_PREFIX"
