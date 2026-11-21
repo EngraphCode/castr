@@ -359,11 +359,31 @@ repository before acting.
       shape, and Castr emits no such type today, so those cells can be built and would
       read missing. I first wrote this up as a question about what the columns mean,
       without having re-read SPEC-C-1; the clause answers most of it.
-    - **Not yet built:** the rows outside a schema in the TypeScript column, read from
-      the exported types; the same rows in the Zod column, which wait on SPEC-N-4; the
-      seven schema rows TypeScript is to carry as structure; Oak's document as a row;
-      the example documents. Seen on 21 November and not yet a case: a response with no
-      content is given an empty closed object as its schema.
+    - **The TypeScript column for a construct that decides no value (21 November).**
+      63 rows: the 56 outside a schema and seven of a schema. The compiler resolves every
+      type the generated module exports and each is reduced to plain values with its
+      documentation comment, tags, and optional and readonly marks
+      (`cases/typescript-structure.ts`); the pairs of documents are those of the other
+      two columns, with one new pair for a named schema. Cells: right 3, refused 2,
+      missing 57, not judged 1. Right: a named schema exported as a type under its name
+      (`components.schemas`, `openapi.components`) and a request body written in place,
+      exported as a type named for its operation (`get_things_Body` for the body
+      of `get /things`). Refused: `$dynamicAnchor` and `itemSchema`. Missing, with
+      one reason on every row: the types are the same without the construct. The cases
+      look anywhere in the exported types and not for the `paths` type SPEC-C-1 names,
+      which Castr does not export. Nothing proposed in the TypeScript column is now
+      without a kind of case. A question this leaves for the amendment's tables: the
+      three discriminator rows, `$id`, `$anchor` and `$defs` are proposed as carried as
+      structure by TypeScript, and none changes a type; only a documentation comment
+      could hold them, so the cell cannot tell dropped from nowhere to go. A reference
+      to a named type reads as the type written in place, so `$ref` can only read
+      missing in this column.
+    - **Not yet built:** the rows outside a schema in the Zod column, which wait on
+      SPEC-N-4; Oak's document as a row; the example documents. Seen on 21 November and
+      not yet a case: a response with no content is given an empty closed object as its
+      schema; and in the module with endpoint definitions the source comment
+      `// MCP Tools` is written inside the `endpoints` array, after the first
+      endpoint's last property, which is text assembly placing a comment by position.
     - **Rows only text defines** (25 `format` values, six schema constructs) are
       hand-listed and are the part most likely to be missing a row. The 3.0-only rows of
       the report (`nullable`, `byte`, `binary`, boolean exclusive bounds) are not in the
