@@ -306,6 +306,15 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   to move the judging into a pure function, which needs no stand-in. When a test wants a
   fake that decides, the code under test is doing two jobs.
 
+- **21 November, review of the parameter cases (#147), three rounds.** Each round found
+  a case that proved less than its cell said: a control that changed two things at once
+  (a `content` payload against a plain schema); a value found for another reason (a
+  property of a schema standing for the media type that carries it); a choice set
+  against some of its other values and not all. Before pushing a structure case, ask
+  what else differs between its two documents, and whether the value could be held if
+  the construct were dropped. A row no pair of valid documents can isolate is listed
+  with its reason and reads not judged; it is not given a weaker case that reads right.
+
 ## 2026-11-18 (the reflection: tensions in the owner's request, three cards, picomatch withdrawn — Ingot binds Patina / 194219, claude-code)
 
 - **Owner, 18 November 2026, verbatim**, asked which of two things "in isolation" meant: "I
