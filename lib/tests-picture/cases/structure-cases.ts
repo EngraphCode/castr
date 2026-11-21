@@ -489,6 +489,267 @@ const RESPONSES_AND_HEADERS: readonly StructureCase[] = [
   ),
 ];
 
+interface Form {
+  /** The media type of the body. */
+  readonly type: string;
+  /** The schema of the body's one property, `part`. */
+  readonly part: UnknownRecord;
+  readonly openapi: string;
+}
+
+/** `post /things` sending a form whose one part has the encoding given, or none. */
+function formWith(form: Form, encoding: UnknownRecord | undefined): UnknownRecord {
+  const schema = {
+    type: 'object',
+    properties: { part: form.part },
+    additionalProperties: false,
+  };
+  const media = encoding === undefined ? {} : { encoding: { part: encoding } };
+  return sending({ content: { [form.type]: { schema, ...media } } }, form.openapi);
+}
+
+const MULTIPART: Form = { type: 'multipart/form-data', part: STRINGS, openapi: '3.1.0' };
+const URL_ENCODED: Form = {
+  type: 'application/x-www-form-urlencoded',
+  part: STRINGS,
+  openapi: '3.1.0',
+};
+
+function encoding(
+  field: string,
+  with_: UnknownRecord,
+  without: UnknownRecord,
+  expects: Expectation,
+  form: Form = MULTIPART,
+): StructureCase {
+  return pair(`encoding.${field}`, (given) => formWith(form, given), with_, without, expects);
+}
+
+/** A style with `explode` stated, so that no document leans on a default. */
+function styled(name: string, explode: boolean): UnknownRecord {
+  return { style: name, explode };
+}
+
+const STYLES_OF_AN_ARRAY = ['form', 'spaceDelimited', 'pipeDelimited'];
+
+/**
+ * A style of an encoding for an array: its name is held, and it is told from each other
+ * style an array may have.
+ */
+function arrayStyle(name: string): StructureCase {
+  return {
+    rowId: `encoding.style=${name}`,
+    document: formWith(URL_ENCODED, styled(name, false)),
+    control: formWith(URL_ENCODED, undefined),
+    expects: value(name),
+    apartFrom: STYLES_OF_AN_ARRAY.filter((other) => other !== name).map((other) =>
+      formWith(URL_ENCODED, styled(other, false)),
+    ),
+  };
+}
+
+const AN_OBJECT = { type: 'object', properties: { inner: STRING }, additionalProperties: false };
+const URL_ENCODED_OBJECT: Form = { ...URL_ENCODED, part: AN_OBJECT };
+
+/** A part that is itself a form, so that an encoding nested in its encoding has a property to name. */
+const NESTED_FORM: Form = { type: 'multipart/form-data', part: AN_OBJECT, openapi: '3.2.0' };
+const AS_FORM = { contentType: 'multipart/form-data' };
+
+/**
+ * A part that is an array of arrays. An encoding is applied to each item of an array
+ * property, so each item must itself be an array for an item or prefix encoding nested in
+ * it to have items to apply to.
+ */
+const NESTED_ITEMS: Form = {
+  type: 'multipart/form-data',
+  part: { type: 'array', items: STRINGS },
+  openapi: '3.2.0',
+};
+const AS_MIXED = { contentType: 'multipart/mixed' };
+
+const ENCODINGS: readonly StructureCase[] = [
+  encoding('contentType', AS_KESTREL, { contentType: 'text/plain' }, value('text/kestrel')),
+  encoding('headers', { headers: { 'X-Kestrel': PLAIN_HEADER } }, {}, value('X-Kestrel')),
+  ...STYLES_OF_AN_ARRAY.map(arrayStyle),
+  // `deepObject` is defined for an object and with `explode: true`, which only `form`
+  // shares with it.
+  {
+    rowId: 'encoding.style=deepObject',
+    document: formWith(URL_ENCODED_OBJECT, styled('deepObject', true)),
+    control: formWith(URL_ENCODED_OBJECT, undefined),
+    expects: value('deepObject'),
+    apartFrom: [formWith(URL_ENCODED_OBJECT, styled('form', true))],
+  },
+  encoding('explode', styled('form', false), styled('form', true), DIFFERENCE, URL_ENCODED),
+  encoding('allowReserved', { allowReserved: true }, {}, DIFFERENCE, URL_ENCODED),
+  encoding(
+    'encoding',
+    { ...AS_FORM, encoding: { inner: AS_KESTREL } },
+    AS_FORM,
+    value('text/kestrel'),
+    NESTED_FORM,
+  ),
+  encoding(
+    'itemEncoding',
+    { ...AS_MIXED, itemEncoding: AS_KESTREL },
+    AS_MIXED,
+    value('text/kestrel'),
+    NESTED_ITEMS,
+  ),
+  encoding(
+    'prefixEncoding',
+    { ...AS_MIXED, prefixEncoding: [AS_KESTREL] },
+    AS_MIXED,
+    value('text/kestrel'),
+    NESTED_ITEMS,
+  ),
+];
+
+const REF = (kind: string, name = 'Kestrel'): UnknownRecord => ({
+  $ref: `#/components/${kind}/${name}`,
+});
+
+/**
+ * A named component, used by reference, against the same thing written in place: the
+ * name is what only the component states.
+ */
+function named(
+  rowId: string,
+  kind: string,
+  thing: UnknownRecord,
+  usedIn: (use: UnknownRecord) => UnknownRecord,
+  name = 'Kestrel',
+  openapi = '3.1.0',
+): StructureCase {
+  return {
+    rowId,
+    document: {
+      ...documentOf(usedIn(REF(kind, name)), { components: { [kind]: { [name]: thing } } }),
+      openapi,
+    },
+    control: { ...documentOf(usedIn(thing)), openapi },
+    expects: value(name),
+  };
+}
+
+const getting = (operation: UnknownRecord): UnknownRecord => ({
+  '/things': { get: { ...PLAIN, ...operation } },
+});
+const asParameter = (use: UnknownRecord): UnknownRecord => getting({ parameters: [use] });
+const asResponse = (use: UnknownRecord): UnknownRecord => getting({ responses: { '200': use } });
+const CALLBACK = { '{$request.body#/url}': { post: PLAIN } };
+const JSON_RESPONSE = { description: 'ok', ...JSON_BODY };
+
+/**
+ * A reference with and without a field beside `$ref`. The field has an effect only where
+ * the thing referred to has that field itself: a parameter has a `description`, and a
+ * response has a `summary` from OpenAPI 3.2.
+ */
+function beside(
+  field: string,
+  kind: string,
+  thing: UnknownRecord,
+  usedIn: (use: UnknownRecord) => UnknownRecord,
+  openapi: string,
+): StructureCase {
+  const using = (use: UnknownRecord): UnknownRecord => ({
+    ...documentOf(usedIn(use), { components: { [kind]: { Kestrel: thing } } }),
+    openapi,
+  });
+  return {
+    rowId: `reference.${field}`,
+    document: using({ ...REF(kind), [field]: 'osprey' }),
+    control: using(REF(kind)),
+    expects: value('osprey'),
+  };
+}
+
+/** The same named response in both documents: referred to in one, written in place in the other. */
+function referredTo(): StructureCase {
+  const using = (use: UnknownRecord): UnknownRecord =>
+    documentOf(asResponse(use), { components: { responses: { Kestrel: JSON_RESPONSE } } });
+  return {
+    rowId: 'reference.$ref',
+    document: using(REF('responses')),
+    control: using(JSON_RESPONSE),
+    expects: DIFFERENCE,
+  };
+}
+
+const COMPONENTS_AND_REFERENCES: readonly StructureCase[] = [
+  named('components.parameters', 'parameters', IN_QUERY, asParameter),
+  named('components.responses', 'responses', JSON_RESPONSE, asResponse),
+  named('components.requestBodies', 'requestBodies', JSON_BODY, (use) => ({
+    '/things': { post: { ...PLAIN, requestBody: use } },
+  })),
+  named('components.headers', 'headers', PLAIN_HEADER, (use) =>
+    asResponse({ description: 'ok', headers: { 'X-Thing': use } }),
+  ),
+  named('components.pathItems', 'pathItems', { get: PLAIN }, (use) => ({ '/things': use })),
+  named('components.callbacks', 'callbacks', CALLBACK, (use) =>
+    getting({ callbacks: { onThing: use } }),
+  ),
+  named(
+    'components.mediaTypes',
+    'mediaTypes',
+    { schema: KESTREL_OBJECT },
+    (use) => asResponse({ description: 'ok', content: { [JSON_TYPE]: use } }),
+    'Kestrel',
+    '3.2.0',
+  ),
+  // A name using every kind of character the grammar of a component name allows.
+  named('components[a component name]', 'parameters', IN_QUERY, asParameter, 'Kestrel.v1-a_b'),
+  // The component is declared in both documents, so only the reference differs.
+  referredTo(),
+  beside('summary', 'responses', JSON_RESPONSE, asResponse, '3.2.0'),
+  beside('description', 'parameters', IN_QUERY, asParameter, '3.1.0'),
+
+  {
+    rowId: 'openapi.paths',
+    document: documentOf({ '/kestrels': { get: PLAIN } }),
+    control: documentOf(getting({})),
+    expects: value('/kestrels'),
+  },
+  {
+    rowId: 'openapi.webhooks',
+    document: documentOf(getting({}), { webhooks: { kestrel: { post: PLAIN } } }),
+    control: documentOf(getting({})),
+    expects: value('kestrel'),
+  },
+  // The components of a document, shown by one of them being used: a named schema.
+  {
+    rowId: 'openapi.components',
+    document: documentOf(
+      asResponse({ description: 'ok', content: { [JSON_TYPE]: { schema: REF('schemas') } } }),
+      {
+        components: { schemas: { Kestrel: KESTREL_OBJECT } },
+      },
+    ),
+    control: documentOf(
+      asResponse({ description: 'ok', content: { [JSON_TYPE]: { schema: KESTREL_OBJECT } } }),
+    ),
+    expects: value('Kestrel'),
+  },
+  {
+    rowId: 'openapi.$self',
+    document: {
+      ...documentOf(getting({})),
+      openapi: '3.2.0',
+      $self: 'https://kestrel.example/api',
+    },
+    control: { ...documentOf(getting({})), openapi: '3.2.0' },
+    expects: value('https://kestrel.example/api'),
+  },
+  {
+    rowId: 'callbacks[a callback expression]',
+    document: documentOf(
+      getting({ callbacks: { onThing: { '{$request.body#/kestrel}': { post: PLAIN } } } }),
+    ),
+    control: documentOf(getting({ callbacks: { onThing: CALLBACK } })),
+    expects: value('{$request.body#/kestrel}'),
+  },
+];
+
 /**
  * One case for each row of a document outside a schema that the endpoint definitions
  * are proposed to carry as structure. The families not yet here have no cell.
@@ -499,6 +760,8 @@ export const STRUCTURE_CASES: readonly StructureCase[] = [
   ...REQUEST_BODIES,
   ...MEDIA_TYPES,
   ...RESPONSES_AND_HEADERS,
+  ...ENCODINGS,
+  ...COMPONENTS_AND_REFERENCES,
 ];
 
 /**

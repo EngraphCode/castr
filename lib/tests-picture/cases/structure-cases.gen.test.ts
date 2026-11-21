@@ -18,15 +18,14 @@ import { rowsWith, runStructureCases } from './run-schema-cases.js';
 import { ROWS_NO_CASE_ISOLATES, STRUCTURE_CASES } from './structure-cases.js';
 
 describe('the cases for the rows of a document outside a schema', () => {
-  it('has no case for a row that needs none, and no row with two', () => {
+  it('has exactly one case for every row the endpoint definitions are to carry as structure', () => {
     const { rows } = pictureRows(loadDefinition);
     const cased = [
       ...STRUCTURE_CASES,
       ...[...ROWS_NO_CASE_ISOLATES.keys()].map((rowId) => ({ rowId })),
     ];
-    const { strays, repeated } = structureCoverageOf(rows, cased);
 
-    expect({ strays, repeated }).toEqual({ strays: [], repeated: [] });
+    expect(structureCoverageOf(rows, cased)).toEqual({ uncased: [], strays: [], repeated: [] });
   });
 
   it('holds what the construct states on exactly the rows recorded as right', async () => {

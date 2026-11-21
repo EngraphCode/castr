@@ -28,6 +28,17 @@ describe('projectionOf', () => {
   });
 });
 
+describe('projectionOf, given the names a module exports', () => {
+  it('shows the name beside a value that is the very object exported under it', () => {
+    const named = { a: 1 };
+
+    expect(projectionOf({ uses: named, copy: { a: 1 } }, new Map([[named, 'Kestrel']]))).toEqual({
+      uses: { 'exported as': 'Kestrel', value: { a: 1 } },
+      copy: { a: 1 },
+    });
+  });
+});
+
 describe('holds', () => {
   const projection = projectionOf({
     method: 'get',

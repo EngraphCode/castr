@@ -26,8 +26,21 @@ function projectionOfSchema(schema: z.ZodType): Projection {
 /**
  * Reduces what a generated module exports to a projection. A Zod validator is read as
  * the JSON Schema Zod gives for it, so that what a validator requires can be compared too.
+ *
+ * Where a value inside is the very object the module exports under a name, the name is
+ * shown beside it: that is how a reference to a named component is held, and no value
+ * shows it.
  */
-export function projectionOf(value: unknown): Projection {
+export function projectionOf(
+  value: unknown,
+  names: ReadonlyMap<unknown, string> = new Map(),
+): Projection {
+  const name = names.get(value);
+  const projection = projectionOfValue(value, names);
+  return name === undefined ? projection : { 'exported as': name, value: projection };
+}
+
+function projectionOfValue(value: unknown, names: ReadonlyMap<unknown, string>): Projection {
   if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
     return value;
   }
@@ -35,7 +48,7 @@ export function projectionOf(value: unknown): Projection {
     return projectionOfSchema(value);
   }
   if (Array.isArray(value)) {
-    return value.map((item: unknown) => projectionOf(item));
+    return value.map((item: unknown) => projectionOf(item, names));
   }
   if (!isRecord(value)) {
     return null;
@@ -43,7 +56,7 @@ export function projectionOf(value: unknown): Projection {
   return Object.fromEntries(
     Object.entries(value)
       .filter(([, entry]) => typeof entry !== 'function')
-      .map(([key, entry]) => [key, projectionOf(entry)]),
+      .map(([key, entry]) => [key, projectionOf(entry, names)]),
   );
 }
 

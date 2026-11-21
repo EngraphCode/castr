@@ -22,9 +22,23 @@ function endpointsIn(moduleExports: unknown): ConvertedEndpoints {
     return { kind: 'nothing emitted' };
   }
   const exported: unknown = Reflect.get(moduleExports, 'endpoints');
-  return exported === undefined
-    ? { kind: 'nothing emitted' }
-    : { kind: 'endpoints', projection: projectionOf(exported) };
+  if (exported === undefined) {
+    return { kind: 'nothing emitted' };
+  }
+  // A named component is held by the name the module exports it under, which no value
+  // inside the definitions shows. So each export's name is read, and shown wherever
+  // the definitions use the very object exported under it.
+  const others = Object.entries(moduleExports).filter(([name]) => name !== 'endpoints');
+  const names = new Map(
+    others.filter(([, value]) => typeof value === 'object').map(([name, value]) => [value, name]),
+  );
+  return {
+    kind: 'endpoints',
+    projection: {
+      exported: others.map(([name]) => name),
+      endpoints: projectionOf(exported, names),
+    },
+  };
 }
 
 function validatorIn(moduleExports: unknown): Converted {

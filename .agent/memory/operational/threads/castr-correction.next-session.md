@@ -266,9 +266,16 @@ repository before acting.
       whether the value the construct states is there and not in the control's. Nothing
       is assumed about the shape of the definitions. A case for a choice among values
       (a parameter's location) also names a document for each other value, and the
-      definitions must differ from each. On 21 November 2026, for 71 rows (paths, path
-      items, operations, parameters, request bodies, media types, responses, headers):
-      right 27, wrong 3, refused 1, crashed 1, missing 35, not judged 4.
+      definitions must differ from each. The names the module exports are read with
+      the definitions, since a named component is held by its export name. Every one of
+      the 98 rows has a cell, and the test requires it. On 21 November 2026: right 29,
+      wrong 3, refused 1, crashed 1, missing 60, not judged 4.
+      - Right: the path template; every method, with `query` and `additionalOperations`
+        of 3.2; path-level and operation parameters; `operationId`; an operation's
+        `description`, `requestBody` and `responses`; a parameter's `name`, `required`,
+        `schema` and `description` and the locations `query` and `querystring`; a request
+        body's `description`; a media type's `schema`; a response's `description`; the
+        document's `paths`; and `components`, shown by a named schema.
       - Wrong: a cookie parameter is written as a header parameter, so neither is told
         apart; a response's content changes the definitions and its media type is not in
         them.
@@ -276,19 +283,19 @@ repository before acting.
         load. That leaves `default` and an exact status code not judged, since they
         cannot be set against it.
       - Refused: `itemSchema` (3.2), in plain words: endpoints do not yet support it.
-      - Missing: every field of a response header; a response's `headers` and `summary`;
-        the media type of a request body, of a response and of a parameter's `content`;
-        a request body's `required`; `encoding`, `itemEncoding` and `prefixEncoding`; a
-        media type's `description`; `summary`
-        on a path item and an operation; a path item's `description`; `deprecated` and
-        `callbacks` on an operation; a path item that is a `$ref`; on a parameter
-        `deprecated`, `allowEmptyValue`, `allowReserved`, `explode` and all eight
-        `style` values.
+      - Missing, 60 rows: every field of an encoding and of a response header; every
+        named component other than a schema, and every field of a reference (the
+        definitions are the same as when the thing is written in place); `webhooks`,
+        `$self` and a callback expression; every serialisation rule of a parameter (its
+        eight styles, `explode`, `allowReserved`, `allowEmptyValue`); every `deprecated`
+        and every `summary`; the media type of a request body, of a response and of a
+        parameter's `content`; a response's `headers`; a request body's `required`; a
+        media type's `description`, `encoding`, `itemEncoding` and `prefixEncoding`; a
+        path item's `description` and one that is a `$ref`; an operation's `callbacks`.
       - Two rows have no case because no pair of valid documents isolates them: a path
         parameter's location, and a header's one style.
-      - Right means the value is somewhere in the definitions, not that it is in the
-        right place. 27 of the 98 rows have no case yet: encodings, components,
-        references, callbacks and the document's own four fields.
+      - Right means the value is somewhere in the module's definitions, not that it is
+        in the right place.
     - **What the cases do not prove.**
       - Right is an upper bound. Six review rounds moved six cells from right to wrong
         with a sharper sample each: `email`, `uri`, `uuid`, `duration`, `pattern` on an
@@ -306,13 +313,11 @@ repository before acting.
     - **A cell the amendment must define.** `type: integer` reads wrong because Castr's
       output refuses an integer beyond the safe range, which is the narrowing the owner
       decided Castr makes and reports. The picture has no cell for a declared narrowing.
-    - **Not yet built:** the other families of the endpoint-definition column; cases for
-      rows carried as structure in the Zod and TypeScript columns (annotations, names);
-      Oak's document as a row; the example documents. Seen on 21 November and not yet a
-      case: a `4XX` response is written as the bare key `4XX`, which is not valid
-      TypeScript; a response with no content is given an empty closed object as its
-      schema; response headers do not appear; `deprecated`, `readOnly` and `default` do
-      not reach the Zod annotations.
+    - **Not yet built:** cases for rows carried as structure in the Zod and TypeScript
+      columns (annotations, names); Oak's document as a row; the example documents. Seen
+      on 21 November and not yet a case: a response with no content is given an empty
+      closed object as its schema; `deprecated`, `readOnly` and `default` do not reach
+      the Zod annotations.
     - **Rows only text defines** (25 `format` values, six schema constructs) are
       hand-listed and are the part most likely to be missing a row. The 3.0-only rows of
       the report (`nullable`, `byte`, `binary`, boolean exclusive bounds) are not in the
