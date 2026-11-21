@@ -241,13 +241,32 @@ repository before acting.
       owner's nine decisions give. The join reports a computed row with no proposal and a
       proposal with no row; the bars on the fifth class and on `read` are checked.
       `pnpm picture` prints the tables and `pnpm test:picture` runs 89 tests.
-    - **Not yet built:** any case that runs Castr. No cell says what Castr does today.
-      That is the next part: one case per schema row, generated through Castr and judged
-      by an independent validator reading the same document, each cell right, refused,
-      wrong, missing or crashed; it lands asserting the cells that are right today. Then
-      cases for the TypeScript and endpoint-definition columns (their proposed outcomes are
-      already on `main`; what is missing is anything that runs Castr for them), Oak's
-      document as a row, and the example documents.
+    - **The first cases (#142).** 74 cases, one for every row of a schema that Zod is
+      proposed to carry. Ajv for JSON Schema 2020-12 reads each; for the 70 it can check,
+      the Zod module Castr generates is loaded and run on the same samples. On
+      21 November 2026: right 35, wrong 21, refused 13, crashed 1, not judged 4.
+      `cases/right-today.ts` is held to exactly the rows that are right. `pnpm picture`
+      prints each cell that is not right with its reason.
+    - **What the cases do not prove.**
+      - Right is an upper bound. Six review rounds moved six cells from right to wrong
+        with a sharper sample each: `email`, `uri`, `uuid`, `duration`, `pattern` on an
+        astral character, and `integer` beyond the safe range. `$dynamicRef` was refused
+        before and after; its case now exercises an anchor override, and the refusal's
+        reason is that a reference against an embedded `$id` is not resolved.
+      - The reference is not the source. Ajv checks no range for `int64` (it still
+        refuses a non-integer, through `type`), and accepts every number for `float` and
+        `double`. Those formats decide none of their samples, and a control check names
+        the three cases.
+      - Four formats have no Ajv checker (`idn-email`, `idn-hostname`, `iri`,
+        `iri-reference`). Castr is not run for them: what it does there is unknown.
+      - A second reference, or cases judged against the defining text, is owed for all
+        seven of those rows.
+    - **A cell the amendment must define.** `type: integer` reads wrong because Castr's
+      output refuses an integer beyond the safe range, which is the narrowing the owner
+      decided Castr makes and reports. The picture has no cell for a declared narrowing.
+    - **Not yet built:** cases for rows carried as structure, for the TypeScript and
+      endpoint-definition columns (their proposed outcomes are on `main`), for the rows
+      of a document outside a schema, Oak's document as a row, and the example documents.
     - **Rows only text defines** (25 `format` values, six schema constructs) are
       hand-listed and are the part most likely to be missing a row. The 3.0-only rows of
       the report (`nullable`, `byte`, `binary`, boolean exclusive bounds) are not in the
