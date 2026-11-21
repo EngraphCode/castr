@@ -17,7 +17,10 @@ import {
 } from './cases/typescript-structure-cases.js';
 import { DOCUMENTS } from './documents/documents.js';
 import { renderDocuments } from './documents/render-documents.js';
-import { runDocuments } from './documents/run-documents.js';
+import { renderNotRight, renderUsage } from './documents/render-usage.js';
+import { rowsUsedBy } from './documents/rows-used.js';
+import { readDocument, runDocuments } from './documents/run-documents.js';
+import { usageOf } from './documents/usage.js';
 import { loadDefinition } from './rows/definitions.js';
 import { pictureRows } from './rows/picture-rows.js';
 import { renderRows, renderToday, renderUnexercised } from './rows/render.js';
@@ -51,6 +54,21 @@ if (problems.length > 0) {
   console.log(renderToday(rows, typesHeld, "Castr's TypeScript output holds"));
   console.log(renderToday(rows, endpoints, "Castr's endpoint definitions hold"));
   console.log(renderDocuments(await runDocuments(DOCUMENTS)));
+  const rowIds = new Set(rows.map((row) => row.id));
+  const usages = DOCUMENTS.map((document) => {
+    const { used, unrecognised } = rowsUsedBy(readDocument(document), rowIds);
+    return {
+      name: document.name,
+      usage: usageOf(used, rows, { zod, typescript, endpoints }),
+      unrecognised,
+    };
+  });
+  console.log(renderUsage(usages));
+  // The first document is the corpus the specification names.
+  const [corpus] = usages;
+  if (corpus !== undefined) {
+    console.log(renderNotRight(corpus.name, corpus.usage));
+  }
   console.log(
     renderUnexercised([
       ['to Zod', unexercised(rows, 'zod').length],

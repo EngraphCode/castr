@@ -1,7 +1,11 @@
+import { readFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
+import { normalize } from '@scalar/openapi-parser';
+
 import { createCastrConvert, type DocumentOutput } from '../cases/castr-convert.js';
+import { isJsonObject, type JsonObject } from '../rows/json.js';
 
 import { documentCell, statedVersion, type DocumentCell } from './document-cell.js';
 import type { PictureDocument } from './documents.js';
@@ -62,4 +66,17 @@ export async function runDocuments(
     await castr.dispose();
   }
   return lines;
+}
+
+/**
+ * A document as plain values, parsed from its file as JSON or as YAML. The parser is the
+ * one Castr depends on, used here only to parse: nothing is resolved, upgraded or
+ * checked.
+ */
+export function readDocument(document: PictureDocument): JsonObject {
+  const parsed: unknown = normalize(readFileSync(`${PACKAGE}${document.file}`, 'utf8'));
+  if (!isJsonObject(parsed)) {
+    throw new Error(`${document.file} does not hold an object`);
+  }
+  return parsed;
 }

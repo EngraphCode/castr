@@ -24,8 +24,6 @@ Not built yet:
 
 - the rows of the document outside a schema, in the Zod column (56 rows proposed as
   carried or carried as structure there);
-- which rows each whole document uses, so that a document's line can be read against
-  the cells of its constructs;
 - the example input library's documents, which are not pinned yet.
 
 [`unexercised`](cases/coverage.ts) computes the first, `pnpm picture` prints the count
@@ -77,6 +75,39 @@ Today Castr refuses Oak's document, in every output, at a schema-valued
 `additionalProperties`. No example is refused or crashes: ten convert in every output,
 and four have an output the module holds none of.
 [`documents/documents.gen.test.ts`](documents/documents.gen.test.ts) holds that.
+
+### The rows a document uses
+
+A document's line says whether it converts. What stands between it and a right
+conversion is said by the rows, so `pnpm picture` also walks each document
+([`documents/rows-used.ts`](documents/rows-used.ts)) and names every row it states a
+construct of, then sets those rows against today's cells
+([`documents/usage.ts`](documents/usage.ts)). It prints a count for each document and
+each output, and for Oak's document the rows that are not right.
+
+Oak's document uses 74 of the 317 rows. In the Zod output two of them are refused
+(`additionalProperties` and `propertyNames`, each enough alone to stop the document),
+three are wrong (`const`, `format: uri` and `false` as a schema) and one is missing
+(`default`). [`documents/documents.gen.test.ts`](documents/documents.gen.test.ts) holds
+the two that stop it.
+
+How to read it:
+
+- **A row is used where the document writes its construct.** A construct in force by
+  default, such as a parameter's `style`, is not named unless written. A reference is
+  not followed; what it points at is walked where it is declared, so a file a document
+  refers to outside itself is not walked.
+- **The cells are the cases' cells.** Each was made from a small document written for
+  one row. A construct right there is not thereby right beside the others a real
+  document holds, and the count says nothing of a combination.
+- **The walk is checked against every case**
+  ([`documents/rows-used.e2e.test.ts`](documents/rows-used.e2e.test.ts)): each of the
+  210 cases' documents must name the row it was written for, and no whole document may
+  state a field that is no row.
+- **Where each object of a document is found is a table written by hand** in the walk,
+  not computed from the definitions. That check is what holds it.
+- **A keyword only OpenAPI 3.0 has**, such as `nullable`, is named as a keyword no
+  vocabulary defines, which is what it is in 3.1.
 
 Eight of the examples say they are OpenAPI 3.0, which the specification has Castr
 read. The picture's rows are those of 3.1 and 3.2, so no row speaks for a construct only
