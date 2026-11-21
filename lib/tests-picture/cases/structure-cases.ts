@@ -259,11 +259,247 @@ const PARAMETERS: readonly StructureCase[] = [
   style('cookie', { ...IN_QUERY, in: 'cookie' }, 'form', '3.2.0'),
 ];
 
+const JSON_TYPE = 'application/json';
+const KESTREL_ONLY = { type: 'string', enum: ['kestrel'] };
+
+/** `get /things` whose `200` response is the one given. */
+function respondingWith(response: UnknownRecord, openapi = '3.1.0'): UnknownRecord {
+  return { ...documentOf({ '/things': { get: { responses: { '200': response } } } }), openapi };
+}
+
+/** `post /things` with the request body given. */
+function sending(requestBody: UnknownRecord, openapi = '3.1.0'): UnknownRecord {
+  return { ...documentOf({ '/things': { post: { ...PLAIN, requestBody } } }), openapi };
+}
+
+/** A pair of documents made the same way, the second being the control. */
+function pair(
+  rowId: string,
+  make: (given: UnknownRecord) => UnknownRecord,
+  with_: UnknownRecord,
+  without: UnknownRecord,
+  expects: Expectation,
+): StructureCase {
+  return { rowId, document: make(with_), control: make(without), expects };
+}
+
+const JSON_BODY = { content: { [JSON_TYPE]: { schema: KESTREL_OBJECT } } };
+
+const REQUEST_BODIES: readonly StructureCase[] = [
+  // One schema under one media type, against the same schema under another.
+  pair(
+    'request-body.content',
+    sending,
+    JSON_BODY,
+    { content: { 'application/xml': { schema: KESTREL_OBJECT } } },
+    value(JSON_TYPE),
+  ),
+  pair(
+    'request-body.description',
+    sending,
+    { ...JSON_BODY, description: 'osprey' },
+    JSON_BODY,
+    value('osprey'),
+  ),
+  pair(
+    'request-body.required',
+    sending,
+    { ...JSON_BODY, required: true },
+    { ...JSON_BODY, required: false },
+    DIFFERENCE,
+  ),
+];
+
+/** A `200` response whose content under one media type is the media type object given. */
+function contentOf(mediaType: string, object: UnknownRecord): UnknownRecord {
+  return { description: 'ok', content: { [mediaType]: object } };
+}
+
+function mediaType(
+  field: string,
+  type: string,
+  with_: UnknownRecord,
+  without: UnknownRecord,
+  expects: Expectation,
+  openapi = '3.1.0',
+): StructureCase {
+  return pair(
+    `media-type.${field}`,
+    (given) => respondingWith(contentOf(type, given), openapi),
+    with_,
+    without,
+    expects,
+  );
+}
+
+const FORM = {
+  type: 'object',
+  properties: { part: STRING },
+  additionalProperties: false,
+};
+const AS_KESTREL = { contentType: 'text/kestrel' };
+
+const MEDIA_TYPES: readonly StructureCase[] = [
+  pair(
+    'content[a media type]',
+    respondingWith,
+    contentOf('text/kestrel', { schema: STRING }),
+    contentOf('text/plain', { schema: STRING }),
+    value('text/kestrel'),
+  ),
+  mediaType('schema', JSON_TYPE, { schema: KESTREL_ONLY }, { schema: STRING }, value('kestrel')),
+  pair(
+    'media-type.encoding',
+    sending,
+    { content: { 'multipart/form-data': { schema: FORM, encoding: { part: AS_KESTREL } } } },
+    { content: { 'multipart/form-data': { schema: FORM } } },
+    value('text/kestrel'),
+  ),
+  mediaType(
+    'description',
+    JSON_TYPE,
+    { schema: STRING, description: 'kestrel' },
+    { schema: STRING },
+    value('kestrel'),
+    '3.2.0',
+  ),
+  mediaType(
+    'itemSchema',
+    'application/jsonl',
+    { itemSchema: KESTREL_ONLY },
+    { itemSchema: STRING },
+    value('kestrel'),
+    '3.2.0',
+  ),
+  mediaType(
+    'itemEncoding',
+    'multipart/mixed',
+    { itemSchema: STRING, itemEncoding: AS_KESTREL },
+    { itemSchema: STRING },
+    value('text/kestrel'),
+    '3.2.0',
+  ),
+  mediaType(
+    'prefixEncoding',
+    'multipart/mixed',
+    { itemSchema: STRING, prefixEncoding: [AS_KESTREL] },
+    { itemSchema: STRING },
+    value('text/kestrel'),
+    '3.2.0',
+  ),
+];
+
+const KEYS_OF_A_RESPONSE = ['default', '404', '4XX'];
+
+/**
+ * One response under one key of `responses`, beside a `200`: the key is held, and the
+ * definitions differ from those for the same response under each other kind of key.
+ */
+function responseKey(rowId: string, key: string): StructureCase {
+  const under = (given: string): UnknownRecord =>
+    documentOf({ '/things': { get: { responses: { ...OK, [given]: { description: 'none' } } } } });
+  return {
+    rowId,
+    document: under(key),
+    control: documentOf({ '/things': { get: PLAIN } }),
+    expects: value(key),
+    apartFrom: KEYS_OF_A_RESPONSE.filter((other) => other !== key).map(under),
+  };
+}
+
+function response(
+  field: string,
+  with_: UnknownRecord,
+  without: UnknownRecord,
+  expects: Expectation,
+  openapi = '3.1.0',
+): StructureCase {
+  return pair(
+    `response.${field}`,
+    (given) => respondingWith({ description: 'ok', ...given }, openapi),
+    with_,
+    without,
+    expects,
+  );
+}
+
+/** A case about one header of a `200` response. */
+function header(
+  field: string,
+  with_: UnknownRecord,
+  without: UnknownRecord,
+  expects: Expectation,
+  openapi = '3.1.0',
+): StructureCase {
+  return pair(
+    `header.${field}`,
+    (given) => respondingWith({ description: 'ok', headers: { 'X-Thing': given } }, openapi),
+    with_,
+    without,
+    expects,
+  );
+}
+
+const PLAIN_HEADER = { schema: STRING };
+const MANY_HEADER = { schema: STRINGS };
+
+const RESPONSES_AND_HEADERS: readonly StructureCase[] = [
+  responseKey('responses.default', 'default'),
+  responseKey('responses[an exact status code]', '404'),
+  responseKey('responses[a status range]', '4XX'),
+
+  response('description', { description: 'kestrel' }, {}, value('kestrel')),
+  response('content', JSON_BODY, {}, value(JSON_TYPE)),
+  response('headers', { headers: { 'X-Kestrel': PLAIN_HEADER } }, {}, value('X-Kestrel')),
+  response('summary', { summary: 'kestrel' }, {}, value('kestrel'), '3.2.0'),
+
+  header('schema', { schema: KESTREL_ONLY }, PLAIN_HEADER, value('kestrel')),
+  // The same schema, carried under a media type and carried directly.
+  header(
+    'content',
+    { content: { [JSON_TYPE]: { schema: KESTREL_OBJECT } } },
+    { schema: KESTREL_OBJECT },
+    value(JSON_TYPE),
+  ),
+  header(
+    'description',
+    { ...PLAIN_HEADER, description: 'kestrel' },
+    PLAIN_HEADER,
+    value('kestrel'),
+  ),
+  header('deprecated', { ...PLAIN_HEADER, deprecated: true }, PLAIN_HEADER, DIFFERENCE),
+  header(
+    'required',
+    { ...PLAIN_HEADER, required: true },
+    { ...PLAIN_HEADER, required: false },
+    DIFFERENCE,
+  ),
+  header(
+    'explode',
+    { ...MANY_HEADER, explode: true },
+    { ...MANY_HEADER, explode: false },
+    DIFFERENCE,
+  ),
+  header(
+    'allowReserved',
+    { ...PLAIN_HEADER, allowReserved: true },
+    PLAIN_HEADER,
+    DIFFERENCE,
+    '3.2.0',
+  ),
+];
+
 /**
  * One case for each row of a document outside a schema that the endpoint definitions
  * are proposed to carry as structure. The families not yet here have no cell.
  */
-export const STRUCTURE_CASES: readonly StructureCase[] = [...PATHS_AND_OPERATIONS, ...PARAMETERS];
+export const STRUCTURE_CASES: readonly StructureCase[] = [
+  ...PATHS_AND_OPERATIONS,
+  ...PARAMETERS,
+  ...REQUEST_BODIES,
+  ...MEDIA_TYPES,
+  ...RESPONSES_AND_HEADERS,
+];
 
 /**
  * Rows no pair of documents can isolate, each with the reason. Their cell is not judged.
@@ -272,5 +508,9 @@ export const ROWS_NO_CASE_ISOLATES: ReadonlyMap<string, string> = new Map([
   [
     'parameter.in=path',
     'a parameter in the path cannot move while its template stays, so no valid document differs only in the location',
+  ],
+  [
+    'header.style=simple',
+    'simple is the only style a header has, so stating it says nothing its absence does not',
   ],
 ]);

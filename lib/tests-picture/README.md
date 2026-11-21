@@ -9,8 +9,9 @@ crashes.
 This directory is being built in steps. It holds the rows, the outcome proposed for each,
 and two kinds of case. A case for every row of a schema whose construct decides which
 values are accepted fills the Zod and TypeScript columns. A case for a row of the document
-outside a schema fills the endpoint-definition column; paths, path items, operations
-and parameters have them, and the other families do not yet. Oak's document and the example documents
+outside a schema fills the endpoint-definition column; paths, path items, operations,
+parameters, request bodies, media types, responses and headers have them, and the other
+families do not yet. Oak's document and the example documents
 have no case yet.
 
 ## Run it
@@ -174,8 +175,9 @@ must differ from those made from each. Without that, a cookie parameter written 
 header parameter would read right, because its name is held.
 
 A row that no pair of valid documents can isolate has no case, and its cell is not
-judged, with the reason ([`ROWS_NO_CASE_ISOLATES`](cases/structure-cases.ts)). There is
-one: a parameter in the path cannot move to another location while its template stays.
+judged, with the reason ([`ROWS_NO_CASE_ISOLATES`](cases/structure-cases.ts)). There are
+two: a parameter in the path cannot move to another location while its template stays,
+and `simple` is the only style a header has.
 
 Where a construct states no value that can be searched for, as a boolean does, the case
 asks only that the definitions differ from the control's. That is the weaker proof.
