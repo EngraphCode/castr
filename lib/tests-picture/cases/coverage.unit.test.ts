@@ -11,6 +11,7 @@ import {
   coverageOf,
   needsDecidingCase,
   needsStructureCase,
+  needsZodStructureCase,
   structureCoverageOf,
   typescriptReadingFor,
 } from './coverage.js';
@@ -96,6 +97,22 @@ describe('structureCoverageOf', () => {
     expect(needsStructureCase(summary)).toBe(true);
     expect(needsStructureCase(servers)).toBe(false);
     expect(needsStructureCase(title)).toBe(false);
+  });
+
+  it('needs a Zod structure case for a part of a schema Zod carries as structure', () => {
+    expect(needsZodStructureCase(title)).toBe(true);
+    expect(needsZodStructureCase(maximum)).toBe(false);
+    expect(needsZodStructureCase(summary)).toBe(false);
+  });
+
+  it('sets the cases against the rows the given rule says need one', () => {
+    expect(
+      structureCoverageOf(
+        [title, summary],
+        [{ rowId: 'operation.summary' }],
+        needsZodStructureCase,
+      ),
+    ).toEqual({ uncased: ['keyword:title'], strays: ['operation.summary'], repeated: [] });
   });
 
   it('names the rows with no case, the cases with no such row, and the rows with two', () => {

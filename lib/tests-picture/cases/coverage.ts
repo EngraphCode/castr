@@ -67,14 +67,24 @@ export function needsStructureCase(row: Row): boolean {
 }
 
 /**
- * Sets the structure cases against the rows. A case for a row that needs none is a
- * stray, as is a case for a row that does not exist.
+ * A row needs a structure case in the Zod column where it is part of a schema and the Zod
+ * output is proposed to carry it as structure: the construct decides no value, and a case
+ * can show that the validators hold what it states.
+ */
+export function needsZodStructureCase(row: Row): boolean {
+  return row.group !== 'document' && row.proposal.zod === 'carried as structure';
+}
+
+/**
+ * Sets the structure cases against the rows that `needs` one. A case for a row that
+ * needs none is a stray, as is a case for a row that does not exist.
  */
 export function structureCoverageOf(
   rows: readonly Row[],
   cases: readonly { readonly rowId: string }[],
+  needs: (row: Row) => boolean = needsStructureCase,
 ): Coverage {
-  const needing = rows.filter(needsStructureCase).map((row) => row.id);
+  const needing = rows.filter(needs).map((row) => row.id);
   const cased = cases.map((structureCase) => structureCase.rowId);
   return {
     uncased: needing.filter((id) => !cased.includes(id)),

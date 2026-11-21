@@ -5,43 +5,47 @@
 import { describe, it, expect } from 'vitest';
 
 import type { Expectation } from './structure-case.js';
-import { judgeStructure, type ConvertedEndpoints } from './structure-verdict.js';
+import { judgeStructure, type ConvertedStructure } from './structure-verdict.js';
 
+const DEFINITIONS = 'endpoint definitions';
 const KESTREL: Expectation = { kind: 'value', value: 'kestrel' };
 const DIFFERENCE: Expectation = { kind: 'difference' };
 
-const plain: ConvertedEndpoints = { kind: 'endpoints', projection: [{ method: 'get' }] };
-const withTheValue: ConvertedEndpoints = {
-  kind: 'endpoints',
+const plain: ConvertedStructure = { kind: 'held', projection: [{ method: 'get' }] };
+const withTheValue: ConvertedStructure = {
+  kind: 'held',
   projection: [{ method: 'get', summary: 'kestrel' }],
 };
-const changed: ConvertedEndpoints = {
-  kind: 'endpoints',
+const changed: ConvertedStructure = {
+  kind: 'held',
   projection: [{ method: 'get', summary: 'k' }],
 };
-const refused: ConvertedEndpoints = { kind: 'threw', thrown: new Error('Cannot proceed.') };
+const refused: ConvertedStructure = { kind: 'threw', thrown: new Error('Cannot proceed.') };
 
 describe('judgeStructure', () => {
   it('is right where the definitions hold the value with the construct and not without', () => {
-    expect(judgeStructure(KESTREL, withTheValue, plain)).toEqual({ verdict: 'right', detail: '' });
+    expect(judgeStructure(DEFINITIONS, KESTREL, withTheValue, plain)).toEqual({
+      verdict: 'right',
+      detail: '',
+    });
   });
 
   it('is missing where the definitions are the same without the construct', () => {
-    expect(judgeStructure(KESTREL, plain, plain)).toEqual({
+    expect(judgeStructure(DEFINITIONS, KESTREL, plain, plain)).toEqual({
       verdict: 'missing',
       detail: 'the endpoint definitions are the same without it',
     });
   });
 
   it('is wrong where the definitions change and do not hold the value', () => {
-    expect(judgeStructure(KESTREL, changed, plain)).toEqual({
+    expect(judgeStructure(DEFINITIONS, KESTREL, changed, plain)).toEqual({
       verdict: 'wrong',
       detail: 'the endpoint definitions change with the construct and do not hold "kestrel"',
     });
   });
 
   it('is not judged where the definitions hold the value without the construct', () => {
-    expect(judgeStructure(KESTREL, withTheValue, withTheValue)).toEqual({
+    expect(judgeStructure(DEFINITIONS, KESTREL, withTheValue, withTheValue)).toEqual({
       verdict: 'not judged',
       detail:
         'the endpoint definitions hold "kestrel" without the construct, so the case decides nothing',
@@ -49,12 +53,12 @@ describe('judgeStructure', () => {
   });
 
   it('asks only for a difference where the construct states no value to find', () => {
-    expect(judgeStructure(DIFFERENCE, changed, plain).verdict).toBe('right');
-    expect(judgeStructure(DIFFERENCE, plain, plain).verdict).toBe('missing');
+    expect(judgeStructure(DEFINITIONS, DIFFERENCE, changed, plain).verdict).toBe('right');
+    expect(judgeStructure(DEFINITIONS, DIFFERENCE, plain, plain).verdict).toBe('missing');
   });
 
   it('is refused where Castr raises an error of its own for the document', () => {
-    expect(judgeStructure(KESTREL, refused, plain)).toEqual({
+    expect(judgeStructure(DEFINITIONS, KESTREL, refused, plain)).toEqual({
       verdict: 'refused',
       detail: 'Cannot proceed.',
     });
@@ -63,6 +67,7 @@ describe('judgeStructure', () => {
   it('is crashed where the module Castr emitted cannot be used', () => {
     expect(
       judgeStructure(
+        DEFINITIONS,
         KESTREL,
         { kind: 'output unusable', reason: 'does not load: Transform failed' },
         plain,
@@ -71,47 +76,57 @@ describe('judgeStructure', () => {
   });
 
   it('is missing where Castr emitted no endpoint definitions', () => {
-    expect(judgeStructure(KESTREL, { kind: 'nothing emitted' }, plain)).toEqual({
+    expect(judgeStructure(DEFINITIONS, KESTREL, { kind: 'nothing emitted' }, plain)).toEqual({
       verdict: 'missing',
       detail: 'Castr emitted no endpoint definitions',
     });
   });
 
+  it('names the output it was given in what it says', () => {
+    expect(judgeStructure('Zod validators', KESTREL, plain, plain).detail).toBe(
+      'the Zod validators are the same without it',
+    );
+  });
+
   it('is not judged where the control cannot be converted', () => {
-    expect(judgeStructure(KESTREL, withTheValue, refused)).toEqual({
+    expect(judgeStructure(DEFINITIONS, KESTREL, withTheValue, refused)).toEqual({
       verdict: 'not judged',
       detail: 'the control was refused: Cannot proceed.',
     });
   });
 
   it('is wrong where the definitions are the same when the construct has another value', () => {
-    expect(judgeStructure(KESTREL, withTheValue, plain, [changed, withTheValue])).toEqual({
+    expect(
+      judgeStructure(DEFINITIONS, KESTREL, withTheValue, plain, [changed, withTheValue]),
+    ).toEqual({
       verdict: 'wrong',
       detail: 'the endpoint definitions are the same when the construct has another value',
     });
   });
 
   it('is right where the definitions differ for every other value of the construct', () => {
-    expect(judgeStructure(KESTREL, withTheValue, plain, [changed, plain]).verdict).toBe('right');
+    expect(
+      judgeStructure(DEFINITIONS, KESTREL, withTheValue, plain, [changed, plain]).verdict,
+    ).toBe('right');
   });
 
   it('is not judged where a document with another value cannot be converted', () => {
-    expect(judgeStructure(KESTREL, withTheValue, plain, [refused])).toEqual({
+    expect(judgeStructure(DEFINITIONS, KESTREL, withTheValue, plain, [refused])).toEqual({
       verdict: 'not judged',
       detail: 'a document with another value was refused: Cannot proceed.',
     });
   });
 
   it('is wrong, in either order, where one other value is the same and another is refused', () => {
-    expect(judgeStructure(KESTREL, withTheValue, plain, [refused, withTheValue]).verdict).toBe(
-      'wrong',
-    );
-    expect(judgeStructure(KESTREL, withTheValue, plain, [withTheValue, refused]).verdict).toBe(
-      'wrong',
-    );
+    expect(
+      judgeStructure(DEFINITIONS, KESTREL, withTheValue, plain, [refused, withTheValue]).verdict,
+    ).toBe('wrong');
+    expect(
+      judgeStructure(DEFINITIONS, KESTREL, withTheValue, plain, [withTheValue, refused]).verdict,
+    ).toBe('wrong');
   });
 
   it('does not look at the other values where the control already decides the cell', () => {
-    expect(judgeStructure(KESTREL, plain, plain, [refused]).verdict).toBe('missing');
+    expect(judgeStructure(DEFINITIONS, KESTREL, plain, plain, [refused]).verdict).toBe('missing');
   });
 });

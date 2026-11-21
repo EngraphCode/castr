@@ -7,11 +7,22 @@ Each cell says whether Castr is right, refuses in plain words, is wrong, emits n
 crashes.
 
 This directory is being built in steps. It holds the rows, the outcome proposed for each,
-and two kinds of case. A case for every row of a schema whose construct decides which
-values are accepted fills the Zod and TypeScript columns. A case for every row of the
-document outside a schema that the endpoint definitions are to carry as structure fills
-the endpoint-definition column. Oak's document and the example documents have no case
-yet.
+and three kinds of case:
+
+- **A deciding case** for every row of a schema whose construct decides which values are
+  accepted. It fills the Zod and TypeScript columns.
+- **A structure case read from the Zod validators** for every row of a schema that
+  decides no value and that the Zod output is proposed to carry as structure (39 rows).
+- **A structure case read from the endpoint definitions** for every row of the document
+  outside a schema that they are proposed to carry as structure. It fills the
+  endpoint-definition column.
+
+Not built yet:
+
+- the rows of the document outside a schema, in the Zod and TypeScript columns (56 rows
+  proposed as carried or carried as structure there);
+- the seven rows of a schema the TypeScript output is proposed to carry as structure;
+- Oak's document and the example documents.
 
 ## Run it
 
@@ -122,6 +133,41 @@ sample can move more. It does not
 mean the construct is right in every combination, and it is not the proof the
 specification asks for (SPEC-G-4, SPEC-G-5).
 
+### The Zod column, for a construct that decides no value
+
+A row such as `title` decides no value, so no sample can show it. Its case is of the
+kind the endpoint-definition column uses, described below
+([`cases/schema-structure-cases.ts`](cases/schema-structure-cases.ts)): two whole
+documents, one whose schema holds the construct and a control without it, or with another
+value. Castr generates a module from each and the module is loaded. Every Zod validator it
+exports is read as the JSON Schema Zod gives for it, under the name it is exported by, and
+the same judge says whether what the construct states is held there and not in the
+control's.
+
+Nine of the 39 cases state no value that can be searched for, and ask only that the
+validators differ from the control's. That is the weaker proof.
+
+What a cell here does not show:
+
+- **A source comment is not held.** A construct Castr wrote only as a comment in the
+  generated text would read missing. When the cases were written the generated text was
+  read beside the validators for each, and no stated value was in one and not the other.
+  No test holds that.
+- **What Zod's JSON Schema does not show is not seen**, with one exception. Zod gives the
+  same JSON Schema for a discriminated union as for a plain choice, so the property a
+  discriminated union discriminates on is added to the reading
+  ([`cases/projection.ts`](cases/projection.ts)).
+- **Right includes copying without understanding.** Castr copies the `xml` and
+  `externalDocs` objects whole into the validator's metadata, including a field that does
+  not exist. The 15 right cells for those objects' fields record that one behaviour, and
+  do not show that Castr knows any field.
+- **Held is not the same as held harmlessly.** A `default` written as Zod's `.default()`
+  would read right, and it also changes what the validator accepts. `example` reads right
+  today because its value is held under `examples`, another keyword.
+- **A refusal is the module's, not the column's.** Castr writes the validators and the
+  types into one module, so a refusal that gives TypeScript as its reason, as the one for
+  `$dynamicAnchor` does, leaves the Zod cell refused too.
+
 ### The TypeScript column
 
 The judge of a type is the TypeScript compiler, which is outside Castr
@@ -186,7 +232,7 @@ asks only that the definitions differ from the control's. That is the weaker pro
 A right cell says the value is somewhere in the endpoint definitions. It does not say the
 value is in the right place, or that a consumer can use it there.
 
-[`cases/right-today.ts`](cases/right-today.ts) lists the rows that are right today, for each column.
+[`cases/right-today.ts`](cases/right-today.ts) lists the rows that are right today, for each kind of case.
 [`cases/schema-cases.gen.test.ts`](cases/schema-cases.gen.test.ts) holds that list to
 exactly the rows that are right: a row that stops being right fails it, and so does a row
 that becomes right and is not added. The list records what is true. It does not accept

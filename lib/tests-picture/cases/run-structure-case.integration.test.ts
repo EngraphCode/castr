@@ -20,17 +20,23 @@ describe('runStructureCase', () => {
   it('gives Castr the document, its control and each document with another value', async () => {
     const other = { paths: { '/things': { get: { summary: 'osprey' } } } };
     const given: unknown[] = [];
-    await runStructureCase({ ...summary, apartFrom: [other] }, (document) => {
-      given.push(document);
-      return Promise.resolve({ kind: 'nothing emitted' });
-    });
+    await runStructureCase(
+      { ...summary, apartFrom: [other] },
+      (document) => {
+        given.push(document);
+        return Promise.resolve({ kind: 'nothing emitted' });
+      },
+      'endpoint definitions',
+    );
 
     expect(given).toEqual([summary.document, summary.control, other]);
   });
 
   it('judges what Castr made of the two', async () => {
-    const cell = await runStructureCase(summary, () =>
-      Promise.resolve({ kind: 'endpoints', projection: [{ method: 'get' }] }),
+    const cell = await runStructureCase(
+      summary,
+      () => Promise.resolve({ kind: 'held', projection: [{ method: 'get' }] }),
+      'endpoint definitions',
     );
 
     expect(cell).toEqual({
@@ -41,7 +47,11 @@ describe('runStructureCase', () => {
 
   it('rejects, and gives no cell, where the harness itself fails', async () => {
     await expect(
-      runStructureCase(summary, () => Promise.reject(new Error('ENOSPC: no space left'))),
+      runStructureCase(
+        summary,
+        () => Promise.reject(new Error('ENOSPC: no space left')),
+        'endpoint definitions',
+      ),
     ).rejects.toThrow('ENOSPC');
   });
 });

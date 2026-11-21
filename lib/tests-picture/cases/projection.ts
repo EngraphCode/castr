@@ -13,9 +13,24 @@ function isRecord(value: unknown): value is UnknownRecord {
   return typeof value === 'object' && value !== null;
 }
 
+/**
+ * Zod's JSON Schema for a validator, with the one fact it leaves out that a construct of
+ * the picture states: which property a discriminated union discriminates on. Without it
+ * a discriminated union reads the same as a plain choice.
+ */
+function described(schema: z.ZodType): unknown {
+  return z.toJSONSchema(schema, {
+    override: ({ zodSchema, jsonSchema }) => {
+      if (zodSchema instanceof z.ZodDiscriminatedUnion) {
+        jsonSchema['discriminator'] = { propertyName: zodSchema.def.discriminator };
+      }
+    },
+  });
+}
+
 function projectionOfSchema(schema: z.ZodType): Projection {
   try {
-    return { zod: projectionOf(z.toJSONSchema(schema)) };
+    return { zod: projectionOf(described(schema)) };
   } catch {
     // Zod has no JSON Schema for some validators. Such a validator still shows that
     // something is held; what it holds cannot be read here.

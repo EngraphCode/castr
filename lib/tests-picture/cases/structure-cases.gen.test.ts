@@ -29,7 +29,11 @@ describe('the cases for the rows of a document outside a schema', () => {
   });
 
   it('holds what the construct states on exactly the rows recorded as right', async () => {
-    const cells = await runStructureCases(STRUCTURE_CASES, ROWS_NO_CASE_ISOLATES);
+    const cells = await runStructureCases(
+      STRUCTURE_CASES,
+      'endpoint definitions',
+      ROWS_NO_CASE_ISOLATES,
+    );
 
     expect(rowsWith(cells, 'right')).toEqual(RIGHT_TODAY_ENDPOINTS);
     // A cookie parameter is written as a header parameter, so neither is told apart. A

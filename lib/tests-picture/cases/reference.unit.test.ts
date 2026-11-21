@@ -8,9 +8,7 @@ import { referenceFor } from './reference.js';
 import { documentFor } from './schema-case.js';
 
 function reference(schema: unknown, components?: Readonly<Record<string, object>>) {
-  return referenceFor(
-    documentFor({ rowId: 'a row', schema, samples: [], ...(components ? { components } : {}) }),
-  );
+  return referenceFor(documentFor({ schema, ...(components ? { components } : {}) }));
 }
 
 describe('referenceFor', () => {
