@@ -126,8 +126,10 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    The picture's rows and proposed outcomes are on `main` (#138, #140): `pnpm picture`
    prints 317 rows in three columns, and the cells of 74 schema cases (#142). Castr's
    Zod output was run for 70 of them: right 35, wrong 21, refused 13, crashed 1. The
-   other four are not judged, and what Castr does there is unknown. The next
-   parts are the cases for the other rows and the other two columns.
+   other four are not judged, and what Castr does there is unknown. The TypeScript
+   column has cells for the same 74 cases (#144), judged by the TypeScript compiler:
+   right 50, wrong 6, refused 13, crashed 1, not judged 4. The next parts are the
+   endpoint-definition column and the cases for the other rows.
 1. **PICTURE: one repeatable command that shows what Castr does, judged from outside it.**
    The owner asked on 18 November 2026 what working, working well and correct look like.
    The seat answered with cards and a draft amendment, and on 19 November the owner sent it
