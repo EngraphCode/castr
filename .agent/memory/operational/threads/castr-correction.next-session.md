@@ -35,9 +35,11 @@ The owner's instruction, verbatim, on 21 November: "fine, that remains the accep
 please continue /oak-start-right-team use the cognitive skills and reviewers as appropriate
 throughout". The order is PICTURE, the specification amendment, fixing Castr, HOME, MOVE.
 
-1. **PICTURE has three things left, and each names what it waits on.** Four cells in each
-   deciding column are not judged (`int64`, `float`, `double`, and the formats the
-   reference has no checker for) and need a second judge. The 56 Zod cells for rows
+1. **PICTURE has three things left, and each names what it waits on.** Seven rows in each
+   deciding column need a second judge. Four are not judged, because the reference has
+   no checker for them (`idn-email`, `idn-hostname`, `iri`, `iri-reference`). Three have
+   cells that decide nothing, because the reference accepts every sample (`int64`,
+   `float`, `double`). The 56 Zod cells for rows
    outside a schema wait on the form of the public surface (SPEC-N-4). The example input
    library's documents are not pinned (EC-1 of
    [its plan](../../../plans/active/example-input-library.md)).
@@ -124,30 +126,44 @@ address.
   cogent and cohesive. For a large survey, overlapping readers on a cheaper model are
   synthesised by the seat, which keeps the judgement of correctness.
 
-The commit helper. A successor sets its own name, identifier and session prefix:
+The commit helper. A successor sets its own name, identifier, session prefix, platform
+and model. The two claims files are ignored by git, so a fresh checkout has neither and
+the helper creates them. It refuses a path or a subject that the shell would split or
+read as more than text, because it builds its commands as text:
 
 ```sh
 #!/bin/sh
-# usage: AGENT_NAME=... AGENT_ID=... SESSION_PREFIX=... MODEL=... \
+# usage: AGENT_NAME=... AGENT_ID=... SESSION_PREFIX=... PLATFORM=... MODEL=... \
 #        sh helper.sh "<subject>" <message-file> <file>...
 set -u
 SUBJ="$1"; MSG="$2"; shift 2
-WHO="--agent-name \"$AGENT_NAME\" --platform claude --model $MODEL"
+[ -r "$MSG" ] || { echo "message file not readable"; exit 1; }
+for f in "$SUBJ" "$@"; do
+  case "$f" in
+    *[\"\'\`\$\\\;\&\|\<\>\*\?]*) echo "refused, not plain text: $f"; exit 1 ;;
+  esac
+done
+for f in "$@"; do
+  case "$f" in *[[:space:]]*) echo "refused, has a space: $f"; exit 1 ;; esac
+done
+WHO="--agent-name \"$AGENT_NAME\" --platform $PLATFORM --model $MODEL"
 WHO="$WHO --session-id-prefix $SESSION_PREFIX"
 ACTIVE=.agent/state/collaboration/active-claims.json
 CLOSED=.agent/state/collaboration/closed-claims.archive.json
 FILES=""; for f in "$@"; do FILES="$FILES --file $f"; done
 now() { date -u +%Y-%m-%dT%H:%M:%SZ; }
+[ -e $ACTIVE ] && [ -e $CLOSED ] || pnpm -s agent-tools:collaboration-state -- \
+  claims init --active $ACTIVE --closed $CLOSED >/dev/null
 CLAIM=$(pnpm -s agent-tools:collaboration-state -- claims open \
   --active $ACTIVE --thread castr-correction \
   --area-kind git --area-pattern index/head --intent "Stage and commit: $SUBJ" \
-  --ttl-seconds 900 --platform claude --model "$MODEL" --now "$(now)" \
+  --ttl-seconds 900 --platform "$PLATFORM" --model "$MODEL" --now "$(now)" \
   | grep -o '"claim_id": "[^"]*"' | head -1 | cut -d'"' -f4)
 [ -n "$CLAIM" ] || { echo "no claim opened"; exit 1; }
 close() {
   pnpm -s agent-tools:collaboration-state -- claims close \
     --active $ACTIVE --closed $CLOSED \
-    --claim-id "$CLAIM" --summary "$1" --platform claude --model "$MODEL" \
+    --claim-id "$CLAIM" --summary "$1" --platform "$PLATFORM" --model "$MODEL" \
     --now "$(now)" | tail -1
 }
 I=$(eval pnpm -s agent-tools:commit-queue -- enqueue --claim-id "$CLAIM" $WHO \
@@ -168,7 +184,7 @@ for f in "$@"; do
 done
 pnpm -s agent-tools:commit-queue -- record-staged --intent-id "$I" \
   >/dev/null || abandon "record-staged failed"
-cp "$MSG" .git/COMMIT_EDITMSG
+cp "$MSG" .git/COMMIT_EDITMSG || abandon "message file not copied"
 if pnpm -s agent-tools:commit-queue -- commit --intent-id "$I" \
   --message-file .git/COMMIT_EDITMSG > "$MSG.log" 2>&1; then
   SHA=$(git rev-parse --short HEAD)
@@ -190,7 +206,7 @@ fi
   rulings from the owner's other estate that bind work here are restated under "How work
   lands here" above and in the wrap of 20 November below.
 - **Promises still open,** each forwarded: the rehearsal of the consumer's generation
-  step; a second judge for the cells not judged; the cases owed to the command (offset
+  step; a second judge for the seven rows named above; the cases owed to the command (offset
   date-times, a closed-object `allOf` over a shared property, whether non-validating
   keywords are carried); saying to the owner when a first measurement is provisional.
 - **Inference, not observation.** That a `paths` type would read missing in every one of
