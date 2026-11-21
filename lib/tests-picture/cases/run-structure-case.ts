@@ -11,8 +11,8 @@ import type { Cell } from './verdict.js';
 export type ConvertEndpoints = (document: UnknownRecord) => Promise<ConvertedEndpoints>;
 
 /**
- * Runs one case: Castr reads the document and its control, and the cell is what judging
- * the two gives.
+ * Runs one case: Castr reads the document, its control and each document that gives the
+ * construct another value, and the cell is what judging them gives.
  */
 export async function runStructureCase(
   structureCase: StructureCase,
@@ -20,5 +20,9 @@ export async function runStructureCase(
 ): Promise<Cell> {
   const converted = await convert(structureCase.document);
   const control = await convert(structureCase.control);
-  return judgeStructure(structureCase.expects, converted, control);
+  const others: ConvertedEndpoints[] = [];
+  for (const other of structureCase.apartFrom ?? []) {
+    others.push(await convert(other));
+  }
+  return judgeStructure(structureCase.expects, converted, control, others);
 }

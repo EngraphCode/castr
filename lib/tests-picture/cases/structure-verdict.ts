@@ -23,6 +23,8 @@ function cellWithoutEndpoints(converted: Exclude<ConvertedEndpoints, { kind: 'en
   return { verdict: 'crashed', detail: `Castr's output ${converted.reason}` };
 }
 
+const RIGHT: Cell = { verdict: 'right', detail: '' };
+
 const SAME: Cell = {
   verdict: 'missing',
   detail: 'the endpoint definitions are the same without it',
@@ -37,7 +39,7 @@ function judgeValue(value: string | number, held: Projection, control: Projectio
     };
   }
   if (holds(held, value)) {
-    return { verdict: 'right', detail: '' };
+    return RIGHT;
   }
   return sameProjection(held, control)
     ? SAME
@@ -47,9 +49,33 @@ function judgeValue(value: string | number, held: Projection, control: Projectio
       };
 }
 
+function judgeAgainstControl(expects: Expectation, held: Projection, control: Projection): Cell {
+  if (expects.kind === 'value') {
+    return judgeValue(expects.value, held, control);
+  }
+  return sameProjection(held, control) ? SAME : RIGHT;
+}
+
+function judgeApart(held: Projection, other: ConvertedEndpoints): Cell {
+  if (other.kind !== 'endpoints') {
+    const { verdict, detail } = cellWithoutEndpoints(other);
+    return {
+      verdict: 'not judged',
+      detail: `a document with another value was ${verdict}: ${detail}`,
+    };
+  }
+  return sameProjection(held, other.projection)
+    ? {
+        verdict: 'wrong',
+        detail: 'the endpoint definitions are the same when the construct has another value',
+      }
+    : RIGHT;
+}
+
 /**
- * The cell for one structure case, from what Castr made of its document and of its
- * control: whether the endpoint definitions hold what the construct states.
+ * The cell for one structure case, from what Castr made of its document, of its control
+ * and of each document that gives the construct another value: whether the endpoint
+ * definitions hold what the construct states, and tell it apart from the other values.
  *
  * A right cell means the value is somewhere in the definitions, or that they differ. It
  * does not say the value is in the right place.
@@ -58,6 +84,7 @@ export function judgeStructure(
   expects: Expectation,
   converted: ConvertedEndpoints,
   control: ConvertedEndpoints,
+  others: readonly ConvertedEndpoints[] = [],
 ): Cell {
   if (converted.kind !== 'endpoints') {
     return cellWithoutEndpoints(converted);
@@ -66,10 +93,12 @@ export function judgeStructure(
     const { verdict, detail } = cellWithoutEndpoints(control);
     return { verdict: 'not judged', detail: `the control was ${verdict}: ${detail}` };
   }
-  if (expects.kind === 'value') {
-    return judgeValue(expects.value, converted.projection, control.projection);
+  const againstControl = judgeAgainstControl(expects, converted.projection, control.projection);
+  if (againstControl.verdict !== 'right') {
+    return againstControl;
   }
-  return sameProjection(converted.projection, control.projection)
-    ? SAME
-    : { verdict: 'right', detail: '' };
+  const notApart = others
+    .map((other) => judgeApart(converted.projection, other))
+    .find((cell) => cell.verdict !== 'right');
+  return notApart ?? RIGHT;
 }

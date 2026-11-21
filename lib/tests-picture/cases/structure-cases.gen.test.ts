@@ -29,6 +29,8 @@ describe('the cases for the rows of a document outside a schema', () => {
     const cells = await runStructureCases(STRUCTURE_CASES);
 
     expect(rowsWith(cells, 'right')).toEqual(RIGHT_TODAY_ENDPOINTS);
+    // A cookie parameter is written as a header parameter, so neither is told apart.
+    expect(rowsWith(cells, 'wrong')).toEqual(['parameter.in=header', 'parameter.in=cookie']);
     expect(rowsWith(cells, 'not judged')).toEqual([]);
   }, 60_000);
 });

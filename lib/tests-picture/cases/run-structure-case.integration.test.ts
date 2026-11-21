@@ -17,14 +17,15 @@ const summary: StructureCase = {
 };
 
 describe('runStructureCase', () => {
-  it('gives Castr the document and then its control', async () => {
+  it('gives Castr the document, its control and each document with another value', async () => {
+    const other = { paths: { '/things': { get: { summary: 'osprey' } } } };
     const given: unknown[] = [];
-    await runStructureCase(summary, (document) => {
+    await runStructureCase({ ...summary, apartFrom: [other] }, (document) => {
       given.push(document);
       return Promise.resolve({ kind: 'nothing emitted' });
     });
 
-    expect(given).toEqual([summary.document, summary.control]);
+    expect(given).toEqual([summary.document, summary.control, other]);
   });
 
   it('judges what Castr made of the two', async () => {

@@ -21,4 +21,10 @@ export interface StructureCase {
   readonly document: UnknownRecord;
   readonly control: UnknownRecord;
   readonly expects: Expectation;
+  /**
+   * Documents that give the construct another of its values. The definitions made from
+   * the document must differ from those made from each, or the value is not told apart:
+   * a cookie parameter written as a header parameter is held and is still wrong.
+   */
+  readonly apartFrom?: readonly UnknownRecord[];
 }
