@@ -30,14 +30,15 @@ function versionsCell(row: Row): string {
 export type CellsToday = ReadonlyMap<string, Cell>;
 
 /**
- * What Castr's Zod output and its TypeScript output do today.
+ * What each of Castr's three outputs does today.
  */
 export interface Today {
   readonly zod: CellsToday;
   readonly typescript: CellsToday;
+  readonly endpoints: CellsToday;
 }
 
-const NOTHING_TODAY: Today = { zod: new Map(), typescript: new Map() };
+const NOTHING_TODAY: Today = { zod: new Map(), typescript: new Map(), endpoints: new Map() };
 
 function renderRow(row: Row, today: Today): string {
   const cells = [
@@ -45,6 +46,7 @@ function renderRow(row: Row, today: Today): string {
     versionsCell(row),
     today.zod.get(row.id)?.verdict ?? '',
     today.typescript.get(row.id)?.verdict ?? '',
+    today.endpoints.get(row.id)?.verdict ?? '',
     zodCell(row),
     row.proposal.typescript,
     row.proposal.endpoints,
@@ -56,7 +58,7 @@ function renderRow(row: Row, today: Today): string {
 
 /**
  * Renders the rows as one Markdown table for each part of a document. A row that has a
- * case shows what Castr's Zod and TypeScript outputs do for it today; a row with no case
+ * case shows what Castr's outputs do for it today; a row with no case
  * shows nothing there, which is not a claim that Castr is right.
  */
 export function renderRows(rows: readonly Row[], today: Today = NOTHING_TODAY): string {
@@ -69,8 +71,8 @@ export function renderRows(rows: readonly Row[], today: Today = NOTHING_TODAY): 
     lines.push(
       `## ${title} (${String(inGroup.length)})`,
       '',
-      '| Construct | OpenAPI | Castr today, to Zod | Castr today, to TypeScript | Proposed: to Zod | Proposed: to TypeScript | Proposed: to the endpoint definitions | Defined | Note |',
-      '| --- | --- | --- | --- | --- | --- | --- | --- | --- |',
+      '| Construct | OpenAPI | Castr today, to Zod | Castr today, to TypeScript | Castr today, to the endpoint definitions | Proposed: to Zod | Proposed: to TypeScript | Proposed: to the endpoint definitions | Defined | Note |',
+      '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |',
       ...inGroup.map((row) => renderRow(row, today)),
       '',
     );
@@ -98,7 +100,7 @@ export function renderToday(rows: readonly Row[], today: CellsToday, output: str
     return `${verdict} ${String(count)}`;
   });
   const lines = [
-    `## What Castr's ${output} output does today (${String(cased.length)} cases)`,
+    `## What ${output} today (${String(cased.length)} cases)`,
     '',
     `${counts.join('; ')}.`,
     '',

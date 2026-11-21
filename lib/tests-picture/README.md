@@ -7,10 +7,11 @@ Each cell says whether Castr is right, refuses in plain words, is wrong, emits n
 crashes.
 
 This directory is being built in steps. It holds the rows, the outcome proposed for each,
-and a case for every row of a schema whose construct decides which values are accepted.
-Those cases fill two columns: the Zod output and the TypeScript output. The
-endpoint-definition column, the rows that are carried as structure, the rows of the
-document outside a schema, Oak's document and the example documents have no case yet.
+and two kinds of case. A case for every row of a schema whose construct decides which
+values are accepted fills the Zod and TypeScript columns. A case for a row of the document
+outside a schema fills the endpoint-definition column; paths, path items and operations
+have them, and the other families do not yet. Oak's document and the example documents
+have no case yet.
 
 ## Run it
 
@@ -145,6 +146,33 @@ the shape is a missing one. The other cells are as for Zod.
 Where a case's schema leans on a second construct that only a validator can decide, a
 type that is right about the first still disagrees with the reference. The `allOf` and
 `$ref` cases were changed for that reason, to schemas that `type` alone decides.
+
+### The endpoint-definition column
+
+A row of the document outside a schema decides no value, so its case is of another kind
+([`cases/structure-cases.ts`](cases/structure-cases.ts)): two whole documents, one that
+holds the construct and a control that is the same without it, or with another value.
+Castr generates a module from each, the module is loaded, and what it exports as
+`endpoints` is reduced to plain values ([`cases/projection.ts`](cases/projection.ts)); a
+Zod validator there is read as the JSON Schema Zod gives for it.
+
+The judge assumes nothing about the shape of the endpoint definitions
+([`cases/run-structure-case.ts`](cases/run-structure-case.ts)):
+
+| Cell       | Meaning                                                                               |
+| ---------- | ------------------------------------------------------------------------------------- |
+| right      | The value the construct states is in the definitions, and is not in the control's.    |
+| wrong      | The definitions change with the construct and do not hold the value.                  |
+| missing    | The definitions are the same without the construct, or the module exports none.       |
+| refused    | Castr gave an error of its own for the document.                                      |
+| crashed    | Castr failed with a fault of the runtime, or emitted a module that does not load.     |
+| not judged | The control holds the value too, or could not be converted: the case decides nothing. |
+
+Where a construct states no value that can be searched for, as a boolean does, the case
+asks only that the definitions differ from the control's. That is the weaker proof.
+
+A right cell says the value is somewhere in the endpoint definitions. It does not say the
+value is in the right place, or that a consumer can use it there.
 
 [`cases/right-today.ts`](cases/right-today.ts) lists the rows that are right today, for each column.
 [`cases/schema-cases.gen.test.ts`](cases/schema-cases.gen.test.ts) holds that list to
