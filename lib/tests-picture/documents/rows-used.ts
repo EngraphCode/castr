@@ -311,28 +311,27 @@ export function rowsUsedBy(document: JsonObject, rows: ReadonlySet<string>): Row
 
   const is31 = typeof document['openapi'] === 'string' && document['openapi'].startsWith('3.1');
 
-  function walk(placed: string, node: unknown): void {
-    const asReference = is31 && isJsonObject(node) && '$ref' in node;
-    const pathItem = asReference ? 'reference' : 'path-item';
-    const kind = placed === PATH_ITEM_OR_REFERENCE ? pathItem : placed;
-    if (kind === SCHEMA) {
-      walkSchema(node);
-      return;
+  /** The kind of object at a place, which for a path item depends on the version. */
+  const kindAt = (placed: string, node: unknown): string => {
+    if (placed !== PATH_ITEM_OR_REFERENCE) {
+      return placed;
     }
-    if (!isJsonObject(node)) {
-      return;
+    return is31 && isJsonObject(node) && '$ref' in node ? 'reference' : 'path-item';
+  };
+
+  // A reference stands in for the object, and holds only what a reference holds: it
+  // admits no extension. A path item is the exception: its `$ref` is a field of its
+  // own beside the others.
+  const isReferenceAt = (kind: string, node: JsonObject): boolean => {
+    if (kind === 'reference') {
+      return true;
     }
-    if (kind === 'security-requirement') {
-      if (Object.keys(node).length > 0) {
-        use('security-requirement[a security scheme name]');
-      }
-      return;
-    }
-    // A reference stands in for the object, and holds only what a reference holds: it
-    // admits no extension. A path item is the exception: its `$ref` is a field of its
-    // own beside the others.
     const mayBeReference = kind in KEYED ? KEYED_BY_REFERENCE.has(kind) : kind !== 'path-item';
-    const isReference = kind === 'reference' || ('$ref' in node && mayBeReference);
+    return '$ref' in node && mayBeReference;
+  };
+
+  const walkObject = (kind: string, node: JsonObject): void => {
+    const isReference = isReferenceAt(kind, node);
     if (kind in KEYED && !isReference) {
       walkKeyed(kind, node);
       return;
@@ -345,6 +344,19 @@ export function rowsUsedBy(document: JsonObject, rows: ReadonlySet<string>): Row
       } else {
         walkField(kind, name, value);
       }
+    }
+  };
+
+  function walk(placed: string, node: unknown): void {
+    const kind = kindAt(placed, node);
+    if (kind === SCHEMA) {
+      walkSchema(node);
+    } else if (!isJsonObject(node)) {
+      // A plain value where an object belongs states nothing more.
+    } else if (kind !== 'security-requirement') {
+      walkObject(kind, node);
+    } else if (Object.keys(node).length > 0) {
+      use('security-requirement[a security scheme name]');
     }
   }
 
