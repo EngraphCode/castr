@@ -7,7 +7,13 @@ import { describe, it, expect } from 'vitest';
 import { proposalOf, type Coded } from '../rows/outcomes.js';
 import type { Row } from '../rows/table.js';
 
-import { coverageOf, needsDecidingCase, typescriptReadingFor } from './coverage.js';
+import {
+  coverageOf,
+  needsDecidingCase,
+  needsStructureCase,
+  structureCoverageOf,
+  typescriptReadingFor,
+} from './coverage.js';
 import type { SchemaCase } from './schema-case.js';
 
 function rowOf(id: string, group: Row['group'], coded: Coded): Row {
@@ -79,5 +85,35 @@ describe('coverageOf', () => {
     expect(
       coverageOf([maximum], [caseFor('keyword:maximum'), caseFor('keyword:maximum')]).repeated,
     ).toEqual(['keyword:maximum']);
+  });
+});
+
+describe('structureCoverageOf', () => {
+  const summary = rowOf('operation.summary', 'document', ['O', 'S', 'S', '']);
+  const servers = rowOf('openapi.servers', 'document', ['O', 'O', 'O', '']);
+
+  it('needs a case for a row of the document the endpoint definitions carry as structure', () => {
+    expect(needsStructureCase(summary)).toBe(true);
+    expect(needsStructureCase(servers)).toBe(false);
+    expect(needsStructureCase(title)).toBe(false);
+  });
+
+  it('names the rows with no case, the cases with no such row, and the rows with two', () => {
+    expect(
+      structureCoverageOf(
+        [summary, servers],
+        [{ rowId: 'openapi.servers' }, { rowId: 'operation.gone' }],
+      ),
+    ).toEqual({
+      uncased: ['operation.summary'],
+      strays: ['openapi.servers', 'operation.gone'],
+      repeated: [],
+    });
+    expect(
+      structureCoverageOf(
+        [summary],
+        [{ rowId: 'operation.summary' }, { rowId: 'operation.summary' }],
+      ).repeated,
+    ).toEqual(['operation.summary']);
   });
 });

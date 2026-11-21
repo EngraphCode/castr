@@ -3,7 +3,9 @@ import type { Row } from '../rows/table.js';
 import { createCastrConvert } from './castr-convert.js';
 import { typescriptReadingFor } from './coverage.js';
 import { runCase } from './run-case.js';
+import { runStructureCase } from './run-structure-case.js';
 import type { SchemaCase } from './schema-case.js';
+import type { StructureCase } from './structure-case.js';
 import type { Cell } from './verdict.js';
 
 /**
@@ -45,6 +47,25 @@ export async function runTypeScriptCases(
       if (reading !== undefined) {
         cells.set(schemaCase.rowId, await runCase(schemaCase, castr.convertType, reading));
       }
+    }
+  } finally {
+    await castr.dispose();
+  }
+  return cells;
+}
+
+/**
+ * Runs every structure case through Castr, and gives the cell for each by the identity of
+ * its row: whether the endpoint definitions hold what the case's construct states.
+ */
+export async function runStructureCases(
+  cases: readonly StructureCase[],
+): Promise<ReadonlyMap<string, Cell>> {
+  const cells = new Map<string, Cell>();
+  const castr = await createCastrConvert();
+  try {
+    for (const structureCase of cases) {
+      cells.set(structureCase.rowId, await runStructureCase(structureCase, castr.convertEndpoints));
     }
   } finally {
     await castr.dispose();

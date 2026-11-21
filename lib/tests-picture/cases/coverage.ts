@@ -56,3 +56,29 @@ export function typescriptReadingFor(row: Row): Reading | undefined {
   }
   return row.proposal.typescript === 'carried by companion' ? TYPE_ADMITS : undefined;
 }
+
+/**
+ * A row needs a structure case where it is part of a document outside a schema and the
+ * endpoint definitions are proposed to carry it as structure: a case can show that what
+ * the construct states is held there.
+ */
+export function needsStructureCase(row: Row): boolean {
+  return row.group === 'document' && row.proposal.endpoints === 'carried as structure';
+}
+
+/**
+ * Sets the structure cases against the rows. A case for a row that needs none is a
+ * stray, as is a case for a row that does not exist.
+ */
+export function structureCoverageOf(
+  rows: readonly Row[],
+  cases: readonly { readonly rowId: string }[],
+): Coverage {
+  const needing = rows.filter(needsStructureCase).map((row) => row.id);
+  const cased = cases.map((structureCase) => structureCase.rowId);
+  return {
+    uncased: needing.filter((id) => !cased.includes(id)),
+    strays: cased.filter((id) => !needing.includes(id)),
+    repeated: [...new Set(cased.filter((id, index) => cased.indexOf(id) !== index))],
+  };
+}

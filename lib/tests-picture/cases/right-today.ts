@@ -100,3 +100,28 @@ export const RIGHT_TODAY_TYPESCRIPT: readonly string[] = [
   'text:`true` as a schema',
   'text:a list of types (`type: [..]`)',
 ];
+
+/**
+ * The rows of a document outside a schema for which the endpoint definitions hold what
+ * the construct states, today, held as exactly as the lists above. Right says the value
+ * is somewhere in the definitions; it does not say it is in the right place.
+ */
+export const RIGHT_TODAY_ENDPOINTS: readonly string[] = [
+  'paths[a path template]',
+  'path-item.get',
+  'path-item.put',
+  'path-item.post',
+  'path-item.delete',
+  'path-item.options',
+  'path-item.head',
+  'path-item.patch',
+  'path-item.trace',
+  'path-item.query',
+  'path-item.additionalOperations',
+  'path-item.parameters',
+  'operation.operationId',
+  'operation.description',
+  'operation.parameters',
+  'operation.requestBody',
+  'operation.responses',
+];
