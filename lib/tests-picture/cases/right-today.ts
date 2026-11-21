@@ -134,4 +134,6 @@ export const RIGHT_TODAY_ENDPOINTS: readonly string[] = [
   'request-body.description',
   'media-type.schema',
   'response.description',
+  'openapi.paths',
+  'openapi.components',
 ];

@@ -489,6 +489,189 @@ const RESPONSES_AND_HEADERS: readonly StructureCase[] = [
   ),
 ];
 
+const MANY_PARTS = {
+  type: 'object',
+  properties: { part: STRINGS },
+  additionalProperties: false,
+};
+
+/** `post /things` sending a form whose one part has the encoding given, or none. */
+function formWith(
+  type: string,
+  encoding: UnknownRecord | undefined,
+  openapi: string,
+): UnknownRecord {
+  const media = encoding === undefined ? {} : { encoding: { part: encoding } };
+  return sending({ content: { [type]: { schema: MANY_PARTS, ...media } } }, openapi);
+}
+
+function encoding(
+  field: string,
+  with_: UnknownRecord,
+  without: UnknownRecord,
+  expects: Expectation,
+  openapi = '3.1.0',
+): StructureCase {
+  return pair(
+    `encoding.${field}`,
+    (given) => formWith('multipart/form-data', given, openapi),
+    with_,
+    without,
+    expects,
+  );
+}
+
+const STYLES_OF_AN_ENCODING = ['form', 'spaceDelimited', 'pipeDelimited', 'deepObject'];
+
+/** A style of an encoding: its name is held, and it is told from each other style. */
+function encodingStyle(name: string): StructureCase {
+  const styled = (given: string): UnknownRecord =>
+    formWith('application/x-www-form-urlencoded', { style: given }, '3.1.0');
+  return {
+    rowId: `encoding.style=${name}`,
+    document: styled(name),
+    control: formWith('application/x-www-form-urlencoded', undefined, '3.1.0'),
+    expects: value(name),
+    apartFrom: STYLES_OF_AN_ENCODING.filter((other) => other !== name).map(styled),
+  };
+}
+
+const ENCODINGS: readonly StructureCase[] = [
+  encoding('contentType', AS_KESTREL, { contentType: 'text/plain' }, value('text/kestrel')),
+  encoding('headers', { headers: { 'X-Kestrel': PLAIN_HEADER } }, {}, value('X-Kestrel')),
+  ...STYLES_OF_AN_ENCODING.map(encodingStyle),
+  encoding(
+    'explode',
+    { style: 'form', explode: false },
+    { style: 'form', explode: true },
+    DIFFERENCE,
+  ),
+  encoding('allowReserved', { allowReserved: true }, {}, DIFFERENCE),
+  encoding('encoding', { encoding: { inner: AS_KESTREL } }, {}, value('text/kestrel'), '3.2.0'),
+  encoding('itemEncoding', { itemEncoding: AS_KESTREL }, {}, value('text/kestrel'), '3.2.0'),
+  encoding('prefixEncoding', { prefixEncoding: [AS_KESTREL] }, {}, value('text/kestrel'), '3.2.0'),
+];
+
+const REF = (kind: string, name = 'Kestrel'): UnknownRecord => ({
+  $ref: `#/components/${kind}/${name}`,
+});
+
+/**
+ * A named component, used by reference, against the same thing written in place: the
+ * name is what only the component states.
+ */
+function named(
+  rowId: string,
+  kind: string,
+  thing: UnknownRecord,
+  usedIn: (use: UnknownRecord) => UnknownRecord,
+  name = 'Kestrel',
+  openapi = '3.1.0',
+): StructureCase {
+  return {
+    rowId,
+    document: {
+      ...documentOf(usedIn(REF(kind, name)), { components: { [kind]: { [name]: thing } } }),
+      openapi,
+    },
+    control: { ...documentOf(usedIn(thing)), openapi },
+    expects: value(name),
+  };
+}
+
+const getting = (operation: UnknownRecord): UnknownRecord => ({
+  '/things': { get: { ...PLAIN, ...operation } },
+});
+const asParameter = (use: UnknownRecord): UnknownRecord => getting({ parameters: [use] });
+const asResponse = (use: UnknownRecord): UnknownRecord => getting({ responses: { '200': use } });
+const CALLBACK = { '{$request.body#/url}': { post: PLAIN } };
+const JSON_RESPONSE = { description: 'ok', ...JSON_BODY };
+
+/** A reference to a named parameter, with and without a field beside `$ref`. */
+function beside(field: string): StructureCase {
+  const using = (use: UnknownRecord): UnknownRecord =>
+    documentOf(asParameter(use), { components: { parameters: { Kestrel: IN_QUERY } } });
+  return {
+    rowId: `reference.${field}`,
+    document: using({ ...REF('parameters'), [field]: 'osprey' }),
+    control: using(REF('parameters')),
+    expects: value('osprey'),
+  };
+}
+
+const COMPONENTS_AND_REFERENCES: readonly StructureCase[] = [
+  named('components.parameters', 'parameters', IN_QUERY, asParameter),
+  named('components.responses', 'responses', JSON_RESPONSE, asResponse),
+  named('components.requestBodies', 'requestBodies', JSON_BODY, (use) => ({
+    '/things': { post: { ...PLAIN, requestBody: use } },
+  })),
+  named('components.headers', 'headers', PLAIN_HEADER, (use) =>
+    asResponse({ description: 'ok', headers: { 'X-Thing': use } }),
+  ),
+  named('components.pathItems', 'pathItems', { get: PLAIN }, (use) => ({ '/things': use })),
+  named('components.callbacks', 'callbacks', CALLBACK, (use) =>
+    getting({ callbacks: { onThing: use } }),
+  ),
+  named(
+    'components.mediaTypes',
+    'mediaTypes',
+    { schema: KESTREL_OBJECT },
+    (use) => asResponse({ description: 'ok', content: { [JSON_TYPE]: use } }),
+    'Kestrel',
+    '3.2.0',
+  ),
+  // A name using every kind of character the grammar of a component name allows.
+  named('components[a component name]', 'parameters', IN_QUERY, asParameter, 'Kestrel.v1-a_b'),
+  named('reference.$ref', 'responses', JSON_RESPONSE, asResponse),
+  beside('summary'),
+  beside('description'),
+
+  {
+    rowId: 'openapi.paths',
+    document: documentOf({ '/kestrels': { get: PLAIN } }),
+    control: documentOf(getting({})),
+    expects: value('/kestrels'),
+  },
+  {
+    rowId: 'openapi.webhooks',
+    document: documentOf(getting({}), { webhooks: { kestrel: { post: PLAIN } } }),
+    control: documentOf(getting({})),
+    expects: value('kestrel'),
+  },
+  // The components of a document, shown by one of them being used: a named schema.
+  {
+    rowId: 'openapi.components',
+    document: documentOf(
+      asResponse({ description: 'ok', content: { [JSON_TYPE]: { schema: REF('schemas') } } }),
+      {
+        components: { schemas: { Kestrel: KESTREL_OBJECT } },
+      },
+    ),
+    control: documentOf(
+      asResponse({ description: 'ok', content: { [JSON_TYPE]: { schema: KESTREL_OBJECT } } }),
+    ),
+    expects: value('Kestrel'),
+  },
+  {
+    rowId: 'openapi.$self',
+    document: {
+      ...documentOf(getting({})),
+      openapi: '3.2.0',
+      $self: 'https://kestrel.example/api',
+    },
+    control: { ...documentOf(getting({})), openapi: '3.2.0' },
+    expects: value('https://kestrel.example/api'),
+  },
+  {
+    rowId: 'callbacks[a callback expression]',
+    document: documentOf(
+      getting({ callbacks: { onThing: { '{$request.body#/kestrel}': { post: PLAIN } } } }),
+    ),
+    control: documentOf(getting({ callbacks: { onThing: CALLBACK } })),
+    expects: value('{$request.body#/kestrel}'),
+  },
+];
+
 /**
  * One case for each row of a document outside a schema that the endpoint definitions
  * are proposed to carry as structure. The families not yet here have no cell.
@@ -499,6 +682,8 @@ export const STRUCTURE_CASES: readonly StructureCase[] = [
   ...REQUEST_BODIES,
   ...MEDIA_TYPES,
   ...RESPONSES_AND_HEADERS,
+  ...ENCODINGS,
+  ...COMPONENTS_AND_REFERENCES,
 ];
 
 /**

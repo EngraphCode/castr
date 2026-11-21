@@ -8,11 +8,10 @@ crashes.
 
 This directory is being built in steps. It holds the rows, the outcome proposed for each,
 and two kinds of case. A case for every row of a schema whose construct decides which
-values are accepted fills the Zod and TypeScript columns. A case for a row of the document
-outside a schema fills the endpoint-definition column; paths, path items, operations,
-parameters, request bodies, media types, responses and headers have them, and the other
-families do not yet. Oak's document and the example documents
-have no case yet.
+values are accepted fills the Zod and TypeScript columns. A case for every row of the
+document outside a schema that the endpoint definitions are to carry as structure fills
+the endpoint-definition column. Oak's document and the example documents have no case
+yet.
 
 ## Run it
 
@@ -155,7 +154,9 @@ A row of the document outside a schema decides no value, so its case is of anoth
 holds the construct and a control that is the same without it, or with another value.
 Castr generates a module from each, the module is loaded, and what it exports as
 `endpoints` is reduced to plain values ([`cases/projection.ts`](cases/projection.ts)); a
-Zod validator there is read as the JSON Schema Zod gives for it.
+Zod validator there is read as the JSON Schema Zod gives for it. The names the module
+exports are read with it, because a named component is held by the name it is exported
+under and by no value inside the definitions.
 
 The judge assumes nothing about the shape of the endpoint definitions
 ([`cases/structure-verdict.ts`](cases/structure-verdict.ts)):
