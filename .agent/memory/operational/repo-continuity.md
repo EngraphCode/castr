@@ -143,8 +143,11 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    v1 document at a schema-valued `additionalProperties`, and refuses none of the 14
    examples in the repository. Each document's rows are named and set against the
    cells: Oak's uses 74 rows, two refused in the Zod output (`additionalProperties`,
-   `propertyNames`), three wrong, one missing. PICTURE has no part left that does not
-   wait on the specification; the next step is the amendment.
+   `propertyNames`), three wrong, one missing. What PICTURE has left: the four cells not judged in each
+   deciding column (`int64`, `float`, `double` and formats the reference does not
+   judge), which need a second judge; the Zod cells for rows outside a schema, which
+   wait on SPEC-N-4; and the library's documents, which wait on EC-1. The next step
+   is the specification amendment.
 1. **PICTURE: one repeatable command that shows what Castr does, judged from outside it.**
    The owner asked on 18 November 2026 what working, working well and correct look like.
    The seat answered with cards and a draft amendment, and on 19 November the owner sent it
