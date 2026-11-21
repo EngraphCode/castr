@@ -386,11 +386,19 @@ repository before acting.
       schema-valued `additionalProperties` (two places, both a response schema of a
       `check-restricted` operation); the 14 examples convert, eight of them 3.0
       documents. A document has no proposal and is not a row.
+    - **The rows a document uses (21 November).** `documents/rows-used.ts` walks a whole
+      document and names every row it writes a construct of; the walk is held by every
+      one of the 210 cases' documents naming its own row. Oak's document uses 74 of the
+      317 rows. Against today's Zod cells: right 21, wrong 3 (`const`, `format: uri`,
+      `false` as a schema), refused 2 (`additionalProperties`, `propertyNames`), missing
+      1 (`default`), no cell 47. Against the endpoint definitions: right 18, wrong 1
+      (`response.content`), missing 8, not judged 2. So what stands between Oak's
+      document and a conversion is two refusals, and between that and a right one, as
+      far as cases made one row at a time can say, the wrong and missing rows that
+      `pnpm picture` lists. Four examples have an output the module holds none of
+      (a document of webhooks alone; three with no named schema); none is refused.
     - **Not yet built:** the rows outside a schema in the Zod column, which wait on
-      SPEC-N-4; which rows each whole document uses, so a document's line can be read
-      against the cells of its constructs (a walk of a document that names row
-      identities; every existing case's document must name its own row, which checks
-      the walk); the example input library's documents, which are not pinned (EC-1).
+      SPEC-N-4; the example input library's documents, which are not pinned (EC-1).
       Seen on 21 November and
       not yet a case: a response with no content is given an empty closed object as its
       schema; and in the module with endpoint definitions the source comment
