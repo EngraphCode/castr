@@ -1,8 +1,9 @@
 /**
  * How the TypeScript compiler is asked whether a value belongs to a generated type.
  *
- * The compiler reads its own library from disk, so this is an end-to-end test. Castr is
- * not run: the generated module is a constant.
+ * The compiler runs in this process on the text of a generated module and reads its own
+ * library from disk, as the generated-code suite does (`tests-generated/*.gen.test.ts`),
+ * and takes that suite's name. Castr is not run: each generated module is a constant.
  */
 
 import { describe, it, expect } from 'vitest';
