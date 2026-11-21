@@ -130,7 +130,7 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    column has cells for the same 74 cases (#144), judged by the TypeScript compiler:
    right 50, wrong 6, refused 13, crashed 1, not judged 4. The endpoint-definition
    column has cells for 71 rows outside a schema (#146, #147 and the response family):
-   right 27, wrong 3, refused 3, crashed 1, missing 33, not judged 4. The next parts are
+   right 27, wrong 3, refused 1, crashed 1, missing 35, not judged 4. The next parts are
    its other families (27 rows), then Oak's document and the example documents.
 1. **PICTURE: one repeatable command that shows what Castr does, judged from outside it.**
    The owner asked on 18 November 2026 what working, working well and correct look like.

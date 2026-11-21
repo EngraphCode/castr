@@ -268,17 +268,18 @@ repository before acting.
       (a parameter's location) also names a document for each other value, and the
       definitions must differ from each. On 21 November 2026, for 71 rows (paths, path
       items, operations, parameters, request bodies, media types, responses, headers):
-      right 27, wrong 3, refused 3, crashed 1, missing 33, not judged 4.
+      right 27, wrong 3, refused 1, crashed 1, missing 35, not judged 4.
       - Wrong: a cookie parameter is written as a header parameter, so neither is told
         apart; a response's content changes the definitions and its media type is not in
         them.
       - Crashed: a status range (`4XX`) is written as a bare key and the module does not
         load. That leaves `default` and an exact status code not judged, since they
         cannot be set against it.
-      - Refused: the three 3.2 fields of a media type that need `itemSchema`.
+      - Refused: `itemSchema` (3.2), in plain words: endpoints do not yet support it.
       - Missing: every field of a response header; a response's `headers` and `summary`;
         the media type of a request body, of a response and of a parameter's `content`;
-        a request body's `required`; `encoding`; a media type's `description`; `summary`
+        a request body's `required`; `encoding`, `itemEncoding` and `prefixEncoding`; a
+        media type's `description`; `summary`
         on a path item and an operation; a path item's `description`; `deprecated` and
         `callbacks` on an operation; a path item that is a `$ref`; on a parameter
         `deprecated`, `allowEmptyValue`, `allowReserved`, `explode` and all eight

@@ -48,5 +48,8 @@ describe('the cases for the rows of a document outside a schema', () => {
       'parameter.in=path',
       'header.style=simple',
     ]);
+    // Every row that is none of these is missing.
+    expect(rowsWith(cells, 'refused')).toEqual(['media-type.itemSchema']);
+    expect(rowsWith(cells, 'crashed')).toEqual(['responses[a status range]']);
   }, 60_000);
 });
