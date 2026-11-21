@@ -24,6 +24,23 @@ Not built yet:
 - the seven rows of a schema the TypeScript output is proposed to carry as structure;
 - Oak's document and the example documents.
 
+[`unexercised`](cases/coverage.ts) computes the first two, `pnpm picture` prints their
+counts, and [`cases/coverage.e2e.test.ts`](cases/coverage.e2e.test.ts) holds them.
+
+### Why the first has no cases yet
+
+A path template, a method, a status code and a media type are proposed as carried as
+structure by the Zod output. A trial that read the validators alone, with nothing that
+contains them, found that they hold none of those. What holds a path or a status code is
+whatever keys the validators, which is the endpoint definitions, and that column has its
+cells. The validators do hold a parameter's name, whether it is required, and the schema
+in a parameter, a request body and a response.
+
+So for most of these rows the Zod column, as proposed, either repeats the
+endpoint-definition column or asks a validator to hold what it has no place for. The
+proposals are left as they are: what the Zod and TypeScript columns mean for a row outside
+a schema is a question for the specification's tables, and the cases follow its answer.
+
 ## Run it
 
 ```bash

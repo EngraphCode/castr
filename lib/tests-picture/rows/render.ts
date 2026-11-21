@@ -115,3 +115,19 @@ export function renderToday(rows: readonly Row[], today: CellsToday, output: str
   }
   return [...lines, ''].join('\n');
 }
+
+/**
+ * Writes how many proposed cells of each output nothing exercises yet, so that an empty
+ * cell in the tables is read as not built and never as nothing to show.
+ */
+export function renderUnexercised(counts: readonly (readonly [string, number])[]): string {
+  const lines = [
+    '## Proposed and not exercised yet',
+    '',
+    'Rows an output is proposed to carry for which the picture has no kind of case. Their',
+    'cell is empty.',
+    '',
+    ...counts.map(([output, count]) => `- ${output}: ${String(count)} rows`),
+  ];
+  return [...lines, ''].join('\n');
+}

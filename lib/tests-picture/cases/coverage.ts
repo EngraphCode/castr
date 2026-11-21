@@ -92,3 +92,31 @@ export function structureCoverageOf(
     repeated: [...new Set(cased.filter((id, index) => cased.indexOf(id) !== index))],
   };
 }
+
+/** One of the three outputs a row has a proposal for. */
+export type Column = 'zod' | 'typescript' | 'endpoints';
+
+function hasCaseKind(row: Row, column: Column): boolean {
+  if (column === 'zod') {
+    return needsDecidingCase(row) || needsZodStructureCase(row);
+  }
+  if (column === 'typescript') {
+    return needsDecidingCase(row) && typescriptReadingFor(row) !== undefined;
+  }
+  return needsStructureCase(row);
+}
+
+/**
+ * The rows an output is proposed to carry, or to carry as structure, for which the picture
+ * has no kind of case yet: nothing exercises what is proposed for them, and their cell is
+ * empty. A row carried by a companion asks nothing of the output itself.
+ */
+export function unexercised(rows: readonly Row[], column: Column): readonly string[] {
+  return rows
+    .filter((row) => {
+      const proposed = row.proposal[column];
+      return proposed === 'carried' || proposed === 'carried as structure';
+    })
+    .filter((row) => !hasCaseKind(row, column))
+    .map((row) => row.id);
+}

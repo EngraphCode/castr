@@ -14,6 +14,7 @@ import {
   needsZodStructureCase,
   structureCoverageOf,
   typescriptReadingFor,
+  unexercised,
 } from './coverage.js';
 import type { SchemaCase } from './schema-case.js';
 
@@ -132,5 +133,25 @@ describe('structureCoverageOf', () => {
         [{ rowId: 'operation.summary' }, { rowId: 'operation.summary' }],
       ).repeated,
     ).toEqual(['operation.summary']);
+  });
+});
+
+describe('unexercised', () => {
+  const template = rowOf('paths[a path template]', 'document', ['S', 'S', 'S', '']);
+  const anchor = rowOf('keyword:$anchor', 'schema keyword', ['S', 'S', 'K', '']);
+  const servers = rowOf('openapi.servers', 'document', ['O', 'O', 'O', '']);
+
+  it('names a row an output is to carry that no kind of case exercises', () => {
+    expect(unexercised([template, anchor, title, maximum, servers], 'zod')).toEqual([
+      'paths[a path template]',
+    ]);
+    expect(unexercised([template, anchor, title, maximum, servers], 'typescript')).toEqual([
+      'paths[a path template]',
+      'keyword:$anchor',
+    ]);
+  });
+
+  it('names no row where every proposal to carry has a kind of case', () => {
+    expect(unexercised([template, anchor, title, maximum, servers], 'endpoints')).toEqual([]);
   });
 });
