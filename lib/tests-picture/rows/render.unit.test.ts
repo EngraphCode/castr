@@ -5,7 +5,7 @@
 import { describe, it, expect } from 'vitest';
 
 import { proposalOf } from './outcomes.js';
-import { renderRows, renderToday } from './render.js';
+import { renderRows, renderToday, renderUnexercised } from './render.js';
 import type { Row } from './table.js';
 
 const keyword: Row = {
@@ -80,5 +80,18 @@ describe('renderToday', () => {
         '',
       ].join('\n'),
     );
+  });
+});
+
+describe('renderUnexercised', () => {
+  it('writes a count for each output under a heading that says what the count is', () => {
+    const written = renderUnexercised([
+      ['to Zod', 2],
+      ['to TypeScript', 0],
+    ]);
+
+    expect(written).toContain('## Proposed and not exercised yet');
+    expect(written).toContain('- to Zod: 2 rows');
+    expect(written).toContain('- to TypeScript: 0 rows');
   });
 });

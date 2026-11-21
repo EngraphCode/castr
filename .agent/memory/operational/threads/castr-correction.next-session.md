@@ -336,8 +336,31 @@ repository before acting.
     - **A cell the amendment must define.** `type: integer` reads wrong because Castr's
       output refuses an integer beyond the safe range, which is the narrowing the owner
       decided Castr makes and reports. The picture has no cell for a declared narrowing.
-    - **Not yet built:** the rows of the document outside a schema in the Zod and
-      TypeScript columns (56 proposed as carried or carried as structure there); the
+    - **Rows outside a schema in the Zod and TypeScript columns: where to look.** 56 such
+      rows are proposed as carried or carried as structure by Zod, and by TypeScript, and
+      have no kind of case (`unexercised` in `cases/coverage.ts` computes them and a test
+      holds the counts). SPEC-C-1 says where they are carried: a `paths` type keyed by
+      path template, method, parameter location, status and media type; and Zod schemas
+      "addressable by component name and by operation, response status and media type".
+      The form of that addressing is the public surface, SPEC-N-4, which is not designed.
+      A trial on 21 November read every Zod validator in the module Castr generates with
+      endpoint definitions, named where exported and with nothing else that contains it,
+      for 54 of those rows, using the endpoint column's pairs of documents. On 33 the
+      validators were the same with the construct and without: every path template,
+      method, `operationId`, media type, header, named component other than a schema,
+      callback and webhook. Nine read right: `path-item.parameters`,
+      `operation.parameters`, `operation.requestBody`, `parameter.name`,
+      `parameter.required` (both rows), `parameter.schema`, `media-type.schema`, and
+      `components` by a named schema. The four parameter locations are not told apart
+      by the validators. So today a validator is addressed by status or media type only
+      through the endpoint definitions, whose column has its cells; a Zod case for these
+      rows waits on the form of the addressing. The TypeScript side does not wait: the
+      `paths` type's keys are stated, the client that stays (openapi-fetch) fixes its
+      shape, and Castr emits no such type today, so those cells can be built and would
+      read missing. I first wrote this up as a question about what the columns mean,
+      without having re-read SPEC-C-1; the clause answers most of it.
+    - **Not yet built:** the rows outside a schema in the TypeScript column, read from
+      the exported types; the same rows in the Zod column, which wait on SPEC-N-4; the
       seven schema rows TypeScript is to carry as structure; Oak's document as a row;
       the example documents. Seen on 21 November and not yet a case: a response with no
       content is given an empty closed object as its schema.

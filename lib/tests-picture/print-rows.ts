@@ -6,13 +6,14 @@
  * Run with: `pnpm picture`
  */
 
+import { unexercised } from './cases/coverage.js';
 import { runSchemaCases, runStructureCases, runTypeScriptCases } from './cases/run-schema-cases.js';
 import { SCHEMA_CASES } from './cases/schema-cases.js';
 import { SCHEMA_STRUCTURE_CASES } from './cases/schema-structure-cases.js';
 import { ROWS_NO_CASE_ISOLATES, STRUCTURE_CASES } from './cases/structure-cases.js';
 import { loadDefinition } from './rows/definitions.js';
 import { pictureRows } from './rows/picture-rows.js';
-import { renderRows, renderToday } from './rows/render.js';
+import { renderRows, renderToday, renderUnexercised } from './rows/render.js';
 
 const { rows, problems } = pictureRows(loadDefinition);
 
@@ -35,5 +36,12 @@ if (problems.length > 0) {
   console.log(renderToday(rows, held, "Castr's Zod output holds"));
   console.log(renderToday(rows, typescript, "Castr's TypeScript output does"));
   console.log(renderToday(rows, endpoints, "Castr's endpoint definitions hold"));
+  console.log(
+    renderUnexercised([
+      ['to Zod', unexercised(rows, 'zod').length],
+      ['to TypeScript', unexercised(rows, 'typescript').length],
+      ['to the endpoint definitions', unexercised(rows, 'endpoints').length],
+    ]),
+  );
   console.log(renderRows(rows, { zod, typescript, endpoints }));
 }
