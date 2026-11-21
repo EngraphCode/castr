@@ -164,3 +164,14 @@ export const RIGHT_TODAY_ZOD_STRUCTURE: readonly string[] = [
   'xml.nodeType=cdata',
   'xml.nodeType=none',
 ];
+
+/**
+ * The rows the exported types hold what the construct states for, today, held as exactly
+ * as the lists above. Right says the value is somewhere in the types, or that the types
+ * differ; it does not say it is in the place the specification names.
+ */
+export const RIGHT_TODAY_TYPESCRIPT_STRUCTURE: readonly string[] = [
+  'operation.requestBody',
+  'openapi.components',
+  'components.schemas',
+];

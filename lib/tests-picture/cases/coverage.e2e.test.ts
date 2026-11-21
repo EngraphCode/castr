@@ -26,19 +26,8 @@ describe('the proposed cells no kind of case exercises', () => {
     expect(split(unexercised(rows, 'zod'))).toEqual({ ofASchema: 0, outsideASchema: 56 });
   });
 
-  it('are, for TypeScript, those rows and seven rows of a schema carried as structure', () => {
-    const ids = unexercised(rows, 'typescript');
-
-    expect(split(ids)).toEqual({ ofASchema: 7, outsideASchema: 56 });
-    expect(ids.filter((id) => isOfASchema.get(id) === true)).toEqual([
-      'keyword:$id',
-      'keyword:$anchor',
-      'keyword:$dynamicAnchor',
-      'keyword:$defs',
-      'discriminator.mapping',
-      'discriminator.propertyName',
-      'discriminator.defaultMapping',
-    ]);
+  it('are none for TypeScript', () => {
+    expect(unexercised(rows, 'typescript')).toEqual([]);
   });
 
   it('are none for the endpoint definitions', () => {

@@ -67,8 +67,11 @@ export async function runStructureCases(
 ): Promise<ReadonlyMap<string, Cell>> {
   const cells = new Map<string, Cell>();
   const castr = await createCastrConvert();
-  const convert =
-    output === 'endpoint definitions' ? castr.convertEndpoints : castr.convertValidators;
+  const convert = {
+    'endpoint definitions': castr.convertEndpoints,
+    'Zod validators': castr.convertValidators,
+    'TypeScript types': castr.convertTypes,
+  }[output];
   try {
     for (const structureCase of cases) {
       cells.set(structureCase.rowId, await runStructureCase(structureCase, convert, output));
