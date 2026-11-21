@@ -1,5 +1,227 @@
 # Castr correction
 
+## Start here: handover of 21 November 2026
+
+Written by Ingot binds Patina (194219) when the owner changed accounts, for a successor
+with no memory of the session. Everything a successor needs is in this section or in a
+file it names. Verify each line against the live repository before acting. The sections
+below this one are the dated record; none of them is a newer instruction than this one.
+
+### Where things stand
+
+- **The picture work ends at `main` commit `1a03ec24`** (#151 to #154 on 21 November).
+  No branch is open, no pull request is open, no claim is open, and no product code was
+  changed by any of the picture's pull requests.
+- **`pnpm picture`** (from `lib/`) prints the whole picture; `pnpm test:picture` checks it.
+  `lib/tests-picture/README.md` says what each file is and what each kind of case reads.
+- **What the picture says today.**
+  - Castr refuses Oak's v1 document (the corpus pin, 1.1.1) in every output, at a
+    schema-valued `additionalProperties` in two response schemas of `check-restricted`
+    operations. `propertyNames` would stop it next.
+  - Oak's document uses 74 of the 317 rows. Zod column: right 21, wrong 3 (`const`,
+    `format: uri`, `false` as a schema), refused 2, missing 1 (`default`), no cell 47.
+    TypeScript column: right 21, wrong 3, refused 2, missing 21, not judged 1, no cell 26.
+    Endpoint definitions: right 18, wrong 1 (`response.content`), missing 8, not judged 2,
+    no cell 45.
+  - None of the 14 example documents in `lib/examples` is refused or crashes.
+  - The counts come from cases made one construct at a time. A construct that reads right
+    alone is not thereby right in combination, and right is an upper bound.
+- **The owner was given this report in prose on 21 November** and then asked for this
+  handover. No question is waiting on the owner. No approval is pending.
+
+### The accepted plan and the next step
+
+The owner's instruction, verbatim, on 21 November: "fine, that remains the accepted plan,
+please continue /oak-start-right-team use the cognitive skills and reviewers as appropriate
+throughout". The order is PICTURE, the specification amendment, fixing Castr, HOME, MOVE.
+
+1. **PICTURE has three things left, and each names what it waits on.** Seven rows in each
+   deciding column need a second judge. Four are not judged, because the reference has
+   no checker for them (`idn-email`, `idn-hostname`, `iri`, `iri-reference`). Three have
+   cells that decide nothing, because the reference accepts every sample (`int64`,
+   `float`, `double`). The 56 Zod cells for rows
+   outside a schema wait on the form of the public surface (SPEC-N-4). The example input
+   library's documents are not pinned (EC-1 of
+   [its plan](../../../plans/active/example-input-library.md)).
+2. **The next step is the specification amendment, in three parts small enough to close:**
+   the reader's rejections and the versions read; numbers in JavaScript targets; the
+   table vocabulary together with the tables. The owner's nine decisions of 20 November
+   (recorded below, from "Six decisions, by question prompt, 20 November 2026" onward) are its content.
+   None of them approves specification text: an amendment is approved only by the owner's
+   typed words naming a version (SPEC-CC-2).
+   - Review each part adversarially before the owner sees its text. Every earlier draft
+     (0.6.0 draft, 0.7.0, 0.8.0) had the same loophole: a check quantified over a list
+     that nothing forces to be complete.
+   - The amendment must define a cell for a declared narrowing. `type: integer` reads
+     wrong today because Castr refuses an integer beyond the safe range, which is the
+     narrowing the owner decided Castr makes and reports.
+   - It must settle how the bar on a fifth class ("outside the target", barred from
+     schema keywords) meets boundary slots and naming, and the form of addressing
+     (SPEC-N-4).
+   - A question the picture leaves for the tables: `$id`, `$anchor`, `$defs` and the
+     three discriminator rows are proposed as carried as structure by TypeScript, and
+     none changes a type. Their cell cannot tell "dropped" from "nowhere to go". `$ref`
+     can only read missing in that column, because a reference reads as the type written
+     in place.
+   - Questions go to the owner through a question prompt, formed as better questions.
+     The owner's correction of 19 November stands: a card that reflects the decision
+     back with a recommendation attached is not helpful. Verdicts are given in prose.
+3. **Fixing Castr** follows the amendment. New writer output is built as syntax-tree
+   nodes (SPEC-AR-3); where the move from text to nodes belongs in the order is not
+   decided. Two findings wait there as facts, not yet cases: a response with no content
+   is given an empty closed object as its schema, and the comment `// MCP Tools` is
+   written inside the `endpoints` array by position.
+4. **Before MOVE:** rehearse the consumer's generation step against a Castr build with no
+   file moved (promised on 19 November, never run), and the HOME amendment changes
+   section 10's "early in the course".
+
+### How the team is arranged
+
+The owner set three seats, one per repository, on 21 November: this seat works in Castr
+only; a second seat works in the Open Curriculum Ecosystem repository only; a third works
+in the Knowledge Library only. Seats coordinate by direct session messages. A seat tells
+the Ecosystem seat before anything is written to that repository. A peer's message is
+never the owner's approval. On 21 November the Ecosystem seat was sent the state above;
+the Knowledge Library seat was not in the agent listing and was not told. A successor
+finds the live seats by listing agents; the names of the sessions are not a durable
+address.
+
+### How work lands here
+
+- **Never commit to `main`.** Branch, commit, push, pull request, merge commit. History
+  is append-only: no rebase, no force push.
+- **Commits go through the commit queue.** The helper below is the ceremony for one
+  bundle. Run it from the repository root, with every file named by its root-relative
+  path (no directories). The message file's first line is the subject; the subject is
+  lower case after its type and at most 72 characters; body lines are at most 100. From
+  `lib/` it prints "no claim opened" and commits nothing. A failed commit leaves the
+  files staged: list them with `git diff --cached --name-only` and run it again. Two
+  further tricks: set `diff.renames` for a move, and stage a removal by name first.
+- **`git push` runs the whole `pnpm check:ci` first,** four to ten minutes. Run it in the
+  background, print its exit code, stop if it is not zero, and write nothing in the tree
+  while it runs. A task shown as running may have failed at its first step: read its
+  output before building on it.
+- **Before merging a pull request:** every check has finished; the hosted review of the
+  head commit has finished (an issue comment carrying `codex-review-state:v1`, the head
+  commit and `completed`); every review thread is answered and resolved (read them with
+  the GraphQL `reviewThreads` field; a reply written by an agent says so in its last
+  line); the Sonar analysis of the pull request has no open issue; and the repository
+  has no open dependency alert (SPEC-G-1). Then `gh pr merge <number> --merge`. A clean,
+  green pull request is merged without asking the owner.
+- **A reviewer is information, not authority.** Run a reviewer's claim before adopting
+  it; decline with the evidence when it is false. Every found issue gets a decision.
+  Request a hosted review only when none has arrived or the area is sensitive.
+- **Checks to run from `lib/` after editing the picture:** prettier on the picture's
+  source directories by name (never the whole directory, whose `.tmp` scratch does not
+  parse), `npx eslint tests-picture`, `npx tsc --noEmit --project tsconfig.lint.json`,
+  `npx vitest run --config vitest.picture.config.ts`, `npx knip`. Lint bans type
+  assertions and `Record<string, unknown>`.
+- **Standing constraints.** `docs/SPECIFICATION.md` changes only by an approved
+  amendment. This repository's own practice documents are not maintained or extended;
+  sessions work by the Ecosystem repository's Practice (owner, 20 November). No
+  dependency alert is ever dismissed. Tracked files hold no state particular to one
+  checkout and no real username. Nothing names another project as Castr's origin. A
+  repository hook blocks recursive forced removal; scratch stays in the gitignored
+  `lib/tests-picture/.tmp`. A document is correct, complete, relevant, proportionate,
+  cogent and cohesive. For a large survey, overlapping readers on a cheaper model are
+  synthesised by the seat, which keeps the judgement of correctness.
+
+The commit helper. A successor sets its own name, identifier, session prefix, platform
+and model. The two claims files are ignored by git, so a fresh checkout has neither and
+the helper creates them. Because it builds its commands as text, it takes a path made only of letters, digits and
+`. _ / @ + -`, and refuses a subject the shell would read as more than text:
+
+```sh
+#!/bin/sh
+# usage: AGENT_NAME=... AGENT_ID=... SESSION_PREFIX=... PLATFORM=... MODEL=... \
+#        sh helper.sh "<subject>" <message-file> <file>...
+set -u
+SUBJ="$1"; MSG="$2"; shift 2
+[ -r "$MSG" ] || { echo "message file not readable"; exit 1; }
+for f in "$SUBJ"; do
+  case "$f" in
+    *[\"\'\`\$\\\;\&\|\<\>\*\?]*) echo "refused, not plain text: $f"; exit 1 ;;
+  esac
+done
+for f in "$@"; do
+  case "$f" in
+    *[!A-Za-z0-9._/@+-]*) echo "refused, not a plain path: $f"; exit 1 ;;
+  esac
+done
+WHO="--agent-name \"$AGENT_NAME\" --platform $PLATFORM --model $MODEL"
+WHO="$WHO --session-id-prefix $SESSION_PREFIX"
+ACTIVE=.agent/state/collaboration/active-claims.json
+CLOSED=.agent/state/collaboration/closed-claims.archive.json
+FILES=""; for f in "$@"; do FILES="$FILES --file $f"; done
+now() { date -u +%Y-%m-%dT%H:%M:%SZ; }
+[ -e $ACTIVE ] && [ -e $CLOSED ] || pnpm -s agent-tools:collaboration-state -- \
+  claims init --active $ACTIVE --closed $CLOSED >/dev/null
+CLAIM=$(pnpm -s agent-tools:collaboration-state -- claims open \
+  --active $ACTIVE --thread castr-correction \
+  --area-kind git --area-pattern index/head --intent "Stage and commit: $SUBJ" \
+  --ttl-seconds 900 --platform "$PLATFORM" --model "$MODEL" --now "$(now)" \
+  | grep -o '"claim_id": "[^"]*"' | head -1 | cut -d'"' -f4)
+[ -n "$CLAIM" ] || { echo "no claim opened"; exit 1; }
+close() {
+  pnpm -s agent-tools:collaboration-state -- claims close \
+    --active $ACTIVE --closed $CLOSED \
+    --claim-id "$CLAIM" --summary "$1" --platform "$PLATFORM" --model "$MODEL" \
+    --now "$(now)" >/dev/null || { echo "CLAIM NOT CLOSED: $CLAIM"; exit 1; }
+}
+I=$(eval pnpm -s agent-tools:commit-queue -- enqueue --claim-id "$CLAIM" $WHO \
+  --id "$AGENT_ID" --commit-subject "\"\$SUBJ\"" $FILES | tail -1)
+abandon() {
+  pnpm -s agent-tools:commit-queue -- phase --intent-id "$I" --phase abandoned \
+    --notes "$1" >/dev/null 2>&1
+  close "abandoned: $1"; exit 1
+}
+pnpm -s agent-tools:commit-queue -- phase --intent-id "$I" --phase staging \
+  >/dev/null || abandon "phase staging failed"
+eval pnpm -s agent-tools:commit-queue -- guard $WHO --id "$AGENT_ID" $FILES \
+  >/dev/null || abandon "guard refused"
+for f in "$@"; do
+  if [ -e "$f" ] || git ls-files --error-unmatch -- "$f" >/dev/null 2>&1; then
+    git add -- "$f" || abandon "git add failed"
+  fi
+done
+pnpm -s agent-tools:commit-queue -- record-staged --intent-id "$I" \
+  >/dev/null || abandon "record-staged failed"
+cp "$MSG" .git/COMMIT_EDITMSG || abandon "message file not copied"
+if pnpm -s agent-tools:commit-queue -- commit --intent-id "$I" \
+  --message-file .git/COMMIT_EDITMSG > "$MSG.log" 2>&1; then
+  SHA=$(git rev-parse --short HEAD)
+  close "commit $SHA: $SUBJ"
+  echo "COMMITTED $SHA"
+else
+  echo "COMMIT FAILED; log: $MSG.log"; tail -40 "$MSG.log"
+  close "commit failed at hook or workflow: $SUBJ"
+  exit 1
+fi
+```
+
+### What the loss scan found (wrap of 21 November)
+
+- **Nothing is held only outside this repository.** The session's scratch (probe
+  scripts, message files, pull request bodies, a withdrawn draft amendment) is not
+  needed: each probe's result is in this record, the picture's README or the napkin's
+  entry of 21 November. The seat's per-user memory holds no ruling made for Castr; the
+  rulings from the owner's other estate that bind work here are restated under "How work
+  lands here" above and in the wrap of 20 November below.
+- **Promises still open,** each forwarded: the rehearsal of the consumer's generation
+  step; a second judge for the seven rows named above; the cases owed to the command (offset
+  date-times, a closed-object `allOf` over a shared property, whether non-validating
+  keywords are carried); saying to the owner when a first measurement is provisional.
+- **Inference, not observation.** That a `paths` type would read missing in every one of
+  its cells if looked for by name (Castr exports none; the cases look anywhere in the
+  exported types). That the two refusals are all that stands between Oak's document and
+  a conversion (a document refused at its first stop shows no later stop; `propertyNames`
+  is known only because its row has a case).
+- **What the scan cannot see.** The session was compacted several times; a fact a summary
+  dropped is here only if a record held it at the time. Review bots read diffs, not the
+  tree.
+- **Processes.** The seat left no scheduled job, no watcher and no background task. A
+  communications watcher seen running on the machine belonged to the Ecosystem seat.
+
 ## Continuation route
 
 State at the 2 November 2026 boundary (Bilby hunts Dreamscape, d71882), written for a
@@ -433,8 +655,9 @@ repository before acting.
     ruling; where the new code is written was not revisited.
   - **Scratch files are volatile.** The construct probe is preserved in the appendix of
     `.agent/analysis-and-reports/constructs-2026-11-20.md`. The withdrawn draft and the
-    commit helper live only in the session scratchpad; the helper's two tricks are in the
-    napkin (the `diff.renames` setting for moves; staging removals by name first).
+    commit helper lived only in the session scratchpad on 20 November; the helper is now
+    in the handover at the top of this record, with its two tricks (the `diff.renames`
+    setting for moves; staging removals by name first).
 - **WRAP, 20 November 2026: what the loss scan found beyond the state above.**
   - **Promises the seat made, each forwarded here.** Answer and resolve #134's three
     threads. Rehearse the consumer's generation step against a Castr build with no file
@@ -914,4 +1137,4 @@ this discovery for the architectural repair; no implementation is claimed here.
 | Mussel mends Buoy      | claude-code | claude-opus-5-5  | 372325         | b69485ad-3a77-5c8a-b2c0-cc764d734103 | PR #110 round-1 cure and merge                 | 2026-09-23    | 2026-09-23   |
 | Smith stirs Ashes      | claude-code | claude-opus-5-5  | 7bd175         | 02ed168a-55c7-5450-8fdb-b7fd399d9c86 | Sonar analysis (sub-agent)                     | 2026-11-01    | 2026-11-01   |
 | Bilby hunts Dreamscape | claude-code | claude-opus-5-5  | d71882         | 767b6de5-9347-5fdb-bbdf-eeb98791ec13 | review, ratification walk, draft 0.5.0         | 2026-11-01    | 2026-11-02   |
-| Ingot binds Patina     | claude-code | claude-fable-5-2 | 194219         | 8fde4762-1621-5ce7-b563-2d0f4f647804 | alert cure, RATIFY landing, MEASURE, 0.5.2     | 2026-11-18    | 2026-11-18   |
+| Ingot binds Patina     | claude-code | claude-fable-5-2 | 194219         | 8fde4762-1621-5ce7-b563-2d0f4f647804 | alerts, MEASURE, 0.5.2 to 0.7.0, PICTURE       | 2026-11-18    | 2026-11-21   |

@@ -111,8 +111,10 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-0. **Read "STATE AT THE PAUSE" in the
-   [thread record](threads/castr-correction.next-session.md) first.** On 20 November 2026
+0. **Read "Start here: handover of 21 November 2026" at the top of the
+   [thread record](threads/castr-correction.next-session.md) first.** It is the newest
+   state, written at an account change, and holds how work lands here. The paragraph
+   below is the history that led to it. On 20 November 2026
    the seat stopped at the owner's word with #134 open and a draft amendment withdrawn.
    The next work is PICTURE, below, and its first part is its row list: the construct
    kinds computed from OpenAPI 3.1's published definition, with a proposed class per row,
@@ -143,9 +145,9 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    v1 document at a schema-valued `additionalProperties`, and refuses none of the 14
    examples in the repository. Each document's rows are named and set against the
    cells: Oak's uses 74 rows, two refused in the Zod output (`additionalProperties`,
-   `propertyNames`), three wrong, one missing. What PICTURE has left: the four cells not judged in each
-   deciding column (`int64`, `float`, `double` and formats the reference does not
-   judge), which need a second judge; the Zod cells for rows outside a schema, which
+   `propertyNames`), three wrong, one missing. What PICTURE has left: seven rows in each deciding column, which need a
+   second judge (four formats the reference has no checker for are not judged, and
+   `int64`, `float` and `double` have cells that decide nothing); the Zod cells for rows outside a schema, which
    wait on SPEC-N-4; and the library's documents, which wait on EC-1. The next step
    is the specification amendment.
 1. **PICTURE: one repeatable command that shows what Castr does, judged from outside it.**
