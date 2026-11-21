@@ -9,8 +9,8 @@ crashes.
 This directory is being built in steps. It holds the rows, the outcome proposed for each,
 and two kinds of case. A case for every row of a schema whose construct decides which
 values are accepted fills the Zod and TypeScript columns. A case for a row of the document
-outside a schema fills the endpoint-definition column; paths, path items and operations
-have them, and the other families do not yet. Oak's document and the example documents
+outside a schema fills the endpoint-definition column; paths, path items, operations
+and parameters have them, and the other families do not yet. Oak's document and the example documents
 have no case yet.
 
 ## Run it
@@ -162,11 +162,20 @@ The judge assumes nothing about the shape of the endpoint definitions
 | Cell       | Meaning                                                                               |
 | ---------- | ------------------------------------------------------------------------------------- |
 | right      | The value the construct states is in the definitions, and is not in the control's.    |
-| wrong      | The definitions change with the construct and do not hold the value.                  |
+| wrong      | The definitions change and do not hold the value, or do not tell it from another.     |
 | missing    | The definitions are the same without the construct, or the module exports none.       |
 | refused    | Castr gave an error of its own for the document.                                      |
 | crashed    | Castr failed with a fault of the runtime, or emitted a module that does not load.     |
 | not judged | The control holds the value too, or could not be converted: the case decides nothing. |
+
+Some constructs are a choice among values, as the location of a parameter is. Such a
+case also names documents that give the construct each other value, and the definitions
+must differ from those made from each. Without that, a cookie parameter written as a
+header parameter would read right, because its name is held.
+
+A row that no pair of valid documents can isolate has no case, and its cell is not
+judged, with the reason ([`ROWS_NO_CASE_ISOLATES`](cases/structure-cases.ts)). There is
+one: a parameter in the path cannot move to another location while its template stays.
 
 Where a construct states no value that can be searched for, as a boolean does, the case
 asks only that the definitions differ from the control's. That is the weaker proof.

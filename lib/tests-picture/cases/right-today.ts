@@ -124,4 +124,11 @@ export const RIGHT_TODAY_ENDPOINTS: readonly string[] = [
   'operation.parameters',
   'operation.requestBody',
   'operation.responses',
+  'parameter.name',
+  'parameter.in=query',
+  'parameter.in=querystring',
+  'parameter.required',
+  'parameter.required=true',
+  'parameter.schema',
+  'parameter.description',
 ];

@@ -127,8 +127,150 @@ const PATHS_AND_OPERATIONS: readonly StructureCase[] = [
   ),
 ];
 
+const STRING = { type: 'string' };
+const STRINGS = { type: 'array', items: STRING };
+
+/** `get` on a path, with the parameters given. */
+function getWith(
+  path: string,
+  parameters: readonly UnknownRecord[],
+  openapi: string,
+): UnknownRecord {
+  return { ...documentOf({ [path]: { get: { ...PLAIN, parameters } } }), openapi };
+}
+
+/**
+ * A case about one parameter: the parameter with the construct, against the same
+ * parameter without it or with another value. A parameter in the path is on
+ * `/things/{id}`, and any other on `/things`.
+ */
+function parameter(
+  row: string,
+  with_: UnknownRecord,
+  without: UnknownRecord,
+  expects: Expectation,
+  openapi = '3.1.0',
+): StructureCase {
+  const path = with_['in'] === 'path' ? '/things/{id}' : '/things';
+  return {
+    rowId: `parameter.${row}`,
+    document: getWith(path, [with_], openapi),
+    control: getWith(path, [without], openapi),
+    expects,
+  };
+}
+
+const KESTREL_OBJECT = {
+  type: 'object',
+  properties: { kestrel: STRING },
+  additionalProperties: false,
+};
+const IN_QUERY = { name: 'q', in: 'query', schema: STRING };
+const IN_PATH = { name: 'id', in: 'path', required: true, schema: STRING };
+const MANY_IN_QUERY = { name: 'q', in: 'query', schema: STRINGS };
+
+/** The one payload a `querystring` parameter may have, which any parameter may have too. */
+const FORM_CONTENT = {
+  content: { 'application/x-www-form-urlencoded': { schema: { type: 'object' } } },
+};
+const LOCATIONS = ['query', 'header', 'cookie', 'querystring'];
+
+/**
+ * A parameter in one location: its name is held, and the definitions differ from those
+ * for the same parameter in each other location. Every document is an OpenAPI 3.2 one
+ * and gives the parameter the same content, because that is the only form all four
+ * locations share; the location is then the only thing that differs.
+ */
+function location(name: string): StructureCase {
+  const at = (where: string): UnknownRecord =>
+    getWith('/things', [{ name: 'kestrel', in: where, ...FORM_CONTENT }], '3.2.0');
+  return {
+    rowId: `parameter.in=${name}`,
+    document: at(name),
+    control: getWith('/things', [], '3.2.0'),
+    expects: value('kestrel'),
+    apartFrom: LOCATIONS.filter((other) => other !== name).map(at),
+  };
+}
+
+/** A style, against the same parameter with another style its location allows. */
+function style(name: string, base: UnknownRecord, other: string, openapi?: string): StructureCase {
+  return parameter(
+    `style=${name}`,
+    { ...base, style: name },
+    { ...base, style: other },
+    value(name),
+    openapi,
+  );
+}
+
+const PARAMETERS: readonly StructureCase[] = [
+  parameter('name', { ...IN_QUERY, name: 'kestrel' }, IN_QUERY, value('kestrel')),
+
+  ...LOCATIONS.map(location),
+
+  parameter(
+    'required',
+    { ...IN_QUERY, required: false },
+    { ...IN_QUERY, required: true },
+    DIFFERENCE,
+  ),
+  parameter('required=true', { ...IN_QUERY, required: true }, IN_QUERY, DIFFERENCE),
+  parameter(
+    'schema',
+    { ...IN_QUERY, schema: { type: 'string', enum: ['kestrel'] } },
+    IN_QUERY,
+    value('kestrel'),
+  ),
+  // The same schema, carried under a media type and carried directly: the media type is
+  // what only the content states.
+  parameter(
+    'content',
+    { name: 'q', in: 'query', content: { 'application/json': { schema: KESTREL_OBJECT } } },
+    { name: 'q', in: 'query', schema: KESTREL_OBJECT },
+    value('application/json'),
+  ),
+  parameter('description', { ...IN_QUERY, description: 'kestrel' }, IN_QUERY, value('kestrel')),
+  parameter('deprecated', { ...IN_QUERY, deprecated: true }, IN_QUERY, DIFFERENCE),
+  parameter('allowEmptyValue', { ...IN_QUERY, allowEmptyValue: true }, IN_QUERY, DIFFERENCE),
+  parameter('allowReserved', { ...IN_QUERY, allowReserved: true }, IN_QUERY, DIFFERENCE),
+  parameter(
+    'explode',
+    { ...MANY_IN_QUERY, explode: false },
+    { ...MANY_IN_QUERY, explode: true },
+    DIFFERENCE,
+  ),
+
+  style('form', MANY_IN_QUERY, 'pipeDelimited'),
+  style('spaceDelimited', MANY_IN_QUERY, 'form'),
+  style('pipeDelimited', MANY_IN_QUERY, 'form'),
+  style(
+    'deepObject',
+    {
+      name: 'q',
+      in: 'query',
+      schema: { type: 'object', properties: { a: STRING }, additionalProperties: false },
+    },
+    'form',
+  ),
+  style('simple', IN_PATH, 'label'),
+  style('label', IN_PATH, 'simple'),
+  style('matrix', IN_PATH, 'simple'),
+  style('cookie', { ...IN_QUERY, in: 'cookie' }, 'form', '3.2.0'),
+];
+
 /**
  * One case for each row of a document outside a schema that the endpoint definitions
  * are proposed to carry as structure. The families not yet here have no cell.
  */
-export const STRUCTURE_CASES: readonly StructureCase[] = [...PATHS_AND_OPERATIONS];
+export const STRUCTURE_CASES: readonly StructureCase[] = [...PATHS_AND_OPERATIONS, ...PARAMETERS];
+
+/**
+ * Rows no pair of documents can isolate, each with the reason. Their cell is not judged.
+ */
+export const ROWS_NO_CASE_ISOLATES: ReadonlyMap<string, string> = new Map([
+  [
+    'parameter.in=path',
+    'a parameter in the path cannot move while its template stays, so no valid document differs only in the location',
+  ],
+]);

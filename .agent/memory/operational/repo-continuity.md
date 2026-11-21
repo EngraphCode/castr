@@ -128,8 +128,10 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    Zod output was run for 70 of them: right 35, wrong 21, refused 13, crashed 1. The
    other four are not judged, and what Castr does there is unknown. The TypeScript
    column has cells for the same 74 cases (#144), judged by the TypeScript compiler:
-   right 50, wrong 6, refused 13, crashed 1, not judged 4. The next parts are the
-   endpoint-definition column and the cases for the other rows.
+   right 50, wrong 6, refused 13, crashed 1, not judged 4. The endpoint-definition
+   column has cells for 46 rows outside a schema (#146 and the parameter family): right
+   24, wrong 2, missing 19, not judged 1. The next parts are its other families (52 rows), then Oak's
+   document and the example documents.
 1. **PICTURE: one repeatable command that shows what Castr does, judged from outside it.**
    The owner asked on 18 November 2026 what working, working well and correct look like.
    The seat answered with cards and a draft amendment, and on 19 November the owner sent it

@@ -83,4 +83,35 @@ describe('judgeStructure', () => {
       detail: 'the control was refused: Cannot proceed.',
     });
   });
+
+  it('is wrong where the definitions are the same when the construct has another value', () => {
+    expect(judgeStructure(KESTREL, withTheValue, plain, [changed, withTheValue])).toEqual({
+      verdict: 'wrong',
+      detail: 'the endpoint definitions are the same when the construct has another value',
+    });
+  });
+
+  it('is right where the definitions differ for every other value of the construct', () => {
+    expect(judgeStructure(KESTREL, withTheValue, plain, [changed, plain]).verdict).toBe('right');
+  });
+
+  it('is not judged where a document with another value cannot be converted', () => {
+    expect(judgeStructure(KESTREL, withTheValue, plain, [refused])).toEqual({
+      verdict: 'not judged',
+      detail: 'a document with another value was refused: Cannot proceed.',
+    });
+  });
+
+  it('is wrong, in either order, where one other value is the same and another is refused', () => {
+    expect(judgeStructure(KESTREL, withTheValue, plain, [refused, withTheValue]).verdict).toBe(
+      'wrong',
+    );
+    expect(judgeStructure(KESTREL, withTheValue, plain, [withTheValue, refused]).verdict).toBe(
+      'wrong',
+    );
+  });
+
+  it('does not look at the other values where the control already decides the cell', () => {
+    expect(judgeStructure(KESTREL, plain, plain, [refused]).verdict).toBe('missing');
+  });
 });

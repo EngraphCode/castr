@@ -15,20 +15,27 @@ import { pictureRows } from '../rows/picture-rows.js';
 import { structureCoverageOf } from './coverage.js';
 import { RIGHT_TODAY_ENDPOINTS } from './right-today.js';
 import { rowsWith, runStructureCases } from './run-schema-cases.js';
-import { STRUCTURE_CASES } from './structure-cases.js';
+import { ROWS_NO_CASE_ISOLATES, STRUCTURE_CASES } from './structure-cases.js';
 
 describe('the cases for the rows of a document outside a schema', () => {
   it('has no case for a row that needs none, and no row with two', () => {
     const { rows } = pictureRows(loadDefinition);
-    const { strays, repeated } = structureCoverageOf(rows, STRUCTURE_CASES);
+    const cased = [
+      ...STRUCTURE_CASES,
+      ...[...ROWS_NO_CASE_ISOLATES.keys()].map((rowId) => ({ rowId })),
+    ];
+    const { strays, repeated } = structureCoverageOf(rows, cased);
 
     expect({ strays, repeated }).toEqual({ strays: [], repeated: [] });
   });
 
   it('holds what the construct states on exactly the rows recorded as right', async () => {
-    const cells = await runStructureCases(STRUCTURE_CASES);
+    const cells = await runStructureCases(STRUCTURE_CASES, ROWS_NO_CASE_ISOLATES);
 
     expect(rowsWith(cells, 'right')).toEqual(RIGHT_TODAY_ENDPOINTS);
-    expect(rowsWith(cells, 'not judged')).toEqual([]);
+    // A cookie parameter is written as a header parameter, so neither is told apart.
+    expect(rowsWith(cells, 'wrong')).toEqual(['parameter.in=header', 'parameter.in=cookie']);
+    // No valid document differs from another only in a path parameter's location.
+    expect(rowsWith(cells, 'not judged')).toEqual(['parameter.in=path']);
   }, 60_000);
 });
