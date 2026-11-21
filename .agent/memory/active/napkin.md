@@ -341,7 +341,10 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   tables. The probe itself was wrong twice before it was right: it compared
   stringified projections, so no value could be found, and it had a counter read after
   an `await`, so two documents shared a file. A probe's output is evidence only after
-  its own right cells have been looked into.
+  its own right cells have been looked into. Then I wrote the result up as an open
+  question about what the columns mean, and SPEC-C-1 already says: a `paths` type, and
+  Zod schemas addressable by operation, status and media type. Read the clause that
+  defines the capability before calling something undecided.
 
 ## 2026-11-18 (the reflection: tensions in the owner's request, three cards, picomatch withdrawn — Ingot binds Patina / 194219, claude-code)
 

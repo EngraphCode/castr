@@ -134,9 +134,11 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    The 39 rows of a schema that the Zod output is proposed to carry as structure have
    cells, read from the validators Castr generates: right 19, refused 3, missing 17.
    The rows of the document outside a schema have no case kind in the Zod and
-   TypeScript columns: a trial showed a validator holds nothing that keys it, so what
-   those columns mean there is a question for the tables amendment (the thread record
-   has the trial). The next parts are Oak's document and the example documents.
+   TypeScript columns. SPEC-C-1 says where they are carried (a `paths` type; Zod
+   schemas addressable by operation, status and media type); the Zod cases wait on the
+   form of that addressing (SPEC-N-4), and the thread record has the trial. The next
+   parts are those rows in the TypeScript column, Oak's document and the example
+   documents.
 1. **PICTURE: one repeatable command that shows what Castr does, judged from outside it.**
    The owner asked on 18 November 2026 what working, working well and correct look like.
    The seat answered with cards and a draft amendment, and on 19 November the owner sent it
