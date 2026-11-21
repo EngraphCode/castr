@@ -29,17 +29,21 @@ counts, and [`cases/coverage.e2e.test.ts`](cases/coverage.e2e.test.ts) holds the
 
 ### Why the first has no cases yet
 
-A path template, a method, a status code and a media type are proposed as carried as
-structure by the Zod output. A trial that read the validators alone, with nothing that
-contains them, found that they hold none of those. What holds a path or a status code is
-whatever keys the validators, which is the endpoint definitions, and that column has its
-cells. The validators do hold a parameter's name, whether it is required, and the schema
-in a parameter, a request body and a response.
+The specification says where these rows are carried (SPEC-C-1): the types are a `paths`
+type keyed by path template, method, parameter location, status and media type, and the
+Zod schemas are "addressable by component name and by operation, response status and
+media type". It does not yet say what form that addressing takes, which is the public
+surface (SPEC-N-4).
 
-So for most of these rows the Zod column, as proposed, either repeats the
-endpoint-definition column or asks a validator to hold what it has no place for. The
-proposals are left as they are: what the Zod and TypeScript columns mean for a row outside
-a schema is a question for the specification's tables, and the cases follow its answer.
+A trial that read the validators alone, with nothing that contains them, found what they
+hold by themselves: a parameter's name, whether it is required, and the schema in a
+parameter, a request body and a response. Nothing in them holds a path, a method, a
+status code or a media type. Today the only thing in the generated module that addresses
+a validator by any of those is the endpoint definitions, and that column has its cells.
+Castr emits no `paths` type.
+
+So a case for these rows has to know where to look, and for Zod that waits on the form
+of the addressing. The proposals are left as they are.
 
 ## Run it
 
