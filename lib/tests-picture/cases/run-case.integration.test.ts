@@ -18,7 +18,7 @@ const accepted: SchemaCase = { ...maxLength, samples: ['a', 'ab'] };
 
 /** A stand-in for Castr that emits a validator accepting every value. */
 const acceptingEverything: Convert = () =>
-  Promise.resolve({ kind: 'validator', accepts: () => true });
+  Promise.resolve({ kind: 'decides', accepts: () => true });
 
 describe('runCase', () => {
   it('is right where Castr decides every sample as the reference does', async () => {
@@ -40,7 +40,7 @@ describe('runCase', () => {
     const seen: unknown[] = [];
     await runCase(maxLength, (document) => {
       seen.push(document['openapi'], document['components']);
-      return Promise.resolve({ kind: 'no validator' });
+      return Promise.resolve({ kind: 'nothing emitted' });
     });
 
     expect(seen).toEqual(['3.1.0', { schemas: { T: { type: 'string', maxLength: 2 } } }]);
@@ -64,7 +64,7 @@ describe('runCase', () => {
 
   it('is crashed where the output Castr emitted does not load', async () => {
     const cell = await runCase(maxLength, () =>
-      Promise.resolve({ kind: 'output does not load', reason: 'Transform failed' }),
+      Promise.resolve({ kind: 'output unusable', reason: 'does not load: Transform failed' }),
     );
 
     expect(cell).toEqual({
@@ -76,7 +76,7 @@ describe('runCase', () => {
   it('is crashed where the validator Castr emitted throws on a sample', async () => {
     const cell = await runCase(maxLength, () =>
       Promise.resolve({
-        kind: 'validator',
+        kind: 'decides',
         accepts: () => {
           throw new TypeError('x is not a function');
         },
@@ -96,7 +96,7 @@ describe('runCase', () => {
   });
 
   it('is missing where Castr emitted no validator for the shape', async () => {
-    const cell = await runCase(maxLength, () => Promise.resolve({ kind: 'no validator' }));
+    const cell = await runCase(maxLength, () => Promise.resolve({ kind: 'nothing emitted' }));
 
     expect(cell).toEqual({
       verdict: 'missing',
@@ -110,11 +110,37 @@ describe('runCase', () => {
       { rowId: 'text:format: iri', schema: { type: 'string', format: 'iri' }, samples: ['a'] },
       () => {
         ran = true;
-        return Promise.resolve({ kind: 'no validator' });
+        return Promise.resolve({ kind: 'nothing emitted' });
       },
     );
 
     expect(cell.verdict).toBe('not judged');
     expect(ran).toBe(false);
+  });
+
+  it('gives the convert the samples, and judges by the reading it is given', async () => {
+    const seen: unknown[] = [];
+    const cell = await runCase(
+      maxLength,
+      (_document, samples) => {
+        seen.push(...samples);
+        return Promise.resolve({ kind: 'nothing emitted' });
+      },
+      { emits: 'type', judge: () => ({ verdict: 'right', detail: '' }) },
+    );
+
+    expect(seen).toEqual(['ab', 'abc']);
+    expect(cell).toEqual({ verdict: 'missing', detail: 'Castr emitted no type for the shape' });
+  });
+
+  it('gives the decisions to the judge of the reading', async () => {
+    const cell = await runCase(maxLength, acceptingEverything, {
+      emits: 'type',
+      judge: (decisions) => ({ verdict: 'wrong', detail: JSON.stringify(decisions) }),
+    });
+
+    expect(cell.detail).toBe(
+      '[{"sample":"ab","reference":true,"castr":true},{"sample":"abc","reference":false,"castr":true}]',
+    );
   });
 });

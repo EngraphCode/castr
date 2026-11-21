@@ -1,6 +1,8 @@
 import type { Row } from '../rows/table.js';
 
+import { ZOD_READING, type Reading } from './run-case.js';
 import type { SchemaCase } from './schema-case.js';
+import { judgeAdmits } from './verdict.js';
 
 /**
  * A row needs a deciding case where it is part of a schema and Zod is proposed to carry
@@ -36,4 +38,21 @@ export function coverageOf(rows: readonly Row[], cases: readonly SchemaCase[]): 
     strays: cased.filter((id) => !rowIds.has(id)),
     repeated: [...new Set(cased.filter((id, index) => cased.indexOf(id) !== index))],
   };
+}
+
+const TYPE_DECIDES: Reading = { emits: 'type', judge: ZOD_READING.judge };
+const TYPE_ADMITS: Reading = { emits: 'type', judge: judgeAdmits };
+
+/**
+ * How a case's type is held against the reference, from what is proposed for its row. A
+ * construct TypeScript is proposed to carry must be decided by the type as the source
+ * decides it. One proposed as carried by companion is the companion's to refuse, so the
+ * type need only admit what the source accepts. Any other proposal has no reading: a
+ * deciding case says nothing about it.
+ */
+export function typescriptReadingFor(row: Row): Reading | undefined {
+  if (row.proposal.typescript === 'carried') {
+    return TYPE_DECIDES;
+  }
+  return row.proposal.typescript === 'carried by companion' ? TYPE_ADMITS : undefined;
 }

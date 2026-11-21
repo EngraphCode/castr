@@ -4,7 +4,7 @@
 
 import { describe, it, expect } from 'vitest';
 
-import { cellForThrown, judge, onOneLine } from './verdict.js';
+import { cellForThrown, judge, judgeAdmits, onOneLine } from './verdict.js';
 
 describe('judge', () => {
   it('is right where the two validators decide every sample alike', () => {
@@ -28,6 +28,25 @@ describe('judge', () => {
       detail:
         '[1,1]: the source says invalid, Castr says valid; ' +
         '{"a":1}: the source says valid, Castr says invalid',
+    });
+  });
+});
+
+describe('judgeAdmits', () => {
+  it('is right where the type admits every sample the source accepts, and more besides', () => {
+    expect(
+      judgeAdmits([
+        { sample: 'ab', reference: true, castr: true },
+        { sample: 'abc', reference: false, castr: true },
+        { sample: 1, reference: false, castr: false },
+      ]),
+    ).toEqual({ verdict: 'right', detail: '' });
+  });
+
+  it('is wrong where the type refuses a sample the source accepts, and names it', () => {
+    expect(judgeAdmits([{ sample: 1, reference: true, castr: false }])).toEqual({
+      verdict: 'wrong',
+      detail: "1: the source says valid, Castr's type refuses it",
     });
   });
 });

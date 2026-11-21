@@ -24,15 +24,27 @@ function versionsCell(row: Row): string {
 }
 
 /**
- * What Castr does today for each row that has a case, by the row's identity.
+ * What one of Castr's outputs does today for each row that has a case, by the row's
+ * identity.
  */
 export type CellsToday = ReadonlyMap<string, Cell>;
 
-function renderRow(row: Row, today: CellsToday): string {
+/**
+ * What Castr's Zod output and its TypeScript output do today.
+ */
+export interface Today {
+  readonly zod: CellsToday;
+  readonly typescript: CellsToday;
+}
+
+const NOTHING_TODAY: Today = { zod: new Map(), typescript: new Map() };
+
+function renderRow(row: Row, today: Today): string {
   const cells = [
     row.label,
     versionsCell(row),
-    today.get(row.id)?.verdict ?? '',
+    today.zod.get(row.id)?.verdict ?? '',
+    today.typescript.get(row.id)?.verdict ?? '',
     zodCell(row),
     row.proposal.typescript,
     row.proposal.endpoints,
@@ -44,10 +56,10 @@ function renderRow(row: Row, today: CellsToday): string {
 
 /**
  * Renders the rows as one Markdown table for each part of a document. A row that has a
- * case shows what Castr's Zod output does for it today; a row with no case shows nothing
- * there, which is not a claim that Castr is right.
+ * case shows what Castr's Zod and TypeScript outputs do for it today; a row with no case
+ * shows nothing there, which is not a claim that Castr is right.
  */
-export function renderRows(rows: readonly Row[], today: CellsToday = new Map()): string {
+export function renderRows(rows: readonly Row[], today: Today = NOTHING_TODAY): string {
   const lines: string[] = [];
   for (const [group, title] of GROUPS) {
     const inGroup = rows.filter((row) => row.group === group);
@@ -57,8 +69,8 @@ export function renderRows(rows: readonly Row[], today: CellsToday = new Map()):
     lines.push(
       `## ${title} (${String(inGroup.length)})`,
       '',
-      '| Construct | OpenAPI | Castr today, to Zod | Proposed: to Zod | Proposed: to TypeScript | Proposed: to the endpoint definitions | Defined | Note |',
-      '| --- | --- | --- | --- | --- | --- | --- | --- |',
+      '| Construct | OpenAPI | Castr today, to Zod | Castr today, to TypeScript | Proposed: to Zod | Proposed: to TypeScript | Proposed: to the endpoint definitions | Defined | Note |',
+      '| --- | --- | --- | --- | --- | --- | --- | --- | --- |',
       ...inGroup.map((row) => renderRow(row, today)),
       '',
     );
@@ -76,17 +88,17 @@ const VERDICTS: readonly Cell['verdict'][] = [
 ];
 
 /**
- * Renders what Castr does today: how many cells have each verdict, and the plain words
- * for every cell that is not right.
+ * Renders what one of Castr's outputs does today: how many cells have each verdict, and
+ * the plain words for every cell that is not right.
  */
-export function renderToday(rows: readonly Row[], today: CellsToday): string {
+export function renderToday(rows: readonly Row[], today: CellsToday, output: string): string {
   const cased = rows.filter((row) => today.has(row.id));
   const counts = VERDICTS.map((verdict) => {
     const count = cased.filter((row) => today.get(row.id)?.verdict === verdict).length;
     return `${verdict} ${String(count)}`;
   });
   const lines = [
-    `## What Castr's Zod output does today (${String(cased.length)} cases)`,
+    `## What Castr's ${output} output does today (${String(cased.length)} cases)`,
     '',
     `${counts.join('; ')}.`,
     '',

@@ -1,6 +1,6 @@
 /**
- * The picture's Zod column for the rows of a schema: every case run through Castr and
- * through the reference validator.
+ * The picture's Zod and TypeScript columns for the rows of a schema: every case run
+ * through Castr and through the reference validator.
  *
  * This test runs Castr in this process, writes the module it generates and loads it, as
  * the generated-code suite does (`tests-generated/*.gen.test.ts`), and takes that suite's
@@ -16,8 +16,8 @@ import { pictureRows } from '../rows/picture-rows.js';
 import { coverageOf } from './coverage.js';
 import { casesTheirKeywordDoesNotDecide } from './control.js';
 import { inertCases } from './inert.js';
-import { RIGHT_TODAY } from './right-today.js';
-import { rowsWith, runSchemaCases } from './run-schema-cases.js';
+import { RIGHT_TODAY, RIGHT_TODAY_TYPESCRIPT } from './right-today.js';
+import { rowsWith, runSchemaCases, runTypeScriptCases } from './run-schema-cases.js';
 import { SCHEMA_CASES } from './schema-cases.js';
 
 describe('the cases for the rows of a schema', () => {
@@ -55,4 +55,23 @@ describe('the cases for the rows of a schema', () => {
       'text:format: iri-reference',
     ]);
   });
+
+  // The compiler checks every sample against the type Castr generated. Every case has a
+  // row with a reading for a type, so every case has a cell.
+  it('generates a type that is right on exactly the rows recorded as right', async () => {
+    const { rows } = pictureRows(loadDefinition);
+
+    const cells = await runTypeScriptCases(SCHEMA_CASES, rows);
+
+    expect(cells.size).toBe(SCHEMA_CASES.length);
+    expect(rowsWith(cells, 'right')).toEqual(RIGHT_TODAY_TYPESCRIPT);
+    expect(rowsWith(cells, 'wrong')).toEqual([
+      'keyword:const',
+      'keyword:enum',
+      'keyword:prefixItems',
+      'keyword:allOf',
+      'text:format: int64',
+      'text:`false` as a schema',
+    ]);
+  }, 60_000);
 });
