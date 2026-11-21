@@ -29,6 +29,10 @@ const ROWS = new Set([
   'reference.description',
   'operation.callbacks',
   'callbacks[a callback expression]',
+  'openapi.webhooks',
+  'content[a media type]',
+  'media-type.schema',
+  'response.content',
   'responses.default',
   'responses[an exact status code]',
   'responses[a status range]',
@@ -152,6 +156,29 @@ describe('rowsUsedBy', () => {
     expect(used({ components: { 'x-kestrel': { a: 1 } } })).not.toContain(named);
     expect(used({ components: { kestrels: { a: 1 } } })).not.toContain(named);
     expect(used({ components: { parameters: { Q: {} } } })).toContain(named);
+  });
+
+  it('reads a path item given by reference as its version of OpenAPI does', () => {
+    const webhooks = { onKestrel: { $ref: '#/components/pathItems/K', get: {} } };
+    const in31 = rowsUsedBy({ openapi: '3.1.0', webhooks }, ROWS);
+    const in32 = rowsUsedBy({ openapi: '3.2.0', webhooks }, ROWS);
+
+    // In 3.1 a webhook with `$ref` is a reference, which holds no `get`.
+    expect(in31.used.has('reference.$ref')).toBe(true);
+    expect(in31.used.has('path-item.$ref')).toBe(false);
+    expect(in31.unrecognised).toEqual(['reference.get']);
+    // In 3.2 it is a path item, whose `$ref` is a field of its own.
+    expect(in32.used.has('path-item.$ref')).toBe(true);
+    expect(in32.used.has('path-item.get')).toBe(true);
+    expect(in32.unrecognised).toEqual([]);
+  });
+
+  it('reads a media type whose name begins `x-` as a media type', () => {
+    const content = { 'x-kestrel/json': { schema: { type: 'string' } } };
+    const found = used({ paths: { '/k': { get: { responses: { '200': { content } } } } } });
+
+    expect(found).toEqual(expect.arrayContaining(['content[a media type]', 'media-type.schema']));
+    expect(found).not.toContain('specification-extensions[an `x-` extension]');
   });
 
   it('walks a path item beside its own `$ref`', () => {

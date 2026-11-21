@@ -14,6 +14,12 @@ export interface RowsUsed {
 type Holds = readonly [kind: string, shape: 'one' | 'list' | 'map'];
 
 const SCHEMA = 'schema';
+/**
+ * A place that holds a path item, where OpenAPI 3.1 reads an object with `$ref` as a
+ * reference and nothing else. Under `paths`, and everywhere in 3.2, such an object is a
+ * path item whose `$ref` is one of its fields.
+ */
+const PATH_ITEM_OR_REFERENCE = 'path-item-or-reference';
 const one = (kind: string): Holds => [kind, 'one'];
 const list = (kind: string): Holds => [kind, 'list'];
 const map = (kind: string): Holds => [kind, 'map'];
@@ -30,7 +36,7 @@ const CHILDREN: Readonly<Record<string, Readonly<Record<string, Holds>>>> = {
     info: one('info'),
     servers: list('server'),
     paths: one('paths'),
-    webhooks: map('path-item'),
+    webhooks: map(PATH_ITEM_OR_REFERENCE),
     components: one('components'),
     security: list('security-requirement'),
     tags: list('tag'),
@@ -48,7 +54,7 @@ const CHILDREN: Readonly<Record<string, Readonly<Record<string, Holds>>>> = {
     securitySchemes: map('security-scheme'),
     links: map('link'),
     callbacks: map('callbacks'),
-    pathItems: map('path-item'),
+    pathItems: map(PATH_ITEM_OR_REFERENCE),
     mediaTypes: map('media-type'),
   },
   'path-item': {
@@ -106,7 +112,7 @@ const KEYED: Readonly<
 > = {
   paths: () => ['paths[a path template]', 'path-item'],
   content: () => ['content[a media type]', 'media-type'],
-  callbacks: () => ['callbacks[a callback expression]', 'path-item'],
+  callbacks: () => ['callbacks[a callback expression]', PATH_ITEM_OR_REFERENCE],
   responses: (key) => {
     if (key === 'default') {
       return ['responses.default', 'response'];
@@ -117,6 +123,9 @@ const KEYED: Readonly<
     return /^[1-5]\d\d$/.test(key) ? ['responses[an exact status code]', 'response'] : undefined;
   },
 };
+
+/** The keyed kinds whose entries are media types or the like, and admit no extension. */
+const NOT_EXTENSIBLE: ReadonlySet<string> = new Set(['content']);
 
 /** The keyed kinds that may be given by reference instead. */
 const KEYED_BY_REFERENCE: ReadonlySet<string> = new Set(['callbacks']);
@@ -270,7 +279,7 @@ export function rowsUsedBy(document: JsonObject, rows: ReadonlySet<string>): Row
   const walkKeyed = (kind: string, node: JsonObject): void => {
     const keyed = KEYED[kind];
     for (const [key, value] of Object.entries(node)) {
-      if (key.startsWith('x-')) {
+      if (key.startsWith('x-') && !NOT_EXTENSIBLE.has(kind)) {
         useExtension(kind);
       } else {
         const entry = keyed?.(key);
@@ -300,7 +309,12 @@ export function rowsUsedBy(document: JsonObject, rows: ReadonlySet<string>): Row
     }
   };
 
-  function walk(kind: string, node: unknown): void {
+  const is31 = typeof document['openapi'] === 'string' && document['openapi'].startsWith('3.1');
+
+  function walk(placed: string, node: unknown): void {
+    const asReference = is31 && isJsonObject(node) && '$ref' in node;
+    const pathItem = asReference ? 'reference' : 'path-item';
+    const kind = placed === PATH_ITEM_OR_REFERENCE ? pathItem : placed;
     if (kind === SCHEMA) {
       walkSchema(node);
       return;
@@ -318,7 +332,7 @@ export function rowsUsedBy(document: JsonObject, rows: ReadonlySet<string>): Row
     // admits no extension. A path item is the exception: its `$ref` is a field of its
     // own beside the others.
     const mayBeReference = kind in KEYED ? KEYED_BY_REFERENCE.has(kind) : kind !== 'path-item';
-    const isReference = '$ref' in node && mayBeReference;
+    const isReference = kind === 'reference' || ('$ref' in node && mayBeReference);
     if (kind in KEYED && !isReference) {
       walkKeyed(kind, node);
       return;
