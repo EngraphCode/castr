@@ -27,6 +27,8 @@ const ROWS = new Set([
   'parameter.schema',
   'reference.$ref',
   'reference.description',
+  'operation.callbacks',
+  'callbacks[a callback expression]',
   'responses.default',
   'responses[an exact status code]',
   'responses[a status range]',
@@ -118,6 +120,38 @@ describe('rowsUsedBy', () => {
     );
     expect(found.used.has('parameter.name')).toBe(false);
     expect(found.unrecognised).toEqual(['reference.name']);
+  });
+
+  it('names a callback given by reference as a reference, not as a callback expression', () => {
+    const callbacks = { onKestrel: { $ref: '#/components/callbacks/K' } };
+    const found = used({ paths: { '/k': { get: { callbacks } } } });
+
+    expect(found).toContain('reference.$ref');
+    expect(found).not.toContain('callbacks[a callback expression]');
+  });
+
+  it('reports an extension beside a `$ref`, since a reference holds none', () => {
+    const reference = { $ref: '#/components/parameters/Q', 'x-note': 1 };
+    const found = rowsUsedBy({ paths: { '/k': { get: { parameters: [reference] } } } }, ROWS);
+
+    expect(found.used.has('specification-extensions[an `x-` extension]')).toBe(false);
+    expect(found.unrecognised).toEqual(['reference.x-note']);
+  });
+
+  it('reports a response keyed by neither a status code, a range nor `default`', () => {
+    const found = rowsUsedBy({ paths: { '/k': { get: { responses: { kestrel: {} } } } } }, ROWS);
+
+    expect(found.used.has('responses[an exact status code]')).toBe(false);
+    expect(found.unrecognised).toEqual(['responses.kestrel']);
+  });
+
+  it('names a component name only where a kind of component has an entry', () => {
+    const named = 'components[a component name]';
+
+    expect(used({ components: { schemas: {} } })).not.toContain(named);
+    expect(used({ components: { 'x-kestrel': { a: 1 } } })).not.toContain(named);
+    expect(used({ components: { kestrels: { a: 1 } } })).not.toContain(named);
+    expect(used({ components: { parameters: { Q: {} } } })).toContain(named);
   });
 
   it('walks a path item beside its own `$ref`', () => {

@@ -96,8 +96,14 @@ const CHILDREN: Readonly<Record<string, Readonly<Record<string, Holds>>>> = {
   },
 };
 
-/** The kinds of object whose entries are keyed by something the author chooses. */
-const KEYED: Readonly<Record<string, (key: string) => readonly [row: string, kind: string]>> = {
+/**
+ * The kinds of object whose entries are keyed by something the author chooses: for a
+ * key, the row it is an entry of and the kind of object it holds, or nothing where the
+ * key is none the object allows.
+ */
+const KEYED: Readonly<
+  Record<string, (key: string) => readonly [row: string, kind: string] | undefined>
+> = {
   paths: () => ['paths[a path template]', 'path-item'],
   content: () => ['content[a media type]', 'media-type'],
   callbacks: () => ['callbacks[a callback expression]', 'path-item'],
@@ -105,12 +111,15 @@ const KEYED: Readonly<Record<string, (key: string) => readonly [row: string, kin
     if (key === 'default') {
       return ['responses.default', 'response'];
     }
-    return [
-      /^[1-5]XX$/.test(key) ? 'responses[a status range]' : 'responses[an exact status code]',
-      'response',
-    ];
+    if (/^[1-5]XX$/.test(key)) {
+      return ['responses[a status range]', 'response'];
+    }
+    return /^[1-5]\d\d$/.test(key) ? ['responses[an exact status code]', 'response'] : undefined;
   },
 };
+
+/** The keyed kinds that may be given by reference instead. */
+const KEYED_BY_REFERENCE: ReadonlySet<string> = new Set(['callbacks']);
 
 /** Fields that hold a map from a name to a string. */
 const MAPS_OF_STRINGS: ReadonlySet<string> = new Set(['scopes', 'mapping']);
@@ -263,10 +272,14 @@ export function rowsUsedBy(document: JsonObject, rows: ReadonlySet<string>): Row
     for (const [key, value] of Object.entries(node)) {
       if (key.startsWith('x-')) {
         useExtension(kind);
-      } else if (keyed !== undefined) {
-        const [row, child] = keyed(key);
-        use(row);
-        walk(child, value);
+      } else {
+        const entry = keyed?.(key);
+        if (entry === undefined) {
+          unrecognised.add(`${kind}.${key}`);
+        } else {
+          use(entry[0]);
+          walk(entry[1], value);
+        }
       }
     }
   };
@@ -276,10 +289,10 @@ export function rowsUsedBy(document: JsonObject, rows: ReadonlySet<string>): Row
     if (MAPS_OF_STRINGS.has(name) && isJsonObject(value) && Object.keys(value).length > 0) {
       use(MAP_OF_STRINGS_ROW);
     }
-    if (kind === 'components' && isJsonObject(value) && Object.keys(value).length > 0) {
+    const holds = CHILDREN[kind]?.[name];
+    if (kind === 'components' && holds !== undefined && each(value, 'map').length > 0) {
       use('components[a component name]');
     }
-    const holds = CHILDREN[kind]?.[name];
     if (holds !== undefined) {
       each(value, holds[1]).forEach((child) => {
         walk(holds[0], child);
@@ -301,18 +314,20 @@ export function rowsUsedBy(document: JsonObject, rows: ReadonlySet<string>): Row
       }
       return;
     }
-    if (kind in KEYED) {
+    // A reference stands in for the object, and holds only what a reference holds: it
+    // admits no extension. A path item is the exception: its `$ref` is a field of its
+    // own beside the others.
+    const mayBeReference = kind in KEYED ? KEYED_BY_REFERENCE.has(kind) : kind !== 'path-item';
+    const isReference = '$ref' in node && mayBeReference;
+    if (kind in KEYED && !isReference) {
       walkKeyed(kind, node);
       return;
     }
-    // A reference stands in for the object, and holds only what a reference holds. A
-    // path item is the exception: its `$ref` is a field of its own beside the others.
-    const isReference = '$ref' in node && kind !== 'path-item';
     for (const [name, value] of Object.entries(node)) {
-      if (name.startsWith('x-')) {
-        useExtension(kind);
-      } else if (isReference) {
+      if (isReference) {
         useField('reference', name, value);
+      } else if (name.startsWith('x-')) {
+        useExtension(kind);
       } else {
         walkField(kind, name, value);
       }

@@ -57,7 +57,7 @@ export function tally(
   );
 }
 
-const STOPS: readonly Standing[] = ['refused', 'crashed'];
+const STOPS: ReadonlySet<Standing> = new Set(['refused', 'crashed']);
 
 /**
  * The rows a document uses that Castr refuses or crashes on in some output: each is
@@ -65,8 +65,6 @@ const STOPS: readonly Standing[] = ['refused', 'crashed'];
  */
 export function stops(usage: readonly UsedRow[]): readonly UsedRow[] {
   return usage.filter((usedRow) =>
-    [usedRow.zod, usedRow.typescript, usedRow.endpoints].some((standing) =>
-      STOPS.includes(standing),
-    ),
+    [usedRow.zod, usedRow.typescript, usedRow.endpoints].some((standing) => STOPS.has(standing)),
   );
 }
