@@ -241,13 +241,24 @@ repository before acting.
       owner's nine decisions give. The join reports a computed row with no proposal and a
       proposal with no row; the bars on the fifth class and on `read` are checked.
       `pnpm picture` prints the tables and `pnpm test:picture` runs 89 tests.
-    - **Not yet built:** any case that runs Castr. No cell says what Castr does today.
-      That is the next part: one case per schema row, generated through Castr and judged
-      by an independent validator reading the same document, each cell right, refused,
-      wrong, missing or crashed; it lands asserting the cells that are right today. Then
-      cases for the TypeScript and endpoint-definition columns (their proposed outcomes are
-      already on `main`; what is missing is anything that runs Castr for them), Oak's
-      document as a row, and the example documents.
+    - **The first cases (#142).** 74 cases, one for every row of a schema that Zod is
+      proposed to carry, each read by Ajv for JSON Schema 2020-12 and by the Zod module
+      Castr generates. On 21 November 2026: right 35, wrong 21, refused 13, crashed 1,
+      not judged 4. `cases/right-today.ts` is held to exactly the rows that are right.
+      `pnpm picture` prints each cell that is not right with its reason.
+    - **What the cases do not prove.** Right is an upper bound: six review rounds moved
+      seven cells from right to wrong with a sharper sample each (`email`, `uri`, `uuid`,
+      `duration`, `pattern` on an astral character, `integer` beyond the safe range, and
+      `$dynamicRef` to refused). The reference is not the source: Ajv accepts every number
+      for `int64`, `float` and `double`, so those cells prove nothing about the format,
+      and a control check names them. Four formats have no Ajv checker and are not judged.
+      A second reference, or cases judged against the defining text, is owed for those.
+    - **A cell the amendment must define.** `type: integer` reads wrong because Castr's
+      output refuses an integer beyond the safe range, which is the narrowing the owner
+      decided Castr makes and reports. The picture has no cell for a declared narrowing.
+    - **Not yet built:** cases for rows carried as structure, for the TypeScript and
+      endpoint-definition columns (their proposed outcomes are on `main`), for the rows
+      of a document outside a schema, Oak's document as a row, and the example documents.
     - **Rows only text defines** (25 `format` values, six schema constructs) are
       hand-listed and are the part most likely to be missing a row. The 3.0-only rows of
       the report (`nullable`, `byte`, `binary`, boolean exclusive bounds) are not in the

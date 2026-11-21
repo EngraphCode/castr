@@ -124,7 +124,9 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    columns for Zod, TypeScript and the endpoint definitions. The amendment that carries
    the nine decisions follows it, in three parts, with the tables.
    The picture's rows and proposed outcomes are on `main` (#138, #140): `pnpm picture`
-   prints 317 rows in three columns. The next part is the cases that run Castr.
+   prints 317 rows in three columns, and for 74 schema rows what Castr's Zod output
+   does today (#142): right 35, wrong 21, refused 13, crashed 1, not judged 4. The next
+   parts are the cases for the other rows and the other two columns.
 1. **PICTURE: one repeatable command that shows what Castr does, judged from outside it.**
    The owner asked on 18 November 2026 what working, working well and correct look like.
    The seat answered with cards and a draft amendment, and on 19 November the owner sent it

@@ -256,6 +256,15 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   definitions written in the test made each reading rule a stated fact. One note of mine
   was wrong and a reviewer was right: Zod 4.6.7 counts string length in characters. I had
   carried the UTF-16 claim from an earlier report without running it; run the claim.
+- **The first cases, 21 November (#142).** A case with one plain accepted sample and
+  one plainly refused sample agrees with almost any validator. Every cell that moved
+  from right to wrong moved on a boundary sample taken from the defining text: an
+  address RFC 5321 allows, a malformed percent-encoding, a UUID with free version bits,
+  fractional seconds, an astral character against `.`, an integer past the safe range.
+  Write the boundary sample first. Two checks earned their place: a control (the schema
+  without its named keyword) caught three cases the reference never decided, and
+  running a reviewer's claimed disagreement before adopting it caught one that was
+  false (IPv6 with an IPv4 tail). The reference validator is a witness, not the source.
 - **An adversarial review before the owner sees an amendment, 20 November.** One reviewer
   returned twelve findings on a nine-change draft and it was withdrawn unseen. The largest
   amendment that has closed in this repository changed one clause. The amendment is now
