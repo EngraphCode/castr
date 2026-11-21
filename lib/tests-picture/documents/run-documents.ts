@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import { createCastrConvert, type DocumentOutput } from '../cases/castr-convert.js';
 
-import { counted, documentCell, statedVersion, type DocumentCell } from './document-cell.js';
+import { documentCell, statedVersion, type DocumentCell } from './document-cell.js';
 import type { PictureDocument } from './documents.js';
 
 const PACKAGE = fileURLToPath(new URL('../../', import.meta.url));
@@ -22,15 +22,13 @@ export interface DocumentLine {
 
 function cellOf<Held>(
   output: DocumentOutput<Held>,
-  describe: (held: Held) => string,
+  count: (held: Held) => number,
+  one: string,
+  many: string,
 ): DocumentCell {
-  if (output.kind === 'held') {
-    return documentCell({ kind: 'made', holds: describe(output.held) });
-  }
-  if (output.kind === 'nothing emitted') {
-    return documentCell({ kind: 'made', holds: 'none' });
-  }
-  return documentCell(output);
+  return documentCell(
+    output.kind === 'held' ? { kind: 'made', count: count(output.held), one, many } : output,
+  );
 }
 
 /**
@@ -50,10 +48,13 @@ export async function runDocuments(
       lines.push({
         name: document.name,
         openapi: statedVersion(await readFile(file, 'utf8')) ?? 'not stated',
-        zod: cellOf(made.validators, (names) => counted(names.length, 'validator', 'validators')),
-        typescript: cellOf(made.types, (names) => counted(names.length, 'type', 'types')),
-        endpoints: cellOf(made.endpoints, (count) =>
-          counted(count, 'endpoint definition', 'endpoint definitions'),
+        zod: cellOf(made.validators, (names) => names.length, 'validator', 'validators'),
+        typescript: cellOf(made.types, (names) => names.length, 'type', 'types'),
+        endpoints: cellOf(
+          made.endpoints,
+          (count) => count,
+          'endpoint definition',
+          'endpoint definitions',
         ),
       });
     }

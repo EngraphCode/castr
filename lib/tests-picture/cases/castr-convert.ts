@@ -120,9 +120,7 @@ function endpointCountIn(moduleExports: unknown): DocumentOutput<number> {
     return { kind: 'nothing emitted' };
   }
   const exported: unknown = Reflect.get(moduleExports, 'endpoints');
-  return Array.isArray(exported)
-    ? { kind: 'held', held: exported.length }
-    : { kind: 'nothing emitted' };
+  return { kind: 'held', held: Array.isArray(exported) ? exported.length : 0 };
 }
 
 type Generated =
@@ -199,13 +197,26 @@ export async function createCastrConvert(): Promise<{
     return load(output, directory, find);
   };
 
+  // A module is loaded here without its types being checked, so it is compiled first:
+  // one a consumer's compiler refuses is not output that can be used.
+  const usable = async <Held>(
+    generated: Generated,
+    find: (moduleExports: unknown) => DocumentOutput<Held>,
+  ): Promise<DocumentOutput<Held>> => {
+    if (generated.kind !== 'content') {
+      return generated;
+    }
+    const types = typeNamesIn(generated.content);
+    return types.kind === 'held' ? loaded(generated, find) : types;
+  };
+
   const convertDocument: ConvertDocument = async (file) => {
     const plain = await generateFrom(file, 'schemas-only');
     const withEndpoints = await generateFrom(file, 'schemas-with-metadata');
     return {
       types: plain.kind === 'content' ? typeNamesIn(plain.content) : plain,
-      validators: await loaded(plain, validatorNamesIn),
-      endpoints: await loaded(withEndpoints, endpointCountIn),
+      validators: await usable(plain, validatorNamesIn),
+      endpoints: await usable(withEndpoints, endpointCountIn),
     };
   };
 

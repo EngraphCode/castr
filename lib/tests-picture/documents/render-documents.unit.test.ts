@@ -15,7 +15,7 @@ const lines: readonly DocumentLine[] = [
     openapi: '3.1.0',
     zod: { outcome: 'converted', detail: '2 validators' },
     typescript: { outcome: 'crashed', detail: "Castr's output does not compile: x" },
-    endpoints: { outcome: 'converted', detail: 'none' },
+    endpoints: { outcome: 'nothing', detail: 'the module holds no endpoint definitions' },
   },
   { name: 'ospreys', openapi: '3.2.0', zod: refused, typescript: refused, endpoints: refused },
 ];
@@ -26,7 +26,7 @@ describe('renderDocuments', () => {
 
     expect(written).toContain('## Whole documents (2)');
     expect(written).toContain(
-      "| kestrels | 3.1.0 | converted: 2 validators | crashed | converted: none | Castr's output does not compile: x |",
+      "| kestrels | 3.1.0 | converted: 2 validators | crashed | nothing | Castr's output does not compile: x |",
     );
   });
 
@@ -38,5 +38,6 @@ describe('renderDocuments', () => {
 
   it('says that converted is not right', () => {
     expect(renderDocuments(lines)).toContain('It does not\nsay the output is right.');
+    expect(renderDocuments(lines)).toContain('it does\nnot say whether the document asks for any.');
   });
 });

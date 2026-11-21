@@ -61,9 +61,11 @@ the version the specification names as its corpus, and the 14 example documents 
 [`lib/examples`](../examples). `pnpm picture` runs Castr on each from its file, as a
 consumer would, and prints one line for each with a cell for each output:
 
-- **converted**: Castr generated a module and the output in it can be used. The Zod
-  validators load, the module compiles, and the endpoint definitions load. The cell gives
-  a count of what the module exports.
+- **converted**: Castr generated a module and the output in it can be used. The module
+  compiles and loads, and holds at least one of the output. The cell gives the count.
+- **nothing**: the module compiles and loads, and holds none of the output. That does
+  not say whether the document asks for any: a document of webhooks alone gives no
+  endpoint definition, and one with no named schema gives no validator and no type.
 - **refused**: Castr raised an error of its own and generated nothing.
 - **crashed**: the runtime faulted, or the module does not load or compile.
 
@@ -72,7 +74,8 @@ right. A document converts when none of its constructs is refused or crashes, an
 rows say which of the constructs it uses are then held wrongly or dropped.
 
 Today Castr refuses Oak's document, in every output, at a schema-valued
-`additionalProperties`, and converts the 14 examples.
+`additionalProperties`. No example is refused or crashes: ten convert in every output,
+and four have an output the module holds none of.
 [`documents/documents.gen.test.ts`](documents/documents.gen.test.ts) holds that.
 
 Eight of the examples say they are OpenAPI 3.0, which the specification has Castr

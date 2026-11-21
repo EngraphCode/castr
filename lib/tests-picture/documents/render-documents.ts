@@ -9,10 +9,10 @@ function shown(found: DocumentCell): string {
   return found.outcome === 'converted' ? `converted: ${found.detail}` : found.outcome;
 }
 
-/** The reasons a document's outputs were not converted, each given once. */
+/** The reasons a document's outputs were refused or crashed, each given once. */
 function reasons(line: DocumentLine): string {
   const given = [line.zod, line.typescript, line.endpoints]
-    .filter((found) => found.outcome !== 'converted')
+    .filter((found) => found.outcome === 'refused' || found.outcome === 'crashed')
     .map((found) => found.detail);
   return [...new Set(given)].join('; ');
 }
@@ -37,7 +37,8 @@ export function renderDocuments(lines: readonly DocumentLine[]): string {
     `## Whole documents (${String(lines.length)})`,
     '',
     'Converted says Castr generated a module and the output in it can be used. It does not',
-    'say the output is right.',
+    'say the output is right. Nothing says the module holds none of that output; it does',
+    'not say whether the document asks for any.',
     '',
     '| Document | OpenAPI | To Zod | To TypeScript | To the endpoint definitions | Why not |',
     '| --- | --- | --- | --- | --- | --- |',

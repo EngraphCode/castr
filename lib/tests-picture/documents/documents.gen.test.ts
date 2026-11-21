@@ -17,20 +17,25 @@ function outcomes(line: DocumentLine): string {
 }
 
 describe('the whole documents', () => {
-  it('are converted in every output, all but the one Castr refuses', async () => {
+  it('are converted in every output that the module holds, all but the one Castr refuses', async () => {
     const lines = await runDocuments(DOCUMENTS);
     const notConverted = lines.filter(
       (line) => outcomes(line) !== 'converted, converted, converted',
     );
 
-    // Oak's document is the corpus the specification names. Castr refuses it today.
-    expect(notConverted.map((line) => [line.name, outcomes(line), line.zod.detail])).toEqual([
-      [
-        "Oak's curriculum API, v1 (1.1.1)",
-        'refused, refused, refused',
-        'Non-strict object input "schema-valued additionalProperties" is rejected. Castr requires closed-world object semantics (additionalProperties: false).',
-      ],
+    expect(notConverted.map((line) => [line.name, outcomes(line)])).toEqual([
+      // Oak's document is the corpus the specification names. Castr refuses it today.
+      ["Oak's curriculum API, v1 (1.1.1)", 'refused, refused, refused'],
+      // A document of webhooks only: no endpoint definition is made from a webhook.
+      ['webhook-example', 'converted, converted, nothing'],
+      // Documents with no named schema: every schema is written in place.
+      ['non-oauth-scopes', 'nothing, nothing, converted'],
+      ['api-with-examples', 'nothing, nothing, converted'],
+      ['callback-example', 'nothing, nothing, converted'],
     ]);
+    expect(lines[0]?.zod.detail).toBe(
+      'Non-strict object input "schema-valued additionalProperties" is rejected. Castr requires closed-world object semantics (additionalProperties: false).',
+    );
     expect(lines.map((line) => line.openapi)).not.toContain('not stated');
   }, 120_000);
 });
