@@ -111,8 +111,10 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-0. **Read "STATE AT THE PAUSE" in the
-   [thread record](threads/castr-correction.next-session.md) first.** On 20 November 2026
+0. **Read "Start here: handover of 21 November 2026" at the top of the
+   [thread record](threads/castr-correction.next-session.md) first.** It is the newest
+   state, written at an account change, and holds how work lands here. The paragraph
+   below is the history that led to it. On 20 November 2026
    the seat stopped at the owner's word with #134 open and a draft amendment withdrawn.
    The next work is PICTURE, below, and its first part is its row list: the construct
    kinds computed from OpenAPI 3.1's published definition, with a proposed class per row,
