@@ -259,6 +259,22 @@ repository before acting.
       `false` as a schema is `unknown`; `int64` is `bigint`, which refuses a JSON number.
       The `allOf` and `$ref` cases were changed to schemas `type` alone decides, since a
       type cannot decide `minLength`; both stay right for Zod.
+    - **The endpoint-definition column (#146, then the parameter family).** A row of the
+      document outside a schema decides no value, so its case is two documents: one
+      holding the construct and a control without it. The module Castr generates from
+      each is loaded and its `endpoints` export is reduced to plain values; the cell says
+      whether the value the construct states is there and not in the control's. Nothing
+      is assumed about the shape of the definitions. A case for a choice among values
+      (a parameter's location) also names a document for each other value, and the
+      definitions must differ from each. On 21 November 2026, 46 cases over paths, path
+      items, operations and parameters: right 26, wrong 2, missing 18. Missing: `summary`
+      on a path item and an operation; a path item's `description`; `deprecated` and
+      `callbacks` on an operation; a path item that is a `$ref` (no definitions at all);
+      on a parameter `deprecated`, `allowEmptyValue`, `allowReserved`, `explode` and all
+      eight `style` values. Wrong: a cookie parameter is written as a header parameter,
+      so neither is told apart. Right means the value is somewhere in the definitions,
+      not that it is in the right place. 52 of the 98 rows have no case yet: request
+      bodies, media types, encodings, responses, headers, components and references.
     - **What the cases do not prove.**
       - Right is an upper bound. Six review rounds moved six cells from right to wrong
         with a sharper sample each: `email`, `uri`, `uuid`, `duration`, `pattern` on an
@@ -276,13 +292,13 @@ repository before acting.
     - **A cell the amendment must define.** `type: integer` reads wrong because Castr's
       output refuses an integer beyond the safe range, which is the narrowing the owner
       decided Castr makes and reports. The picture has no cell for a declared narrowing.
-    - **Not yet built:** cases for rows carried as structure, for the
-      endpoint-definition column (its proposed outcomes are on `main`), for the rows
-      of a document outside a schema, Oak's document as a row, and the example documents.
-      A first look at the endpoint output on 21 November, not yet a case: a `4XX`
-      response is written as the bare key `4XX`, which is not valid TypeScript;
-      `style`, `explode` and response headers do not appear; `deprecated`, `readOnly`
-      and `default` do not reach the Zod annotations.
+    - **Not yet built:** the other families of the endpoint-definition column; cases for
+      rows carried as structure in the Zod and TypeScript columns (annotations, names);
+      Oak's document as a row; the example documents. Seen on 21 November and not yet a
+      case: a `4XX` response is written as the bare key `4XX`, which is not valid
+      TypeScript; a response with no content is given an empty closed object as its
+      schema; response headers do not appear; `deprecated`, `readOnly` and `default` do
+      not reach the Zod annotations.
     - **Rows only text defines** (25 `format` values, six schema constructs) are
       hand-listed and are the part most likely to be missing a row. The 3.0-only rows of
       the report (`nullable`, `byte`, `binary`, boolean exclusive bounds) are not in the

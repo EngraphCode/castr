@@ -293,6 +293,19 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   scratch directory in this one. Leave scratch files in `tests-picture/.tmp`; they are
   ignored.
 
+- **21 November, the endpoint-definition column (#146 and the parameter family).** A
+  judge that asks only "do the outputs differ from the control's" passes a construct that
+  is mangled into another: a cookie parameter written as a header parameter differs from
+  a query parameter and read right. I found it by printing what was behind three right
+  cells, not by the cell. Look inside a sample of right cells of every new judge before
+  recording them; for a construct that is a choice among values, set it against every
+  other value. My first parameter documents were invalid (a templated path with its
+  parameter undeclared) and Castr refused them correctly: read a refusal's reason before
+  counting it as Castr's. Review, twice on one test file: a stand-in that answers by
+  call order, then one that answers by a lookup, are both logic in a fake. The cure was
+  to move the judging into a pure function, which needs no stand-in. When a test wants a
+  fake that decides, the code under test is doing two jobs.
+
 ## 2026-11-18 (the reflection: tensions in the owner's request, three cards, picomatch withdrawn — Ingot binds Patina / 194219, claude-code)
 
 - **Owner, 18 November 2026, verbatim**, asked which of two things "in isolation" meant: "I
