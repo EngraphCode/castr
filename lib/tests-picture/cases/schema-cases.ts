@@ -119,16 +119,13 @@ export const SCHEMA_CASES: readonly SchemaCase[] = [
   ),
   keyword('then', { type: 'number', if: { minimum: 10 }, then: { multipleOf: 10 } }, [20, 5.5, 15]),
   keyword('else', { type: 'number', if: { minimum: 10 }, else: { multipleOf: 1 } }, [15.5, 5, 5.5]),
-  keyword(
-    'allOf',
-    {
-      allOf: [
-        { type: 'string', minLength: 2 },
-        { type: 'string', maxLength: 3 },
-      ],
-    },
-    ['ab', 'abc', 'a', 'abcd'],
-  ),
+  // Each branch alone admits a value the other refuses, and only `type` tells them apart,
+  // so a type can decide the case as a validator does.
+  keyword('allOf', { allOf: [{ type: ['string', 'number'] }, { type: ['string', 'boolean'] }] }, [
+    'a',
+    1,
+    true,
+  ]),
   keyword('anyOf', { anyOf: [STRING, NUMBER] }, ['a', 1, true]),
   keyword(
     'oneOf',
@@ -163,8 +160,8 @@ export const SCHEMA_CASES: readonly SchemaCase[] = [
   {
     rowId: 'keyword:$ref',
     schema: { $ref: '#/components/schemas/Named' },
-    components: { Named: { type: 'string', minLength: 2 } },
-    samples: ['ab', 'a', 1],
+    components: { Named: STRING },
+    samples: ['ab', 1],
   },
   // The outer schema overrides the tree's `node` anchor and closes every node. A reader
   // that treats `$dynamicRef` as `$ref` leaves the nested node open, so the third sample

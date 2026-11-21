@@ -1,12 +1,14 @@
 /**
  * What one cell of the picture says about Castr today.
  *
- * - `right`: Castr's validator decides every sample as the reference validator does.
- * - `wrong`: it decides at least one sample differently.
+ * - `right`: Castr's output decides every sample as the reference validator does; or,
+ *   for a type whose construct is proposed as carried by companion, admits every sample
+ *   the reference accepts.
+ * - `wrong`: it decides at least one sample differently; or that type refuses one.
  * - `refused`: Castr gave an error where a valid document should have been converted.
  * - `crashed`: Castr failed with a fault of the runtime, not an error of its own, or
- *   emitted output that does not load.
- * - `missing`: Castr ran and emitted no validator for the shape.
+ *   emitted output that does not load or does not compile.
+ * - `missing`: Castr ran and emitted no validator, or no type, for the shape.
  * - `not judged`: the reference validator cannot read the case, so nothing is claimed.
  */
 export type Verdict = 'right' | 'wrong' | 'refused' | 'crashed' | 'missing' | 'not judged';
@@ -43,6 +45,22 @@ export function judge(decisions: readonly Decision[]): Cell {
     return { verdict: 'right', detail: '' };
   }
   return { verdict: 'wrong', detail: disagreements.map(describeDisagreement).join('; ') };
+}
+
+/**
+ * Holds a type that is proposed to leave a construct to its companion: the type must
+ * admit every sample the source accepts, and may admit more, since the companion is what
+ * refuses them. Refusing a valid value makes the cell wrong.
+ */
+export function judgeAdmits(decisions: readonly Decision[]): Cell {
+  const refused = decisions.filter((decision) => decision.reference && !decision.castr);
+  if (refused.length === 0) {
+    return { verdict: 'right', detail: '' };
+  }
+  const described = refused.map(
+    ({ sample }) => `${JSON.stringify(sample)}: the source says valid, Castr's type refuses it`,
+  );
+  return { verdict: 'wrong', detail: described.join('; ') };
 }
 
 const RUNTIME_FAULTS: readonly ErrorConstructor[] = [TypeError, RangeError, ReferenceError];

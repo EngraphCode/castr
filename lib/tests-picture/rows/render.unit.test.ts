@@ -29,24 +29,27 @@ const field: Row = {
 describe('renderRows', () => {
   it('writes one table for each part of a document that has rows, with its count', () => {
     const heading =
-      '| Construct | OpenAPI | Castr today, to Zod | Proposed: to Zod | Proposed: to TypeScript | Proposed: to the endpoint definitions | Defined | Note |';
-    const rule = '| --- | --- | --- | --- | --- | --- | --- | --- |';
+      '| Construct | OpenAPI | Castr today, to Zod | Castr today, to TypeScript | Proposed: to Zod | Proposed: to TypeScript | Proposed: to the endpoint definitions | Defined | Note |';
+    const rule = '| --- | --- | --- | --- | --- | --- | --- | --- | --- |';
 
     expect(
-      renderRows([field, keyword], new Map([['keyword:not', { verdict: 'wrong', detail: '' }]])),
+      renderRows([field, keyword], {
+        zod: new Map([['keyword:not', { verdict: 'wrong', detail: '' }]]),
+        typescript: new Map([['keyword:not', { verdict: 'right', detail: '' }]]),
+      }),
     ).toBe(
       [
         '## Schema keywords (1)',
         '',
         heading,
         rule,
-        '| not (applicator) | all | wrong | carried, by a check Castr writes | carried by companion | carried by companion | computed | TypeScript has no negated type. |',
+        '| not (applicator) | all | wrong | right | carried, by a check Castr writes | carried by companion | carried by companion | computed | TypeScript has no negated type. |',
         '',
         '## Objects and fields of a document (1)',
         '',
         heading,
         rule,
-        String.raw`| responses: an entry keyed by a\|b | 3.2 |  | carried as structure | carried as structure | carried as structure | computed |  |`,
+        String.raw`| responses: an entry keyed by a\|b | 3.2 |  |  | carried as structure | carried as structure | carried as structure | computed |  |`,
         '',
       ].join('\n'),
     );
@@ -64,7 +67,7 @@ describe('renderToday', () => {
       ['responses[a status range]', { verdict: 'right', detail: '' }],
     ] as const);
 
-    expect(renderToday([keyword, field], today)).toBe(
+    expect(renderToday([keyword, field], today, 'Zod')).toBe(
       [
         "## What Castr's Zod output does today (2 cases)",
         '',

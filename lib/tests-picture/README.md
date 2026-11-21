@@ -91,15 +91,19 @@ it. [`rows/table.ts`](rows/table.ts) joins them to the computed rows and reports
 ## The cases
 
 A case is a schema that exercises one construct kind, and sample values the construct
-decides ([`cases/schema-cases.ts`](cases/schema-cases.ts)). Two validators read the same
-whole document:
+decides ([`cases/schema-cases.ts`](cases/schema-cases.ts)). Each case is one whole
+document, read by a reference and by Castr:
 
 - **The reference:** Ajv for JSON Schema 2020-12, with `format` asserting. It is
   independent of Castr ([`cases/reference.ts`](cases/reference.ts)).
-- **Castr:** its public generation function, and the Zod module it generates, loaded and
-  run ([`cases/castr-convert.ts`](cases/castr-convert.ts)).
+- **Castr:** its public generation function, and the one module it generates
+  ([`cases/castr-convert.ts`](cases/castr-convert.ts)). That module holds a Zod validator
+  and a TypeScript type for the shape, and each has a column.
 
-The cell is what comparing their decisions gives ([`cases/verdict.ts`](cases/verdict.ts)):
+### The Zod column
+
+The generated module is loaded and its validator is run on every sample. The cell is what
+comparing its decisions with the reference's gives ([`cases/verdict.ts`](cases/verdict.ts)):
 
 | Cell       | Meaning                                                                           |
 | ---------- | --------------------------------------------------------------------------------- |
@@ -117,7 +121,32 @@ sample can move more. It does not
 mean the construct is right in every combination, and it is not the proof the
 specification asks for (SPEC-G-4, SPEC-G-5).
 
-[`cases/right-today.ts`](cases/right-today.ts) lists the rows that are right today.
+### The TypeScript column
+
+The judge of a type is the TypeScript compiler, which is outside Castr
+([`cases/typescript-type.ts`](cases/typescript-type.ts)). Each sample is declared as a
+constant of the type that only that value inhabits, and assigned to the generated type:
+the compiler's error, or its silence, is the type's decision on the sample. The constant
+is not a literal, so a property the type does not name is not an error.
+
+What right means depends on what is proposed for the row
+([`typescriptReadingFor`](cases/coverage.ts)):
+
+- **A row TypeScript is proposed to carry** (20 cases): the type decides every sample as
+  the reference does.
+- **A row proposed as carried by companion** (54 cases): the type admits every sample the
+  reference accepts. It may admit more, because the Zod validator is what refuses them.
+  This is a weak statement: a type of `unknown` passes it. It catches a type that is
+  narrower than the source, as `bigint` is for an `int64` that arrives as a JSON number.
+
+A module that does not compile is a crashed cell, and a module with no exported type for
+the shape is a missing one. The other cells are as for Zod.
+
+Where a case's schema leans on a second construct that only a validator can decide, a
+type that is right about the first still disagrees with the reference. The `allOf` and
+`$ref` cases were changed for that reason, to schemas that `type` alone decides.
+
+[`cases/right-today.ts`](cases/right-today.ts) lists the rows that are right today, for each column.
 [`cases/schema-cases.gen.test.ts`](cases/schema-cases.gen.test.ts) holds that list to
 exactly the rows that are right: a row that stops being right fails it, and so does a row
 that becomes right and is not added. The list records what is true. It does not accept

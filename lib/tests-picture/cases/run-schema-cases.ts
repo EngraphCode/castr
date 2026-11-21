@@ -1,4 +1,7 @@
+import type { Row } from '../rows/table.js';
+
 import { createCastrConvert } from './castr-convert.js';
+import { typescriptReadingFor } from './coverage.js';
 import { runCase } from './run-case.js';
 import type { SchemaCase } from './schema-case.js';
 import type { Cell } from './verdict.js';
@@ -16,6 +19,32 @@ export async function runSchemaCases(
   try {
     for (const schemaCase of cases) {
       cells.set(schemaCase.rowId, await runCase(schemaCase, castr.convert));
+    }
+  } finally {
+    await castr.dispose();
+  }
+  return cells;
+}
+
+/**
+ * Runs every case through Castr and has the TypeScript compiler check each sample
+ * against the type Castr generated, read as the proposal for the case's row says. A case
+ * whose row has no reading for a type is given no cell.
+ */
+export async function runTypeScriptCases(
+  cases: readonly SchemaCase[],
+  rows: readonly Row[],
+): Promise<ReadonlyMap<string, Cell>> {
+  const rowOf = new Map(rows.map((row) => [row.id, row]));
+  const cells = new Map<string, Cell>();
+  const castr = await createCastrConvert();
+  try {
+    for (const schemaCase of cases) {
+      const row = rowOf.get(schemaCase.rowId);
+      const reading = row === undefined ? undefined : typescriptReadingFor(row);
+      if (reading !== undefined) {
+        cells.set(schemaCase.rowId, await runCase(schemaCase, castr.convertType, reading));
+      }
     }
   } finally {
     await castr.dispose();
