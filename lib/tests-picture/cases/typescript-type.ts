@@ -106,6 +106,28 @@ function sourceFileOf(program: Program, name: string): SourceFile {
 }
 
 /**
+ * The generated module as the compiler holds it, with the first thing wrong with it in
+ * words where it does not compile. `beside` is the text of a second file that imports
+ * the module, for a caller that has the compiler check something against it.
+ */
+export function compiled(
+  content: string,
+  beside = `import type {} from './picture-generated.js';`,
+): { readonly program: Program; readonly generated: SourceFile; readonly broken?: string } {
+  const texts = new Map([
+    [GENERATED, content],
+    [SAMPLES, beside],
+  ]);
+  const program = createProgram([GENERATED, SAMPLES], OPTIONS, hostShowing(texts));
+  const generated = sourceFileOf(program, GENERATED);
+  const broken = firstMessage([
+    ...program.getSyntacticDiagnostics(generated),
+    ...program.getSemanticDiagnostics(generated),
+  ]);
+  return broken === undefined ? { program, generated } : { program, generated, broken };
+}
+
+/**
  * The type Castr generated for the case's shape, as something that decides a value: the
  * TypeScript compiler says whether each sample is assignable to it. The compiler is the
  * judge, outside Castr.
@@ -114,16 +136,7 @@ function sourceFileOf(program: Program, name: string): SourceFile {
  * decision for any other value is refused.
  */
 export function typeIn(content: string, samples: readonly unknown[]): Converted {
-  const texts = new Map([
-    [GENERATED, content],
-    [SAMPLES, samplesSource(samples)],
-  ]);
-  const program = createProgram([SAMPLES], OPTIONS, hostShowing(texts));
-  const generated = sourceFileOf(program, GENERATED);
-  const broken = firstMessage([
-    ...program.getSyntacticDiagnostics(generated),
-    ...program.getSemanticDiagnostics(generated),
-  ]);
+  const { program, generated, broken } = compiled(content, samplesSource(samples));
   if (broken !== undefined) {
     return { kind: 'output unusable', reason: `does not compile: ${broken}` };
   }

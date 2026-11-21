@@ -12,6 +12,7 @@ import type { Convert, Converted } from './run-case.js';
 import type { ConvertStructure } from './run-structure-case.js';
 import type { ConvertedStructure } from './structure-verdict.js';
 import { CASE_COMPONENT } from './schema-case.js';
+import { typesIn } from './typescript-structure.js';
 import { typeIn } from './typescript-type.js';
 import { onOneLine } from './verdict.js';
 
@@ -96,7 +97,8 @@ type Generated =
  * disk, and the one module it generates. `convert` loads that module and runs its Zod
  * validator; `convertType` has the TypeScript compiler check values against its type;
  * `convertEndpoints` loads the module made with endpoint definitions and takes those;
- * `convertValidators` loads the module and takes every Zod validator it exports.
+ * `convertValidators` loads the module and takes every Zod validator it exports;
+ * `convertTypes` has the TypeScript compiler read every type the module exports.
  *
  * The files live under `tests-picture/.tmp`, inside the package so that the generated
  * module resolves `zod` as a consumer's would, and are removed when `dispose` is called.
@@ -106,6 +108,7 @@ export async function createCastrConvert(): Promise<{
   readonly convertType: Convert;
   readonly convertEndpoints: ConvertStructure;
   readonly convertValidators: ConvertStructure;
+  readonly convertTypes: ConvertStructure;
   readonly dispose: () => Promise<void>;
 }> {
   await mkdir(TEMP_ROOT, { recursive: true });
@@ -176,9 +179,15 @@ export async function createCastrConvert(): Promise<{
     return generated.kind === 'content' ? typeIn(generated.content, samples) : generated;
   };
 
+  const convertTypes: ConvertStructure = async (document) => {
+    const generated = await generate(document);
+    return generated.kind === 'content' ? typesIn(generated.content) : generated;
+  };
+
   return {
     convert,
     convertType,
+    convertTypes,
     convertEndpoints,
     convertValidators,
     dispose: () => rm(directory, { recursive: true, force: true }),

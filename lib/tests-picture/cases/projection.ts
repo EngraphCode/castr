@@ -102,7 +102,11 @@ export function sameProjection(left: Projection, right: Projection): boolean {
   return canonical(left) === canonical(right);
 }
 
-function canonical(projection: Projection): string {
+/**
+ * A projection as text that is the same for the same projection, whatever order its keys
+ * were written in.
+ */
+export function canonical(projection: Projection): string {
   if (projection === null || typeof projection !== 'object') {
     return JSON.stringify(projection);
   }

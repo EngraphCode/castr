@@ -7,7 +7,7 @@ Each cell says whether Castr is right, refuses in plain words, is wrong, emits n
 crashes.
 
 This directory is being built in steps. It holds the rows, the outcome proposed for each,
-and three kinds of case:
+and four kinds of case:
 
 - **A deciding case** for every row of a schema whose construct decides which values are
   accepted. It fills the Zod and TypeScript columns.
@@ -16,16 +16,19 @@ and three kinds of case:
 - **A structure case read from the endpoint definitions** for every row of the document
   outside a schema that they are proposed to carry as structure. It fills the
   endpoint-definition column.
+- **A structure case read from the exported types** for every row the TypeScript output
+  is proposed to carry and that no value of a shape shows (63 rows: 56 outside a schema
+  and seven of a schema).
 
 Not built yet:
 
-- the rows of the document outside a schema, in the Zod and TypeScript columns (56 rows
-  proposed as carried or carried as structure there);
-- the seven rows of a schema the TypeScript output is proposed to carry as structure;
+- the rows of the document outside a schema, in the Zod column (56 rows proposed as
+  carried or carried as structure there);
 - Oak's document and the example documents.
 
-[`unexercised`](cases/coverage.ts) computes the first two, `pnpm picture` prints their
-counts, and [`cases/coverage.e2e.test.ts`](cases/coverage.e2e.test.ts) holds them.
+[`unexercised`](cases/coverage.ts) computes the first, `pnpm picture` prints the count
+for each output, and [`cases/coverage.e2e.test.ts`](cases/coverage.e2e.test.ts) holds
+them.
 
 ### Why the first has no cases yet
 
@@ -43,7 +46,8 @@ a validator by any of those is the endpoint definitions, and that column has its
 Castr emits no `paths` type.
 
 So a case for these rows has to know where to look, and for Zod that waits on the form
-of the addressing. The proposals are left as they are.
+of the addressing. The proposals are left as they are. The TypeScript column does not
+wait: its cases read every type the module exports, wherever it is, and say so below.
 
 ## Run it
 
@@ -214,6 +218,61 @@ Where a case's schema leans on a second construct that only a validator can deci
 type that is right about the first still disagrees with the reference. The `allOf` and
 `$ref` cases were changed for that reason, to schemas that `type` alone decides.
 
+### The TypeScript column, for a construct that decides no value
+
+A row outside a schema, and a row of a schema that decides no value, has no sample for
+the compiler to decide. Its case is a pair of documents
+([`cases/typescript-structure-cases.ts`](cases/typescript-structure-cases.ts)): the pair
+the Zod or the endpoint-definition column uses for the row, and one pair of its own, for
+a named schema. They are read from the types: the compiler resolves every type the
+generated module exports at its top level, and each is reduced to plain values under
+the name it is exported by
+([`cases/typescript-structure.ts`](cases/typescript-structure.ts)). The module read is
+the one generated without endpoint definitions, as for the other TypeScript cases. The
+verdicts are those of the endpoint-definition column, described next.
+
+What is read:
+
+- **The resolved type, not its text.** An alias and an interface of one type read the
+  same, as does a union whatever order its members were written in, and a type exported
+  after it is declared.
+- **Documentation comments and their tags**, on a type and on a property, because a
+  description and a deprecation are carried there. Any other comment is not read, nor
+  is the documentation of a value that shares a type's name.
+- **Whether a property is optional, and whether it is written `readonly`.**
+- **Only types.** A value the module exports is not read, whatever its type.
+- **A module that exports no type** reads as a set of types with nothing in it, so a
+  construct that adds the first type is seen.
+
+The limits of the reading:
+
+- **Right says the value is somewhere in the exported types.** The specification names
+  the place for a row outside a schema: a `paths` type, with `operations`, `components`
+  and `webhooks` (SPEC-C-1). Castr exports none of those today, and the cases do not
+  look for them. The three cells that read right are a named schema, exported as a type
+  under its name (two rows), and a request body written in place, exported as a type
+  named for its operation.
+- **Missing has one reason on all 57 rows:** the types are the same with the construct
+  and without it. In these cases Castr exports a type for a named schema and for a
+  request body, and for nothing else of a document.
+- **A use of a named type reads as the type written in place.** The type is resolved,
+  so a reference to a component and the component's content written out are the same.
+  The `$ref` row can therefore only read missing here, however the reference is held.
+- **Some rows have no place in a type.** A discriminator changes no member of a union,
+  and `$id`, `$anchor` and `$defs` change no type; only a documentation comment could
+  hold them. Their cell does not tell "dropped" from "nowhere to go". That is a
+  question about what is proposed for them.
+- **An intersection is read as its parts**, not as the single object it comes to.
+  Castr writes `allOf` as an intersection, so two documents whose `allOf` comes to the
+  same object by different parts read as different.
+- **Not seen:** a property made readonly by a mapped type such as `Readonly`, a readonly
+  index signature, a label in a tuple, and a type inside an exported namespace. A
+  function type is told apart by its signature as the compiler writes it. The type
+  writer has no code that writes a mapped type or a namespace today.
+- **A type is read 40 levels deep.** A type that contains a part more than once is read
+  again each time, which is slow for a large document.
+- **A refusal is the module's**, as in the Zod column.
+
 ### The endpoint-definition column
 
 A row of the document outside a schema decides no value, so its case is of another kind
@@ -254,8 +313,8 @@ A right cell says the value is somewhere in the endpoint definitions. It does no
 value is in the right place, or that a consumer can use it there.
 
 [`cases/right-today.ts`](cases/right-today.ts) lists the rows that are right today, for each kind of case.
-[`cases/schema-cases.gen.test.ts`](cases/schema-cases.gen.test.ts) holds that list to
-exactly the rows that are right: a row that stops being right fails it, and so does a row
+The `*-cases.gen.test.ts` file for each kind of case holds its list to exactly the rows
+that are right: a row that stops being right fails it, and so does a row
 that becomes right and is not added. The list records what is true. It does not accept
 the rows that are missing from it. The same test fails if a row that needs a case has
 none, and if a case holds no value its schema refuses.

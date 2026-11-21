@@ -133,13 +133,14 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    component family): right 29, wrong 3, refused 1, crashed 1, missing 60, not judged 4.
    The 39 rows of a schema that the Zod output is proposed to carry as structure have
    cells, read from the validators Castr generates: right 19, refused 3, missing 17.
-   The rows of the document outside a schema have no case kind in the Zod and
-   TypeScript columns. SPEC-C-1 says where they are carried (a `paths` type; Zod
-   schemas addressable by operation, status and media type); the Zod cases wait on the
-   form of that addressing (SPEC-N-4), and the thread record has the trial. The next
-   parts are those rows in the TypeScript column, with the seven rows of a schema the
-   TypeScript output is proposed to carry as structure; Oak's document; and the
-   example documents.
+   The 63 rows the TypeScript output is proposed to carry that no value of a shape
+   shows (56 outside a schema, seven of a schema) have cells, read from the types the
+   module exports: right 3, refused 2, missing 57, not judged 1.
+   The 56 rows of the document outside a schema have no case kind in the Zod column.
+   SPEC-C-1 says where they are carried (Zod schemas addressable by operation, status
+   and media type); the cases wait on the form of that addressing (SPEC-N-4), and the
+   thread record has the trial. The next parts are Oak's document and the example
+   documents.
 1. **PICTURE: one repeatable command that shows what Castr does, judged from outside it.**
    The owner asked on 18 November 2026 what working, working well and correct look like.
    The seat answered with cards and a draft amendment, and on 19 November the owner sent it

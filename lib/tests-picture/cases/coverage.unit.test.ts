@@ -11,6 +11,7 @@ import {
   coverageOf,
   needsDecidingCase,
   needsStructureCase,
+  needsTypeScriptStructureCase,
   needsZodStructureCase,
   structureCoverageOf,
   typescriptReadingFor,
@@ -136,6 +137,28 @@ describe('structureCoverageOf', () => {
   });
 });
 
+describe('needsTypeScriptStructureCase', () => {
+  const anchor = rowOf('keyword:$anchor', 'schema keyword', ['S', 'S', 'K', '']);
+
+  it('holds for a row TypeScript is proposed to carry as structure, in a schema or not', () => {
+    expect(needsTypeScriptStructureCase(anchor)).toBe(true);
+    expect(
+      needsTypeScriptStructureCase(rowOf('operation.summary', 'document', ['O', 'S', 'S', ''])),
+    ).toBe(true);
+  });
+
+  it('holds for a row outside a schema that TypeScript is proposed to carry', () => {
+    expect(needsTypeScriptStructureCase(required)).toBe(true);
+  });
+
+  it('does not hold for a part of a schema TypeScript carries, or a row it does not', () => {
+    expect(
+      needsTypeScriptStructureCase(rowOf('keyword:type', 'schema keyword', ['C', 'C', 'K', ''])),
+    ).toBe(false);
+    expect(needsTypeScriptStructureCase(maximum)).toBe(false);
+  });
+});
+
 describe('unexercised', () => {
   const template = rowOf('paths[a path template]', 'document', ['S', 'S', 'S', '']);
   const anchor = rowOf('keyword:$anchor', 'schema keyword', ['S', 'S', 'K', '']);
@@ -145,13 +168,16 @@ describe('unexercised', () => {
     expect(unexercised([template, anchor, title, maximum, servers], 'zod')).toEqual([
       'paths[a path template]',
     ]);
-    expect(unexercised([template, anchor, title, maximum, servers], 'typescript')).toEqual([
-      'paths[a path template]',
-      'keyword:$anchor',
-    ]);
+  });
+
+  it('names a part of a schema TypeScript is to carry where Zod is not', () => {
+    const typedOnly = rowOf('keyword:typed', 'schema keyword', ['K', 'C', 'K', '']);
+
+    expect(unexercised([typedOnly, maximum], 'typescript')).toEqual(['keyword:typed']);
   });
 
   it('names no row where every proposal to carry has a kind of case', () => {
+    expect(unexercised([template, anchor, title, maximum, servers], 'typescript')).toEqual([]);
     expect(unexercised([template, anchor, title, maximum, servers], 'endpoints')).toEqual([]);
   });
 });

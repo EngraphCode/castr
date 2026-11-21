@@ -6,7 +6,7 @@ import { cellForThrown, type Cell } from './verdict.js';
  * Which of Castr's outputs a structure case is read from, named in the plural as a cell
  * writes it.
  */
-export type StructureOutput = 'endpoint definitions' | 'Zod validators';
+export type StructureOutput = 'endpoint definitions' | 'Zod validators' | 'TypeScript types';
 
 /**
  * What Castr made of a document, as one of its outputs holds it: the output's

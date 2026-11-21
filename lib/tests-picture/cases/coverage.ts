@@ -76,6 +76,19 @@ export function needsZodStructureCase(row: Row): boolean {
 }
 
 /**
+ * A row needs a structure case in the TypeScript column where the TypeScript output is
+ * proposed to carry it as structure, or to carry it and it is outside a schema: no value
+ * of a shape shows such a construct, and a case can show that the exported types hold
+ * what it states.
+ */
+export function needsTypeScriptStructureCase(row: Row): boolean {
+  const proposed = row.proposal.typescript;
+  return (
+    proposed === 'carried as structure' || (proposed === 'carried' && row.group === 'document')
+  );
+}
+
+/**
  * Sets the structure cases against the rows that `needs` one. A case for a row that
  * needs none is a stray, as is a case for a row that does not exist.
  */
@@ -101,7 +114,10 @@ function hasCaseKind(row: Row, column: Column): boolean {
     return needsDecidingCase(row) || needsZodStructureCase(row);
   }
   if (column === 'typescript') {
-    return needsDecidingCase(row) && typescriptReadingFor(row) !== undefined;
+    return (
+      (needsDecidingCase(row) && typescriptReadingFor(row) !== undefined) ||
+      needsTypeScriptStructureCase(row)
+    );
   }
   return needsStructureCase(row);
 }

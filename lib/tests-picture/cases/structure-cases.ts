@@ -765,6 +765,26 @@ export const STRUCTURE_CASES: readonly StructureCase[] = [
 ];
 
 /**
+ * A named schema, against the same schema under another name. The endpoint definitions
+ * are not proposed to carry the name, so the case is not among those above.
+ */
+export const NAMED_SCHEMA_CASE: StructureCase = {
+  rowId: 'components.schemas',
+  document: documentOf(
+    asResponse({ description: 'ok', content: { [JSON_TYPE]: { schema: REF('schemas') } } }),
+    { components: { schemas: { Kestrel: KESTREL_OBJECT } } },
+  ),
+  control: documentOf(
+    asResponse({
+      description: 'ok',
+      content: { [JSON_TYPE]: { schema: REF('schemas', 'Thing') } },
+    }),
+    { components: { schemas: { Thing: KESTREL_OBJECT } } },
+  ),
+  expects: value('Kestrel'),
+};
+
+/**
  * Rows no pair of documents can isolate, each with the reason. Their cell is not judged.
  */
 export const ROWS_NO_CASE_ISOLATES: ReadonlyMap<string, string> = new Map([
