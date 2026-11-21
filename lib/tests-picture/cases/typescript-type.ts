@@ -21,11 +21,13 @@ import { CASE_COMPONENT } from './schema-case.js';
 import { onOneLine } from './verdict.js';
 
 /**
- * Where the two files the compiler is shown are said to be. Nothing is written there: the
- * compiler is given their text, and reads from disk only its own library and the packages
- * the generated module imports, which it finds from this place as a consumer's would be.
+ * Where the two files the compiler is shown are said to be: beside this file, a directory
+ * that is always there, which the compiler looks for before it asks for a file in it.
+ * Nothing is written: the compiler is given their text, and reads from disk only its own
+ * library and the packages the generated module imports, which it finds from this place
+ * as a consumer's would be.
  */
-const PLACE = fileURLToPath(new URL('../.tmp/', import.meta.url));
+const PLACE = fileURLToPath(new URL('./', import.meta.url));
 const GENERATED = `${PLACE}picture-generated.ts`;
 const SAMPLES = `${PLACE}picture-samples.ts`;
 
