@@ -9,7 +9,8 @@ import type { UnknownRecord } from '../../src/shared/type-utils/types.js';
 
 import { projectionOf } from './projection.js';
 import type { Convert, Converted } from './run-case.js';
-import type { ConvertEndpoints, ConvertedEndpoints } from './run-structure-case.js';
+import type { ConvertEndpoints } from './run-structure-case.js';
+import type { ConvertedEndpoints } from './structure-verdict.js';
 import { CASE_COMPONENT } from './schema-case.js';
 import { typeIn } from './typescript-type.js';
 import { onOneLine } from './verdict.js';

@@ -157,7 +157,7 @@ Castr generates a module from each, the module is loaded, and what it exports as
 Zod validator there is read as the JSON Schema Zod gives for it.
 
 The judge assumes nothing about the shape of the endpoint definitions
-([`cases/run-structure-case.ts`](cases/run-structure-case.ts)):
+([`cases/structure-verdict.ts`](cases/structure-verdict.ts)):
 
 | Cell       | Meaning                                                                               |
 | ---------- | ------------------------------------------------------------------------------------- |
