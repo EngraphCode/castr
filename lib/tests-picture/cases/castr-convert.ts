@@ -12,7 +12,7 @@ import type { Convert, Converted } from './run-case.js';
 import type { ConvertStructure } from './run-structure-case.js';
 import type { ConvertedStructure } from './structure-verdict.js';
 import { CASE_COMPONENT } from './schema-case.js';
-import { typesIn } from './typescript-structure.js';
+import { typeNamesIn, typesIn } from './typescript-structure.js';
 import { typeIn } from './typescript-type.js';
 import { onOneLine } from './verdict.js';
 
@@ -88,6 +88,43 @@ async function load<Found>(
   return find(loaded);
 }
 
+type Template = 'schemas-only' | 'schemas-with-metadata';
+
+/** What one output of a whole document was found to be, or why there is none. */
+export type DocumentOutput<Held> =
+  { readonly kind: 'held'; readonly held: Held } | Exclude<Converted, { kind: 'decides' }>;
+
+/**
+ * Runs Castr on a document where it is on disk, and takes a count of each output: the
+ * names of the types and of the validators the module exports, and how many endpoint
+ * definitions the module made with them holds.
+ */
+export type ConvertDocument = (file: string) => Promise<{
+  readonly types: DocumentOutput<readonly string[]>;
+  readonly validators: DocumentOutput<readonly string[]>;
+  readonly endpoints: DocumentOutput<number>;
+}>;
+
+function validatorNamesIn(moduleExports: unknown): DocumentOutput<readonly string[]> {
+  if (typeof moduleExports !== 'object' || moduleExports === null) {
+    return { kind: 'nothing emitted' };
+  }
+  const names = Object.entries(moduleExports)
+    .filter(([, value]) => value instanceof z.ZodType)
+    .map(([name]) => name);
+  return { kind: 'held', held: names };
+}
+
+function endpointCountIn(moduleExports: unknown): DocumentOutput<number> {
+  if (typeof moduleExports !== 'object' || moduleExports === null) {
+    return { kind: 'nothing emitted' };
+  }
+  const exported: unknown = Reflect.get(moduleExports, 'endpoints');
+  return Array.isArray(exported)
+    ? { kind: 'held', held: exported.length }
+    : { kind: 'nothing emitted' };
+}
+
 type Generated =
   | { readonly kind: 'content'; readonly content: string; readonly name: string }
   | Extract<Converted, { kind: 'threw' | 'nothing emitted' }>;
@@ -98,7 +135,8 @@ type Generated =
  * validator; `convertType` has the TypeScript compiler check values against its type;
  * `convertEndpoints` loads the module made with endpoint definitions and takes those;
  * `convertValidators` loads the module and takes every Zod validator it exports;
- * `convertTypes` has the TypeScript compiler read every type the module exports.
+ * `convertTypes` has the TypeScript compiler read every type the module exports;
+ * `convertDocument` takes a document where it is on disk and counts each output.
  *
  * The files live under `tests-picture/.tmp`, inside the package so that the generated
  * module resolves `zod` as a consumer's would, and are removed when `dispose` is called.
@@ -109,20 +147,16 @@ export async function createCastrConvert(): Promise<{
   readonly convertEndpoints: ConvertStructure;
   readonly convertValidators: ConvertStructure;
   readonly convertTypes: ConvertStructure;
+  readonly convertDocument: ConvertDocument;
   readonly dispose: () => Promise<void>;
 }> {
   await mkdir(TEMP_ROOT, { recursive: true });
   const directory = await mkdtemp(join(TEMP_ROOT, 'cases-'));
   let count = 0;
 
-  const generate = async (
-    document: UnknownRecord,
-    template: 'schemas-only' | 'schemas-with-metadata' = 'schemas-only',
-  ): Promise<Generated> => {
+  const generateFrom = async (input: string, template: Template): Promise<Generated> => {
     count += 1;
     const name = `case-${String(count)}`;
-    const input = join(directory, `${name}.json`);
-    await writeFile(input, JSON.stringify(document), 'utf8');
     let result: GenerationResult;
     try {
       // Only what Castr itself throws is a cell. A failure to write a file, on either
@@ -142,6 +176,37 @@ export async function createCastrConvert(): Promise<{
     return result.type === 'single'
       ? { kind: 'content', content: result.content, name }
       : { kind: 'nothing emitted' };
+  };
+
+  const generate = async (
+    document: UnknownRecord,
+    template: Template = 'schemas-only',
+  ): Promise<Generated> => {
+    const input = join(directory, `document-${String(count + 1)}.json`);
+    await writeFile(input, JSON.stringify(document), 'utf8');
+    return generateFrom(input, template);
+  };
+
+  const loaded = async <Found>(
+    generated: Generated,
+    find: (moduleExports: unknown) => Found,
+  ): Promise<Found | Exclude<Generated, { kind: 'content' }> | Unusable> => {
+    if (generated.kind !== 'content') {
+      return generated;
+    }
+    const output = join(directory, `${generated.name}.ts`);
+    await writeFile(output, generated.content, 'utf8');
+    return load(output, directory, find);
+  };
+
+  const convertDocument: ConvertDocument = async (file) => {
+    const plain = await generateFrom(file, 'schemas-only');
+    const withEndpoints = await generateFrom(file, 'schemas-with-metadata');
+    return {
+      types: plain.kind === 'content' ? typeNamesIn(plain.content) : plain,
+      validators: await loaded(plain, validatorNamesIn),
+      endpoints: await loaded(withEndpoints, endpointCountIn),
+    };
   };
 
   const convert: Convert = async (document) => {
@@ -188,6 +253,7 @@ export async function createCastrConvert(): Promise<{
     convert,
     convertType,
     convertTypes,
+    convertDocument,
     convertEndpoints,
     convertValidators,
     dispose: () => rm(directory, { recursive: true, force: true }),
