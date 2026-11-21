@@ -75,6 +75,7 @@ const baseIgnores = [
   '**/.DS_Store',
   '**/*.hbs',
   '**/tests-generated/.tmp/**',
+  '**/tests-picture/.tmp/**',
   // Generated fixture outputs - not source code
   '**/tests-transforms/__fixtures__/normalized/**/zod*.ts',
 ];

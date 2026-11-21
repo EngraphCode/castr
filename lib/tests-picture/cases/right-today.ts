@@ -1,0 +1,43 @@
+/**
+ * The rows on which Castr's Zod output decides every sample as the reference validator
+ * does, today. The picture's test holds this list to exactly the rows that are right: a
+ * row that stops being right fails it, and so does a row that becomes right and is not
+ * added here. It records what is true; it does not accept the rows that are missing.
+ */
+export const RIGHT_TODAY: readonly string[] = [
+  'type:string',
+  'type:number',
+  'type:boolean',
+  'type:null',
+  'type:array',
+  'type:object',
+  'keyword:type',
+  'keyword:enum',
+  'keyword:multipleOf',
+  'keyword:maximum',
+  'keyword:exclusiveMaximum',
+  'keyword:minimum',
+  'keyword:exclusiveMinimum',
+  'keyword:maxLength',
+  'keyword:minLength',
+  'keyword:maxItems',
+  'keyword:minItems',
+  'keyword:required',
+  'keyword:dependentRequired',
+  'keyword:properties',
+  'keyword:items',
+  'keyword:allOf',
+  'keyword:anyOf',
+  'keyword:oneOf',
+  'keyword:$ref',
+  'keyword:format',
+  'text:format: date',
+  'text:format: hostname',
+  'text:format: ipv4',
+  'text:format: ipv6',
+  'text:format: int32',
+  'text:format: float',
+  'text:format: double',
+  'text:`true` as a schema',
+  'text:a list of types (`type: [..]`)',
+];

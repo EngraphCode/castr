@@ -9,6 +9,7 @@ node_modules
 coverage
 lib/src/characterisation/test-output
 lib/tests-generated/.tmp
+lib/tests-picture/.tmp
 
 # examples (fetched from external sources)
 .temp-examples

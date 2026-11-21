@@ -5,7 +5,7 @@
 import { describe, it, expect } from 'vitest';
 
 import { proposalOf } from './outcomes.js';
-import { renderRows } from './render.js';
+import { renderRows, renderToday } from './render.js';
 import type { Row } from './table.js';
 
 const keyword: Row = {
@@ -28,19 +28,25 @@ const field: Row = {
 
 describe('renderRows', () => {
   it('writes one table for each part of a document that has rows, with its count', () => {
-    expect(renderRows([field, keyword])).toBe(
+    const heading =
+      '| Construct | OpenAPI | Castr today, to Zod | Proposed: to Zod | Proposed: to TypeScript | Proposed: to the endpoint definitions | Defined | Note |';
+    const rule = '| --- | --- | --- | --- | --- | --- | --- | --- |';
+
+    expect(
+      renderRows([field, keyword], new Map([['keyword:not', { verdict: 'wrong', detail: '' }]])),
+    ).toBe(
       [
         '## Schema keywords (1)',
         '',
-        '| Construct | OpenAPI | To Zod | To TypeScript | To the endpoint definitions | Defined | Note |',
-        '| --- | --- | --- | --- | --- | --- | --- |',
-        '| not (applicator) | all | carried, by a check Castr writes | carried by companion | carried by companion | computed | TypeScript has no negated type. |',
+        heading,
+        rule,
+        '| not (applicator) | all | wrong | carried, by a check Castr writes | carried by companion | carried by companion | computed | TypeScript has no negated type. |',
         '',
         '## Objects and fields of a document (1)',
         '',
-        '| Construct | OpenAPI | To Zod | To TypeScript | To the endpoint definitions | Defined | Note |',
-        '| --- | --- | --- | --- | --- | --- | --- |',
-        String.raw`| responses: an entry keyed by a\|b | 3.2 | carried as structure | carried as structure | carried as structure | computed |  |`,
+        heading,
+        rule,
+        String.raw`| responses: an entry keyed by a\|b | 3.2 |  | carried as structure | carried as structure | carried as structure | computed |  |`,
         '',
       ].join('\n'),
     );
@@ -48,5 +54,27 @@ describe('renderRows', () => {
 
   it('writes nothing for no rows', () => {
     expect(renderRows([])).toBe('');
+  });
+});
+
+describe('renderToday', () => {
+  it('counts the cells by verdict and gives the words for each that is not right', () => {
+    const today = new Map([
+      ['keyword:not', { verdict: 'wrong', detail: '"a": the source says invalid' }],
+      ['responses[a status range]', { verdict: 'right', detail: '' }],
+    ] as const);
+
+    expect(renderToday([keyword, field], today)).toBe(
+      [
+        "## What Castr's Zod output does today (2 cases)",
+        '',
+        'right 1; wrong 1; refused 0; crashed 0; missing 0; not judged 0.',
+        '',
+        '| Construct | Castr today | What happened |',
+        '| --- | --- | --- |',
+        '| not (applicator) | wrong | "a": the source says invalid |',
+        '',
+      ].join('\n'),
+    );
   });
 });
