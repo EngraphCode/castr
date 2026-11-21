@@ -336,10 +336,30 @@ repository before acting.
     - **A cell the amendment must define.** `type: integer` reads wrong because Castr's
       output refuses an integer beyond the safe range, which is the narrowing the owner
       decided Castr makes and reports. The picture has no cell for a declared narrowing.
+    - **A question the tables must answer: what the Zod and TypeScript columns mean for
+      a row outside a schema.** 56 such rows are proposed as carried or carried as
+      structure by Zod, and by TypeScript, and have no kind of case (`unexercised` in
+      `cases/coverage.ts` computes them and a test holds the counts). A trial on
+      21 November read every Zod validator in the module Castr generates with endpoint
+      definitions, named where exported and with nothing else that contains it, for 54 of
+      those rows, using the endpoint column's pairs of documents. On 33 the validators
+      were the same with the construct and without: every path template, method,
+      `operationId`, media type, header, named component other than a schema, callback
+      and webhook. Nine read right: `path-item.parameters`, `operation.parameters`,
+      `operation.requestBody`, `parameter.name`, `parameter.required` (both rows),
+      `parameter.schema`, `media-type.schema`, and `components` by a named schema. The
+      four parameter locations are not told apart by the validators. So a validator
+      holds a name, requiredness and a slot's schema, and nothing that keys it; for the
+      key rows the Zod proposal repeats the endpoint column or asks for what a validator
+      has no place for. The proposals are unchanged. The owner's bar on the fifth class
+      is no schema keyword; the adversarial review of 20 November wanted it extended to
+      boundary slots and naming, which would forbid classing these rows as outside the
+      target for Zod. That is the owner's decision at the tables amendment. A TypeScript
+      type can be keyed by a path and a method, as the `paths` type of the generator OCE
+      uses today is; Castr emits no such type, so those cells would read missing.
     - **Not yet built:** the rows of the document outside a schema in the Zod and
-      TypeScript columns (56 proposed as carried or carried as structure there); the
-      seven schema rows TypeScript is to carry as structure; Oak's document as a row;
-      the example documents. Seen on 21 November and not yet a case: a response with no
+      TypeScript columns, pending that question; the seven schema rows TypeScript is to
+      carry as structure; Oak's document as a row; the example documents. Seen on 21 November and not yet a case: a response with no
       content is given an empty closed object as its schema.
     - **Rows only text defines** (25 `format` values, six schema constructs) are
       hand-listed and are the part most likely to be missing a row. The 3.0-only rows of
