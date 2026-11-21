@@ -9,15 +9,15 @@ import type { UnknownRecord } from '../../src/shared/type-utils/types.js';
 
 import { projectionOf } from './projection.js';
 import type { Convert, Converted } from './run-case.js';
-import type { ConvertEndpoints } from './run-structure-case.js';
-import type { ConvertedEndpoints } from './structure-verdict.js';
+import type { ConvertStructure } from './run-structure-case.js';
+import type { ConvertedStructure } from './structure-verdict.js';
 import { CASE_COMPONENT } from './schema-case.js';
 import { typeIn } from './typescript-type.js';
 import { onOneLine } from './verdict.js';
 
 const TEMP_ROOT = fileURLToPath(new URL('../.tmp/', import.meta.url));
 
-function endpointsIn(moduleExports: unknown): ConvertedEndpoints {
+function endpointsIn(moduleExports: unknown): ConvertedStructure {
   if (typeof moduleExports !== 'object' || moduleExports === null) {
     return { kind: 'nothing emitted' };
   }
@@ -33,12 +33,27 @@ function endpointsIn(moduleExports: unknown): ConvertedEndpoints {
     others.filter(([, value]) => typeof value === 'object').map(([name, value]) => [value, name]),
   );
   return {
-    kind: 'endpoints',
+    kind: 'held',
     projection: {
       exported: others.map(([name]) => name),
       endpoints: projectionOf(exported, names),
     },
   };
+}
+
+function validatorsIn(moduleExports: unknown): ConvertedStructure {
+  if (typeof moduleExports !== 'object' || moduleExports === null) {
+    return { kind: 'nothing emitted' };
+  }
+  const validators = Object.entries(moduleExports).filter(
+    ([, value]) => value instanceof z.ZodType,
+  );
+  if (validators.length === 0) {
+    return { kind: 'nothing emitted' };
+  }
+  // Each validator is read under the name the module exports it by, so a construct held
+  // as a name of its own is found as one held inside a validator is.
+  return { kind: 'held', projection: projectionOf(Object.fromEntries(validators)) };
 }
 
 function validatorIn(moduleExports: unknown): Converted {
@@ -80,7 +95,8 @@ type Generated =
  * Castr as a consumer meets it: its public generation function, given a document on
  * disk, and the one module it generates. `convert` loads that module and runs its Zod
  * validator; `convertType` has the TypeScript compiler check values against its type;
- * `convertEndpoints` loads the module made with endpoint definitions and takes those.
+ * `convertEndpoints` loads the module made with endpoint definitions and takes those;
+ * `convertValidators` loads the module and takes every Zod validator it exports.
  *
  * The files live under `tests-picture/.tmp`, inside the package so that the generated
  * module resolves `zod` as a consumer's would, and are removed when `dispose` is called.
@@ -88,7 +104,8 @@ type Generated =
 export async function createCastrConvert(): Promise<{
   readonly convert: Convert;
   readonly convertType: Convert;
-  readonly convertEndpoints: ConvertEndpoints;
+  readonly convertEndpoints: ConvertStructure;
+  readonly convertValidators: ConvertStructure;
   readonly dispose: () => Promise<void>;
 }> {
   await mkdir(TEMP_ROOT, { recursive: true });
@@ -134,7 +151,7 @@ export async function createCastrConvert(): Promise<{
     return load(output, directory, validatorIn);
   };
 
-  const convertEndpoints: ConvertEndpoints = async (document) => {
+  const convertEndpoints: ConvertStructure = async (document) => {
     const generated = await generate(document, 'schemas-with-metadata');
     if (generated.kind !== 'content') {
       return generated;
@@ -142,6 +159,16 @@ export async function createCastrConvert(): Promise<{
     const output = join(directory, `${generated.name}.ts`);
     await writeFile(output, generated.content, 'utf8');
     return load(output, directory, endpointsIn);
+  };
+
+  const convertValidators: ConvertStructure = async (document) => {
+    const generated = await generate(document);
+    if (generated.kind !== 'content') {
+      return generated;
+    }
+    const output = join(directory, `${generated.name}.ts`);
+    await writeFile(output, generated.content, 'utf8');
+    return load(output, directory, validatorsIn);
   };
 
   const convertType: Convert = async (document, samples) => {
@@ -153,6 +180,7 @@ export async function createCastrConvert(): Promise<{
     convert,
     convertType,
     convertEndpoints,
+    convertValidators,
     dispose: () => rm(directory, { recursive: true, force: true }),
   };
 }

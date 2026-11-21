@@ -296,6 +296,29 @@ repository before acting.
         parameter's location, and a header's one style.
       - Right means the value is somewhere in the module's definitions, not that it is
         in the right place.
+    - **The Zod column, for a schema construct that decides no value.** The 39 rows of
+      a schema that Zod is proposed to carry as structure each have a case of the
+      endpoint column's kind: a document and a control. Every Zod validator the generated
+      module exports is read as the JSON Schema Zod gives for it, and the same judge
+      says whether what the construct states is held. On 21 November 2026: right 19,
+      refused 3, missing 17.
+      - Right: `title`, `description`, `examples`, `example` (held under `examples`),
+        `externalDocs` and its two fields, an `x-` extension inside `externalDocs`, and
+        `xml` with every field and every `nodeType`.
+      - Refused: `$dynamicAnchor` (the reason given is about TypeScript, and one module
+        holds both outputs); `format: password`; a `format` value no specification
+        defines. The owner decided the last is carried and reported, never refused.
+      - Missing: `$id`, `$anchor`, `$defs`, `$comment`; `default`, `deprecated`,
+        `readOnly`, `writeOnly`; `contentEncoding`, `contentMediaType`, `contentSchema`;
+        a keyword no vocabulary defines; an `x-` extension on a schema; `discriminator`
+        and its three fields.
+      - Castr copies `xml` and `externalDocs` whole, including a field that does not
+        exist, so the 15 right cells for those objects record one behaviour.
+      - Zod gives one JSON Schema for a discriminated union and a plain choice, so the
+        reading adds the discriminating property; without that the four discriminator
+        cells could never have read right.
+      - Seen and not a case: a typed `enum` is written as an enum, an untyped `const` or
+        `enum` as `unknown`.
     - **What the cases do not prove.**
       - Right is an upper bound. Six review rounds moved six cells from right to wrong
         with a sharper sample each: `email`, `uri`, `uuid`, `duration`, `pattern` on an
@@ -313,11 +336,11 @@ repository before acting.
     - **A cell the amendment must define.** `type: integer` reads wrong because Castr's
       output refuses an integer beyond the safe range, which is the narrowing the owner
       decided Castr makes and reports. The picture has no cell for a declared narrowing.
-    - **Not yet built:** cases for rows carried as structure in the Zod and TypeScript
-      columns (annotations, names); Oak's document as a row; the example documents. Seen
-      on 21 November and not yet a case: a response with no content is given an empty
-      closed object as its schema; `deprecated`, `readOnly` and `default` do not reach
-      the Zod annotations.
+    - **Not yet built:** the rows of the document outside a schema in the Zod and
+      TypeScript columns (56 proposed as carried or carried as structure there); the
+      seven schema rows TypeScript is to carry as structure; Oak's document as a row;
+      the example documents. Seen on 21 November and not yet a case: a response with no
+      content is given an empty closed object as its schema.
     - **Rows only text defines** (25 `format` values, six schema constructs) are
       hand-listed and are the part most likely to be missing a row. The 3.0-only rows of
       the report (`nullable`, `byte`, `binary`, boolean exclusive bounds) are not in the

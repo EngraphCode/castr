@@ -315,6 +315,25 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   the construct were dropped. A row no pair of valid documents can isolate is listed
   with its reason and reads not judged; it is not given a weaker case that reads right.
 
+- **21 November, review of the last endpoint families (#148, #149).** Five cases held a
+  construct that had no effect in its document: an encoding on a part that was not an
+  object or an array of arrays, `deepObject` without an object and `explode`, a
+  reference's `summary` on a kind that has none. A valid document is not enough; read
+  the specification's rule for where the construct applies before writing its case. I
+  also posted two replies on each other's threads; read the thread's first comment back
+  before replying to its identifier.
+- **21 November, the Zod column for constructs that decide no value.** A local
+  test-expert review before the first push found what the hosted reviews had been
+  finding after it: `xml` on a root schema, where 3.1 says it has no effect; a
+  `nodeType` that restated the default; two discriminator branches no value could
+  satisfy. It also ran what I had not: Zod gives one JSON Schema for a discriminated
+  union and a plain choice, so the four discriminator cells could never have read
+  right. Before recording a missing cell, ask what the output would look like if Castr
+  did the thing, and check the reading would see it. My first probe put sixteen
+  constructs in one schema and one refusal hid the other fifteen: one construct per
+  document, in probes as in cases. A count I wrote from memory was wrong twice in one
+  README section; count from the list.
+
 ## 2026-11-18 (the reflection: tensions in the owner's request, three cards, picomatch withdrawn — Ingot binds Patina / 194219, claude-code)
 
 - **Owner, 18 November 2026, verbatim**, asked which of two things "in isolation" meant: "I

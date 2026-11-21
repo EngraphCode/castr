@@ -22,7 +22,7 @@ export const CASE_COMPONENT = 'T';
  * A whole, valid OpenAPI 3.1 document that holds a case's schema as a named component and
  * uses it as the body of one response.
  */
-export function documentFor(schemaCase: SchemaCase): UnknownRecord {
+export function documentFor(schemaCase: Pick<SchemaCase, 'schema' | 'components'>): UnknownRecord {
   return {
     openapi: '3.1.0',
     info: { title: 'A case of the picture', version: '1' },

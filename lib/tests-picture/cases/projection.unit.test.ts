@@ -21,6 +21,18 @@ describe('projectionOf', () => {
     });
   });
 
+  it('shows which property a discriminated union discriminates on, at any depth', () => {
+    const cat = z.object({ kind: z.literal('cat') });
+    const dog = z.object({ kind: z.literal('dog') });
+    const plain = projectionOf(z.object({ pet: z.union([cat, dog]) }));
+    const discriminated = projectionOf(z.object({ pet: z.discriminatedUnion('kind', [cat, dog]) }));
+
+    expect(holds(plain, 'propertyName')).toBe(false);
+    expect(discriminated).toMatchObject({
+      zod: { properties: { pet: { discriminator: { propertyName: 'kind' } } } },
+    });
+  });
+
   it('still shows a validator that Zod cannot describe', () => {
     expect(projectionOf(z.custom(() => true))).toEqual({
       zod: 'a validator Zod cannot describe',

@@ -6,6 +6,7 @@ import { runCase } from './run-case.js';
 import { runStructureCase } from './run-structure-case.js';
 import type { SchemaCase } from './schema-case.js';
 import type { StructureCase } from './structure-case.js';
+import type { StructureOutput } from './structure-verdict.js';
 import type { Cell } from './verdict.js';
 
 /**
@@ -56,18 +57,21 @@ export async function runTypeScriptCases(
 
 /**
  * Runs every structure case through Castr, and gives the cell for each by the identity of
- * its row: whether the endpoint definitions hold what the case's construct states. A row
- * that no case can isolate is given a cell that is not judged, with the reason.
+ * its row: whether the output named holds what the case's construct states. A row that no
+ * case can isolate is given a cell that is not judged, with the reason.
  */
 export async function runStructureCases(
   cases: readonly StructureCase[],
+  output: StructureOutput,
   noCaseIsolates: ReadonlyMap<string, string> = new Map(),
 ): Promise<ReadonlyMap<string, Cell>> {
   const cells = new Map<string, Cell>();
   const castr = await createCastrConvert();
+  const convert =
+    output === 'endpoint definitions' ? castr.convertEndpoints : castr.convertValidators;
   try {
     for (const structureCase of cases) {
-      cells.set(structureCase.rowId, await runStructureCase(structureCase, castr.convertEndpoints));
+      cells.set(structureCase.rowId, await runStructureCase(structureCase, convert, output));
     }
   } finally {
     await castr.dispose();

@@ -137,3 +137,30 @@ export const RIGHT_TODAY_ENDPOINTS: readonly string[] = [
   'openapi.paths',
   'openapi.components',
 ];
+
+/**
+ * The rows of a schema that decide no value for which the Zod validators hold what the
+ * construct states, today, held as exactly as the lists above. Right says the value is
+ * somewhere in the validators; it does not say it is in the right place.
+ */
+export const RIGHT_TODAY_ZOD_STRUCTURE: readonly string[] = [
+  'keyword:title',
+  'keyword:description',
+  'keyword:examples',
+  'schema.example',
+  'schema.externalDocs',
+  'external-docs.url',
+  'external-docs.description',
+  'extensible[an `x-` extension]',
+  'schema.xml',
+  'xml.name',
+  'xml.namespace',
+  'xml.prefix',
+  'xml.attribute',
+  'xml.wrapped',
+  'xml.nodeType=element',
+  'xml.nodeType=attribute',
+  'xml.nodeType=text',
+  'xml.nodeType=cdata',
+  'xml.nodeType=none',
+];
