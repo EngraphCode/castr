@@ -165,9 +165,8 @@ const IN_PATH = { name: 'id', in: 'path', required: true, schema: STRING };
 const MANY_IN_QUERY = { name: 'q', in: 'query', schema: STRINGS };
 
 const KESTREL_IN_QUERY = { name: 'kestrel', in: 'query', schema: STRING };
-const KESTREL_IN_QUERYSTRING = {
-  name: 'kestrel',
-  in: 'querystring',
+/** The one payload a `querystring` parameter may have, which any parameter may have too. */
+const FORM_CONTENT = {
   content: { 'application/x-www-form-urlencoded': { schema: { type: 'object' } } },
 };
 const MOVABLE = ['query', 'header', 'cookie'];
@@ -215,13 +214,19 @@ const PARAMETERS: readonly StructureCase[] = [
     control: getWith('/things', [], '3.1.0'),
     expects: value('kestrel'),
   },
+  // Every document here gives the parameter the same content, so the location is the
+  // only thing that differs between them.
   {
     rowId: 'parameter.in=querystring',
-    document: getWith('/things', [KESTREL_IN_QUERYSTRING], '3.2.0'),
+    document: getWith(
+      '/things',
+      [{ name: 'kestrel', in: 'querystring', ...FORM_CONTENT }],
+      '3.2.0',
+    ),
     control: getWith('/things', [], '3.2.0'),
     expects: value('kestrel'),
     apartFrom: MOVABLE.map((other) =>
-      getWith('/things', [{ ...KESTREL_IN_QUERY, in: other }], '3.2.0'),
+      getWith('/things', [{ name: 'kestrel', in: other, ...FORM_CONTENT }], '3.2.0'),
     ),
   },
 

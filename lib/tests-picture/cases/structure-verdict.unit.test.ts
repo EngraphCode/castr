@@ -102,6 +102,15 @@ describe('judgeStructure', () => {
     });
   });
 
+  it('is wrong, in either order, where one other value is the same and another is refused', () => {
+    expect(judgeStructure(KESTREL, withTheValue, plain, [refused, withTheValue]).verdict).toBe(
+      'wrong',
+    );
+    expect(judgeStructure(KESTREL, withTheValue, plain, [withTheValue, refused]).verdict).toBe(
+      'wrong',
+    );
+  });
+
   it('does not look at the other values where the control already decides the cell', () => {
     expect(judgeStructure(KESTREL, plain, plain, [refused]).verdict).toBe('missing');
   });

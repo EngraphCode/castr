@@ -97,8 +97,12 @@ export function judgeStructure(
   if (againstControl.verdict !== 'right') {
     return againstControl;
   }
-  const notApart = others
-    .map((other) => judgeApart(converted.projection, other))
-    .find((cell) => cell.verdict !== 'right');
-  return notApart ?? RIGHT;
+  // The same definitions for another value is a fact whatever else was refused, so it
+  // is reported before a document that could not be converted, in whatever order.
+  const apart = others.map((other) => judgeApart(converted.projection, other));
+  return (
+    apart.find((cell) => cell.verdict === 'wrong') ??
+    apart.find((cell) => cell.verdict !== 'right') ??
+    RIGHT
+  );
 }
