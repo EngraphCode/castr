@@ -139,8 +139,9 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    The 56 rows of the document outside a schema have no case kind in the Zod column.
    SPEC-C-1 says where they are carried (Zod schemas addressable by operation, status
    and media type); the cases wait on the form of that addressing (SPEC-N-4), and the
-   thread record has the trial. The next parts are Oak's document and the example
-   documents.
+   thread record has the trial. Whole documents have a line each: Castr refuses Oak's
+   v1 document at a schema-valued `additionalProperties` and converts the 14 examples
+   in the repository. The next part is which rows each document uses.
 1. **PICTURE: one repeatable command that shows what Castr does, judged from outside it.**
    The owner asked on 18 November 2026 what working, working well and correct look like.
    The seat answered with cards and a draft amendment, and on 19 November the owner sent it
