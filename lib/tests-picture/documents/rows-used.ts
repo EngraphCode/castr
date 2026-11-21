@@ -130,8 +130,20 @@ const NOT_EXTENSIBLE: ReadonlySet<string> = new Set(['content']);
 /** The keyed kinds that may be given by reference instead. */
 const KEYED_BY_REFERENCE: ReadonlySet<string> = new Set(['callbacks']);
 
-/** Fields that hold a map from a name to a string. */
-const MAPS_OF_STRINGS: ReadonlySet<string> = new Set(['scopes', 'mapping']);
+/**
+ * The fields the definitions declare as a map from a name to a string, as
+ * `object.field`.
+ */
+const MAPS_OF_STRINGS: ReadonlySet<string> = new Set([
+  'link.parameters',
+  ...[
+    'implicit',
+    'password',
+    'client-credentials',
+    'authorization-code',
+    'device-authorization',
+  ].map((flow) => `oauth-flows/${flow}.scopes`),
+]);
 const MAP_OF_STRINGS_ROW = 'map-of-strings[an entry of a map of strings]';
 
 /** Keywords that hold one schema, a list of schemas, or a map of schemas. */
@@ -295,7 +307,7 @@ export function rowsUsedBy(document: JsonObject, rows: ReadonlySet<string>): Row
 
   const walkField = (kind: string, name: string, value: unknown): void => {
     useField(kind, name, value);
-    if (MAPS_OF_STRINGS.has(name) && isJsonObject(value) && Object.keys(value).length > 0) {
+    if (MAPS_OF_STRINGS.has(`${kind}.${name}`) && each(value, 'map').length > 0) {
       use(MAP_OF_STRINGS_ROW);
     }
     const holds = CHILDREN[kind]?.[name];

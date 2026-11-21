@@ -27,6 +27,11 @@ const ROWS = new Set([
   'parameter.schema',
   'reference.$ref',
   'reference.description',
+  'map-of-strings[an entry of a map of strings]',
+  'components.links',
+  'link.parameters',
+  'schema.discriminator',
+  'discriminator.mapping',
   'operation.callbacks',
   'callbacks[a callback expression]',
   'openapi.webhooks',
@@ -179,6 +184,18 @@ describe('rowsUsedBy', () => {
 
     expect(found).toEqual(expect.arrayContaining(['content[a media type]', 'media-type.schema']));
     expect(found).not.toContain('specification-extensions[an `x-` extension]');
+  });
+
+  it('names an entry of a map of strings where the definitions say a field is one', () => {
+    const entry = 'map-of-strings[an entry of a map of strings]';
+    const link = (parameters: JsonObject): JsonObject => ({
+      components: { links: { K: { parameters } } },
+    });
+
+    expect(used(link({ id: '$response.body#/id' }))).toContain(entry);
+    expect(used(link({}))).not.toContain(entry);
+    // A discriminator's mapping is not declared as a map of strings.
+    expect(used(withSchema({ discriminator: { mapping: { a: '#/a' } } }))).not.toContain(entry);
   });
 
   it('walks a path item beside its own `$ref`', () => {
