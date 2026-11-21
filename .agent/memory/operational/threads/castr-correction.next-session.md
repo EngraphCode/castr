@@ -266,17 +266,28 @@ repository before acting.
       whether the value the construct states is there and not in the control's. Nothing
       is assumed about the shape of the definitions. A case for a choice among values
       (a parameter's location) also names a document for each other value, and the
-      definitions must differ from each. On 21 November 2026, for 46 rows of paths, path
-      items, operations and parameters: right 24, wrong 2, missing 19, and one row not
-      judged (`in: path`: no valid document differs only in a path parameter's location). Missing: `summary`
-      on a path item and an operation; a path item's `description`; `deprecated` and
-      `callbacks` on an operation; a path item that is a `$ref` (no definitions at all);
-      on a parameter the media type of its `content`, `deprecated`, `allowEmptyValue`,
-      `allowReserved`, `explode` and all
-      eight `style` values. Wrong: a cookie parameter is written as a header parameter,
-      so neither is told apart. Right means the value is somewhere in the definitions,
-      not that it is in the right place. 52 of the 98 rows have no case yet: request
-      bodies, media types, encodings, responses, headers, components and references.
+      definitions must differ from each. On 21 November 2026, for 71 rows (paths, path
+      items, operations, parameters, request bodies, media types, responses, headers):
+      right 27, wrong 3, refused 3, crashed 1, missing 33, not judged 4.
+      - Wrong: a cookie parameter is written as a header parameter, so neither is told
+        apart; a response's content changes the definitions and its media type is not in
+        them.
+      - Crashed: a status range (`4XX`) is written as a bare key and the module does not
+        load. That leaves `default` and an exact status code not judged, since they
+        cannot be set against it.
+      - Refused: the three 3.2 fields of a media type that need `itemSchema`.
+      - Missing: every field of a response header; a response's `headers` and `summary`;
+        the media type of a request body, of a response and of a parameter's `content`;
+        a request body's `required`; `encoding`; a media type's `description`; `summary`
+        on a path item and an operation; a path item's `description`; `deprecated` and
+        `callbacks` on an operation; a path item that is a `$ref`; on a parameter
+        `deprecated`, `allowEmptyValue`, `allowReserved`, `explode` and all eight
+        `style` values.
+      - Two rows have no case because no pair of valid documents isolates them: a path
+        parameter's location, and a header's one style.
+      - Right means the value is somewhere in the definitions, not that it is in the
+        right place. 27 of the 98 rows have no case yet: encodings, components,
+        references, callbacks and the document's own four fields.
     - **What the cases do not prove.**
       - Right is an upper bound. Six review rounds moved six cells from right to wrong
         with a sharper sample each: `email`, `uri`, `uuid`, `duration`, `pattern` on an
