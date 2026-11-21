@@ -9,8 +9,16 @@
 
 import { describe, it, expect } from 'vitest';
 
+import { runSchemaCases, runStructureCases } from '../cases/run-schema-cases.js';
+import { SCHEMA_CASES } from '../cases/schema-cases.js';
+import { SCHEMA_STRUCTURE_CASES } from '../cases/schema-structure-cases.js';
+import { loadDefinition } from '../rows/definitions.js';
+import { pictureRows } from '../rows/picture-rows.js';
+
 import { DOCUMENTS } from './documents.js';
-import { runDocuments, type DocumentLine } from './run-documents.js';
+import { rowsUsedBy } from './rows-used.js';
+import { readDocument, runDocuments, type DocumentLine } from './run-documents.js';
+import { stops, usageOf } from './usage.js';
 
 function outcomes(line: DocumentLine): string {
   return [line.zod, line.typescript, line.endpoints].map((found) => found.outcome).join(', ');
@@ -37,5 +45,25 @@ describe('the whole documents', () => {
       'Non-strict object input "schema-valued additionalProperties" is rejected. Castr requires closed-world object semantics (additionalProperties: false).',
     );
     expect(lines.map((line) => line.openapi)).not.toContain('not stated');
+  }, 120_000);
+
+  it("has, for Oak's document, a refused row for each construct that stops it", async () => {
+    const { rows } = pictureRows(loadDefinition);
+    const [oak] = DOCUMENTS;
+    if (oak === undefined) {
+      throw new Error('no document');
+    }
+    const zod = new Map([
+      ...(await runSchemaCases(SCHEMA_CASES)),
+      ...(await runStructureCases(SCHEMA_STRUCTURE_CASES, 'Zod validators')),
+    ]);
+    const { used } = rowsUsedBy(readDocument(oak), new Set(rows.map((row) => row.id)));
+    const usage = usageOf(used, rows, { zod, typescript: new Map(), endpoints: new Map() });
+
+    // The document is refused at the first of these. The second would stop it next.
+    expect(stops(usage).map((usedRow) => usedRow.row.id)).toEqual([
+      'keyword:additionalProperties',
+      'keyword:propertyNames',
+    ]);
   }, 120_000);
 });
