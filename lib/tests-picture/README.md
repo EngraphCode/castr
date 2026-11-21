@@ -8,9 +8,9 @@ crashes.
 
 This directory is being built in steps. It holds the rows, the outcome proposed for each,
 and a case for every row of a schema whose construct decides which values are accepted.
-Those cases fill one column, the Zod output. The TypeScript and endpoint-definition
-columns, the rows that are carried as structure, the rows of the document outside a
-schema, Oak's document and the example documents have no case yet.
+Those cases fill two columns: the Zod output and the TypeScript output. The
+endpoint-definition column, the rows that are carried as structure, the rows of the
+document outside a schema, Oak's document and the example documents have no case yet.
 
 ## Run it
 

@@ -240,13 +240,25 @@ repository before acting.
       outcome for Zod, TypeScript and the endpoint definitions, in the six outcomes the
       owner's nine decisions give. The join reports a computed row with no proposal and a
       proposal with no row; the bars on the fifth class and on `read` are checked.
-      `pnpm picture` prints the tables and `pnpm test:picture` runs 89 tests.
+      `pnpm picture` prints the tables and `pnpm test:picture` runs the checks.
     - **The first cases (#142).** 74 cases, one for every row of a schema that Zod is
       proposed to carry. Ajv for JSON Schema 2020-12 reads each; for the 70 it can check,
       the Zod module Castr generates is loaded and run on the same samples. On
       21 November 2026: right 35, wrong 21, refused 13, crashed 1, not judged 4.
       `cases/right-today.ts` is held to exactly the rows that are right. `pnpm picture`
       prints each cell that is not right with its reason.
+    - **The TypeScript column (#144).** The module Castr generates for a case holds a
+      type beside its validator. The TypeScript compiler judges it: each sample is
+      declared by the type only that value inhabits and assigned to the generated type.
+      A row TypeScript is proposed to carry (20 cases) must be decided as the reference
+      decides it; a row proposed as carried by companion (54) need only admit what the
+      reference accepts, which a type of `unknown` also passes. On 21 November 2026:
+      right 50 (14 carried, 36 companion), wrong 6, refused 13, crashed 1, not judged 4.
+      The wrong six: `const` and `enum` are written `unknown`; `prefixItems` is a closed
+      tuple; `allOf` over two branches that each list types is `unknown & unknown`;
+      `false` as a schema is `unknown`; `int64` is `bigint`, which refuses a JSON number.
+      The `allOf` and `$ref` cases were changed to schemas `type` alone decides, since a
+      type cannot decide `minLength`; both stay right for Zod.
     - **What the cases do not prove.**
       - Right is an upper bound. Six review rounds moved six cells from right to wrong
         with a sharper sample each: `email`, `uri`, `uuid`, `duration`, `pattern` on an
@@ -264,9 +276,13 @@ repository before acting.
     - **A cell the amendment must define.** `type: integer` reads wrong because Castr's
       output refuses an integer beyond the safe range, which is the narrowing the owner
       decided Castr makes and reports. The picture has no cell for a declared narrowing.
-    - **Not yet built:** cases for rows carried as structure, for the TypeScript and
-      endpoint-definition columns (their proposed outcomes are on `main`), for the rows
+    - **Not yet built:** cases for rows carried as structure, for the
+      endpoint-definition column (its proposed outcomes are on `main`), for the rows
       of a document outside a schema, Oak's document as a row, and the example documents.
+      A first look at the endpoint output on 21 November, not yet a case: a `4XX`
+      response is written as the bare key `4XX`, which is not valid TypeScript;
+      `style`, `explode` and response headers do not appear; `deprecated`, `readOnly`
+      and `default` do not reach the Zod annotations.
     - **Rows only text defines** (25 `format` values, six schema constructs) are
       hand-listed and are the part most likely to be missing a row. The 3.0-only rows of
       the report (`nullable`, `byte`, `binary`, boolean exclusive bounds) are not in the

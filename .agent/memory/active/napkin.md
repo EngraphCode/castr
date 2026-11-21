@@ -275,6 +275,24 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   500k line that calls for a design review first; a third planned reader was dropped
   beforehand for that reason and the estimate was still low).
 
+- **21 November, the TypeScript column (#144).** What worked: JSON's own text is the
+  TypeScript type that only that value inhabits, so a sample needs no translation, and a
+  declared constant is not a literal, so no excess-property check distorts the answer.
+  Mistakes, each caught by review or by me after the push: (1) the compiler's in-memory
+  files were placed in a directory that exists only after another test has run; the
+  compiler asks the disk whether a directory exists before it asks for a file, so a clean
+  checkout failed. Run a new test with every directory it does not create itself moved
+  aside. (2) I named an in-process test end-to-end again, the mistake of #142. In this
+  repository an in-process test that reads files to judge generated text is `.gen.test.ts`.
+  (3) The README's opening still said the cases fill one column after the pull request
+  merged; the search for the old wording, already a lesson here, was not run. (4) The
+  commit helper needs the subject as the message file's first line. A reviewer's claim
+  that `JSON.stringify` is typed `string | undefined` was false when checked against the
+  type check; it was declined with that evidence.
+- **A hook in the other estate blocks forced recursive removal** even of a gitignored
+  scratch directory in this one. Leave scratch files in `tests-picture/.tmp`; they are
+  ignored.
+
 ## 2026-11-18 (the reflection: tensions in the owner's request, three cards, picomatch withdrawn — Ingot binds Patina / 194219, claude-code)
 
 - **Owner, 18 November 2026, verbatim**, asked which of two things "in isolation" meant: "I
