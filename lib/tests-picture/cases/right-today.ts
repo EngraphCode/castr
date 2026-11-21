@@ -130,6 +130,5 @@ export const RIGHT_TODAY_ENDPOINTS: readonly string[] = [
   'parameter.required',
   'parameter.required=true',
   'parameter.schema',
-  'parameter.content',
   'parameter.description',
 ];

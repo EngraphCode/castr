@@ -267,11 +267,12 @@ repository before acting.
       is assumed about the shape of the definitions. A case for a choice among values
       (a parameter's location) also names a document for each other value, and the
       definitions must differ from each. On 21 November 2026, for 46 rows of paths, path
-      items, operations and parameters: right 25, wrong 2, missing 18, and one row not
+      items, operations and parameters: right 24, wrong 2, missing 19, and one row not
       judged (`in: path`: no valid document differs only in a path parameter's location). Missing: `summary`
       on a path item and an operation; a path item's `description`; `deprecated` and
       `callbacks` on an operation; a path item that is a `$ref` (no definitions at all);
-      on a parameter `deprecated`, `allowEmptyValue`, `allowReserved`, `explode` and all
+      on a parameter the media type of its `content`, `deprecated`, `allowEmptyValue`,
+      `allowReserved`, `explode` and all
       eight `style` values. Wrong: a cookie parameter is written as a header parameter,
       so neither is told apart. Right means the value is somewhere in the definitions,
       not that it is in the right place. 52 of the 98 rows have no case yet: request

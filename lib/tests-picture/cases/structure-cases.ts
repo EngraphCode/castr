@@ -160,26 +160,36 @@ function parameter(
   };
 }
 
+const KESTREL_OBJECT = {
+  type: 'object',
+  properties: { kestrel: STRING },
+  additionalProperties: false,
+};
 const IN_QUERY = { name: 'q', in: 'query', schema: STRING };
 const IN_PATH = { name: 'id', in: 'path', required: true, schema: STRING };
 const MANY_IN_QUERY = { name: 'q', in: 'query', schema: STRINGS };
 
-const KESTREL_IN_QUERY = { name: 'kestrel', in: 'query', schema: STRING };
 /** The one payload a `querystring` parameter may have, which any parameter may have too. */
 const FORM_CONTENT = {
   content: { 'application/x-www-form-urlencoded': { schema: { type: 'object' } } },
 };
-const MOVABLE = ['query', 'header', 'cookie'];
+const LOCATIONS = ['query', 'header', 'cookie', 'querystring'];
 
+/**
+ * A parameter in one location: its name is held, and the definitions differ from those
+ * for the same parameter in each other location. Every document is an OpenAPI 3.2 one
+ * and gives the parameter the same content, because that is the only form all four
+ * locations share; the location is then the only thing that differs.
+ */
 function location(name: string): StructureCase {
+  const at = (where: string): UnknownRecord =>
+    getWith('/things', [{ name: 'kestrel', in: where, ...FORM_CONTENT }], '3.2.0');
   return {
     rowId: `parameter.in=${name}`,
-    document: getWith('/things', [{ ...KESTREL_IN_QUERY, in: name }], '3.1.0'),
-    control: getWith('/things', [], '3.1.0'),
+    document: at(name),
+    control: getWith('/things', [], '3.2.0'),
     expects: value('kestrel'),
-    apartFrom: MOVABLE.filter((other) => other !== name).map((other) =>
-      getWith('/things', [{ ...KESTREL_IN_QUERY, in: other }], '3.1.0'),
-    ),
+    apartFrom: LOCATIONS.filter((other) => other !== name).map(at),
   };
 }
 
@@ -197,26 +207,7 @@ function style(name: string, base: UnknownRecord, other: string, openapi?: strin
 const PARAMETERS: readonly StructureCase[] = [
   parameter('name', { ...IN_QUERY, name: 'kestrel' }, IN_QUERY, value('kestrel')),
 
-  // A parameter in each location: its name is held, and the definitions differ from
-  // those for the same parameter in each other location.
-  location('query'),
-  location('header'),
-  location('cookie'),
-  // Every document here gives the parameter the same content, so the location is the
-  // only thing that differs between them.
-  {
-    rowId: 'parameter.in=querystring',
-    document: getWith(
-      '/things',
-      [{ name: 'kestrel', in: 'querystring', ...FORM_CONTENT }],
-      '3.2.0',
-    ),
-    control: getWith('/things', [], '3.2.0'),
-    expects: value('kestrel'),
-    apartFrom: MOVABLE.map((other) =>
-      getWith('/things', [{ name: 'kestrel', in: other, ...FORM_CONTENT }], '3.2.0'),
-    ),
-  },
+  ...LOCATIONS.map(location),
 
   parameter(
     'required',
@@ -231,23 +222,13 @@ const PARAMETERS: readonly StructureCase[] = [
     IN_QUERY,
     value('kestrel'),
   ),
+  // The same schema, carried under a media type and carried directly: the media type is
+  // what only the content states.
   parameter(
     'content',
-    {
-      name: 'q',
-      in: 'query',
-      content: {
-        'application/json': {
-          schema: {
-            type: 'object',
-            properties: { kestrel: STRING },
-            additionalProperties: false,
-          },
-        },
-      },
-    },
-    IN_QUERY,
-    value('kestrel'),
+    { name: 'q', in: 'query', content: { 'application/json': { schema: KESTREL_OBJECT } } },
+    { name: 'q', in: 'query', schema: KESTREL_OBJECT },
+    value('application/json'),
   ),
   parameter('description', { ...IN_QUERY, description: 'kestrel' }, IN_QUERY, value('kestrel')),
   parameter('deprecated', { ...IN_QUERY, deprecated: true }, IN_QUERY, DIFFERENCE),
