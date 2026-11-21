@@ -202,18 +202,6 @@ const PARAMETERS: readonly StructureCase[] = [
   location('query'),
   location('header'),
   location('cookie'),
-  // A parameter in the path cannot move while its template stays, so this case shows
-  // only that it is held.
-  {
-    rowId: 'parameter.in=path',
-    document: getWith(
-      '/things/{kestrel}',
-      [{ ...KESTREL_IN_QUERY, in: 'path', required: true }],
-      '3.1.0',
-    ),
-    control: getWith('/things', [], '3.1.0'),
-    expects: value('kestrel'),
-  },
   // Every document here gives the parameter the same content, so the location is the
   // only thing that differs between them.
   {
@@ -295,3 +283,13 @@ const PARAMETERS: readonly StructureCase[] = [
  * are proposed to carry as structure. The families not yet here have no cell.
  */
 export const STRUCTURE_CASES: readonly StructureCase[] = [...PATHS_AND_OPERATIONS, ...PARAMETERS];
+
+/**
+ * Rows no pair of documents can isolate, each with the reason. Their cell is not judged.
+ */
+export const ROWS_NO_CASE_ISOLATES: ReadonlyMap<string, string> = new Map([
+  [
+    'parameter.in=path',
+    'a parameter in the path cannot move while its template stays, so no valid document differs only in the location',
+  ],
+]);

@@ -173,6 +173,10 @@ case also names documents that give the construct each other value, and the defi
 must differ from those made from each. Without that, a cookie parameter written as a
 header parameter would read right, because its name is held.
 
+A row that no pair of valid documents can isolate has no case, and its cell is not
+judged, with the reason ([`ROWS_NO_CASE_ISOLATES`](cases/structure-cases.ts)). There is
+one: a parameter in the path cannot move to another location while its template stays.
+
 Where a construct states no value that can be searched for, as a boolean does, the case
 asks only that the definitions differ from the control's. That is the weaker proof.
 

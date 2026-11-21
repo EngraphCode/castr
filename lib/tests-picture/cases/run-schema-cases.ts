@@ -56,10 +56,12 @@ export async function runTypeScriptCases(
 
 /**
  * Runs every structure case through Castr, and gives the cell for each by the identity of
- * its row: whether the endpoint definitions hold what the case's construct states.
+ * its row: whether the endpoint definitions hold what the case's construct states. A row
+ * that no case can isolate is given a cell that is not judged, with the reason.
  */
 export async function runStructureCases(
   cases: readonly StructureCase[],
+  noCaseIsolates: ReadonlyMap<string, string> = new Map(),
 ): Promise<ReadonlyMap<string, Cell>> {
   const cells = new Map<string, Cell>();
   const castr = await createCastrConvert();
@@ -69,6 +71,9 @@ export async function runStructureCases(
     }
   } finally {
     await castr.dispose();
+  }
+  for (const [rowId, reason] of noCaseIsolates) {
+    cells.set(rowId, { verdict: 'not judged', detail: reason });
   }
   return cells;
 }

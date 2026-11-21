@@ -126,7 +126,6 @@ export const RIGHT_TODAY_ENDPOINTS: readonly string[] = [
   'operation.responses',
   'parameter.name',
   'parameter.in=query',
-  'parameter.in=path',
   'parameter.in=querystring',
   'parameter.required',
   'parameter.required=true',

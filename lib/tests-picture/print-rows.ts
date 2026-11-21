@@ -8,7 +8,7 @@
 
 import { runSchemaCases, runStructureCases, runTypeScriptCases } from './cases/run-schema-cases.js';
 import { SCHEMA_CASES } from './cases/schema-cases.js';
-import { STRUCTURE_CASES } from './cases/structure-cases.js';
+import { ROWS_NO_CASE_ISOLATES, STRUCTURE_CASES } from './cases/structure-cases.js';
 import { loadDefinition } from './rows/definitions.js';
 import { pictureRows } from './rows/picture-rows.js';
 import { renderRows, renderToday } from './rows/render.js';
@@ -21,7 +21,7 @@ if (problems.length > 0) {
 } else {
   const zod = await runSchemaCases(SCHEMA_CASES);
   const typescript = await runTypeScriptCases(SCHEMA_CASES, rows);
-  const endpoints = await runStructureCases(STRUCTURE_CASES);
+  const endpoints = await runStructureCases(STRUCTURE_CASES, ROWS_NO_CASE_ISOLATES);
   console.log(renderToday(rows, zod, "Castr's Zod output does"));
   console.log(renderToday(rows, typescript, "Castr's TypeScript output does"));
   console.log(renderToday(rows, endpoints, "Castr's endpoint definitions hold"));
