@@ -118,7 +118,7 @@ mean the construct is right in every combination, and it is not the proof the
 specification asks for (SPEC-G-4, SPEC-G-5).
 
 [`cases/right-today.ts`](cases/right-today.ts) lists the rows that are right today.
-[`cases/schema-cases.e2e.test.ts`](cases/schema-cases.e2e.test.ts) holds that list to
+[`cases/schema-cases.gen.test.ts`](cases/schema-cases.gen.test.ts) holds that list to
 exactly the rows that are right: a row that stops being right fails it, and so does a row
 that becomes right and is not added. The list records what is true. It does not accept
 the rows that are missing from it. The same test fails if a row that needs a case has
@@ -129,6 +129,12 @@ construct, a case cannot show Castr wrong by it, and a sample that only exposes 
 looseness is left out: Ajv accepts every number for `format: float`, so a number beyond the
 single-precision range, which Castr's output refuses, is not a sample. Those cells need a
 second reference, or a case judged against the text.
+
+Each case is also run against a control: its schema with the named keyword taken out
+([`cases/control.ts`](cases/control.ts)). A case whose samples are decided the same with
+the keyword as without it exercises nothing. Three cases are in that state, and the test
+names them: `int64`, `float` and `double`, for which the reference accepts every number.
+The `float` and `double` cells read right and prove nothing about the format.
 
 Four `format` values are not judged, because Ajv has no checker for them (`idn-email`,
 `idn-hostname`, `iri`, `iri-reference`).

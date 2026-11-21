@@ -2,8 +2,9 @@
  * The picture's Zod column for the rows of a schema: every case run through Castr and
  * through the reference validator.
  *
- * This test runs Castr, writes the module it generates and loads it, so it is an
- * end-to-end test. It holds the record of the rows that are right today to exactly the
+ * This test runs Castr in this process, writes the module it generates and loads it, as
+ * the generated-code suite does (`tests-generated/*.gen.test.ts`), and takes that suite's
+ * name. It holds the record of the rows that are right today to exactly the
  * rows that are right.
  */
 
@@ -13,6 +14,7 @@ import { loadDefinition } from '../rows/definitions.js';
 import { pictureRows } from '../rows/picture-rows.js';
 
 import { coverageOf } from './coverage.js';
+import { casesTheirKeywordDoesNotDecide } from './control.js';
 import { inertCases } from './inert.js';
 import { RIGHT_TODAY } from './right-today.js';
 import { rowsWith, runSchemaCases } from './run-schema-cases.js';
@@ -28,6 +30,16 @@ describe('the cases for the rows of a schema', () => {
   it('gives every case a value its schema accepts and a value it refuses', () => {
     // `true` as a schema accepts every value: no sample can be refused.
     expect(inertCases(SCHEMA_CASES)).toEqual(['text:`true` as a schema']);
+  });
+
+  it('gives every case samples that the keyword it names decides', () => {
+    // The reference accepts every number for these three formats, so the format decides
+    // none of their samples: their cells say nothing about the format itself.
+    expect(casesTheirKeywordDoesNotDecide(SCHEMA_CASES)).toEqual([
+      'text:format: int64',
+      'text:format: float',
+      'text:format: double',
+    ]);
   });
 
   // One test runs Castr once and holds both facts about its cells, so no result is
