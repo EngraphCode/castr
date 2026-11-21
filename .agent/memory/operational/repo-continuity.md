@@ -137,8 +137,9 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    TypeScript columns. SPEC-C-1 says where they are carried (a `paths` type; Zod
    schemas addressable by operation, status and media type); the Zod cases wait on the
    form of that addressing (SPEC-N-4), and the thread record has the trial. The next
-   parts are those rows in the TypeScript column, Oak's document and the example
-   documents.
+   parts are those rows in the TypeScript column, with the seven rows of a schema the
+   TypeScript output is proposed to carry as structure; Oak's document; and the
+   example documents.
 1. **PICTURE: one repeatable command that shows what Castr does, judged from outside it.**
    The owner asked on 18 November 2026 what working, working well and correct look like.
    The seat answered with cards and a draft amendment, and on 19 November the owner sent it
