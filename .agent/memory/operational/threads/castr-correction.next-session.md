@@ -164,7 +164,7 @@ close() {
   pnpm -s agent-tools:collaboration-state -- claims close \
     --active $ACTIVE --closed $CLOSED \
     --claim-id "$CLAIM" --summary "$1" --platform "$PLATFORM" --model "$MODEL" \
-    --now "$(now)" | tail -1
+    --now "$(now)" >/dev/null || { echo "CLAIM NOT CLOSED: $CLAIM"; exit 1; }
 }
 I=$(eval pnpm -s agent-tools:commit-queue -- enqueue --claim-id "$CLAIM" $WHO \
   --id "$AGENT_ID" --commit-subject "\"\$SUBJ\"" $FILES | tail -1)
