@@ -18,7 +18,7 @@ import {
   type TypeReference,
 } from 'typescript';
 
-import type { Projection } from './projection.js';
+import { canonical, type Projection } from './projection.js';
 import type { ConvertedStructure } from './structure-verdict.js';
 import { compiled } from './typescript-type.js';
 
@@ -93,7 +93,20 @@ function literalOf(type: Type, checker: TypeChecker): Projection | undefined {
 const DEEPEST = 40;
 
 function byText(left: Projection, right: Projection): number {
-  return JSON.stringify(left).localeCompare(JSON.stringify(right));
+  return canonical(left).localeCompare(canonical(right));
+}
+
+function isReadonlyTuple(target: Type): boolean {
+  return 'readonly' in target && target.readonly === true;
+}
+
+/**
+ * How each element of a tuple stands, as the compiler numbers it: required, optional,
+ * or the rest. The elements' types alone do not say.
+ */
+function elementKinds(target: Type): readonly number[] {
+  const kinds: unknown = 'elementFlags' in target ? target.elementFlags : [];
+  return Array.isArray(kinds) ? kinds.filter((kind) => typeof kind === 'number') : [];
 }
 
 /**
@@ -126,7 +139,11 @@ function projectionOfType(
     return { allOf: type.types.map(inner) };
   }
   if (isReference(type) && checker.isTupleType(type)) {
-    return { tuple: checker.getTypeArguments(type).map(inner) };
+    const kind = isReadonlyTuple(type.target) ? 'readonly tuple' : 'tuple';
+    return {
+      [kind]: checker.getTypeArguments(type).map(inner),
+      elements: elementKinds(type.target),
+    };
   }
   if (isReference(type) && checker.isArrayType(type)) {
     const kind = type.target.symbol.name === 'ReadonlyArray' ? 'readonly array' : 'array';
@@ -143,15 +160,19 @@ function projectionOfObject(
   checker: TypeChecker,
   inner: (member: Type) => Projection,
 ): Projection {
-  const properties: Fields = {};
-  for (const property of checker.getPropertiesOfType(type)) {
-    properties[property.name] = {
-      ...documented(property),
-      optional: (property.flags & SymbolFlags.Optional) !== 0,
-      readonly: isReadonly(property),
-      type: inner(checker.getTypeOfSymbol(property)),
-    };
-  }
+  // Built from entries, so that a property named as one every object has, `__proto__`
+  // among them, is held as any other.
+  const properties: Projection = Object.fromEntries(
+    checker.getPropertiesOfType(type).map((property): [string, Projection] => [
+      property.name,
+      {
+        ...documented(property),
+        optional: (property.flags & SymbolFlags.Optional) !== 0,
+        readonly: isReadonly(property),
+        type: inner(checker.getTypeOfSymbol(property)),
+      },
+    ]),
+  );
   const object: Fields = { properties };
   const indexed = checker.getIndexInfosOfType(type).map((info) => ({
     key: inner(info.keyType),
@@ -209,12 +230,14 @@ export function typesIn(content: string): ConvertedStructure {
   const checker = program.getTypeChecker();
   // A module that exports no type is still a set of types, with nothing in it: a
   // construct that adds the first type is then seen as a difference.
-  const projection: Fields = {};
-  for (const [name, symbol] of exportedTypes(program, generated)) {
-    projection[name] = {
-      ...documented(symbol),
-      type: projectionOfType(checker.getDeclaredTypeOfSymbol(symbol), checker, new Set()),
-    };
-  }
+  const projection: Projection = Object.fromEntries(
+    exportedTypes(program, generated).map(([name, symbol]): [string, Projection] => [
+      name,
+      {
+        ...documented(symbol),
+        type: projectionOfType(checker.getDeclaredTypeOfSymbol(symbol), checker, new Set()),
+      },
+    ]),
+  );
   return { kind: 'held', projection };
 }

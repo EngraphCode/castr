@@ -62,6 +62,34 @@ describe('typesIn', () => {
     expect(holds(types, 'Inner')).toBe(false);
   });
 
+  it('reads a union the same whatever order the properties of a member were written in', () => {
+    const one = held('export type T = { a: string; z: number } | { m: string };');
+    const other = held('export type T = { z: number; a: string } | { m: string };');
+
+    expect(sameProjection(one, other)).toBe(true);
+  });
+
+  it('holds a type and a property named as a property every object already has', () => {
+    const types = held('export type __proto__ = { __proto__: "kestrel"; constructor: "osprey" };');
+
+    expect(holds(types, '__proto__')).toBe(true);
+    expect(holds(types, 'kestrel')).toBe(true);
+    expect(holds(types, 'osprey')).toBe(true);
+  });
+
+  it('tells a tuple from a readonly tuple', () => {
+    const tuple = held('export type T = [string];');
+
+    expect(sameProjection(tuple, held('export type T = readonly [string];'))).toBe(false);
+  });
+
+  it('tells a tuple with a fixed end from one whose last element repeats or may be absent', () => {
+    const fixed = held('export type T = [string, number];');
+
+    expect(sameProjection(fixed, held('export type T = [string, ...number[]];'))).toBe(false);
+    expect(sameProjection(fixed, held('export type T = [string, number?];'))).toBe(false);
+  });
+
   it('tells an array from a tuple and from a readonly array', () => {
     const array = held('export type T = string[];');
 

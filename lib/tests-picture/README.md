@@ -262,11 +262,13 @@ The limits of the reading:
   and `$id`, `$anchor` and `$defs` change no type; only a documentation comment could
   hold them. Their cell does not tell "dropped" from "nowhere to go". That is a
   question about what is proposed for them.
+- **An intersection is read as its parts**, not as the single object it comes to.
+  Castr writes `allOf` as an intersection, so two documents whose `allOf` comes to the
+  same object by different parts read as different.
 - **Not seen:** a property made readonly by a mapped type such as `Readonly`, a readonly
-  index signature, a rest element or a label in a tuple, a type inside an exported
-  namespace, and an intersection as the single object it comes to. A function type is
-  told apart by its signature as the compiler writes it. Castr writes none of these
-  today.
+  index signature, a label in a tuple, and a type inside an exported namespace. A
+  function type is told apart by its signature as the compiler writes it. The type
+  writer has no code that writes a mapped type or a namespace today.
 - **A type is read 40 levels deep.** A type that contains a part more than once is read
   again each time, which is slow for a large document.
 - **A refusal is the module's**, as in the Zod column.
