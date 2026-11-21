@@ -24,11 +24,16 @@ Not built yet:
 
 - the rows of the document outside a schema, in the Zod column (56 rows proposed as
   carried or carried as structure there);
-- Oak's document and the example documents.
+- which rows each whole document uses, so that a document's line can be read against
+  the cells of its constructs;
+- the example input library's documents, which are not pinned yet.
 
 [`unexercised`](cases/coverage.ts) computes the first, `pnpm picture` prints the count
 for each output, and [`cases/coverage.e2e.test.ts`](cases/coverage.e2e.test.ts) holds
 them.
+
+It also runs Castr on whole documents: Oak's, and the examples already in the
+repository. See [Whole documents](#whole-documents).
 
 ### Why the first has no cases yet
 
@@ -48,6 +53,35 @@ Castr emits no `paths` type.
 So a case for these rows has to know where to look, and for Zod that waits on the form
 of the addressing. The proposals are left as they are. The TypeScript column does not
 wait: its cases read every type the module exports, wherever it is, and say so below.
+
+## Whole documents
+
+[`documents/documents.ts`](documents/documents.ts) lists Oak's curriculum API document at
+the version the specification names as its corpus, and the 14 example documents in
+[`lib/examples`](../examples). `pnpm picture` runs Castr on each from its file, as a
+consumer would, and prints one line for each with a cell for each output:
+
+- **converted**: Castr generated a module and the output in it can be used. The module
+  compiles and loads, and holds at least one of the output. The cell gives the count.
+- **nothing**: the module compiles and loads, and holds none of the output. That does
+  not say whether the document asks for any: a document of webhooks alone gives no
+  endpoint definition, and one with no named schema gives no validator and no type.
+- **refused**: Castr raised an error of its own and generated nothing.
+- **crashed**: the runtime faulted, or the module does not load or compile.
+
+A document has no proposal: what is proposed is said row by row. And converted is not
+right. A document converts when none of its constructs is refused or crashes, and the
+rows say which of the constructs it uses are then held wrongly or dropped.
+
+Today Castr refuses Oak's document, in every output, at a schema-valued
+`additionalProperties`. No example is refused or crashes: ten convert in every output,
+and four have an output the module holds none of.
+[`documents/documents.gen.test.ts`](documents/documents.gen.test.ts) holds that.
+
+Eight of the examples say they are OpenAPI 3.0, which the specification has Castr
+read. The picture's rows are those of 3.1 and 3.2, so no row speaks for a construct only
+3.0 has, and those lines say what happens to the document and no more. Where an example
+is held as YAML and as JSON the YAML is read.
 
 ## Run it
 

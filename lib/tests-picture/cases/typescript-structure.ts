@@ -241,3 +241,19 @@ export function typesIn(content: string): ConvertedStructure {
   );
   return { kind: 'held', projection };
 }
+
+/**
+ * The names of the types the generated module exports, where it compiles. The types are
+ * not read, so this is quick for a module of any size.
+ */
+export function typeNamesIn(
+  content: string,
+):
+  | { readonly kind: 'held'; readonly held: readonly string[] }
+  | { readonly kind: 'output unusable'; readonly reason: string } {
+  const { program, generated, broken } = compiled(content);
+  if (broken !== undefined) {
+    return { kind: 'output unusable', reason: `does not compile: ${broken}` };
+  }
+  return { kind: 'held', held: exportedTypes(program, generated).map(([name]) => name) };
+}

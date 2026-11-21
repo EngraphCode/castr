@@ -378,8 +378,20 @@ repository before acting.
       could hold them, so the cell cannot tell dropped from nowhere to go. A reference
       to a named type reads as the type written in place, so `$ref` can only read
       missing in this column.
+    - **Whole documents (21 November).** `pnpm picture` runs Castr on Oak's v1 document
+      (the corpus pin, 1.1.1) and the 14 example documents in `lib/examples`, each from
+      its file, and prints a line for each with a cell for each output: converted,
+      refused or crashed. Converted means the module was generated, compiles and loads;
+      it does not mean right. Oak's document is refused in every output at a
+      schema-valued `additionalProperties` (two places, both a response schema of a
+      `check-restricted` operation); the 14 examples convert, eight of them 3.0
+      documents. A document has no proposal and is not a row.
     - **Not yet built:** the rows outside a schema in the Zod column, which wait on
-      SPEC-N-4; Oak's document as a row; the example documents. Seen on 21 November and
+      SPEC-N-4; which rows each whole document uses, so a document's line can be read
+      against the cells of its constructs (a walk of a document that names row
+      identities; every existing case's document must name its own row, which checks
+      the walk); the example input library's documents, which are not pinned (EC-1).
+      Seen on 21 November and
       not yet a case: a response with no content is given an empty closed object as its
       schema; and in the module with endpoint definitions the source comment
       `// MCP Tools` is written inside the `endpoints` array, after the first

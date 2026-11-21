@@ -2,6 +2,30 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-11-21 (picture: the TypeScript structure cells and whole documents — Ingot binds Patina / 194219, claude-code)
+
+- **A background task shown as running had failed at its first step.** A command that
+  pushed, opened a pull request and then waited for checks was listed as running for a
+  long time. The push had been refused by the pre-push gate, so no branch and no pull
+  request existed, and the wait loop was polling for checks on nothing. I made two more
+  commits meanwhile, under the running gate. What works: print the push's exit code and
+  stop the command when it is not zero; read the output file's first lines before
+  building on a task that is "still running"; write nothing in the tree while the gate
+  runs.
+- **The commit helper runs from the repository root** with root-relative paths. From
+  `lib/` it prints "no claim opened" and commits nothing.
+- **`prettier --write tests-picture` formats the scratch under `.tmp`** and fails on a
+  generated module that does not parse. Give prettier the source directories by name.
+- **A local test review before the push found seven defects in a new reader by running
+  inputs against it; the two hosted reviews then found four more.** Each was confirmed
+  by a test that failed first. A reader that compares two outputs is only as good as the
+  differences it can see, and "the same" is its dangerous answer: ask a reviewer for
+  pairs of different inputs it reads as the same.
+- **I wrote a README sentence about the specification from memory and it was false.**
+  I wrote that what Castr does with a 3.0 document is not settled; the table of formats
+  says 3.0.x is read. I caught it by grepping before the commit. Same lesson as the
+  SPEC-C-1 entry: read the clause before writing what it says.
+
 ## 2026-11-19 (the owner's correction: cards reflected the decision back; better questions — Ingot binds Patina / 194219, claude-code)
 
 - **Owner correction, 19 November 2026, verbatim**, given when asked what should change in a

@@ -1,7 +1,7 @@
 /**
  * Prints the picture: every construct kind of an OpenAPI 3.1 or 3.2 document with its
  * proposed outcome in each of the three outputs, and, for the rows that have a case, what
- * each of Castr's outputs does for it today.
+ * each of Castr's outputs does for it today; and what Castr makes of each whole document.
  *
  * Run with: `pnpm picture`
  */
@@ -15,6 +15,9 @@ import {
   typescriptRowsNoCaseIsolates,
   typescriptStructureCases,
 } from './cases/typescript-structure-cases.js';
+import { DOCUMENTS } from './documents/documents.js';
+import { renderDocuments } from './documents/render-documents.js';
+import { runDocuments } from './documents/run-documents.js';
 import { loadDefinition } from './rows/definitions.js';
 import { pictureRows } from './rows/picture-rows.js';
 import { renderRows, renderToday, renderUnexercised } from './rows/render.js';
@@ -47,6 +50,7 @@ if (problems.length > 0) {
   console.log(renderToday(rows, typed, "Castr's TypeScript output does"));
   console.log(renderToday(rows, typesHeld, "Castr's TypeScript output holds"));
   console.log(renderToday(rows, endpoints, "Castr's endpoint definitions hold"));
+  console.log(renderDocuments(await runDocuments(DOCUMENTS)));
   console.log(
     renderUnexercised([
       ['to Zod', unexercised(rows, 'zod').length],
