@@ -35,10 +35,17 @@ const keepingEverything: ConvertEndpoints = (document) =>
 const droppingEverything: ConvertEndpoints = () =>
   Promise.resolve({ kind: 'endpoints', projection: [{ method: 'get', path: '/things' }] });
 
-/** A stand-in that answers the document with the first result and the control with the second. */
-function inTurn(first: ConvertedEndpoints, second: ConvertedEndpoints): ConvertEndpoints {
-  const answers = [first, second];
-  return () => Promise.resolve(answers.shift() ?? second);
+/** A stand-in that answers the case's document with one result and its control with another. */
+function answering(
+  { document, control }: StructureCase,
+  forDocument: ConvertedEndpoints,
+  forControl: ConvertedEndpoints,
+): ConvertEndpoints {
+  const answers = new Map([
+    [document, forDocument],
+    [control, forControl],
+  ]);
+  return (given) => Promise.resolve(answers.get(given) ?? { kind: 'nothing emitted' });
 }
 
 const withTheValue: ConvertedEndpoints = { kind: 'endpoints', projection: ['kestrel'] };
@@ -61,7 +68,11 @@ describe('runStructureCase', () => {
   it('is wrong where the definitions change and do not hold the value', async () => {
     const cell = await runStructureCase(
       summary,
-      inTurn({ kind: 'endpoints', projection: ['k'] }, { kind: 'endpoints', projection: [] }),
+      answering(
+        summary,
+        { kind: 'endpoints', projection: ['k'] },
+        { kind: 'endpoints', projection: [] },
+      ),
     );
 
     expect(cell).toEqual({
@@ -71,7 +82,7 @@ describe('runStructureCase', () => {
   });
 
   it('is not judged where the definitions hold the value without the construct', async () => {
-    const cell = await runStructureCase(summary, inTurn(withTheValue, withTheValue));
+    const cell = await runStructureCase(summary, answering(summary, withTheValue, withTheValue));
 
     expect(cell.verdict).toBe('not judged');
   });
@@ -111,7 +122,10 @@ describe('runStructureCase', () => {
   it('is not judged where the control cannot be converted', async () => {
     const cell = await runStructureCase(
       summary,
-      inTurn(withTheValue, { kind: 'threw', thrown: new Error('Cannot proceed.') }),
+      answering(summary, withTheValue, {
+        kind: 'threw',
+        thrown: new Error('Cannot proceed.'),
+      }),
     );
 
     expect(cell).toEqual({
