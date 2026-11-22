@@ -271,6 +271,34 @@ enum: [...]}}`. Neither names a property. They are the only schema-valued
   that the latest 3.1 revision no longer has, and the text must say which of `schema`
   and `schema-base` case 4 is judged by; both are pinned.
 
+- 2026-11-22, N3, before its start. **Tried, in scratch, for the two rows 0.8.1 is to
+  class** (Zod 4.6.7 and the TypeScript compiler in `lib`; each line is what ran, not
+  what was expected).
+  - _Zod, property names._ `z.record(K, V)` refuses a key that fails `K` (`invalid_key`,
+    or `unrecognized_keys` for an enum). `z.intersection(anObject, z.record(K,
+z.unknown()))` does not: it accepted `{A1: 1}` against a key pattern of lower-case
+    letters, for a strict object, a loose one and a catchall. So Zod's own checker
+    carries `propertyNames` only where the whole object is a record, which is an object
+    that names no property. On an object that names properties, the only form is a
+    check Castr writes (`.check` over the keys refused `{A1: 1}`).
+  - _Zod, Oak's shape._ `z.record(z.string(), V)` and `z.strictObject({}).catchall(V)`
+    accept and refuse the same three samples.
+  - _TypeScript, an object that names no property._ `{ [key: string]: V }` accepts
+    `{}` and a value in `V` and refuses one outside it. Keys from an enum are a mapped
+    type with optional members, which refuses a key outside the enum.
+  - _TypeScript, an object that names a property whose type is not `S`._ `{ a: string;
+[key: string]: number }` does not compile. `{ a: string } & { [key: string]: number }`
+    compiles and refuses the literal `{ a: 'x', b: 1 }`, which the source accepts. `{ a:
+string; [key: string]: string | number }` accepts every valid value and also
+    `{ a: 'x', b: 'y' }`, which the source refuses.
+  - _What follows, as a hypothesis for the draft and its attack._ With the classes
+    section 3 already defines, 0.8.1 can make both outputs carry Oak's two schemas,
+    which name no property: Zod as a record, TypeScript as an index signature. A
+    `propertyNames` on an object that names properties needs a check Castr writes, whose
+    mark is part three's; until then it is a `NOT-YET-BUILT` rejection. A constrained
+    object that names a property whose type its `additionalProperties` does not admit
+    is carried by companion in TypeScript at best.
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
