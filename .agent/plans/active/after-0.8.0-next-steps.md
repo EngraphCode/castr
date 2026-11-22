@@ -12,22 +12,25 @@ owner_directive: >-
   step back and assess value, and separately to run the decision matrix on
   unknowns. The next piece of work will happen in a fresh session, so make make
   sure that everything relevant is recorded in the repo". The same day, asked
-  where a bounded fix of Oak's refusals goes: "Fix first".
+  where a bounded fix of Oak's refusals goes: "Fix first". The same day, after the
+  trace of N0, by question prompt: the two rows that stop Oak's document are carried
+  in 0.8.1 ("Carry in 0.8.1"), and the fix is built once that text is approved
+  ("Build with the text").
 todos:
   - id: N0-FIX
-    content: 'A bounded fix of what stops Oak''s document, as far as the approved specification allows, proved by the picture. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
+    content: 'The fix of what stops Oak''s document, built once specification 0.8.1 classes its two rows, proved by the picture. Its trace is done. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
-    depends_on: []
+    depends_on: [N3-CORRECTIONS]
   - id: N1-REPIN
     content: 'The picture pins the latest revisions of the publisher schemas for OpenAPI 3.1 and 3.2. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
-    depends_on: [N0-FIX]
+    depends_on: []
   - id: N2-REFUSALS
     content: 'The picture has cells for what the reader refuses under SPEC-FV-1 and SPEC-FV-2, and they show what Castr does today. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
-    depends_on: [N0-FIX]
+    depends_on: []
   - id: N3-CORRECTIONS
-    content: 'Specification 0.8.1, the corrections to part one, approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
+    content: 'Specification 0.8.1, the corrections to part one and the classes of the two rows that stop Oak''s document, approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
     depends_on: [N1-REPIN]
   - id: N4-NUMBERS
@@ -75,8 +78,9 @@ and the other is corrected.
    the lenses in `.agent/directives/principles.md` under "Decision Lenses". This
    repository holds copies of both at an older revision; they are not used. If the
    sibling checkout is absent, stop and say so; do not fall back to the local copies.
-6. Before the first edit, do the first step back and run the decision matrix on the
-   unknowns of N0, and write both under "Step log" in the thread record.
+6. Before a step's first edit, do its step back and run the decision matrix on its
+   unknowns, and write both under "Step log" in the thread record. N0's are there,
+   dated 22 November. The next step is N1.
 7. Read "Review dispositions" at the foot of this plan and give each row its
    disposition before starting the step it names.
 
@@ -124,16 +128,22 @@ lib/src` is empty). Every pull request since has been the picture, the specifica
 
 ## Order, and whose it is
 
-- **N0 first is the owner's**, 22 November: "Fix first". It replaced the accepted order
-  of 21 November, which put the whole amendment before any fix.
+- **N1, then N3, then N0 is the owner's**, 22 November, after the trace of N0. Asked
+  when the text for the two rows that stop Oak's document is brought for approval, the
+  owner chose "Carry in 0.8.1"; asked what happens to the part of the fix that is
+  specified today and turns no picture cell right, "Build with the text". So N0's code
+  waits on 0.8.1, and 0.8.1 waits on the re-pin. This replaces "Fix first" of earlier
+  the same day for where the fix sits. That the fix is built before numbers and the
+  tables is the seat's reading of those words, not something the owner was asked.
 - **N4 then N5 then the rest of the fixing is the owner's** accepted order for the
   amendment's remaining parts.
 - **N3 before N4 is the seat's** disposition (the matrix pass: one concern per change).
   Numbers share no clause with the reader's refusals; only landing is serial, because
   the approval check allows one approved text at a time.
-- **N1 and N2 come after N0** by the owner's "Fix first", and are not ordered between
-  themselves: only SPEC-FV-1 case 4 uses the publisher's schema, so N2 does not wait on
-  N1. N3 does, for the revisions it names. The todos' `depends_on` say the same.
+- **N1 and N2 wait on nothing** and are not ordered between themselves: only SPEC-FV-1
+  case 4 uses the publisher's schema, so N2 does not wait on N1. N3 does, for the
+  revisions it names. N1 is first because N3 and then N0 wait on it; N2 is fitted in
+  where it does not hold them. The todos' `depends_on` say the same.
 - **N6 waits on N0 and N2.** What N0 learns is its main input, and N2's cells for
   what the reader refuses are work the legs must hold. A leg whose "right" the
   tables define waits on N5; the others do not. N6 writes the legs; it does not by
@@ -152,8 +162,9 @@ validate-specification-approval`), or by the record.
 
 ### N0-FIX: what stops Oak's document
 
-- **Serves.** The owner's "Fix first", and "explored if we can reach that state in
-  isolation". It is the first change to product code since 18 November.
+- **Serves.** "explored if we can reach that state in isolation". It is the first
+  change to product code since 18 November. By the owner's word of 22 November it is
+  built once 0.8.1 is approved, as one change in which the picture's cells turn right.
 - **What is known, checked on 22 November.**
   - Oak's document is refused at two response schemas (the 200 responses of
     `/lessons/check-restricted` and
@@ -194,36 +205,40 @@ validate-specification-approval`), or by the record.
   does not make Oak's document convert, because `propertyNames` stops the same two
   schemas, and two parts of the fix have no approved answer yet. The owner was told
   this on 22 November.
-- **Not settled, and each is an unknown for the matrix before code is written.**
-  1. Whether changing the model's validator is "the model changes", which the course
-     says waits on the model's design (SPEC-N-1).
-  2. What TypeScript writes for a constrained object. No approved text says. The
-     picture proposes "carried by companion"; that is a proposal, and section 12 of the
-     specification says no code assumes an answer to an open item (SPEC-N-5).
-  3. `propertyNames`: the picture proposes it as a Zod check Castr writes and as
-     carried by companion for TypeScript. The mark on such a check is part three's.
-  4. The size of moving the Zod writer from text to syntax-tree nodes, which SPEC-AR-3
-     and the matrix pass require of a writer when it is first touched.
-  5. Whether a narrow amendment that classes just these two rows, ahead of the tables,
-     is the right instrument for 2 and 3. Any such text needs the owner's words.
-- **Do.** First, the matrix on the five unknowns, and a trace of one of the two Oak
-  schemas through reader, model, validator and each writer, written into the thread
-  record. Then the part that is specified today: the reader and the model's validator
-  accept a schema-valued `additionalProperties`, and the Zod output carries it, test
-  first, with new writer output as syntax-tree nodes. The picture's cells are the
-  proof. The TypeScript writer today neither writes nor refuses `additionalProperties`:
-  it writes the named properties and drops the rest. So in the same change the
-  TypeScript output refuses a schema-valued `additionalProperties` with a located
-  rejection, until an approved text says what it writes; a constraint is never dropped
-  silently (SPEC-PR-2). Parts that need an owner's answer stop and ask, once, with the trace.
-- **Finished when.** The picture's Zod cell for `additionalProperties` reads right and
-  is held by its test; its TypeScript cell reads refused or right, never wrong or
-  missing; no cell that read right reads otherwise; Oak's whole-document
-  line says exactly what stops it next; and the thread record says what of Oak's
-  refusal is fixed, what is not, and what each remaining part waits on.
-- **Size.** Unknown until the trace: this is the plan's least-sized step. Size it after
-  the trace, in pull requests of one concern each. If the Zod column alone passes three
-  pull requests, step back.
+- **The five unknowns this step opened with, each now disposed.** The thread record's
+  "Step log" has the row for each.
+  1. Whether changing the model's validator is "the model changes" (SPEC-N-1): it is
+     not; the validator is made to agree with the type the model already declares.
+  2. What TypeScript writes for a constrained object: 0.8.1 says (N3).
+  3. `propertyNames` in Zod and in TypeScript: 0.8.1 says (N3).
+  4. The size of moving the Zod writer to syntax-tree nodes: the touched path moves,
+     in one pull request.
+  5. Whether a narrow amendment is the right instrument for 2 and 3: the owner chose to
+     carry the two rows in 0.8.1.
+- **Do.** The trace and the matrix are done. Once 0.8.1 is approved: test first, the
+  reader and the model's validator accept a schema-valued `additionalProperties`, and
+  each writer writes what 0.8.1 says, with new writer output as syntax-tree nodes. The
+  picture's cells are the proof. The TypeScript writer today neither writes nor refuses
+  `additionalProperties`: it writes the named properties and drops the rest, so the
+  reader is not changed ahead of the writers; a constraint is never dropped silently
+  (SPEC-PR-2). The tests that pin the old refusal change in the same commit.
+- **What the trace found, 22 November.** The picture's columns are one module: every
+  case generates the types and the Zod schemas together, and a refusal by either writer
+  refuses both. So the Zod cell cannot read right while the TypeScript cell reads
+  refused, which this step first asked for. The owner then chose that the two rows are
+  classed in 0.8.1 and that the fix is built with that text. The trace, the step back
+  and the matrix rows are in the thread record's "Step log".
+- **Finished when.** Specification 0.8.1 classes `additionalProperties` and
+  `propertyNames` for the Zod and TypeScript outputs, and in one change: the reader and
+  the model's validator accept a schema-valued `additionalProperties`; each writer
+  writes what 0.8.1 says, with new output built as syntax-tree nodes; the shared JSON
+  Schema writer no longer narrows it; the picture's cells for the two rows read right
+  in every column 0.8.1 classes as carried, and are held by their tests; no cell that
+  read right reads otherwise; Oak's whole-document line says exactly what stops it
+  next, or that nothing does; and the thread record says what is fixed and what is not.
+- **Size.** Sized at its start, from 0.8.1's text. The Zod side is one pull request by
+  the scratch trial of 22 November (the thread record has it). If the whole step
+  passes three pull requests, step back.
 
 ### N1-REPIN: the latest publisher schemas
 
@@ -276,6 +291,13 @@ published-rows.ts` names the files and holds the correction that a Link Object's
      (`https://spec.openapis.org/oas/v3.1.2.html` and `v3.2.0.html`) first.
   3. Say that a reference's target in another file must itself be valid for the place
      it is used.
+  4. Class the two rows that stop Oak's document, by the owner's word of 22 November
+     ("Carry in 0.8.1"): what the TypeScript output carries for a schema-valued
+     `additionalProperties` and for `propertyNames`, and what the Zod output carries for
+     `propertyNames`. SPEC-P-1 already says what Zod writes for the first. The draft
+     uses the classes section 3 defines wherever it can, says plainly where it needs a
+     word part three has not yet defined, and classes no other row. The trace of N0 in
+     the thread record is its input.
 - **Not in this step unless the matrix puts it there.** A sweep of every "MUST" and
   "MUST NOT" in the two texts. The owner's decision twelve already says what an
   unlisted rule costs: Castr reads the document, and a refusal it then gives counts as
@@ -377,9 +399,9 @@ each:**
 1. Which sentence of "What this serves" does the step in hand move, and how would a
    reader of `pnpm picture` see it?
 2. What has changed for Oak's document since the last step back? Steps N1 to N5 change
-   nothing for it by their nature, and the owner knows that and chose "Fix first" for
-   that reason. If two steps in a row end with nothing changed for Oak's document, say
-   so to the owner in plain words before the third starts.
+   nothing for it by their nature. The owner knows that N1 and N3 come before the fix
+   and chose it on 22 November. If two steps in a row end with nothing changed for Oak's
+   document, say so to the owner in plain words before the third starts.
 3. Is the step still the size it was given? If not, is it one step or two?
 4. Is anything being built to check the work that is larger than the work?
 5. What would be lost if the step stopped here?
@@ -425,7 +447,7 @@ of three.
 
 | Step | Unknown                                                                                                |
 | ---- | ------------------------------------------------------------------------------------------------------ |
-| N0   | The five listed under N0, "Not settled"                                                                |
+| N0   | The five listed under N0, disposed on 22 November; any new one met when it is built                    |
 | N1   | Whether the picture pins `schema-base` as well as `schema`, and dated revisions in place of `base`     |
 | N2   | What decides a reference's target outside Castr, across files                                          |
 | N2   | Whether a document Castr converts today and 0.8.0 refuses is a cell of its own or the existing "wrong" |
