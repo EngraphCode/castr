@@ -117,6 +117,107 @@ A step is not finished until its entries are here.
 - 2026-11-22, before N0, a conscience check of the plan's first form: drifting. None of
   its six steps changed product code, and the owner's words of 18 November asked for
   reaching the state to be explored, not only defined. The owner put the fix first.
+- 2026-11-22, N0, start, by Firefly mends Quench (4f7b54). **The trace**, made by
+  reading the code on `main` at `784f9ca2` and running `pnpm picture`. Nothing was
+  changed.
+  - _Oak's two schemas._ The 200 responses of the two `check-restricted` operations hold
+    `{type: object, propertyNames: {type: string}, additionalProperties: {type: string,
+enum: [...]}}`. Neither names a property. They are the only schema-valued
+    `additionalProperties` and the only `propertyNames` in the document; its other 243
+    `additionalProperties` are `false`.
+  - _Reader._ `parsers/openapi/builder/builder.additional-properties.ts` reads an
+    unstated policy and `false` as closed, and throws for `true` and for a schema. The
+    message comes from `object-semantics.ts`, which the JSON Schema and Zod parsers also
+    call. `propertyNames` is read into the model and is not refused by the reader.
+  - _Model._ The type declares `additionalProperties?: boolean | CastrSchema`. The
+    validator (`ir/validation/validators.schema.ts`) accepts a boolean only.
+  - _Zod writer._ `writers/zod/generators/collections.ts` writes `z.strictObject(` for
+    every object and never `.catchall`. `writers/zod/refinements/object.ts` writes a
+    `propertyNames` check today, as text.
+  - _TypeScript writer._ It has no handling of `additionalProperties` and would drop a
+    schema there. It throws on any `propertyNames`.
+  - _Shared JSON Schema writer_ (`writers/shared/json-schema-fields.ts`, used by the JSON
+    Schema and OpenAPI writers). It writes `additionalProperties: false` for every
+    object, so a schema there would be narrowed to closed without a word.
+  - _Other readers of the field._ The dependency graph, the circular-reference finder,
+    the enum visitor and the integer-capability traversal already walk a schema-valued
+    `additionalProperties`.
+  - _The columns are one module._ Every picture case calls
+    `generateZodClientFromOpenAPI`, and `writers/typescript/index.ts` adds the types and
+    then the Zod schemas to one file. No option emits one without the other for a
+    document; the public `getZodSchema` writes Zod for one schema alone. A throw by
+    either writer refuses every column: the Zod column's `propertyNames` cell reads
+    refused today with the TypeScript writer's message.
+  - _How the writers build output._ Declarations are ts-morph structures; every type and
+    every Zod expression inside them is text from `CodeBlockWriter` (Zod writer 1,733
+    lines in 14 files with 1,381 lines of tests; TypeScript writer 1,519 lines).
+  - _Tried, in scratch._ A `z.strictObject({...}).catchall(S)` built with the compiler's
+    node factory and printed by its printer, with each child expression read back from
+    today's text by the compiler's parser, prints and loads. In Zod 4 it accepts
+    `{a: 'x'}` and `{a: 'x', b: 1}` and refuses `{a: 'x', b: 'y'}`, which is the
+    picture's case. So the touched path can build nodes without the whole writer moving
+    first.
+- 2026-11-22, N0, start. **What the trace changes.** The plan's "Finished when" asked
+  for the Zod cell to read right while the TypeScript cell reads refused. That cannot
+  happen: one module carries both, so a TypeScript refusal is a refusal of the Zod
+  column too. Oak's document converts only when the TypeScript column of
+  `additionalProperties` and of `propertyNames`, and the Zod column of `propertyNames`,
+  have approved text. The part that is specified today (the reader, the validator, Zod's
+  `.catchall`) would, built alone, turn no picture cell right.
+- **Owner decisions fifteen and sixteen, by question prompt, 22 November 2026,** given
+  with the trace. Fifteen: asked when the text for the two rows is brought for approval
+  (a narrow amendment now, in 0.8.1, or with the tables), the owner chose "Carry in
+  0.8.1". Sixteen: asked what happens to the part specified today, which turns no
+  picture cell right (build it now, or with the text), the owner chose "Build with the
+  text". Neither approves text. The plan's order is now N1, N3, N0, and N0's finish
+  condition is rewritten there.
+- **Owner correction, 22 November 2026.** The same prompt asked whether changing the
+  model's validator is covered by the ruling that the model changes only after its
+  design. The owner, verbatim: "asking me is the wrong move, use the OCE skills and
+  principles to run all unknowns through the decision matrix, and apply strict,
+  everywhere, all the time as well". The seat had already disposed of it in row 1 below
+  and asked because a reviewer said the disposition was unattacked. A reviewer's doubt
+  about a disposition is tested against the lenses and the text, and is not by itself a
+  question for the owner.
+- 2026-11-22, N0, start. **Step back.**
+  1. _Which sentence it moves._ "Castr converts Oak's latest v1 document". Nothing
+     moves in `pnpm picture` until N0 is built, after 0.8.1. When it is, the cells for
+     the two rows turn right in the columns 0.8.1 classes as carried, and Oak's
+     whole-document line names its next stop or none.
+  2. _Changed for Oak's document since the last step back._ Nothing. N1 and N3 come
+     next and change nothing for it either; the owner chose that order knowing it.
+  3. _Size._ This record is one pull request. N0's building is sized at its start from
+     0.8.1's text; the Zod side is one pull request by the scratch trial.
+  4. _Checking larger than the work._ No. The picture and the writers' own tests are
+     the proof; nothing new is built to check.
+  5. _Lost if it stopped here._ Nothing: the trace, the rows and the two decisions are
+     here, and no code has changed.
+- 2026-11-22, N0, start. **The conscience check.** The Ecosystem repository's panel ran
+  on the seat's reading: four seats in the normal stance on the first reading, then the
+  same four in the adversarial stance on the rewritten one. Seven said on track and one
+  drifting; all eight said the reading was narrower than its sources. Adopted: the
+  first reading told a whole-writer move and "not a bounded fix" from two facts not
+  checked to their edges, and both were then checked (the scratch trial; no option of
+  the generation function emits Zod without types). Adopted: the order of approved
+  texts and the finish condition are the owner's, so they were asked, once. Declined:
+  a picture cell for Zod alone through `getZodSchema`, because the picture judges what
+  a consumer of SPEC-C-1 receives, which is the module, and decision sixteen makes it
+  moot. The stance was run on two different readings, which the panel's rule does not
+  allow for; the second wave is the one that judged the record as it stands.
+- 2026-11-22, N0, start. **The matrix on N0's unknowns.** Each disposition is the
+  seat's and is a hypothesis until attacked.
+
+  | Question                                                                                    | Lens that settles it                                                         | Disposition                                                                                                                                                                                                                                                                                                                 |
+  | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | 1. Is changing the model's validator "the model changes", which waits on SPEC-N-1           | Strict                                                                       | No. The model's type already declares a schema there and SPEC-P-1 names constrained as a meaning; the validator is narrower than the structure it checks, and section 12 says deferring a decision never defers a requirement. The structure is not touched. The validator is made to agree with the type, when N0 is built |
+  | 2. What TypeScript writes for a constrained object                                          | Strict: section 12, no code assumes an answer to an open item                | Specification 0.8.1 says (decision fifteen). The seat drafts the class from the lenses and the owner approves the text. Nothing is built ahead of it (decision sixteen), so the reader is not opened while a writer would drop or refuse what it lets in                                                                    |
+  | 3. `propertyNames` in Zod and in TypeScript                                                 | Strict, as 2                                                                 | Specification 0.8.1 says, as 2. Until then the Zod check that exists and the TypeScript refusal stay as they are                                                                                                                                                                                                            |
+  | 4. The size of moving the Zod writer to syntax-tree nodes                                   | Could it be simpler; the course's "a repair that adds no text-building"      | The path that is touched moves, not the whole writer: the object expression is built as nodes and printed by the compiler's printer, and a child not yet moved is read back from its text by the compiler's parser. Tried in scratch. One pull request. Each later fix moves the path it touches                            |
+  | 5. Whether a narrow amendment classing two rows ahead of the tables is the right instrument | User value, after strict leaves no other route                               | The order of approved texts is the owner's, and the owner chose 0.8.1 (decision fifteen). The seat's first disposition, an amendment of its own ahead of 0.8.1, is withdrawn. The two rows use the classes section 3 already defines where they can, and the draft says where they cannot                                   |
+  | 6. Found: the reader also refuses `additionalProperties: true`, which SPEC-P-1 calls open   | Proportionality: Oak's document has none, and the picture has no case for it | Not in N0. A picture case is added with N2's cells so that it reads refused, and the fix is a leg N6 writes                                                                                                                                                                                                                 |
+  | 7. Found: the JSON Schema and Zod parsers share the reader's refusal                        | Proportionality: neither is a reader of the first capability                 | Their refusals stay. The OpenAPI reader stops calling the shared function for a schema; the function is not changed for the others                                                                                                                                                                                          |
+  | 8. Found: the shared JSON Schema writer would narrow a schema-valued `additionalProperties` | Strict: SPEC-PR-2, nothing changes silently                                  | Fixed in the same change as the reader: it writes the schema, which that format states directly and which is built as a value, not as text                                                                                                                                                                                  |
+  | 9. Found: the Zod writer's existing checks are text and judge a value by `typeof` alone     | Proportionality                                                              | Not in N0. A leg N6 writes                                                                                                                                                                                                                                                                                                  |
 
 ### The matrix pass of 22 November 2026
 
@@ -1260,3 +1361,4 @@ this discovery for the architectural repair; no implementation is claimed here.
 | Smith stirs Ashes      | claude-code | claude-opus-5-5  | 7bd175         | 02ed168a-55c7-5450-8fdb-b7fd399d9c86 | Sonar analysis (sub-agent)                     | 2026-11-01    | 2026-11-01   |
 | Bilby hunts Dreamscape | claude-code | claude-opus-5-5  | d71882         | 767b6de5-9347-5fdb-bbdf-eeb98791ec13 | review, ratification walk, draft 0.5.0         | 2026-11-01    | 2026-11-02   |
 | Ingot binds Patina     | claude-code | claude-fable-5-2 | 194219         | 8fde4762-1621-5ce7-b563-2d0f4f647804 | alerts, MEASURE, 0.5.2 to 0.7.0, PICTURE       | 2026-11-18    | 2026-11-21   |
+| Firefly mends Quench   | claude-code | claude-fable-5-2 | 4f7b54         | f424d6ac-9c42-55de-8327-a0fdf5c046ec | N0 trace and matrix                            | 2026-11-22    | 2026-11-22   |
