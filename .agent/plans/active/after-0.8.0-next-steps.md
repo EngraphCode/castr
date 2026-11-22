@@ -36,7 +36,7 @@ todos:
   - id: N4-NUMBERS
     content: 'Part two of the amendment, numbers in JavaScript targets, approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
-    depends_on: [N3-CORRECTIONS]
+    depends_on: [N3-CORRECTIONS, N0-FIX]
   - id: N5-TABLES
     content: 'Part three of the amendment, the table vocabulary with the tables (SPEC-N-5), approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
@@ -128,13 +128,15 @@ lib/src` is empty). Every pull request since has been the picture, the specifica
 
 ## Order, and whose it is
 
-- **N1, then N3, then N0 is the owner's**, 22 November, after the trace of N0. Asked
-  when the text for the two rows that stop Oak's document is brought for approval, the
-  owner chose "Carry in 0.8.1"; asked what happens to the part of the fix that is
-  specified today and turns no picture cell right, "Build with the text". So N0's code
-  waits on 0.8.1, and 0.8.1 waits on the re-pin. This replaces "Fix first" of earlier
-  the same day for where the fix sits. That the fix is built before numbers and the
-  tables is the seat's reading of those words, not something the owner was asked.
+- **N3 before N0 is the owner's**, 22 November, after the trace of N0. Asked when the
+  text for the two rows that stop Oak's document is brought for approval, the owner
+  chose "Carry in 0.8.1"; asked what happens to the part of the fix that is specified
+  today and turns no picture cell right, "Build with the text". So N0's code waits on
+  0.8.1. This replaces "Fix first" of earlier the same day for where the fix sits.
+- **N1 before N3, and N0 before N4, are the seat's.** N3 names the revisions N1 pins,
+  so it waits on the re-pin. That the fix is built before numbers and the tables is
+  the seat's reading of "Fix first" and of the two answers above; the owner was not
+  asked it. The todos encode both.
 - **N4 then N5 then the rest of the fixing is the owner's** accepted order for the
   amendment's remaining parts.
 - **N3 before N4 is the seat's** disposition (the matrix pass: one concern per change).
@@ -445,20 +447,20 @@ of three.
 
 **Unknowns to decide by the lenses.**
 
-| Step | Unknown                                                                                                |
-| ---- | ------------------------------------------------------------------------------------------------------ |
-| N0   | The five listed under N0, disposed on 22 November; any new one met when it is built                    |
-| N1   | Whether the picture pins `schema-base` as well as `schema`, and dated revisions in place of `base`     |
-| N2   | What decides a reference's target outside Castr, across files                                          |
-| N2   | Whether a document Castr converts today and 0.8.0 refuses is a cell of its own or the existing "wrong" |
-| N3   | Whether a rule that differs between 3.1 and 3.2 is one entry or two                                    |
-| N3   | Whether the sweep of every "MUST" belongs in this step                                                 |
-| N4   | What the picture's cell for a declared narrowing is called and how it is judged                        |
-| N5   | The form of addressing a validator (SPEC-N-4), designed as this step's first piece                     |
-| N5   | How the tables are held so that the picture's proposals are computed from them                         |
-| N5   | What the mark on a Zod check Castr writes is, given that reading Zod is not designed (SPEC-N-3)        |
-| N6   | Where the model's design (SPEC-N-1) is done                                                            |
-| N6   | The seven rows with no second judge: which validator or which text judges each                         |
+| Step | Unknown                                                                                                                                         |
+| ---- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| N0   | Nine rows disposed on 22 November in the thread record (the five listed under N0 and four found by the trace); any new one met when it is built |
+| N1   | Whether the picture pins `schema-base` as well as `schema`, and dated revisions in place of `base`                                              |
+| N2   | What decides a reference's target outside Castr, across files                                                                                   |
+| N2   | Whether a document Castr converts today and 0.8.0 refuses is a cell of its own or the existing "wrong"                                          |
+| N3   | Whether a rule that differs between 3.1 and 3.2 is one entry or two                                                                             |
+| N3   | Whether the sweep of every "MUST" belongs in this step                                                                                          |
+| N4   | What the picture's cell for a declared narrowing is called and how it is judged                                                                 |
+| N5   | The form of addressing a validator (SPEC-N-4), designed as this step's first piece                                                              |
+| N5   | How the tables are held so that the picture's proposals are computed from them                                                                  |
+| N5   | What the mark on a Zod check Castr writes is, given that reading Zod is not designed (SPEC-N-3)                                                 |
+| N6   | Where the model's design (SPEC-N-1) is done                                                                                                     |
+| N6   | The seven rows with no second judge: which validator or which text judges each                                                                  |
 
 **Unknowns found by doing,** recorded when found and not run through the lenses: which
 rows change under the latest revisions (N1); how many more word-only rules the two
