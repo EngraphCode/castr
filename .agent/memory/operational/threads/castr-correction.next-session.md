@@ -352,6 +352,36 @@ string; [key: string]: string | number }` accepts every valid value and also
   | Can 0.8.1 class `propertyNames` for Zod without part three's mark         | Strict, after the scratch trial                                 | Only for an object that names no property, where Zod's own checker holds it as a record. Elsewhere it is `NOT-YET-BUILT` until part three. Oak's two schemas are of the first kind                                           |
   | One TypeScript class for a constrained object, or one per shape           | Excellence: SPEC-PR-1, expressed wherever the target can say it | Per shape: carried where the object names no property; carried by companion where it names one. The simpler test (no named property) is used in place of assignability, which a generator cannot decide from the model alone |
 
+- 2026-11-22, N3. **The first draft was attacked and broke in eleven places.** The
+  [draft](../../../analysis-and-reports/amendment-corrections-draft-2026-11-22.md) holds
+  each finding and its disposition. The seat ran or read the ones the second draft
+  rests on: a Callback Object's extension is allowed by both texts and refused by both
+  schemas; the 3.2 schema already holds the old rule 6; a Tag Object's `parent` must
+  name a tag (3.2 text, 4.22); and Zod's catchall, loose object and record accept
+  `{"__proto__": "zzz"}` and leave the property out of what they return, where the
+  reference validator refuses it. Four rows of the matrix above are changed by it:
+  - _`propertyNames` for Zod._ Not a record. Only a `K` that holds no name to anything
+    (`true`, or `type: string` and annotations) is carried, by writing nothing; any
+    other `K` is `NOT-YET-BUILT` until part three.
+  - _TypeScript for a constrained object._ Carried only for a map, an object whose only
+    keywords are `type: object`, `additionalProperties`, `propertyNames` and
+    annotations. A constrained object that names a property is `NOT-YET-BUILT`: the
+    union index signature does not compile with an optional property and fails
+    SPEC-G-4's mutual assignability.
+  - _What a reference is, a target's validity, a fetch that fails._ Not in 0.8.1. Each
+    was a list nothing forced complete. They follow N2's cells, which give a judge
+    outside Castr.
+  - _Found: `__proto__`._ Lens: strict. The Zod forms 0.5.0 approved are not "carried"
+    for that one name, so the text must say so; the draft declares it in SPEC-P-1 as
+    behaving as stripped, reported, sampled and expected by the proof. Whether to
+    declare it or to hold constrained objects back until a check Castr writes can
+    refuse it is in the text the owner is asked to approve, and is said to them plainly.
+- 2026-11-22, N3. **Two more conditions for N0's building,** from the same review: a
+  constrained object with `patternProperties` is a located rejection, not a catchall;
+  and the picture needs a case for a constrained map beside its case for a constrained
+  object that names a property, because 0.8.1 as drafted makes the first right and
+  leaves the second refused.
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
