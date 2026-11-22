@@ -49,6 +49,11 @@ The system is NOT ready for production until these criteria are met.
 
 ### 2. Input Support: ALL Valid OpenAPI 3.0.x Syntax
 
+> **22 November 2026:** [the specification](../../docs/SPECIFICATION.md) at 0.8.0
+> governs where this section differs. OpenAPI 2.0 and 3.0.x are not read (SPEC-FV-1),
+> reading 3.0.x is a later capability (SPEC-C-3), and no document is rewritten from one
+> version into another before Castr's parser reads it.
+
 The system MUST accept and parse EVERY field from the OpenAPI 3.0.x specification:
 
 **Document Root**
@@ -233,6 +238,11 @@ In addition to the 3.0.x and 3.1.x field surfaces above, the system MUST accept 
 - Missing REQUIRED fields
 
 ### 5. Automatic Upgrade / Canonicalisation (3.0 → 3.2 target)
+
+> **22 November 2026:** [the specification](../../docs/SPECIFICATION.md) at 0.8.0
+> governs where this section differs. OpenAPI 2.0 and 3.0.x are not read (SPEC-FV-1),
+> reading 3.0.x is a later capability (SPEC-C-3), and no document is rewritten from one
+> version into another before Castr's parser reads it.
 
 ALL accepted OpenAPI input MUST emerge from the shared preparation boundary as canonical `3.2.0`:
 

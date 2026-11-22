@@ -3,6 +3,12 @@
 **Date:** January 13, 2026  
 **Status:** Accepted — implementation target; Pack 3 review on 2026-03-22 found reusable `components.requestBodies` are still dropped on OpenAPI egress, so full support is not yet honestly cleared in the live code
 
+**Superseded in part, 22 November 2026:** [the specification](../SPECIFICATION.md) at
+0.8.0 governs where this record differs. OpenAPI 3.0.x and 2.0 are not read
+(SPEC-FV-1); reading 3.0.x is a later capability (SPEC-C-3); and nothing rewrites a
+document from one version into another before Castr's parser reads it, so point 4 of the
+decision below, the automatic upgrade, no longer stands.
+
 ---
 
 ## Context
