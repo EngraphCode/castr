@@ -740,6 +740,38 @@ string; [key: string]: string | number }` accepts every valid value and also
     does set against it; a judge outside Castr for each rule of SPEC-FV-2; the
     resolver of references across files.
 
+- 2026-11-22, N2. **#166 merged (`b35d714e`); the second slice.** An input for each of
+  cases 1 to 4 of SPEC-FV-1 and three that no case describes, 17 in all, with the case
+  decided outside Castr and what Castr does set against it. Castr is right on 4 (the
+  four it should read). It reads five it should refuse: an OpenAPI 2.0 document, a
+  3.0.3 document, a `jsonSchemaDialect` naming Draft-07, a component schema whose
+  `$schema` names Draft-07, and a 3.2 document naming the 3.1 dialect. It refuses the
+  other eight, in words that give no kind or case.
+  - _Matrix row: whether a document Castr converts and 0.8.0 refuses is a cell of its
+    own._ Lens: strict. Yes: `reads it` is a verdict of its own, apart from the
+    existing "wrong", because the fault is in reading at all and not in an output. And
+    a refusal with no kind is not counted right: SPEC-FV-1 says the rejection names its
+    case, and nothing Castr says does.
+  - _Matrix row: what parses YAML outside Castr._ Lens: strict (a loader that is not
+    Castr's reader). The `yaml` package at YAML 1.2; Castr's reader uses another.
+  - _Reviewed before its first push._ The test reviewer found seven things; all are
+    fixed. What Castr did was reported as read whenever not every output stopped, so a
+    crash in one output or three empty outputs read as right; it is now read only when
+    none stopped and one was made, with outcomes of their own for nothing, mixed and
+    crashed. The decider threw on well-formed text holding a value JSON cannot state
+    (`1e999`); that is now "not decided". The dialect check accepted any path segment
+    after `dialect/`; it now takes the publisher's addresses only (`base` or a date for
+    3.1, a date for 3.2), compared as written. A dialect that is not a string goes to
+    case 4. Castr's words are held beside each verdict, since a refusal for another
+    reason reads the same in the verdict. Eight inputs were added so that each of five
+    wrong deciders the reviewer wrote now fails. With them: 25 inputs, 7 right, 6 read
+    that should be refused, 11 refused with no kind, 1 not judged.
+  - _For N7,_ from this slice: whether a dialect address with a fragment, a query or a
+    difference of case names the same dialect; whether 3.2 has a `base` address.
+  - _Left for later slices,_ and said in the README: a `$schema` below a component
+    schema; a Schema Object against its dialect at the revisions 0.8.0 names (only the
+    latest `schema-base` is pinned); case 5; the rules of SPEC-FV-2.
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
