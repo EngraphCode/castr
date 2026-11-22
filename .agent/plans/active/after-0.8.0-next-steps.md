@@ -180,7 +180,7 @@ validate-specification-approval`), or by the record.
     (`lib/src/schema-processing/writers/typescript/type-writer/fail-fast.ts`).
 - **There is no prior work to build on.** Two branches of April 2026 had attempted this
   ("Support explicit additionalProperties honestly"). The owner ruled on 22 November that they be removed: "remove the april work, it is superseded and likely wrong". The fix is
-  written from the specification and the picture, not from them. If `git branch -a` still shows `feat/explicit-additional-properties-2026-04` or `feat/explicit-additional-properties-rebased`, it is not read and not merged.
+  written from the specification and the picture, not from them. They are gone only when `git branch --list 'feat/explicit-additional-properties*'` and `git ls-remote --heads origin 'feat/explicit-additional-properties*'` both print nothing (the second asks the remote; a local listing can be stale). Until then neither `feat/explicit-additional-properties-2026-04` nor `feat/explicit-additional-properties-rebased` is read or merged.
 - **What the first telling got wrong.** The seat told the owner the fix "does not wait
   on any part of the amendment", and the owner chose "Fix first" on that. A reviewer
   then showed it holds for the Zod column only. Fixing `additionalProperties` alone
