@@ -97,6 +97,12 @@ record says something else about the next step, that plan governs.
   this the same day, after deciding. The plan's first step carries each of these as an
   unknown to settle before code is written.
 
+- **Owner ruling, 22 November 2026, verbatim:** "Don't use the local copies of the
+  skills, use the OCE copies". The plan had pointed at this repository's copies of the
+  cognitive skills and lenses. It now names the Ecosystem repository's, and a session
+  with no sibling checkout stops and says so. This follows the ruling of 20 November
+  that sessions here work by the Ecosystem repository's Practice.
+
 **Step log.** Each step of the plan writes here, dated: its step-back answers at its
 start and its end, and a row for each unknown it decides (question, lens, disposition).
 A step is not finished until its entries are here.
