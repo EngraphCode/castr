@@ -52,9 +52,11 @@ below this one are the dated record; none of them is a newer instruction than th
   `docs/SPECIFICATION.md` before approval, because the approval check compares that file
   with its latest approved record. The draft is not approved. One adversarial review
   broke the first draft in six places; the second draft is in that file with each
-  finding's disposition (#156). Left before the owner is asked for words: read the
-  OpenAPI text for each rule SPEC-FV-2 would list, from the published text and not from
-  memory; check the dated revisions of the 3.1 dialect; one more adversarial review.
+  finding's disposition (#156). Left before the owner is asked for words, each
+  named in the draft's "Points that wait": word what a reference with no target
+  receives (the OpenAPI text states no rule against it); re-pin the publisher's schemas
+  at their latest revisions (the picture pins 2022-10-07 for 3.1 and newer ones exist);
+  read the security-requirement rule word for word; one more adversarial review.
 - **#155 was merged with the hosted review of its last commit reported as failed,** not
   completed: the reviewer did not run on that commit. The three earlier commits were
   reviewed and all seven findings fixed. The owner was told on 22 November.

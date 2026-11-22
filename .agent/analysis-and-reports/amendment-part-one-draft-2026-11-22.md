@@ -163,8 +163,24 @@ After:
 >   OpenAPI specification states in words, at the section named beside it, and the
 >   publisher's schema does not hold. A document that breaks it receives `NOT-READ`
 >   under case 4, and the required check decides each listed rule itself as it decides
->   the cases. A rule is listed only by amendment. Listed: (to be written; see the
->   points that wait).
+>   the cases. A rule is listed only by amendment. The OpenAPI text says
+>   of itself that it "is the only normative description of the format" and that where
+>   the published schema differs the text "MUST be considered authoritative"; a place
+>   where the schema refuses what the text allows is listed here too, and the document
+>   is then read. Listed, by the section numbers of 3.1.2 and of 3.2.0:
+>   1. An `operationId` is unique among all operations (4.8.10.1; 4.10.1).
+>   2. Each template expression in a path corresponds to a path parameter of its Path
+>      Item or of each of its operations, and a path parameter's name corresponds to a
+>      template expression in its path (3.5 and 4.8.12.2.1; 4.8.2 and 4.12.2.1).
+>   3. Two templated paths with the same hierarchy and different template names do not
+>      both exist (4.8.8.1; 4.8.1).
+>   4. A list of parameters holds no two with the same name and location (4.8.9.1,
+>      4.8.10.1 and 4.8.12; 4.9.1, 4.10.1 and 4.12).
+>   5. Each tag name in the document's `tags` is unique (4.8.1.1; 4.1.1).
+>   6. In 3.2, `additionalOperations` holds no entry for a method that a fixed field of
+>      the Path Item gives (4.9.1).
+>   7. In the pinned 3.1 schema, a Link Object's `body` is `server` in the text; the
+>      text governs.
 
 ### 4. Section 3, "Advertised capability"
 
@@ -249,13 +265,29 @@ above.
    words to name SPEC-C-2 as the capability that will read it.
 2. **Decided on 22 November (decision twelve).** A rule stated only in words is listed
    in SPEC-FV-2 and a document that breaks it is refused as invalid.
-3. **To read before the list is written.** If rules are listed, each needs the section
-   of the OpenAPI text that states it, read from the published text and not from
-   memory: a reference whose target is absent, a path template and its parameters, a
-   unique `operationId`, and the two rules today's code checks.
-4. **To check before asking for approval.** That the dated revisions of the OpenAPI
-   dialect for 3.1 are what "at any revision" in case 3 needs to cover; and one more
-   adversarial review of this draft.
+3. **Read on 22 November from the published text** (`spec.openapis.org/oas/v3.1.2.html`
+   and `v3.2.0.html`), and written into SPEC-FV-2 above. Three things the reading
+   changed or left open:
+   - **A reference whose target is absent is not a stated rule.** Neither text says a
+     document with such a reference is invalid. 3.2 says only that an implementation
+     "MUST NOT treat a reference as unresolvable before completely parsing all
+     documents" (4.1.2.1). So the list does not hold it, and under this draft a
+     reference Castr cannot resolve is `NOT-YET-BUILT`, which no code can cure where the
+     target truly is not there. This needs words before approval.
+   - **A security requirement naming no declared scheme** is a rule in both texts
+     (4.8.30; 4.30) that was read only in summary. It is listed once read word for word.
+   - **The pinned schemas are old revisions.** The picture pins the 3.1 schema of
+     2022-10-07; the publisher's index lists revisions up to 2026-11-05, and for 3.2 up
+     to 2026-11-12 against the pinned 2025-09-17. It also publishes a second schema for
+     each line, `schema-base`, which does validate Schema Objects. The revisions named
+     in case 4 should be the latest, re-pinned in the picture first.
+   - The pinned 3.1 schema already holds two rules that looked word-only: a path begins
+     with `/`, and a path parameter is required.
+4. **To do before asking for approval.** Word the absent reference; re-pin the
+   publisher's schemas at their latest revisions and name those in case 4; read the
+   security-requirement rule word for word; one more adversarial review. The 3.1
+   dialect has dated revisions (2024-10-25 and 2024-11-10) beside `base`, which "at any
+   revision" in case 3 covers.
 
 ## What the first review found, in short
 
