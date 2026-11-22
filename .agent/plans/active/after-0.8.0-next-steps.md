@@ -28,7 +28,7 @@ todos:
     depends_on: []
   - id: N2-REFUSALS
     content: 'The picture has cells for what the reader refuses under SPEC-FV-1 and SPEC-FV-2, and they show what Castr does today. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
-    status: pending
+    status: in_progress
     depends_on: []
   - id: N3-CORRECTIONS
     content: 'Specification 0.8.1, the corrections to part one, approved in the owner''s words or withdrawn. Withdrawn on 22 November 2026 after four attacks; its corrections are carried by N7. The thread record holds its step-back answers and matrix rows under "Step log".'
@@ -85,9 +85,11 @@ and the other is corrected.
    sibling checkout is absent, stop and say so; do not fall back to the local copies.
 6. Before a step's first edit, do its step back and run the decision matrix on its
    unknowns, and write both under "Step log" in the thread record. N0's are there,
-   dated 22 November. N1 is done; N3 and N4 are withdrawn. The next steps are N2, whose
-   first act is to choose and prove its validator, and N5, the tables, which now carry
-   numbers; neither waits on the other.
+   dated 22 November. N1 is done; N3 and N4 are withdrawn. The next step is N5, the
+   tables, which now carry numbers: it is on the path to the fix and waits on nothing.
+   It opens with a Cricket panel, its re-sizing, and the design of SPEC-N-4. N2 has its
+   judge and two slices merged; its remaining slices are worked where N5 waits on the
+   owner.
 7. Read "Review dispositions" at the foot of this plan and give each row its
    disposition before starting the step it names.
 
@@ -325,6 +327,22 @@ validate-specification-approval`), or by the record.
   cell is written, pick the validator by the matrix and prove it on those three
   documents and on one invalid Schema Object. Any earlier result in this repository's
   records that ran a document holding a Schema Object through Ajv is not evidence.
+- **Where it stands, 22 November.** Two slices are merged.
+  - _The judge_ (#166): `lib/tests-picture/refusals/judge.ts`, `@hyperjump/json-schema`
+    1.18.1 over the pinned schemas, chosen after it and the Python `jsonschema` agreed
+    on 186 outcomes. `pnpm picture` lists the 16 of 56 small documents that the
+    revisions 0.8.0 names and the latest judge differently.
+  - _Cases 1 to 4_ (#167): 29 inputs with the case decided outside Castr. Castr is
+    right on 7, reads 7 it should refuse (OpenAPI 2.0 and 3.0.3 among them), refuses 11
+    in words with no kind or case, and 4 are not decided.
+  - _Remaining slices, each a pull request:_ case 5, which needs a resolver of
+    references outside Castr; a judge outside Castr for each rule SPEC-FV-2 lists; a
+    Schema Object against its dialect's meta-schema at the revisions 0.8.0 names (only
+    the latest `schema-base` is pinned); a `$schema` below a component schema; the 2.0
+    and 3.0.x documents of the example library.
+  - _For those slices:_ write each expected outcome by hand before its judge exists.
+    The decided column of #167 was generated from the decider's own output and read
+    over, which is weaker.
 - **Finished when.** `pnpm picture` prints a section for the reader's refusals; the
   cells are held by a test; the README says what is judged and by what.
 - **Size.** One pull request, about ten files, two or three pushes. Before the first
@@ -597,7 +615,7 @@ of three.
 | N1   | Whether the picture pins `schema-base` as well as `schema`, and dated revisions in place of `base`                                              |
 | N2   | What decides a reference's target outside Castr, across files                                                                                   |
 | N2   | Whether a document Castr converts today and 0.8.0 refuses is a cell of its own or the existing "wrong"                                          |
-| N2   | Which validator judges the cells, given that Ajv cannot judge the pinned schemas as published                                                   |
+| N7   | What makes the list of documents that differ between revisions enough to name new revisions: the 16 of 56 in the picture are the ones tried     |
 | N7   | Whether a rule that differs between 3.1 and 3.2 is one entry or two                                                                             |
 | N7   | Whether the sweep of every "MUST" belongs in this step                                                                                          |
 | N5   | What the picture's cell for a declared narrowing is called and how it is judged (from N4; a first disposition is in the thread record)          |
