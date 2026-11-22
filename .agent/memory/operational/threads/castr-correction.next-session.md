@@ -56,23 +56,20 @@ below this one are the dated record; none of them is a newer instruction than th
   requirements, Link Objects and a server variable's default, each read word for word
   from the OpenAPI text; give the refusals of a JSON Schema reader and of a Zod reader
   their kinds. The second adversarial review the seat had promised was not run; hosted
-  review ran four rounds. Also owed in the landing or soon after: correct ADR-030 and
-  `.agent/directives/requirements.md` section 2, which still promise 3.0 support.
+  review ran four rounds. ADR-030 and `.agent/directives/requirements.md` promised 3.0 support and each now
+  carries a note that 0.8.0 governs.
   Next: parts two (numbers in JavaScript targets) and three (the table vocabulary with
   the tables).
 - **Two facts found that day by running Castr.** It converts an OpenAPI 2.0 document,
   which section 6 says is refused. It reads 3.0 only after a third-party library rewrites
   the document to 3.1 (`lib/src/shared/load-openapi-document/upgrade-validate.ts`).
-- **Part one of the amendment is drafted** in
-  [amendment-part-one-draft-2026-11-22.md](../../../analysis-and-reports/amendment-part-one-draft-2026-11-22.md),
-  with the exact before and after of each clause. A draft cannot be committed into
-  `docs/SPECIFICATION.md` before approval, because the approval check compares that file
-  with its latest approved record. The draft is not approved. One adversarial review
-  broke the first draft in six places; the second draft is in that file with each
-  finding's disposition (#156). Left before the owner is asked for words, each
-  named in the draft's "Points that wait": re-pin the publisher's schemas
-  at their latest revisions (the picture pins 2022-10-07 for 3.1 and newer ones exist);
-  read the security-requirement rule word for word; one more adversarial review.
+- **How part one was drafted** is in
+  [amendment-part-one-draft-2026-11-22.md](../../../analysis-and-reports/amendment-part-one-draft-2026-11-22.md):
+  the before and after of each clause, the adversarial review that broke the first
+  draft in six places, and each finding's disposition (#156). A draft cannot be
+  committed into `docs/SPECIFICATION.md` before approval, because the approval check
+  compares that file with its latest approved record; a later part is drafted the same
+  way, in a tracked file.
 - **#155 was merged with the hosted review of its last commit reported as failed,** not
   completed: the reviewer did not run on that commit. The three earlier commits were
   reviewed and all seven findings fixed. The owner was told on 22 November.
@@ -91,7 +88,9 @@ throughout". The order is PICTURE, the specification amendment, fixing Castr, HO
    outside a schema wait on the form of the public surface (SPEC-N-4). The example input
    library's documents are not pinned (EC-1 of
    [its plan](../../../plans/active/example-input-library.md)).
-2. **The next step is the specification amendment, in three parts small enough to close:**
+2. **Part one of the amendment is approved as specification 0.8.0** (22 November; see
+   "After the handover" above). Parts two and three remain. As first written on 21
+   November: the specification amendment, in three parts small enough to close:
    the reader's rejections and the versions read; numbers in JavaScript targets; the
    table vocabulary together with the tables. The owner's nine decisions of 20 November
    (recorded below, from "Six decisions, by question prompt, 20 November 2026" onward) are its content.
