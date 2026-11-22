@@ -178,14 +178,10 @@ validate-specification-approval`), or by the record.
   - The TypeScript writer has no handling of `additionalProperties`, and throws on any
     `propertyNames` as impossible
     (`lib/src/schema-processing/writers/typescript/type-writer/fail-fast.ts`).
-- **Prior work to read first, found on 22 November and not read.** Two branches,
-  `feat/explicit-additional-properties-2026-04` and
-  `feat/explicit-additional-properties-rebased`, each hold an unmerged commit of April
-  2026, "Support explicit additionalProperties honestly", touching 44 files under
-  `lib/src`. The owner wrote off every inherited branch on 21 September 2026, so they
-  are read as prior art and never merged: what they changed, what they left, and why
-  they did not land are part of the trace. Check they still exist (`git branch -a`);
-  a checkout that lacks them has lost nothing it needs.
+- **There is no prior work to build on.** Two branches of April 2026 had attempted this
+  ("Support explicit additionalProperties honestly"). The owner had them removed on 22
+  November: "remove the april work, it is superseded and likely wrong". The fix is
+  written from the specification and the picture, not from them.
 - **What the first telling got wrong.** The seat told the owner the fix "does not wait
   on any part of the amendment", and the owner chose "Fix first" on that. A reviewer
   then showed it holds for the Zod column only. Fixing `additionalProperties` alone
