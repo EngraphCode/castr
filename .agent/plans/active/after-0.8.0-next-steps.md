@@ -35,8 +35,8 @@ todos:
     status: completed
     depends_on: [N1-REPIN]
   - id: N4-NUMBERS
-    content: 'Part two of the amendment, numbers in JavaScript targets, approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
-    status: in_progress
+    content: "Part two of the amendment, numbers in JavaScript targets, approved in the owner's words or withdrawn. Withdrawn as a part of its own on 22 November 2026 after three drafts; numbers are written with the tables in N5 (owner decision eighteen)."
+    status: completed
     depends_on: [N3-CORRECTIONS]
   - id: N5-TABLES
     content: 'Part three of the amendment, the table vocabulary with the tables (SPEC-N-5), approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
@@ -147,7 +147,11 @@ lib/src` is empty). Every pull request since has been the picture, the specifica
   the fix sits. N0 waits on N5 ending with the two rows classed in approved text. If part three is
   withdrawn, or is approved without them, N0 does not start and where its text comes
   from goes back to the owner.
-- **N4 then N5 is the owner's** accepted order for the amendment's remaining parts.
+- **N4 then N5 was the owner's** accepted order for the amendment's remaining parts.
+  On 22 November, after three drafts of part two failed, the owner was asked where
+  numbers are written and answered "Whatever is best for strict correctness" (decision eighteen). The
+  seat's reading by the strict lens: with the tables. So N5 carries numbers, and the
+  order is N5, then N0.
 - **N3 before N4 was the seat's** disposition (the matrix pass: one concern per
   change), and N3 is withdrawn by the seat, 22 November: four drafts were attacked and
   the last showed that the change of schema revisions cannot be written until N2's
@@ -419,9 +423,14 @@ validate-specification-approval`), or by the record.
   adversarial reviews found the drafts false on concrete cases in twelve, seven and six
   places; none found the owner's decisions wrong. The draft file says why a clause on
   numbers cannot yet be exact alone, where each finding goes and what stands. Where
-  numbers are written next is the order of the plan and is put to the owner by question
-  prompt; this step does nothing further until that answer. Oak's document states no
-  integer, no `int64` and no `multipleOf`.
+  numbers are written next is the order of the plan and was put to the owner by
+  question prompt, with three options: with the tables; after the fix; again now. The
+  owner answered "Whatever is best for strict correctness" (decision eighteen). By the strict lens that
+  is with the tables: three of the five causes are words part three defines, a clause
+  written before them rests on nothing, and one written after the fix leaves the
+  integer rows open while code changes against the tables. Part two is withdrawn as a
+  part of its own and N5 carries numbers. Oak's document states no integer, no `int64`
+  and no `multipleOf`.
 - **Before a reviewer sees any further draft, here or in N5 and N7:** run each sentence
   against the composition cases (`oneOf`, `not`, `allOf`, `anyOf`, a list of types, a
   `$ref`, a parameter, a document read from YAML). Both amendments that ended on 22
@@ -438,6 +447,13 @@ validate-specification-approval`), or by the record.
   writes is carried and marked; an unknown `format` is carried and reported; the
   endpoint definitions are a third column; four declarations the parser spends have a
   sixth outcome, read.
+- **Carries numbers** (owner decision eighteen, 22 November). The owner's decisions
+  four and seven are written here, with what they need: the class of a narrowed
+  integer; the form of the annotation that states the narrowing; how a parameter's text
+  becomes a number; what SPEC-G-4 excuses and SPEC-G-5 samples; and the rule for
+  writing an integer under `oneOf` or `not`, where asserting the safe range widens. The
+  withdrawn draft of part two holds what stands and every finding. Run each sentence
+  against the composition cases before a reviewer sees it (see N4).
 - **Do.** The picture's proposals (`lib/tests-picture/rows/`) are the first draft of
   the tables. From the matrix pass: the three discriminator rows are carried by
   companion for TypeScript; `$id`, `$anchor` and `$defs` stay carried as structure,

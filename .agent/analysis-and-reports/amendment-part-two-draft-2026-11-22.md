@@ -3,9 +3,16 @@
 Status: stopped at its third draft, 22 November 2026, by the exit the seat set before
 the third attack. Three adversarial reviews broke the three drafts in twelve, seven and
 six places ("Reviews", below). It is not approved, changes nothing in
-`docs/SPECIFICATION.md`, and is not put to the owner for approval. What the owner is
-asked is where numbers are written: see "Why it stopped". The version this part would
-have carried is 0.9.0.
+`docs/SPECIFICATION.md`, and is not put to the owner for approval. The version this
+part would have carried is 0.9.0.
+
+Asked on 22 November 2026, by question prompt, where numbers are written now (with the
+tables; after the fix for Oak's document; or again now, before the tables), the owner
+answered: "Whatever is best for strict correctness". By that measure numbers are written with the tables, in
+part three: three of the five things below are defined there, so a numbers clause
+written before them rests on words that do not exist, and one written after the fix
+leaves the integer rows of the tables open while code is changed against them. Part two
+is withdrawn as a part of its own.
 
 ## Why it stopped
 
