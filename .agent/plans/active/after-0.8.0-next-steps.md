@@ -15,12 +15,13 @@ owner_directive: >-
   where a bounded fix of Oak's refusals goes: "Fix first". The same day, after the
   trace of N0, by question prompt: the two rows that stop Oak's document are carried
   in 0.8.1 ("Carry in 0.8.1"), and the fix is built once that text is approved
-  ("Build with the text").
+  ("Build with the text"). The same day, after two attacks showed the two rows cannot
+  be written in 0.8.1, asked where their text comes from: "With the tables, in order".
 todos:
   - id: N0-FIX
-    content: 'The fix of what stops Oak''s document, built once specification 0.8.1 classes its two rows, proved by the picture. Its trace is done. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
+    content: 'The fix of what stops Oak''s document, built once part three of the amendment classes its two rows, proved by the picture. Its trace is done. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
-    depends_on: [N3-CORRECTIONS]
+    depends_on: [N5-TABLES]
   - id: N1-REPIN
     content: 'The picture pins the latest revisions of the publisher schemas for OpenAPI 3.1 and 3.2. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: completed
@@ -30,13 +31,13 @@ todos:
     status: pending
     depends_on: []
   - id: N3-CORRECTIONS
-    content: 'Specification 0.8.1, the corrections to part one and the classes of the two rows that stop Oak''s document, approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
+    content: 'Specification 0.8.1, the corrections to part one, approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
     depends_on: [N1-REPIN]
   - id: N4-NUMBERS
     content: 'Part two of the amendment, numbers in JavaScript targets, approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
-    depends_on: [N3-CORRECTIONS, N0-FIX]
+    depends_on: [N3-CORRECTIONS]
   - id: N5-TABLES
     content: 'Part three of the amendment, the table vocabulary with the tables (SPEC-N-5), approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
@@ -44,7 +45,11 @@ todos:
   - id: N6-PLOT
     content: 'The remaining legs that fix Castr are written into the course from the picture''s cells, each with an observable exit state, and reviewed. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
-    depends_on: [N0-FIX, N2-REFUSALS]
+    depends_on: [N0-FIX, N2-REFUSALS, N7-REFERENCES]
+  - id: N7-REFERENCES
+    content: 'An amendment on references across documents, written from the picture''s cells for what the reader refuses: what a reference is for case 5 of SPEC-FV-1, that a target must be valid for the place the reference stands, and what a failed fetch says. Approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
+    status: pending
+    depends_on: [N2-REFUSALS, N3-CORRECTIONS]
 ---
 
 # After specification 0.8.0: the next steps
@@ -80,7 +85,8 @@ and the other is corrected.
    sibling checkout is absent, stop and say so; do not fall back to the local copies.
 6. Before a step's first edit, do its step back and run the decision matrix on its
    unknowns, and write both under "Step log" in the thread record. N0's are there,
-   dated 22 November. The next step is N1.
+   dated 22 November. N1 is done. The next step is the redraft of N3's corrections
+   ("Where it stands" under N3); N2 waits on nothing and may be worked beside it.
 7. Read "Review dispositions" at the foot of this plan and give each row its
    disposition before starting the step it names.
 
@@ -128,29 +134,33 @@ lib/src` is empty). Every pull request since has been the picture, the specifica
 
 ## Order, and whose it is
 
-- **N3 before N0 is the owner's**, 22 November, after the trace of N0. Asked when the
-  text for the two rows that stop Oak's document is brought for approval, the owner
-  chose "Carry in 0.8.1"; asked what happens to the part of the fix that is specified
-  today and turns no picture cell right, "Build with the text". So N0's code waits on
-  0.8.1. This replaces "Fix first" of earlier the same day for where the fix sits. What
-  N0 waits on is the approved text for the two rows, not N3 ending: if 0.8.1 is
+- **N3, N4, N5, then N0 is the owner's**, 22 November. After the trace of N0 the owner
+  chose that the fix is built with its text ("Build with the text") and that the text
+  for the two rows is carried in 0.8.1 ("Carry in 0.8.1"). Two attacks on the draft of
+  0.8.1 then showed the two rows cannot be written there: they need words only part
+  three defines. Asked where their text comes from now, the owner chose "With the
+  tables, in order" (decision seventeen). So 0.8.1 is the corrections alone, numbers
+  follow, the tables class the two rows with every other, and the fix is built after
+  the tables are approved. This replaces "Fix first" and "Carry in 0.8.1" for where
+  the fix sits. N0 waits on N5 ending with the two rows classed in approved text. If part three is
   withdrawn, or is approved without them, N0 does not start and where its text comes
   from goes back to the owner.
-- **N1 before N3, and N0 before N4, are the seat's.** N3 names the revisions N1 pins,
-  so it waits on the re-pin. That the fix is built before numbers and the tables is
-  the seat's reading of "Fix first" and of the two answers above; the owner was not
-  asked it. The todos encode both.
-- **N4 then N5 then the rest of the fixing is the owner's** accepted order for the
-  amendment's remaining parts.
+- **N1 before N3 is the seat's.** N3 names the revisions N1 pins, so it waits on the
+  re-pin.
+- **N4 then N5 is the owner's** accepted order for the amendment's remaining parts.
 - **N3 before N4 is the seat's** disposition (the matrix pass: one concern per change).
   Numbers share no clause with the reader's refusals; only landing is serial, because
   the approval check allows one approved text at a time.
 - **N1 and N2 wait on nothing** and are not ordered between themselves: only SPEC-FV-1
   case 4 uses the publisher's schema, so N2 does not wait on N1. N3 does, for the
-  revisions it names. N1 is first because N3 and then N0 wait on it; N2 is fitted in
+  revisions it names. N1 is first because N3 waits on it; N2 is fitted in
   where it does not hold them. The todos' `depends_on` say the same.
-- **N6 waits on N0 and N2.** What N0 learns is its main input, and N2's cells for
-  what the reader refuses are work the legs must hold. A leg whose "right" the
+- **N7 waits on N2 and N3, and is the seat's.** It is the three things on references
+  that 0.8.1 could not say exactly. N2's cells give it a judge outside Castr, and it
+  amends the text 0.8.1 leaves. It is not ordered against N4 and N5; only landing is
+  serial.
+- **N6 waits on N0, N2 and N7.** What N0 learns is its main input, and N2's cells for
+  what the reader refuses, with N7's text for references, are work the legs must hold. A leg whose "right" the
   tables define waits on N5; the others do not. N6 writes the legs; it does not by
   itself complete the course's PLOT todo, which keeps its own dependencies (PICTURE and
   CORPUS) and is marked complete in the course when they are.
@@ -169,7 +179,7 @@ validate-specification-approval`), or by the record.
 
 - **Serves.** "explored if we can reach that state in isolation". It is the first
   change to product code since 18 November. By the owner's word of 22 November it is
-  built once 0.8.1 is approved, as one change in which the picture's cells turn right.
+  built once part three is approved, as one change in which the picture's cells turn right.
 - **What is known, checked on 22 November.**
   - Oak's document is refused at two response schemas (the 200 responses of
     `/lessons/check-restricted` and
@@ -214,15 +224,25 @@ validate-specification-approval`), or by the record.
   "Step log" has the row for each.
   1. Whether changing the model's validator is "the model changes" (SPEC-N-1): it is
      not; the validator is made to agree with the type the model already declares.
-  2. What TypeScript writes for a constrained object: 0.8.1 says (N3).
-  3. `propertyNames` in Zod and in TypeScript: 0.8.1 says (N3).
+  2. What TypeScript writes for a constrained object: part three says (N5).
+  3. `propertyNames` in Zod and in TypeScript: part three says (N5).
   4. The size of moving the Zod writer to syntax-tree nodes: the touched path moves,
      in one pull request.
-  5. Whether a narrow amendment is the right instrument for 2 and 3: the owner chose to
-     carry the two rows in 0.8.1.
-- **Do.** The trace and the matrix are done. Once 0.8.1 is approved: test first, the
+  5. Whether a narrow amendment is the right instrument for 2 and 3: it is not. The
+     owner first chose to carry the two rows in 0.8.1; two attacks showed they need
+     part three's words, and the owner then chose "With the tables, in order".
+- **Conditions on the building,** set by reviews on 22 November and recorded in the
+  thread record's "Step log": the model's files and version are unchanged; every writer
+  writes the construct or gives a located rejection, each proved from a model value
+  with no reader; the validator's test is inverted first and the validator is shown to
+  end on a schema that refers to its own parent; a schema-valued
+  `additionalProperties` inside a branch of `allOf`, or beside `patternProperties`, is a
+  located rejection until the specification says otherwise; and the picture gains a
+  case for a constrained object that names no property beside its case for one that
+  does.
+- **Do.** The trace and the matrix are done. Once part three is approved: test first, the
   reader and the model's validator accept a schema-valued `additionalProperties`, and
-  each writer writes what 0.8.1 says, with new writer output as syntax-tree nodes. The
+  each writer writes what part three says, with new writer output as syntax-tree nodes. The
   picture's cells are the proof. The TypeScript writer today neither writes nor refuses
   `additionalProperties`: it writes the named properties and drops the rest, so the
   reader is not changed ahead of the writers; a constraint is never dropped silently
@@ -230,18 +250,19 @@ validate-specification-approval`), or by the record.
 - **What the trace found, 22 November.** The picture's columns are one module: every
   case generates the types and the Zod schemas together, and a refusal by either writer
   refuses both. So the Zod cell cannot read right while the TypeScript cell reads
-  refused, which this step first asked for. The owner then chose that the two rows are
-  classed in 0.8.1 and that the fix is built with that text. The trace, the step back
-  and the matrix rows are in the thread record's "Step log".
-- **Finished when.** Specification 0.8.1 classes `additionalProperties` and
+  refused, which this step first asked for. The owner then chose that the fix is built
+  with its text, and, after 0.8.1 proved unable to hold that text, that the two rows are
+  classed in part three. The trace, the step back and the matrix rows are in the thread
+  record's "Step log".
+- **Finished when.** Part three of the amendment classes `additionalProperties` and
   `propertyNames` for the Zod and TypeScript outputs, and in one change: the reader and
   the model's validator accept a schema-valued `additionalProperties`; each writer
-  writes what 0.8.1 says, with new output built as syntax-tree nodes; the shared JSON
+  writes what part three says, with new output built as syntax-tree nodes; the shared JSON
   Schema writer no longer narrows it; the picture's cells for the two rows read right
-  in every column 0.8.1 classes as carried, and are held by their tests; no cell that
+  in every column part three classes as carried, and are held by their tests; no cell that
   read right reads otherwise; Oak's whole-document line says exactly what stops it
   next, or that nothing does; and the thread record says what is fixed and what is not.
-- **Size.** Sized at its start, from 0.8.1's text. The Zod side is one pull request by
+- **Size.** Sized at its start, from part three's text. The Zod side is one pull request by
   the scratch trial of 22 November (the thread record has it). If the whole step
   passes three pull requests, step back.
 
@@ -296,15 +317,21 @@ validate-specification-approval`), or by the record.
      `operationId` identify an operation; a server variable's default is one of its
      `enum` values. Read each word for word from the published text
      (`https://spec.openapis.org/oas/v3.1.2.html` and `v3.2.0.html`) first.
-  3. Say that a reference's target in another file must itself be valid for the place
-     it is used.
-  4. Class the two rows that stop Oak's document, by the owner's word of 22 November
-     ("Carry in 0.8.1"): what the TypeScript output carries for a schema-valued
-     `additionalProperties` and for `propertyNames`, and what the Zod output carries for
-     `propertyNames`. SPEC-P-1 already says what Zod writes for the first. The draft
-     uses the classes section 3 defines wherever it can, says plainly where it needs a
-     word part three has not yet defined, and classes no other row. The trace of N0 in
-     the thread record is its input.
+- **Where it stands, 22 November.** The draft
+  (`.agent/analysis-and-reports/amendment-corrections-draft-2026-11-22.md`) has had two
+  attacks, and holds every finding. Three things follow.
+  - The two rows that stop Oak's document are not in 0.8.1 (the owner's decision
+    seventeen). The draft's clauses 5 and 6 come out; what was learnt about the two rows
+    is input to N5.
+  - What a reference is for case 5, that a reference's target must be valid for the
+    place it is used, and what a failed fetch says are not in 0.8.1 either. Each was
+    tried and was a list nothing forced complete. They are written from N2's cells,
+    which give a judge outside Castr, as an amendment of their own after N2 (N7).
+  - The corrections that remain (the revisions, cases 2 and 3, the list of SPEC-FV-2)
+    are redrafted with the second review's wording faults closed, and attacked again
+    before the owner sees them. One thing is read word for word first: which dialect
+    the 3.2 text names as the OpenAPI dialect, because case 3 as approved may refuse a
+    3.2 document that names it.
 - **Not in this step unless the matrix puts it there.** A sweep of every "MUST" and
   "MUST NOT" in the two texts. The owner's decision twelve already says what an
   unlisted rule costs: Castr reads the document, and a refusal it then gives counts as
@@ -327,8 +354,11 @@ validate-specification-approval`), or by the record.
   again. Commit the specification alone, and the record in a commit of its own. Then
   search the repository for sentences the amendment makes false and correct or mark
   them in the same pull request.
-- **Size.** One pull request, three to five pushes. The 0.8.0 pull request took about
-  ten; if this one passes five, step back.
+- **Size.** First given as one pull request of three to five pushes. As it turned out,
+  the record of the draft as attacked, with the owner's decision seventeen, landed as a
+  pull request of its own (#163). The redraft, its attack and, after the owner's words,
+  the landing of the text are one further pull request; if it passes five pushes, step
+  back. The 0.8.0 pull request took about ten.
 
 ### N4-NUMBERS: part two of the amendment
 
@@ -374,6 +404,26 @@ validate-specification-approval`), or by the record.
 - **Size.** The largest step: 315 rows in three columns. At least two pull requests.
   Size it at its start with what is known then.
 
+### N7-REFERENCES: references across documents
+
+- **Serves.** Three corrections to part one that the draft of 0.8.1 tried and could not
+  state exactly (its record is
+  `.agent/analysis-and-reports/amendment-corrections-draft-2026-11-22.md`, "Deferred"
+  and both reviews): what a reference is for case 5 of SPEC-FV-1; that a reference's
+  target, in the document or another, must be valid for the place the reference stands,
+  and that cases 1 to 3 apply to every document read; and what the rejection says when
+  a referenced document cannot be fetched.
+- **Do.** Write it from N2's cells, which decide each case outside Castr. Known hard
+  places, from the reviews: a discriminator `mapping` value that is both a schema name
+  and a relative URI reference, which the 3.2 text calls implementation-defined; a
+  `$ref` written as data; a 3.2 security requirement name that is a URI; a Link
+  Object's `operationRef`, which "MUST point to an Operation Object"; a target inside a
+  file with no `openapi` field. A tracked draft, attacked before the owner sees it, as
+  N3.
+- **Finished when.** As N3, for the version this amendment carries.
+- **Size.** One pull request for the draft and its landing. Size it at its start from
+  N2's cells.
+
 ### N6-PLOT: the remaining legs
 
 - **Serves.** The course's PLOT todo. The picture's cells that are not right are the
@@ -391,8 +441,8 @@ validate-specification-approval`), or by the record.
 ## Stepping back to assess value
 
 This is a requirement of the plan. Use `metacognition` to look at the work and
-`proportionality` to size it. Use the `cricket` panel at the start of N0, N3, N5 and
-N6, and whenever a step back leaves doubt; not at every step back.
+`proportionality` to size it. Use the `cricket` panel at the start of N0, N3, N5, N6
+and N7, and whenever a step back leaves doubt; not at every step back.
 
 **When.** Before the next action, at each of these:
 
@@ -406,8 +456,8 @@ each:**
 1. Which sentence of "What this serves" does the step in hand move, and how would a
    reader of `pnpm picture` see it?
 2. What has changed for Oak's document since the last step back? Steps N1 to N5 change
-   nothing for it by their nature. The owner knows that N1 and N3 come before the fix
-   and chose it on 22 November. If two steps in a row end with nothing changed for Oak's
+   nothing for it by their nature. The owner knows that the amendment's three parts come
+   before the fix and chose it on 22 November. If two steps in a row end with nothing changed for Oak's
    document, say so to the owner in plain words before the third starts.
 3. Is the step still the size it was given? If not, is it one step or two?
 4. Is anything being built to check the work that is larger than the work?
@@ -466,6 +516,8 @@ of three.
 | N5   | What the mark on a Zod check Castr writes is, given that reading Zod is not designed (SPEC-N-3)                                                 |
 | N6   | Where the model's design (SPEC-N-1) is done                                                                                                     |
 | N6   | The seven rows with no second judge: which validator or which text judges each                                                                  |
+| N7   | What a discriminator `mapping` value is read as when it is both a schema name and a relative URI reference                                      |
+| N7   | Whether a target is judged by the schema of the place the reference stands, and what that is for an `operationRef`                              |
 
 **Unknowns found by doing,** recorded when found and not run through the lenses: which
 rows change under the latest revisions (N1); how many more word-only rules the two
@@ -480,15 +532,15 @@ step it names starts.
 | Date       | Source                   | Finding                                                                                                                                   | Step |
 | ---------- | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | ---- |
 | 2026-11-22 | Adversarial review, #156 | A reference into another file that has no `openapi` field (`lib/examples/openapi/multi-file/main.yaml`): is that file read, and as what   | N2   |
-| 2026-11-22 | Adversarial review, #156 | What counts as a reference for case 5: a link's `operationId`, a discriminator's `mapping` value, a security requirement's name           | N3   |
+| 2026-11-22 | Adversarial review, #156 | What counts as a reference for case 5: a link's `operationId`, a discriminator's `mapping` value, a security requirement's name           | N7   |
 | 2026-11-22 | Adversarial review, #156 | A reference written as data, such as a property named `$ref` or a `$ref` inside an example, must not be followed                          | N2   |
-| 2026-11-22 | Adversarial review, #156 | A network or file failure while reading a referenced document makes the refusal differ between runs (SPEC-PR-4)                           | N3   |
+| 2026-11-22 | Adversarial review, #156 | A network or file failure while reading a referenced document makes the refusal differ between runs (SPEC-PR-4)                           | N7   |
 | 2026-11-22 | Adversarial review, #156 | A version such as `3.1.0-rc1` matches the publisher's pattern: is it in the Read column                                                   | N3   |
 | 2026-11-22 | Adversarial review, #156 | A document with both `swagger` and `openapi` fields states two versions                                                                   | N2   |
 | 2026-11-22 | Adversarial review, #156 | YAML that parses differently between libraries (merge keys, duplicate keys, `openapi: 3.1` read as a number): who decides well-formedness | N2   |
 | 2026-11-22 | Adversarial review, #156 | JSON Schema that Castr writes declares the format-assertion vocabulary, so its `$schema` may be one case 3 refuses on reading back        | N5   |
 | 2026-11-22 | Adversarial review, #156 | A nested `$schema` naming another dialect inside a 2020-12 schema                                                                         | N3   |
-| 2026-11-22 | Hosted review, #156      | The resolved target of a reference must be valid for the place it is used                                                                 | N3   |
+| 2026-11-22 | Hosted review, #156      | The resolved target of a reference must be valid for the place it is used                                                                 | N7   |
 
 ## What is not in this plan
 

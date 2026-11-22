@@ -271,6 +271,197 @@ enum: [...]}}`. Neither names a property. They are the only schema-valued
   that the latest 3.1 revision no longer has, and the text must say which of `schema`
   and `schema-base` case 4 is judged by; both are pinned.
 
+- 2026-11-22, N3, before its start. **Tried, in scratch, for the two rows 0.8.1 is to
+  class** (Zod 4.6.7 and the TypeScript compiler in `lib`; each line is what ran, not
+  what was expected).
+  - _Zod, property names._ `z.record(K, V)` refuses a key that fails `K` (`invalid_key`,
+    or `unrecognized_keys` for an enum). `z.intersection(anObject, z.record(K,
+z.unknown()))` does not: it accepted `{A1: 1}` against a key pattern of lower-case
+    letters, for a strict object, a loose one and a catchall. So Zod's own checker
+    carries `propertyNames` only where the whole object is a record, which is an object
+    that names no property. On an object that names properties, the only form is a
+    check Castr writes (`.check` over the keys refused `{A1: 1}`).
+  - _Zod, Oak's shape._ `z.record(z.string(), V)` and `z.strictObject({}).catchall(V)`
+    accept and refuse the same three samples.
+  - _TypeScript, an object that names no property._ `{ [key: string]: V }` accepts
+    `{}` and a value in `V` and refuses one outside it. Keys from an enum are a mapped
+    type with optional members, which refuses a key outside the enum.
+  - _TypeScript, an object that names a property whose type is not `S`._ `{ a: string;
+[key: string]: number }` does not compile. `{ a: string } & { [key: string]: number }`
+    compiles and refuses the literal `{ a: 'x', b: 1 }`, which the source accepts. `{ a:
+string; [key: string]: string | number }` accepts every valid value and also
+    `{ a: 'x', b: 'y' }`, which the source refuses.
+  - _What follows, as a hypothesis for the draft and its attack._ With the classes
+    section 3 already defines, 0.8.1 can make both outputs carry Oak's two schemas,
+    which name no property: Zod as a record, TypeScript as an index signature. A
+    `propertyNames` on an object that names properties needs a check Castr writes, whose
+    mark is part three's; until then it is a `NOT-YET-BUILT` rejection. A constrained
+    object that names a property whose type its `additionalProperties` does not admit
+    is carried by companion in TypeScript at best.
+
+- 2026-11-22, N0, row 1 attacked. A principles-first reviewer was given the row that
+  says changing the model's validator is not "the model changes", with SPEC-N-1,
+  SPEC-AR-2 and the course's sentence, and told to break it. It held: no approved text
+  names the validator or the values the model accepts; a reference in the model is a
+  string, so a schema that refers back to itself is no cycle; and the validator already
+  admits a schema-valued `unevaluatedProperties`. The reviewer added what the row had
+  missed. Today the validator is the only thing between a schema-valued
+  `additionalProperties` and three writers that would narrow or drop it, and a model
+  value can reach the writers with no reader (`ir/serialization.ts`). SPEC-AR-5 binds:
+  "a writer expresses it in the class its table names or gives a located rejection".
+  The seat checked the cited lines of the specification and adopts four conditions for
+  N0's building:
+  1. `ir/models/` is unchanged and the model's version stays as it is.
+  2. In the same change every writer (Zod, TypeScript, the shared JSON Schema writer)
+     writes a constrained object or gives a located rejection, each proved by a test
+     that hands it a model value directly, not through a reader.
+  3. The validator's test that pins the refusal is inverted first, and a test shows the
+     validator ends on an `additionalProperties` that refers to its own parent.
+  4. A schema-valued `additionalProperties` inside a branch of `allOf` is a located
+     rejection until the specification says what it means there.
+
+  Not checked by the reviewer and still to check when N0 is built: whether the two
+  validators exported from the package's entry point touch the public surface
+  (SPEC-N-4), and the Markdown writer.
+
+- 2026-11-22, N3, start. **Step back.**
+  1. _Which sentence it moves._ "the specification says exactly what 'right' is". For
+     Oak's document it is the text the fix waits on.
+  2. _Changed for Oak's document since the last step back._ Nothing. This is the second
+     step in a row of which that is true; the owner chose the order on 22 November
+     knowing it. When this was written N0 was to be the third step. Decision seventeen
+     later put numbers and the tables before the fix; the question that decision
+     answered told the owner that Oak's document stays refused until part three is
+     approved and the fix is built, which is the plain statement the plan's rule asks
+     for before a third such step starts.
+  3. _Size._ The plan gave one pull request of three to five pushes. The draft as
+     attacked and the decision it led to landed as a pull request of their own (#163);
+     the redraft and the landing of the text are one further pull request, as the plan
+     now says.
+  4. _Checking larger than the work._ No.
+  5. _Lost if it stopped here._ The draft is a tracked file; the trials and the texts
+     read word for word are in it.
+- 2026-11-22, N3, start. **The matrix on N3's unknowns and on the review dispositions
+  the plan routes to it.**
+
+  | Question                                                                  | Lens that settles it                                            | Disposition                                                                                                                                                                                                                  |
+  | ------------------------------------------------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | Is a rule that differs between 3.1 and 3.2 one entry or two               | Could it be simpler                                             | One entry that says the difference, as rules 1 to 5 give both section numbers. The Security Requirement rule is the only one that differs                                                                                    |
+  | Does the sweep of every "MUST" belong in this step                        | Proportionality, with the owner's decision twelve               | No. An unlisted rule costs a `NOT-YET-BUILT` count until an amendment lists it; this step lists the three already known                                                                                                      |
+  | Which of `schema` and `schema-base` case 4 is judged by                   | Strict                                                          | `schema`. Case 3 reads a document that states Draft 2020-12 as its dialect, and `schema-base` refuses it                                                                                                                     |
+  | What counts as a reference for case 5                                     | Strict: a reference has a target elsewhere; a name does not     | `$ref`, `$dynamicRef`, a link's `operationRef`, and a discriminator `mapping` value that is a URI reference. A link's `operationId` and a security requirement's name are names, and get rules in SPEC-FV-2                  |
+  | A network or file failure while reading a referenced document             | Strict: SPEC-PR-4, the same inputs give the same output         | It has no target, and the rejection says it could not be read                                                                                                                                                                |
+  | A version such as `3.1.0-rc1`                                             | Strict: case 2 names the publisher's pattern as what decides    | Read as its version line; the clause says so                                                                                                                                                                                 |
+  | A nested `$schema` naming another dialect                                 | Strict                                                          | Case 3 already covers it; "at any depth" says so                                                                                                                                                                             |
+  | The resolved target of a reference must be valid for the place it is used | Strict                                                          | Added to case 4                                                                                                                                                                                                              |
+  | Can 0.8.1 class `propertyNames` for Zod without part three's mark         | Strict, after the scratch trial                                 | Only for an object that names no property, where Zod's own checker holds it as a record. Elsewhere it is `NOT-YET-BUILT` until part three. Oak's two schemas are of the first kind                                           |
+  | One TypeScript class for a constrained object, or one per shape           | Excellence: SPEC-PR-1, expressed wherever the target can say it | Per shape: carried where the object names no property; carried by companion where it names one. The simpler test (no named property) is used in place of assignability, which a generator cannot decide from the model alone |
+
+- 2026-11-22, N3. **The first draft was attacked and broke in eleven places.** The
+  [draft](../../../analysis-and-reports/amendment-corrections-draft-2026-11-22.md) holds
+  each finding and its disposition. The seat ran or read the ones the second draft
+  rests on: a Callback Object's extension is allowed by both texts and refused by both
+  schemas; the 3.2 schema already holds the old rule 6; a Tag Object's `parent` must
+  name a tag (3.2 text, 4.22); and Zod's catchall, loose object and record accept
+  `{"__proto__": "zzz"}` and leave the property out of what they return, where the
+  reference validator refuses it. Four rows of the matrix above are changed by it:
+  - _`propertyNames` for Zod._ Not a record. Only a `K` that holds no name to anything
+    (`true`, or `type: string` and annotations) is carried, by writing nothing; any
+    other `K` is `NOT-YET-BUILT` until part three.
+  - _TypeScript for a constrained object._ Carried only for a map, an object whose only
+    keywords are `type: object`, `additionalProperties`, `propertyNames` and
+    annotations. A constrained object that names a property is `NOT-YET-BUILT`: the
+    union index signature does not compile with an optional property and fails
+    SPEC-G-4's mutual assignability.
+  - _What a reference is, a target's validity, a fetch that fails._ Not in 0.8.1. Each
+    was a list nothing forced complete. They follow N2's cells, which give a judge
+    outside Castr.
+  - _Found: `__proto__`._ Lens: strict. The Zod forms 0.5.0 approved are not "carried"
+    for that one name, so the text must say so; the draft declares it in SPEC-P-1 as
+    behaving as stripped, reported, sampled and expected by the proof. Whether to
+    declare it or to hold constrained objects back until a check Castr writes can
+    refuse it is in the text the owner is asked to approve, and is said to them plainly.
+- 2026-11-22, N3. **Two more conditions for N0's building,** from the same review: a
+  constrained object with `patternProperties` is a located rejection, not a catchall;
+  and the picture needs a case for a constrained map beside its case for a constrained
+  object that names a property, because 0.8.1 as drafted makes the first right and
+  leaves the second refused.
+
+- 2026-11-22, N3. **The second draft was attacked and the two rows did not survive.**
+  Ten findings; the draft holds them. Three decide it.
+  - _`__proto__`, run by the seat (Zod 4.6.7)._ Under `.catchall`, `z.looseObject` and
+    `z.record`, a property named `__proto__` is removed from the returned value whether
+    its value is valid or not, and the parse succeeds. A check written after the object
+    does not see the name. A check before it, on the raw input, can only refuse every
+    value that has the name, valid ones included. Of eight other names tried
+    (`constructor`, `prototype`, `toString`, `hasOwnProperty`, the empty string, `0`,
+    `__defineGetter__`), none behaves so. So Zod cannot be exact for that name where
+    the policy is constrained or open; the choice is between refusing the name, which
+    is a narrowing and needs a check Castr writes, and accepting and removing it, which
+    is what Zod does and is a widening.
+  - _The words the two rows lean on are the tables' words._ "Annotation" needs a closed
+    list (both dialects call `format` one); a map needs `type` stated; "constrained"
+    needs a sentence for each value of `additionalProperties`; and Oak's output needs a
+    row for its `S` as well. SPEC-N-5 leaves all of it open.
+  - _SPEC-G-5._ Its exception has two routes and "a name is always a string" is
+    neither.
+- 2026-11-22, N3. **The matrix on what the second attack raised.**
+
+  | Question                                                                                 | Lens that settles it                                                                       | Disposition                                                                                                                                                                                                                                                                                                                                     |
+  | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | Declare Zod's treatment of `__proto__`, or refuse the name                               | Strict: SPEC-PR-2, "never drops, weakens, widens"; a declared widening is still a widening | Refuse the name. The seat's second draft declared it and called the map carried; three of four conscience-check seats and the second reviewer said that was a weakening named, not removed, and they were right. Refusing needs a check Castr writes and a profile decision that narrows, as the closed reading does; both are the owner's text |
+  | Can the two rows be written in 0.8.1                                                     | Strict, with section 12: no code assumes an answer to an open item                         | No. They need the check Castr writes and its mark, a closed list of annotations, the definition of a map, and a row for `S`. Each is part three's. The premise of decision fifteen, that the two rows could be carried ahead of the tables, did not hold, and the plan says where the text comes from then goes back to the owner               |
+  | What 0.8.1 is now                                                                        | Could it be simpler: one concern per change                                                | The corrections alone: the revisions, cases 2 and 3, and the list of SPEC-FV-2, each with the second review's wording faults closed and re-attacked before the owner sees it                                                                                                                                                                    |
+  | Found: a 3.2 document that names the dialect the 3.2 text names may be refused by case 3 | Strict: read before writing                                                                | Not yet read word for word. It is read from both texts before the corrections are redrafted, and if true it is a defect in approved text that 0.8.1 corrects                                                                                                                                                                                    |
+  | The conscience check's second wave                                                       | The panel's own rule: a frame overtaken by a re-plan is not re-run                         | Not run. The first wave (three on track, one drifting on a missing status line; all four said the frame understated `__proto__` and the three deferred items) judged a plan this finding has replaced. The panel runs again on the plan that follows the owner's answer                                                                         |
+
+- **Owner decision seventeen, by question prompt, 22 November 2026.** Told that two
+  attacks had shown the two rows cannot be written in 0.8.1, and why, and asked where
+  their text comes from now (with the tables in the accepted order; the tables' words
+  next, ahead of numbers; or kept in 0.8.1 with a declared acceptance and removal of
+  `__proto__`), the owner chose "With the tables, in order". So 0.8.1 is the
+  corrections alone; numbers follow; part three classes the two rows with every other;
+  and the fix of Oak's document is built after part three is approved. It approves no
+  text. The plan's order, todos and N0 are changed to say so.
+- 2026-11-22, N3. **The dialect each text names, read word for word.** Both texts, 3.1.2
+  at section 4.8.24.1 and 3.2.0 at section 4.24.1, say: "The OpenAPI Schema Object
+  dialect for this version of the specification is identified by the URI
+  https://spec.openapis.org/oas/3.1/dialect/base (the "OAS dialect schema id")." The
+  3.2 text names the 3.1 address. The publisher's 3.2 `schema-base` fixes the dialect to
+  `https://spec.openapis.org/oas/3.2/dialect/2026-02-26`. Case 3 as approved reads "the
+  OpenAPI dialect its publisher gives for the document's version line, at any
+  revision", which does not say whether a 3.2 document that names the address its own
+  text names is read. It is a fault in approved text, and the redraft of 0.8.1 corrects
+  it: a document is read when it names the dialect its version's text names or the one
+  its version's published schemas give, at any revision.
+- 2026-11-22, N3. **What is next in this step.** Redraft the corrections alone (the
+  revisions, cases 2 and 3, the list of SPEC-FV-2) with the second review's wording
+  faults closed and the dialect fault above; attack it; run the conscience check on the
+  plan as it now stands; then ask for the owner's words on 0.8.1. N2 waits on nothing
+  and may be worked beside it.
+
+- 2026-11-22, N3, at the fifth push of the pull request that carries the draft's record
+  (#163). **Step back.**
+  1. _Which sentence it moves._ None for Oak's document. It makes the plan and the
+     records say one thing after the order changed three times in a day.
+  2. _Changed for Oak's document._ Nothing.
+  3. _Size._ Past what a record should cost. Three review rounds each found places where
+     a change to the plan's order was made in one file and not in another. The cause is
+     the seat's: each change of order was edited where it was noticed, not swept through
+     every place that states the order (the todos, the prose, the review-dispositions
+     table, the continuity row, the step log). A change of order is now swept through
+     all five before it is committed.
+  4. _Checking larger than the work._ Close to it; the cure is the sweep above, not
+     fewer reviews.
+  5. _Lost if it stopped here._ The owner's decision seventeen and both reviews of the
+     draft would not be on `main`.
+- 2026-11-22. **A rule the seat broke all day, found by a hosted review.** Edits to
+  this record and to the continuity file were committed together with plan, test and
+  draft changes in three pull requests. The Ecosystem repository's rule is that
+  continuity records land as their own `chore(continuity)` commit. History here is
+  append-only, so the earlier commits stand as they are; from this commit on, this
+  record and the continuity file are committed apart from everything else.
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
