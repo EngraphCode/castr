@@ -505,6 +505,31 @@ string; [key: string]: string | number }` accepts every valid value and also
   | Which validator judges the cells                                                                   | Open, and N2's first act. Ajv 8.20.0 refuses any document with a Schema Object other than `{}` under the pinned schemas (run by the seat). The plan's N2 says how the choice is proved.                                                                          |
   | Merge the draft before asking the owner, or one pull request for draft and landing                 | Merge first: the owner then reads text that is on `main`, and the landing is a change of the specification alone. The plan's size line for N3 says so.                                                                                                           |
 
+- 2026-11-22, N3. **The fourth attack, and the withdrawal.** The fourth draft (commit
+  `1f793ef5`) met the exit set above. Entry 7's last sentence says two things about a
+  reference into an `x-` field of a Callback Object. And naming the new revisions
+  changes which documents case 4 refuses, in both directions: for one, `allowReserved`
+  on a 3.2 header parameter is read at the revision 0.8.0 names and refused at the
+  latest, and the 3.2 text states no prohibition. The draft had called the change "out
+  of date" and listed none. 0.8.1 is withdrawn; nothing was put to the owner; the
+  specification is unchanged at 0.8.0.
+- 2026-11-22, N3. **Step back at its end.**
+  1. _What it moved._ No sentence of the specification. It found that the picture has
+     read schemas since #162 that refuse and read different documents from the ones the
+     approved text names, that the installed validator cannot judge either set, and
+     that the seat had read a superseded text.
+  2. _Changed for Oak's document._ Nothing.
+  3. _Size._ Four drafts and four attacks for no approved text. The cause is the same
+     in each: the seat wrote what a document's outcome is from reading, where only
+     running the document through a sound validator at both revisions shows it. N2
+     builds that. A correction to section 6 is not drafted again until its cells exist.
+  4. _Whose the withdrawal is._ The seat's. The plan's todo ends "approved in the
+     owner's words or withdrawn"; N3's place before N4 was the seat's disposition; the
+     owner's order (numbers, the tables, the fix) is untouched. The owner is told, not
+     asked.
+  5. _What is next._ N2, starting with its validator, and N4. Neither waits on the
+     other. The corrections return in N7 with the list of what the revisions change.
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
