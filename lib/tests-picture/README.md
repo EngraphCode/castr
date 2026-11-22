@@ -136,13 +136,16 @@ the publisher's schema revision does.
   reach a Schema Object through `"$dynamicRef": "#meta"` with the anchor under `$defs`.
   Ajv 8.20.0 honours a dynamic anchor only at a schema's root, so under those schemas it
   refuses `{"type": "string"}` as a Schema Object.
-- **How the judge was chosen.** On 22 November 2026, 31 small documents were judged
-  against six pinned schemas by this validator and by the Python `jsonschema` 4.25.1,
-  which shares no code with it. They agreed on all 186 outcomes. A third,
-  `json-schema-library` 11.6.16, disagreed with both on two and was wrong on each: it
-  loses a property evaluated through `dependentSchemas`. The outcomes are recorded in
-  [`refusals/revision-cases.e2e.test.ts`](refusals/revision-cases.e2e.test.ts),
-  which recomputes them with the judge. The Python validator is not in this repository.
+- **How the judge was chosen.** On 22 November 2026, in a trial outside this
+  repository, 31 small documents were each judged against three pinned schemas of 3.1
+  and three of 3.2 by this validator and by the Python `jsonschema` 4.25.1, which shares
+  no code with it. They agreed on all 186 outcomes. A third, `json-schema-library`
+  11.6.16, disagreed with both on two and was wrong on each: it loses a property
+  evaluated through `dependentSchemas`. The trial's documents are the ones in
+  [`refusals/revision-cases.e2e.test.ts`](refusals/revision-cases.e2e.test.ts), where
+  two that repeated others are left out: 28 cases and a document with no `info`, each as
+  3.1 and as 3.2, each against three schemas, 174 outcomes. The test recomputes them
+  with the judge. The Python validator is not in this repository.
 - **What a change of revision does.** Case 4 is judged "at the revision this section
   names". [`refusals/revision-cases.ts`](refusals/revision-cases.ts) holds 28 small
   documents, each stamped as 3.1 and as 3.2, and `pnpm picture` lists the ones the
