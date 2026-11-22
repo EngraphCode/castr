@@ -132,7 +132,10 @@ lib/src` is empty). Every pull request since has been the picture, the specifica
   text for the two rows that stop Oak's document is brought for approval, the owner
   chose "Carry in 0.8.1"; asked what happens to the part of the fix that is specified
   today and turns no picture cell right, "Build with the text". So N0's code waits on
-  0.8.1. This replaces "Fix first" of earlier the same day for where the fix sits.
+  0.8.1. This replaces "Fix first" of earlier the same day for where the fix sits. What
+  N0 waits on is the approved text for the two rows, not N3 ending: if 0.8.1 is
+  withdrawn, or is approved without them, N0 does not start and where its text comes
+  from goes back to the owner.
 - **N1 before N3, and N0 before N4, are the seat's.** N3 names the revisions N1 pins,
   so it waits on the re-pin. That the fix is built before numbers and the tables is
   the seat's reading of "Fix first" and of the two answers above; the owner was not
