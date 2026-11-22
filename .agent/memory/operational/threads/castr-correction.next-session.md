@@ -742,11 +742,11 @@ string; [key: string]: string | number }` accepts every valid value and also
 
 - 2026-11-22, N2. **#166 merged (`b35d714e`); the second slice.** Inputs for cases 1 to
   4 of SPEC-FV-1 and for documents no case describes, with the case decided outside
-  Castr and what Castr does set against it. As merged: 27 inputs; 7 right; 6 read that
+  Castr and what Castr does set against it. As merged: 29 inputs; 7 right; 7 read that
   should be refused (an OpenAPI 2.0 document, a 3.0.3 document, a `jsonSchemaDialect`
   naming Draft-07, a component schema whose `$schema` names Draft-07, a 3.2 document
-  naming the 3.1 dialect, a path below the 3.1 dialect); 11 refused in words that give
-  no kind or case; 3 not decided here. The first form of the slice had 17 inputs.
+  naming the 3.1 dialect, a path below the 3.1 dialect, a 3.0.3 document in YAML); 11 refused in words that give
+  no kind or case; 4 not decided here. The first form of the slice had 17 inputs.
   - _Matrix row: whether a document Castr converts and 0.8.0 refuses is a cell of its
     own._ Lens: strict. Yes: `reads it` is a verdict of its own, apart from the
     existing "wrong", because the fault is in reading at all and not in an output. And
