@@ -247,7 +247,7 @@ published-rows.ts` names the files and holds the correction that a Link Object's
 - **Finished when.** `pnpm picture` prints a section for the reader's refusals; the
   cells are held by a test; the README says what is judged and by what.
 - **Size.** One pull request, about ten files, two or three pushes. Before the first
-  push, have the `test-expert` reviewer run inputs against any new reader: on the
+  push, have the test reviewer (`test-reviewer` in this repository, `test-expert` in the Ecosystem repository) run inputs against any new reader: on the
   picture's type reader it found seven defects that way, and the hosted reviews then
   found four more.
 
