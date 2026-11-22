@@ -87,7 +87,8 @@ and the other is corrected.
    unknowns, and write both under "Step log" in the thread record. N0's are there,
    dated 22 November. N1 is done; N3 and N4 are withdrawn. The next step is N5, the
    tables, which now carry numbers: it is on the path to the fix and waits on nothing.
-   It opens with a Cricket panel, its re-sizing, and the design of SPEC-N-4. N2 has its
+   Its Cricket panel ran on 22 November; its first piece is the table vocabulary and
+   the tables for schema rows, with the design of SPEC-N-4 beside it. N2 has its
    judge and two slices merged; its remaining slices are worked where N5 waits on the
    owner.
 7. Read "Review dispositions" at the foot of this plan and give each row its
@@ -484,12 +485,25 @@ validate-specification-approval`), or by the record.
   companion for TypeScript; `$id`, `$anchor` and `$defs` stay carried as structure,
   shown as a type exported under the name. No rule quantified over a list that nothing
   forces to be complete.
-- **Starts with the design of SPEC-N-4.** The 56 Zod cells for rows outside a schema
-  need the form of addressing a validator, which is the public surface and is not
-  designed. It is the first piece of this step, in a pull request of its own: read how
-  the Ecosystem repository uses the output, ask its seat for facts, write the design as
-  a tracked draft, have it attacked, and bring it to the owner as an amendment. The
-  tables for those 56 cells follow it; the other tables do not wait on it.
+- **Its first piece is the vocabulary and the tables for schema rows,** starting with
+  `additionalProperties` and `propertyNames`, the two rows that stop Oak's document.
+  This is the seat's order, set at the step's opening on 22 November after a Cricket
+  panel of eight returns, every one of which gave it: those tables do not wait on the
+  public surface, and they are what N0 waits on. In Oak's document both rows hold only
+  `type: string` and an `enum` of strings (computed, 22 November), so classing them
+  needs no word of the numbers text. The piece is a part of part three that can be
+  approved alone. Before a reviewer sees a sentence of it, the sentence is run against
+  the composition cases (see N4).
+- **The design of SPEC-N-4 runs beside it and never ahead of it in the landing queue.**
+  The 56 Zod cells for rows outside a schema need the form of addressing a validator,
+  which is the public surface and is not designed. In a pull request of its own: read
+  how the Ecosystem repository uses the output, ask its seat for facts, write the
+  design as a tracked draft, have it attacked, and bring it to the owner as an
+  amendment. The tables for those 56 cells follow it.
+- **N0 still waits on the whole step.** Approval of the first piece does not start the
+  fix: numbers are a later part of this step, and starting N0 before them would change
+  code while the integer rows are open, which is the order the seat's reading of
+  decision eighteen ruled out.
 - **Finished when.** As N3, for the version this part carries, with the tables in the
   specification and the picture's proposals computed from them and not kept beside them.
   Where N6 has already written legs, they are read again against the approved tables
