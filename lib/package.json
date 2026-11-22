@@ -111,7 +111,8 @@
     "type-fest": "^5.8.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.68.0",
-    "vitest": "^4.1.12"
+    "vitest": "^4.1.12",
+    "yaml": "^2.9.0"
   },
   "files": [
     "src",

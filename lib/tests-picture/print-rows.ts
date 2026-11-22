@@ -22,11 +22,13 @@ import { renderNotRight, renderUsage } from './documents/render-usage.js';
 import { rowsUsedBy } from './documents/rows-used.js';
 import { readDocument, runDocuments } from './documents/run-documents.js';
 import { usageOf } from './documents/usage.js';
+import { READER_CASES, renderReaderCases } from './refusals/reader-cases.js';
 import {
   judgeRevisionCases,
   renderRevisionDifferences,
   REVISION_CASES,
 } from './refusals/revision-cases.js';
+import { runReaderCases } from './refusals/run-reader-cases.js';
 import { loadDefinition } from './rows/definitions.js';
 import { pictureRows } from './rows/picture-rows.js';
 import { renderRows, renderToday, renderUnexercised } from './rows/render.js';
@@ -60,6 +62,7 @@ if (problems.length > 0) {
   console.log(renderToday(rows, typesHeld, "Castr's TypeScript output holds"));
   console.log(renderToday(rows, endpoints, "Castr's endpoint definitions hold"));
   console.log(renderDocuments(await runDocuments(DOCUMENTS)));
+  console.log(renderReaderCases(await runReaderCases(READER_CASES)));
   console.log(renderRevisionDifferences(await judgeRevisionCases(REVISION_CASES)));
   const rowIds = new Set(rows.map((row) => row.id));
   const usages = DOCUMENTS.map((document) => {
