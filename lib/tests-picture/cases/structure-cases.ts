@@ -356,14 +356,6 @@ const MEDIA_TYPES: readonly StructureCase[] = [
     value('text/kestrel'),
   ),
   mediaType(
-    'description',
-    JSON_TYPE,
-    { schema: STRING, description: 'kestrel' },
-    { schema: STRING },
-    value('kestrel'),
-    '3.2.0',
-  ),
-  mediaType(
     'itemSchema',
     'application/jsonl',
     { itemSchema: KESTREL_ONLY },
@@ -479,13 +471,6 @@ const RESPONSES_AND_HEADERS: readonly StructureCase[] = [
     { ...MANY_HEADER, explode: true },
     { ...MANY_HEADER, explode: false },
     DIFFERENCE,
-  ),
-  header(
-    'allowReserved',
-    { ...PLAIN_HEADER, allowReserved: true },
-    PLAIN_HEADER,
-    DIFFERENCE,
-    '3.2.0',
   ),
 ];
 

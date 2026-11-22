@@ -23,7 +23,7 @@ todos:
     depends_on: [N3-CORRECTIONS]
   - id: N1-REPIN
     content: 'The picture pins the latest revisions of the publisher schemas for OpenAPI 3.1 and 3.2. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
-    status: pending
+    status: completed
     depends_on: []
   - id: N2-REFUSALS
     content: 'The picture has cells for what the reader refuses under SPEC-FV-1 and SPEC-FV-2, and they show what Castr does today. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
@@ -119,7 +119,7 @@ and the other is corrected.
   (`NOT-READ`, SPEC-FV-1, SPEC-FV-2) and 3.0.x as a later capability. It is part one of
   three.
 - The picture (`lib/tests-picture/`, `pnpm picture`, `pnpm test:picture`) has cells for
-  317 rows in three columns and for whole documents.
+  315 rows in three columns and for whole documents (317 before the re-pin of N1).
 - Castr refuses Oak's v1 document in every output. `pnpm picture` lists the rows Oak's
   document uses that are not right: 31 of 74.
 - No commit has touched `lib/src` since 18 November (`git log --since=2026-11-18 --
@@ -369,7 +369,7 @@ published-rows.ts` names the files and holds the correction that a Link Object's
   Where N6 has already written legs, they are read again against the approved tables
   in this step's pull request, and any leg whose exit state a table changed is
   corrected in the course.
-- **Size.** The largest step: 317 rows in three columns. At least two pull requests.
+- **Size.** The largest step: 315 rows in three columns. At least two pull requests.
   Size it at its start with what is known then.
 
 ### N6-PLOT: the remaining legs

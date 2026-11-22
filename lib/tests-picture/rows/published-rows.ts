@@ -3,7 +3,6 @@ import {
   readInventory,
   readKeywords,
   readTypeValues,
-  type Correction,
   type Inventory,
   type KeywordKind,
 } from './inventory.js';
@@ -20,14 +19,6 @@ const VOCABULARIES: readonly (readonly [string, string])[] = [
   ['format', 'jsonschema-2020-12-format-annotation.json'],
   ['content', 'jsonschema-2020-12-content.json'],
   ['meta-data', 'jsonschema-2020-12-meta-data.json'],
-];
-
-/**
- * Where the published OpenAPI 3.1 document schema differs from the specification's text.
- * The Link Object's field is `server`; revision 2022-10-07 of the schema spells it `body`.
- */
-export const OPENAPI_31_CORRECTIONS: readonly Correction[] = [
-  { object: 'link', published: 'body', specified: 'server', section: 'OpenAPI 3.1, 4.8.20' },
 ];
 
 /**
@@ -51,13 +42,15 @@ export function schemaTypeValues(read: DefinitionReader): readonly string[] {
 }
 
 /**
- * The objects and fields of an OpenAPI 3.1 document, outside the schema object.
+ * The objects and fields of an OpenAPI 3.1 document, outside the schema object. Revision
+ * 2022-10-07 of this schema spelt the Link Object's `server` field as `body` and was read
+ * with a correction; from 2026-11-05 the schema and the specification's text agree.
  */
 export function openApi31Objects(read: DefinitionReader): Inventory {
-  return readInventory(read('oas-3.1-schema-2022-10-07.json').schema, {
+  return readInventory(read('oas-3.1-schema-2026-11-05.json').schema, {
     rootName: 'openapi',
     extensionRef: '#/$defs/specification-extensions',
-    corrections: OPENAPI_31_CORRECTIONS,
+    corrections: [],
   });
 }
 
@@ -65,7 +58,7 @@ export function openApi31Objects(read: DefinitionReader): Inventory {
  * The objects and fields of an OpenAPI 3.2 document, outside the schema object.
  */
 export function openApi32Objects(read: DefinitionReader): Inventory {
-  return readInventory(read('oas-3.2-schema-2025-09-17.json').schema, {
+  return readInventory(read('oas-3.2-schema-2026-11-12.json').schema, {
     rootName: 'openapi',
     extensionRef: '#/$defs/specification-extensions',
     corrections: [],
@@ -76,7 +69,7 @@ export function openApi32Objects(read: DefinitionReader): Inventory {
  * The keywords OpenAPI 3.1 adds to the schema object, with the fields of each.
  */
 export function openApi31SchemaVocabulary(read: DefinitionReader): Inventory {
-  return readInventory(read('oas-3.1-meta-base.json').schema, {
+  return readInventory(read('oas-3.1-meta-2024-11-10.json').schema, {
     rootName: 'schema',
     extensionRef: '#/$defs/extensible',
     corrections: [],
@@ -87,7 +80,7 @@ export function openApi31SchemaVocabulary(read: DefinitionReader): Inventory {
  * The keywords OpenAPI 3.2 adds to the schema object, with the fields of each.
  */
 export function openApi32SchemaVocabulary(read: DefinitionReader): Inventory {
-  return readInventory(read('oas-3.2-meta-2025-09-17.json').schema, {
+  return readInventory(read('oas-3.2-meta-2026-02-26.json').schema, {
     rootName: 'schema',
     extensionRef: '#/$defs/extensible',
     corrections: [],

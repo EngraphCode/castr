@@ -80,7 +80,7 @@ export const OBJECT_PROPOSALS: ReadonlyMap<string, ObjectProposals> = new Map<
       ),
       keyed: keyed(
         [
-          '^(schemas|responses|parameters|examples|requestBodies|headers|securitySchemes|links|callbacks|pathItems)$',
+          '^(?:schemas|responses|parameters|examples|requestBodies|headers|securitySchemes|links|callbacks|pathItems)$',
           COMPONENT_NAME,
         ],
         [
@@ -160,13 +160,7 @@ export const OBJECT_PROPOSALS: ReadonlyMap<string, ObjectProposals> = new Map<
     'media-type',
     {
       fallback: SER,
-      fields: fields(
-        ['schema', SLOT],
-        ['itemSchema', SLOT],
-        ['description', SAY],
-        ['example', EX],
-        ['examples', EX],
-      ),
+      fields: fields(['schema', SLOT], ['itemSchema', SLOT], ['example', EX], ['examples', EX]),
     },
   ],
   ['encoding', { fallback: SER }],

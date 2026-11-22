@@ -85,7 +85,7 @@ construct of, then sets those rows against today's cells
 ([`documents/usage.ts`](documents/usage.ts)). It prints a count for each document and
 each output, and for Oak's document the rows that are not right.
 
-Oak's document uses 74 of the 317 rows. In the Zod output two of them are refused
+Oak's document uses 74 of the 315 rows. In the Zod output two of them are refused
 (`additionalProperties` and `propertyNames`, each enough alone to stop the document),
 three are wrong (`const`, `format: uri` and `false` as a schema) and one is missing
 (`default`). [`documents/documents.gen.test.ts`](documents/documents.gen.test.ts) holds
@@ -102,7 +102,7 @@ How to read it:
   document holds, and the count says nothing of a combination.
 - **The walk is checked against every case**
   ([`documents/rows-used.e2e.test.ts`](documents/rows-used.e2e.test.ts)): each of the
-  210 cases' documents must name the row it was written for, and no whole document may
+  208 cases' documents must name the row it was written for, and no whole document may
   state a field that is no row.
 - **Where each object of a document is found is a table written by hand** in the walk,
   not computed from the definitions. That check is what holds it.
@@ -135,17 +135,28 @@ hash and refuses bytes that do not match.
 | The keywords OpenAPI adds to a schema      | the OpenAPI 3.1 base vocabulary and the 3.2 one |
 | Every other object and field of a document | the OpenAPI 3.1 and 3.2 document schemas        |
 
-A published definition is evidence about a format. It is not the format. The OpenAPI 3.1
-document schema spells the Link Object's `server` field as `body`;
-[`rows/published-rows.ts`](rows/published-rows.ts) corrects that by name, and the reading
-reports a correction that stops applying. Constructs that only the specifications' text
+A published definition is evidence about a format. It is not the format. Revision
+2022-10-07 of the OpenAPI 3.1 document schema spelt the Link Object's `server` field as
+`body`, and revision 2025-09-17 of the 3.2 one gave a Media Type Object a `description`
+and a Header Object an `allowReserved` that the specification's text does not; the
+revisions read now agree with the text in all three. Where a definition and the text
+differ, [`rows/published-rows.ts`](rows/published-rows.ts) corrects the field by name, and
+the reading reports a correction that stops applying. No correction is needed today.
+Constructs that only the specifications' text
 defines (the values of `format`, boolean schemas, a keyword no vocabulary defines) cannot
 be computed. They are listed by hand in [`rows/schema-proposals.ts`](rows/schema-proposals.ts),
 each with the section that defines it, and are the part of the rows most likely to be
 missing one.
 
-The two dialect files and the format-assertion vocabulary are pinned with the rest and
-no code reads them yet.
+The rows are read from the latest revisions the publisher listed on 22 November 2026: for
+OpenAPI 3.1, the document schema of 2026-11-05 and the vocabulary of 2024-11-10; for 3.2,
+the document schema of 2026-11-12 and the vocabulary of 2026-02-26.
+
+Pinned with the rest, and read by no code yet: the two dialect files; each version's
+`schema-base`, which is the document schema with every Schema Object held to the OpenAPI
+dialect; the format-assertion vocabulary; and the two document schemas the specification
+names at version 0.8.0 (3.1 of 2022-10-07, 3.2 of 2025-09-17), which stay until the
+specification names others.
 
 ## How a definition is read
 
