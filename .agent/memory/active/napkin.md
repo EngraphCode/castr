@@ -23,6 +23,26 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   pins are old revisions of it. I had read these files for two days for their field
   lists and never their description line.
 
+## 2026-11-22, later (the plan after 0.8.0 — Ingot binds Patina / 194219, claude-code)
+
+- **I told the owner a fact wider than I had checked, and they decided on it.** I said a
+  fix "does not wait on any part of the amendment" after checking the specification, the
+  model's type, the reader and one writer. A reviewer showed it held for one output
+  column of three. What works: before a fact goes to the owner, name what was not
+  checked in the same sentence, or check it.
+- **I repeated a reviewer's claim without looking.** A reviewer's report said this
+  repository holds no copy of the cognitive skills; I wrote it into the plan. One `ls`
+  showed otherwise. A reviewer's statement about the tree is checked like any other.
+- **A handover check found prior work no record named.** Listing unmerged branches
+  showed two that had attempted the plan's first step in April. List the branches
+  before planning a fix, not after.
+- **The commit helper refuses a subject with an apostrophe,** by design. Write the
+  subject without one.
+- **Hosted review of a plan ran seven rounds and each found a real fault,** nearly all
+  of one kind: two places in the records saying different things about what is next.
+  After changing what is next, search every record for the old statement before the
+  first push.
+
 ## 2026-11-21 (picture: the TypeScript structure cells and whole documents — Ingot binds Patina / 194219, claude-code)
 
 - **A background task shown as running had failed at its first step.** A command that
