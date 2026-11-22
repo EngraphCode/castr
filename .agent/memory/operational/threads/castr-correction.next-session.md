@@ -382,6 +382,34 @@ string; [key: string]: string | number }` accepts every valid value and also
   object that names a property, because 0.8.1 as drafted makes the first right and
   leaves the second refused.
 
+- 2026-11-22, N3. **The second draft was attacked and the two rows did not survive.**
+  Ten findings; the draft holds them. Three decide it.
+  - _`__proto__`, run by the seat (Zod 4.6.7)._ Under `.catchall`, `z.looseObject` and
+    `z.record`, a property named `__proto__` is removed from the returned value whether
+    its value is valid or not, and the parse succeeds. A check written after the object
+    does not see the name. A check before it, on the raw input, can only refuse every
+    value that has the name, valid ones included. Of eight other names tried
+    (`constructor`, `prototype`, `toString`, `hasOwnProperty`, the empty string, `0`,
+    `__defineGetter__`), none behaves so. So Zod cannot be exact for that name where
+    the policy is constrained or open; the choice is between refusing the name, which
+    is a narrowing and needs a check Castr writes, and accepting and removing it, which
+    is what Zod does and is a widening.
+  - _The words the two rows lean on are the tables' words._ "Annotation" needs a closed
+    list (both dialects call `format` one); a map needs `type` stated; "constrained"
+    needs a sentence for each value of `additionalProperties`; and Oak's output needs a
+    row for its `S` as well. SPEC-N-5 leaves all of it open.
+  - _SPEC-G-5._ Its exception has two routes and "a name is always a string" is
+    neither.
+- 2026-11-22, N3. **The matrix on what the second attack raised.**
+
+  | Question                                                                                 | Lens that settles it                                                                       | Disposition                                                                                                                                                                                                                                                                                                                                     |
+  | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | Declare Zod's treatment of `__proto__`, or refuse the name                               | Strict: SPEC-PR-2, "never drops, weakens, widens"; a declared widening is still a widening | Refuse the name. The seat's second draft declared it and called the map carried; three of four conscience-check seats and the second reviewer said that was a weakening named, not removed, and they were right. Refusing needs a check Castr writes and a profile decision that narrows, as the closed reading does; both are the owner's text |
+  | Can the two rows be written in 0.8.1                                                     | Strict, with section 12: no code assumes an answer to an open item                         | No. They need the check Castr writes and its mark, a closed list of annotations, the definition of a map, and a row for `S`. Each is part three's. The premise of decision fifteen, that the two rows could be carried ahead of the tables, did not hold, and the plan says where the text comes from then goes back to the owner               |
+  | What 0.8.1 is now                                                                        | Could it be simpler: one concern per change                                                | The corrections alone: the revisions, cases 2 and 3, and the list of SPEC-FV-2, each with the second review's wording faults closed and re-attacked before the owner sees it                                                                                                                                                                    |
+  | Found: a 3.2 document that names the dialect the 3.2 text names may be refused by case 3 | Strict: read before writing                                                                | Not yet read word for word. It is read from both texts before the corrections are redrafted, and if true it is a defect in approved text that 0.8.1 corrects                                                                                                                                                                                    |
+  | The conscience check's second wave                                                       | The panel's own rule: a frame overtaken by a re-plan is not re-run                         | Not run. The first wave (three on track, one drifting on a missing status line; all four said the frame understated `__proto__` and the three deferred items) judged a plan this finding has replaced. The panel runs again on the plan that follows the owner's answer                                                                         |
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the

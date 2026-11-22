@@ -4,6 +4,15 @@ Status: second draft, after one adversarial review broke the first in eleven pla
 is not approved and changes nothing in `docs/SPECIFICATION.md`. Approval is the owner's
 typed words naming a version (SPEC-CC-2). The version this draft would carry is 0.8.1.
 
+**This draft is not ready for approval, and clauses 5 and 6 are to be taken out.** A
+second attack on 22 November found ten more faults, and a trial by the seat showed that
+Zod cannot be exact for a property named `__proto__` under a catchall, a loose object
+or a record: it removes the property from what it returns even when its value is valid,
+and a check written after the object never sees it. The findings are under "The second
+review" at the foot. The text below is the second draft as it was attacked, kept so the
+findings can be read against it. Where the text for the two rows comes from now is the
+owner's to say (the plan, "Order, and whose it is").
+
 It does two things. It corrects part one (specification 0.8.0) where a correction can be
 stated exactly today. And, by the owner's decision fifteen of 22 November 2026 ("Carry in
 0.8.1"), it says what the Zod and TypeScript outputs carry for a schema-valued
@@ -318,6 +327,30 @@ became of it:
 | Cases 3 and 4 across documents                                                                        | Deferred to follow N2                                                                      |
 | The dialect meta-schema revisions were not named                                                      | Named in clause 1                                                                          |
 | The record form contradicted "constrained is `.catchall(S)`"; open was classed in one place only      | No record form remains, and nothing here classes open                                      |
+
+## The second review
+
+One adversarial review of the second draft, 22 November 2026, with the same instruction.
+The seat has run the `__proto__` lines itself and has not yet re-run the others; each
+is a hypothesis until it is.
+
+| Finding                                                                                                                                                                                                        | What it means for the draft                                                                                                      |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| "Annotations" is an open list: both dialects declare `format` as an annotation, so a `K` of `{type: string, format: uuid}` would be dropped, and the output widens                                             | Clauses 5 and 6 need a closed list of the keywords that are annotations                                                          |
+| "Whose only keywords are" admits a schema with no `type`, which accepts values that are not objects                                                                                                            | The map needs `type` stated as `object`                                                                                          |
+| Rule 10, "both schemas refuse one", is false for an extension whose value is an object: the schema reads it as a Path Item                                                                                     | Say that a field whose name begins `x-` is an extension whatever its value, and how the document is judged                       |
+| Clause 1, "whichever revision the document names": the version line fixes the meta-schema. Both texts name only `https://spec.openapis.org/oas/3.1/dialect/base` as the OpenAPI dialect, the 3.2 text included | Case 3 as approved may refuse a 3.2 document that names the dialect its own text names. To read word for word before any wording |
+| `__proto__`: "whatever the policy" is false (a strict object refuses it); a valid value under the name is removed too; a property the schema itself names `__proto__` is lost                                  | No wording makes Zod exact for the name. Refusing it needs a check Castr writes before the object, which is part three's         |
+| Clause 6 against SPEC-G-5, SPEC-PR-2 and SPEC-AR-5: "a name is a string" is neither of SPEC-G-5's two routes; "each output is the same" would drop it from a later JSON Schema writer; no class is named       | The clause needs a class and SPEC-G-5 a third route, or the row waits for the tables                                             |
+| "Constrained" is not defined for a map whose `additionalProperties` is `{}`, `true` or absent                                                                                                                  | One sentence for each value                                                                                                      |
+| Rule 6's 3.2 half and rule 7 across files need the deferred material; `operationRef` "MUST point to an Operation Object" is unlisted                                                                           | Limit rule 6 to 3.1 and rule 7 to one document until the references amendment                                                    |
+| Clause 3, "at any depth", reaches a `$schema` inside data (`const`, `enum`, `example`, `default`)                                                                                                              | "Of a Schema Object, however nested; not a `$schema` in data"                                                                    |
+| Oak's outputs do not follow from clauses 5 and 6 alone: they need `example` to be an annotation and a row for `S` (`type` with `enum`), and SPEC-N-5 leaves every row open                                     | The two rows cannot be cut cleanly from the tables: each leans on rows and words the tables have not written                     |
+
+What held under the second attack: rules 6 to 9 are each a rule neither schema holds;
+removing the old rule 6 loses nothing; clause 2 mis-sorts nothing tried; the index
+signature and the Zod catchall are assignable in both directions for every `S` tried;
+only `__proto__` behaves as it does, among the names tried.
 
 ## Open before approval
 
