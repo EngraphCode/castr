@@ -1,5 +1,11 @@
 # OpenAPI Version Differences (3.0.x vs 3.1.x)
 
+> **22 November 2026:** [the specification](./SPECIFICATION.md) at 0.8.0 governs where this document
+> differs. OpenAPI 2.0 and 3.0.x are not read (SPEC-FV-1), reading 3.0.x is a later
+> capability (SPEC-C-3), and no document is rewritten from one version into another
+> before Castr's parser reads it. What this document says about upgrading 3.0 or 2.0
+> input no longer stands.
+
 This document summarizes key differences between OpenAPI 3.0.x and 3.1.x that affect Castr's processing.
 
 ## Key Differences
