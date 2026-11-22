@@ -3,7 +3,7 @@ title: Castr course — from the present code to the specification
 status: active
 lane: active
 created: 2026-09-21
-last_updated: 2026-11-19
+last_updated: 2026-11-22
 destination: docs/SPECIFICATION.md
 owner_directive: >-
   Owner, 2026-09-21: "Before we go further we stop, and we define a destination,
@@ -73,6 +73,11 @@ and its acceptance a workspace dependency. The specification's computed count of
 `NOT-YET-BUILT` rejections (SPEC-PR-6) is the measure of distance remaining.
 
 ## Order of the legs
+
+State on 22 November 2026: PICTURE has run as far as it can today, and part one of the
+specification amendment is approved as 0.8.0. The next six steps, in detail, are in
+[after-0.8.0-next-steps.md](after-0.8.0-next-steps.md), which is the one statement of
+what is next. What follows is the record of how the order was reached.
 
 Owner decision, 21 September 2026 (recorded 23 September): MEASURE precedes MOVE. The
 measure is one session of throwaway probing and it answers the question that decides what
