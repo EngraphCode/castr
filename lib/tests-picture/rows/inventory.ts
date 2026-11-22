@@ -4,7 +4,7 @@ import { isJsonObject, membersOf, type JsonObject } from './json.js';
  * One field an object of a format may hold, with the fixed values the published
  * definition allows it. A field with no fixed values has an empty list.
  */
-export interface FieldKind {
+interface FieldKind {
   readonly name: string;
   readonly values: readonly string[];
   /**
@@ -32,7 +32,7 @@ export interface ObjectKind {
  * A place where a published definition differs from its specification's text. The
  * inventory reads the field the specification names.
  */
-export interface Correction {
+interface Correction {
   readonly object: string;
   readonly published: string;
   readonly specified: string;

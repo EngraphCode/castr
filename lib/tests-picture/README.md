@@ -33,6 +33,9 @@ them.
 It also runs Castr on whole documents: Oak's, and the examples already in the
 repository. See [Whole documents](#whole-documents).
 
+And it judges small documents against the publisher's own schemas, with a validator
+that is not Castr's. See [What the reader refuses](#what-the-reader-refuses).
+
 ### Why the first has no cases yet
 
 The specification says where these rows are carried (SPEC-C-1): the types are a `paths`
@@ -113,6 +116,45 @@ Eight of the examples say they are OpenAPI 3.0, which the specification has Cast
 read. The picture's rows are those of 3.1 and 3.2, so no row speaks for a construct only
 3.0 has, and those lines say what happens to the document and no more. Where an example
 is held as YAML and as JSON the YAML is read.
+
+## What the reader refuses
+
+Specification 0.8.0 says when the reader of an OpenAPI document refuses it (SPEC-FV-1)
+and which rules it holds that no schema does (SPEC-FV-2). The picture's cells for that
+are being built in slices. The first is here: the judge of case 4, and what a change of
+the publisher's schema revision does.
+
+- **The judge is outside Castr.** [`refusals/judge.ts`](refusals/judge.ts) runs a
+  document against one pinned schema of the OpenAPI Initiative's and says whether it
+  passes and where it fails. The validator is `@hyperjump/json-schema`. Of the
+  publisher's schemas it judges only by the pinned files: a schema that is not pinned
+  is an error, including the undated copies the validator carries, and the http, https
+  and file schemes are removed before anything is judged. The JSON Schema 2020-12
+  meta-schema that the two dialects refer to is the validator's own copy; the picture's
+  pinned copies of its vocabularies are not what the judge reads.
+- **Why not Ajv,** which judges the values of the other cases. The publisher's schemas
+  reach a Schema Object through `"$dynamicRef": "#meta"` with the anchor under `$defs`.
+  Ajv 8.20.0 honours a dynamic anchor only at a schema's root, so under those schemas it
+  refuses `{"type": "string"}` as a Schema Object.
+- **How the judge was chosen.** On 22 November 2026, 31 small documents were judged
+  against six pinned schemas by this validator and by the Python `jsonschema` 4.25.1,
+  which shares no code with it. They agreed on all 186 outcomes. A third,
+  `json-schema-library` 11.6.16, disagreed with both on two and was wrong on each: it
+  loses a property evaluated through `dependentSchemas`. The outcomes are recorded in
+  [`refusals/revision-cases.e2e.test.ts`](refusals/revision-cases.e2e.test.ts),
+  which recomputes them with the judge. The Python validator is not in this repository.
+- **What a change of revision does.** Case 4 is judged "at the revision this section
+  names". [`refusals/revision-cases.ts`](refusals/revision-cases.ts) holds 28 small
+  documents, each stamped as 3.1 and as 3.2, and `pnpm picture` lists the ones the
+  revision 0.8.0 names and the latest pinned revision judge differently: 16 of 56. The
+  list is of the documents tried, not of every document that differs.
+- **`schema` and `schema-base`.** The plain `schema` accepts any object or boolean as a
+  Schema Object; `schema-base` also judges each by the line's dialect, so it refuses
+  `{"type": 5}`. The test holds both. The picture's section compares the plain `schema`,
+  which is the one 0.8.0 names.
+
+Not built yet: a document for each of cases 1, 2, 3 and 5; a judge outside Castr for
+each rule SPEC-FV-2 lists; what Castr does set against each.
 
 ## Run it
 

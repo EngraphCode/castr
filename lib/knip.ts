@@ -6,7 +6,7 @@ const config: KnipConfig = {
     'tests-snapshot/**/*.test.ts',
     'tests-picture/**/*.test.ts',
   ],
-  project: ['src/**/*.ts'],
+  project: ['src/**/*.ts', 'tests-picture/**/*.ts'],
   ignoreBinaries: ['tsx'],
   ignoreDependencies: ['madge'],
   // Knip catches dead code, unused files, and unused exports.

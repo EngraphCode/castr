@@ -270,10 +270,10 @@ jobs:
       # runner blow per-test timeouts (measured — test:transforms zod-roundtrip
       # timed out under 5-way parallelism), and each suite deserves the whole
       # machine. The job itself still runs in parallel with the other lanes.
-      - name: Character, snapshot, gen, transforms, e2e suites
+      - name: Character, snapshot, gen, transforms, picture, e2e suites
         run: >-
           pnpm exec turbo run character test:snapshot test:gen test:transforms
-          test:e2e --continue --log-order=grouped --concurrency=1
+          test:picture test:e2e --continue --log-order=grouped --concurrency=1
 
   # Single required status check: fans in every gate above and fails unless
   # every one succeeded — failed, cancelled, AND skipped results all block
