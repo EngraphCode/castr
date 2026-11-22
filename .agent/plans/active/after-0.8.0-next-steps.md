@@ -574,7 +574,7 @@ of three.
 
 **Unknowns found by doing,** recorded when found and not run through the lenses: which
 rows change under the latest revisions (N1); how many more word-only rules the two
-texts hold (N3); what the trace of Oak's two schemas shows (N0).
+texts hold (N7, since N3 is withdrawn); what the trace of Oak's two schemas shows (N0).
 
 ## Review dispositions
 
