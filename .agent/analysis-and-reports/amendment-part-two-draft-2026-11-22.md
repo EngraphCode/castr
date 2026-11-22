@@ -1,10 +1,30 @@
 # Draft amendment, part two: numbers in JavaScript targets
 
-Status: third draft, 22 November 2026. One adversarial review broke the first in twelve
-places and a second broke the second in seven, one of them in the owner's decision four
-as it was worded ("Reviews", below). It is not approved and changes nothing in
-`docs/SPECIFICATION.md`. Approval is the owner's typed words naming a version
-(SPEC-CC-2). The version this part would carry is 0.9.0.
+Status: stopped at its third draft, 22 November 2026, by the exit the seat set before
+the third attack. Three adversarial reviews broke the three drafts in twelve, seven and
+six places ("Reviews", below). It is not approved, changes nothing in
+`docs/SPECIFICATION.md`, and is not put to the owner for approval. What the owner is
+asked is where numbers are written: see "Why it stopped". The version this part would
+have carried is 0.9.0.
+
+## Why it stopped
+
+No review found the owner's two decisions wrong. Each found the text around them false
+on a concrete schema and value, and the third found six such places after two rounds of
+cutting. They share a cause. A clause on numbers cannot be made exact by itself, because
+what it must say is defined elsewhere and not yet:
+
+- **which class a narrowed integer has** (the scope-and-fidelity tables, part three);
+- **what the annotation is** that states the narrowing and lets a reader recover the
+  integer (the mark on a Zod check, part three, with how Zod is read);
+- **how a parameter's text becomes a number** (the endpoint definitions' column, part
+  three);
+- **what the proof excuses and what it samples** (SPEC-G-4 and SPEC-G-5), which every
+  draft patched and every review broke again;
+- **which kind of located rejection** a place Castr cannot write soundly gets: none of
+  the three kinds fits as they are defined.
+
+What stands from the three drafts is under "What stands".
 
 This is the second of three parts. It adds one profile clause and the two sentences the
 proofs need to use it. It does not touch what the reader refuses (part one, approved as
@@ -246,3 +266,45 @@ also to say whether each finding reaches the core of a decision or the seat's wo
 | —   | Unclear: SPEC-PR-2's "a class or a rejection" has no class for a narrowed integer until part three                                                                                     | Part three (N5)                                                                                                                                                     |
 | —   | Unclear: the SPEC-G-5 sentence did not reach a bound in a typeless `allOf` branch                                                                                                      | Reworded to speak of the shape                                                                                                                                      |
 | —   | Attacked and held: the parser gives the nearest number or an infinity (17 texts); the facts at 9007199254740992; lists with `null` and `string`; integer `const` and `enum` members    | Kept                                                                                                                                                                |
+
+### Third review, of the third draft, 22 November 2026
+
+A third reviewer, asked to class each finding as core (a decision cannot hold as
+decided), text false, or minor. Its count: core none, text false six, minor two. The
+exit set before it (more than three faults of any kind stops drafting) was met.
+
+| #   | Finding                                                                                                                                                                                                                                             | Where it goes                                                                                                 |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| 1   | "It accepts no value the source refuses" is false today without the assertion: `z.int().multipleOf(3)` accepts 9007199254740991, which is not a multiple of 3. Zod's remainder check has a tolerance that passes every integer from about 1.1e15 up | A defect in what Castr writes for `multipleOf`, for the course's legs (N6); and a fact any numbers text needs |
+| 2   | "Or gives a located rejection": no kind fits. The meaning can be written in Zod, so not `UNEXPRESSIBLE`; `NOT-READ` is closed by SPEC-FV-1; `NOT-YET-BUILT` would bar advertising the pair                                                          | The text must state the rule for writing such a place. With the tables                                        |
+| 3   | The two fixed sample values prove nothing for `oneOf: [{type: integer, multipleOf: 2}, {type: number, multipleOf: 3}]`, which widens at 9007199254740996                                                                                            | The sample must come from the source's own refusals outside the safe range. With SPEC-G-4 and SPEC-G-5        |
+| 4   | "A value it refuses that the source accepts is an integer outside the safe range" is false beside SPEC-P-1's closed reading, and is not limited to places where the assertion is written, so a wrong output could pass the proof                    | The permitted difference must be tied to the place the assertion is written                                   |
+| 5   | "Never accepted as another number" is false for a schema that is a number, and for `9007199254740991.4` under `type: integer` two sentences give opposite answers                                                                                   | Both properties must be stated of the JavaScript number the parser gave                                       |
+| 6   | "Asserts there" is unconditional, so it contradicts writing a place another way; and it is not limited to JSON, while Castr writes `z.int()` for a path parameter                                                                                   | With the endpoint definitions' column                                                                         |
+| 7   | Minor. The fact about integer bounds fails under `oneOf` with an exclusive bound just outside the range; "What Castr drops today" omits `not` (`{type: number, not: {type: integer}}` is written `z.number()`)                                      | Facts corrected when numbers are next written; the dropped `not` is a defect for N6                           |
+| 8   | Minor. The notes for the owner left out the rejection kind and its cost, that `{type: integer, minimum: 9007199254740992}` accepts values in the source and none in Zod, and that every integer written would depend on an open item                | Said to the owner when numbers are next brought                                                               |
+
+## What stands
+
+Input to whichever step writes numbers next. Each was attacked and held, or was found
+by a review and run.
+
+- The owner's decisions four and seven, unchanged.
+- The parser gives the nearest JavaScript number or an infinity (17 texts run). No
+  integer outside the safe range arrives inside it.
+- 9007199254740992 and −9007199254740992 are exact, the reference validator accepts
+  each for `type: integer` and for `format: int64`, and `z.int()` refuses each.
+- "`type` names `integer` and does not name `number`" defines the schemas concerned;
+  lists with `null` or `string` held.
+- Asserting the safe range at one schema can widen, under `oneOf` and `not`. A sound
+  form exists: an integer of any magnitude can be written in Zod as a union of the
+  safe integers and the numbers at or beyond each edge.
+- The statement of the narrowing cannot be limited to "where something is narrowed" by
+  one schema object's keywords; stated everywhere the assertion is written, it is true.
+- Defects in what Castr writes today, for N6: `int64` as `bigint`; `multipleOf` on a
+  large integer; a `maximum` in a typeless `allOf` branch, a bound beside a `$ref`, a
+  `const` of 9007199254740992 and a `not` each dropped.
+- Defects in the reference validator, for the proof of SPEC-G-4: decimal `multipleOf`,
+  `int64` beyond its range, and an infinity accepted.
+- Numbers in a JSON document Castr reads have been through the parser, against section
+  3 and SPEC-P-5.
