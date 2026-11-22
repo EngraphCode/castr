@@ -35,8 +35,8 @@ todos:
     status: completed
     depends_on: [N1-REPIN]
   - id: N4-NUMBERS
-    content: 'Part two of the amendment, numbers in JavaScript targets, approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
-    status: pending
+    content: "Part two of the amendment, numbers in JavaScript targets, approved in the owner's words or withdrawn. Withdrawn as a part of its own on 22 November 2026 after three drafts; numbers are written with the tables in N5 (the seat''s reading of owner decision eighteen)."
+    status: completed
     depends_on: [N3-CORRECTIONS]
   - id: N5-TABLES
     content: 'Part three of the amendment, the table vocabulary with the tables (SPEC-N-5), approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
@@ -85,9 +85,9 @@ and the other is corrected.
    sibling checkout is absent, stop and say so; do not fall back to the local copies.
 6. Before a step's first edit, do its step back and run the decision matrix on its
    unknowns, and write both under "Step log" in the thread record. N0's are there,
-   dated 22 November. N1 is done and N3 is withdrawn. The next steps are N2, whose first
-   act is to choose and prove its validator, and N4, the next amendment; neither waits
-   on the other.
+   dated 22 November. N1 is done; N3 and N4 are withdrawn. The next steps are N2, whose
+   first act is to choose and prove its validator, and N5, the tables, which now carry
+   numbers; neither waits on the other.
 7. Read "Review dispositions" at the foot of this plan and give each row its
    disposition before starting the step it names.
 
@@ -135,7 +135,8 @@ lib/src` is empty). Every pull request since has been the picture, the specifica
 
 ## Order, and whose it is
 
-- **N4, N5, then N0 is the owner's**, 22 November. After the trace of N0 the owner
+- **N4, N5, then N0 was the owner's**, 22 November, and is now N5, then N0 (the point
+  after this one). After the trace of N0 the owner
   chose that the fix is built with its text ("Build with the text") and that the text
   for the two rows is carried in 0.8.1 ("Carry in 0.8.1"). Two attacks on the draft of
   0.8.1 then showed the two rows cannot be written there: they need words only part
@@ -147,16 +148,22 @@ lib/src` is empty). Every pull request since has been the picture, the specifica
   the fix sits. N0 waits on N5 ending with the two rows classed in approved text. If part three is
   withdrawn, or is approved without them, N0 does not start and where its text comes
   from goes back to the owner.
-- **N4 then N5 is the owner's** accepted order for the amendment's remaining parts.
+- **N4 then N5 was the owner's** accepted order for the amendment's remaining parts.
+  On 22 November, after three drafts of part two failed, the owner was asked where
+  numbers are written and answered "Whatever is best for strict correctness" (decision eighteen). The
+  seat's reading by the strict lens: with the tables. So N5 carries numbers, and the
+  order is N5, then N0. The measure is the owner's and the reading is the seat's: if a
+  later fact shows another order is stricter, the seat changes it and says so.
 - **N3 before N4 was the seat's** disposition (the matrix pass: one concern per
   change), and N3 is withdrawn by the seat, 22 November: four drafts were attacked and
   the last showed that the change of schema revisions cannot be written until N2's
-  cells list what it does. Its corrections are carried by N7. N4 is the next amendment.
+  cells list what it does. Its corrections are carried by N7. N4 was then the next amendment and is withdrawn
+  too; N5 is the next.
   Numbers share no clause with the reader's refusals; only landing is serial, because
   the approval check allows one approved text at a time.
 - **N1 and N2 wait on nothing** and are not ordered between themselves: only SPEC-FV-1
   case 4 uses the publisher's schema, so N2 does not wait on N1. N1 is done. N2 is worked
-  beside N4, and first wherever N4 waits on the owner. The todos' `depends_on` say the same.
+  beside N5, and first wherever N5 waits on the owner. The todos' `depends_on` say the same.
 - **N7 waits on N2, and is the seat's.** It is the three things on references
   that the drafts of 0.8.1 could not say exactly, the three rules that turn on which
   documents make up a description, and the corrections the withdrawn draft leaves. N2's
@@ -370,7 +377,7 @@ validate-specification-approval`), or by the record.
     version 0.8.1 exists. The corrections are written from N2's cells in N7; the
     redraft file says what stands from the four drafts. Nothing was put to the owner.
 - **What follows is how the step was to run. It is withdrawn; nothing below is to be
-  done under N3.** The way an approved amendment lands still holds for N4, N5 and N7.
+  done under N3.** The way an approved amendment lands still holds for N5 and N7.
 - **Not in this step unless the matrix puts it there.** A sweep of every "MUST" and
   "MUST NOT" in the two texts. The owner's decision twelve already says what an
   unlisted rule costs: Castr reads the document, and a refusal it then gives counts as
@@ -414,6 +421,24 @@ validate-specification-approval`), or by the record.
   step's start: the picture's cell for a declared narrowing, and whether the Zod
   annotation needs the mark that part three defines. If either cannot be said without
   part three's vocabulary, that piece moves to N5.
+- **Where it stands, 22 November.** Stopped at its third draft
+  (`.agent/analysis-and-reports/amendment-part-two-draft-2026-11-22.md`). Three
+  adversarial reviews found the drafts false on concrete cases in twelve, seven and six
+  places; none found the owner's decisions wrong. The draft file says why a clause on
+  numbers cannot yet be exact alone, where each finding goes and what stands. Where
+  numbers are written next is the order of the plan and was put to the owner by
+  question prompt, with three options: with the tables; after the fix; again now. The
+  owner answered "Whatever is best for strict correctness" (decision eighteen). By the strict lens that
+  is with the tables: three of the five causes are words part three defines, a clause
+  written before them rests on nothing, and one written after the fix leaves the
+  integer rows open while code changes against the tables. Part two is withdrawn as a
+  part of its own and N5 carries numbers. Oak's document states no integer, no `int64`
+  and no `multipleOf`.
+- **Before a reviewer sees any further draft, here or in N5 and N7:** run each sentence
+  against the composition cases (`oneOf`, `not`, `allOf`, `anyOf`, a list of types, a
+  `$ref`, a parameter, a document read from YAML). Both amendments that ended on 22
+  November with no text were drafted by reading a rule's consequences and broken by a
+  reviewer running them.
 - **Finished when.** As N3, for the version this part carries.
 - **Size.** One pull request, three to five pushes.
 
@@ -425,6 +450,17 @@ validate-specification-approval`), or by the record.
   writes is carried and marked; an unknown `format` is carried and reported; the
   endpoint definitions are a third column; four declarations the parser spends have a
   sixth outcome, read.
+- **Carries numbers.** This is the seat's reading of the owner's answer of 22 November
+  (decision eighteen: a measure, strict correctness, not a choice of option), set out
+  under "Order, and whose it is". The owner's decisions
+  four and seven are written here, with what they need: the class of a narrowed
+  integer; the form of the annotation that states the narrowing; how a parameter's text
+  becomes a number; what SPEC-G-4 excuses and SPEC-G-5 samples; and the rule for
+  writing an integer under `oneOf` or `not`, where asserting the safe range widens. The
+  withdrawn draft of part two holds what stands and every finding. It also says what
+  section 3 and SPEC-P-5 mean for a document given as a value, whose numbers are
+  JavaScript numbers before Castr sees them. Run each sentence
+  against the composition cases before a reviewer sees it (see N4).
 - **Do.** The picture's proposals (`lib/tests-picture/rows/`) are the first draft of
   the tables. From the matrix pass: the three discriminator rows are carried by
   companion for TypeScript; `$id`, `$anchor` and `$defs` stay carried as structure,
@@ -483,7 +519,8 @@ validate-specification-approval`), or by the record.
 - **Do.** Write the legs into the course, each with an observable exit state read from
   the picture. Inputs: what N0 found; three of Oak's rows read wrong in the Zod column
   (`const`, `format: uri`, `false` as a schema) and one is missing (`default`); the
-  reader converts what 0.8.0 refuses. Say where the model's design (SPEC-N-1) is done:
+  reader converts what 0.8.0 refuses; the defects the reviews of part two found in what
+  Castr writes for numbers and in the reference validator ("Review dispositions"). Say where the model's design (SPEC-N-1) is done:
   the course says the model changes only after that design is an approved amendment,
   and no step here produces it. Have the `assumptions-expert` reviewer read the legs
   before the first runs.
@@ -563,7 +600,7 @@ of three.
 | N2   | Which validator judges the cells, given that Ajv cannot judge the pinned schemas as published                                                   |
 | N7   | Whether a rule that differs between 3.1 and 3.2 is one entry or two                                                                             |
 | N7   | Whether the sweep of every "MUST" belongs in this step                                                                                          |
-| N4   | What the picture's cell for a declared narrowing is called and how it is judged                                                                 |
+| N5   | What the picture's cell for a declared narrowing is called and how it is judged (from N4; a first disposition is in the thread record)          |
 | N5   | The form of addressing a validator (SPEC-N-4), designed as this step's first piece                                                              |
 | N5   | How the tables are held so that the picture's proposals are computed from them                                                                  |
 | N5   | What the mark on a Zod check Castr writes is, given that reading Zod is not designed (SPEC-N-3)                                                 |
@@ -582,28 +619,33 @@ Findings from the adversarial review of part one's first draft that 0.8.0 did no
 settle and no record disposed of. Each gets a disposition, by the matrix, before the
 step it names starts.
 
-| Date       | Source                   | Finding                                                                                                                                                                                                                          | Step |
-| ---------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
-| 2026-11-22 | Adversarial review, #156 | A reference into another file that has no `openapi` field (`lib/examples/openapi/multi-file/main.yaml`): is that file read, and as what                                                                                          | N2   |
-| 2026-11-22 | Adversarial review, #156 | What counts as a reference for case 5: a link's `operationId`, a discriminator's `mapping` value, a security requirement's name                                                                                                  | N7   |
-| 2026-11-22 | Adversarial review, #156 | A reference written as data, such as a property named `$ref` or a `$ref` inside an example, must not be followed                                                                                                                 | N2   |
-| 2026-11-22 | Adversarial review, #156 | A network or file failure while reading a referenced document makes the refusal differ between runs (SPEC-PR-4)                                                                                                                  | N7   |
-| 2026-11-22 | Adversarial review, #156 | A version such as `3.1.0-rc1` matches the publisher's pattern: case 2 says the pattern decides, so it is read; a cell shows it                                                                                                   | N2   |
-| 2026-11-22 | Adversarial review, #156 | A document with both `swagger` and `openapi` fields states two versions                                                                                                                                                          | N2   |
-| 2026-11-22 | Adversarial review, #156 | YAML that parses differently between libraries (merge keys, duplicate keys, `openapi: 3.1` read as a number): who decides well-formedness                                                                                        | N2   |
-| 2026-11-22 | Adversarial review, #156 | JSON Schema that Castr writes declares the format-assertion vocabulary, so its `$schema` may be one case 3 refuses on reading back                                                                                               | N5   |
-| 2026-11-22 | Adversarial review, #156 | A nested `$schema` naming another dialect inside a 2020-12 schema: which meta-schema judges it, and where each dialect's judgement stops                                                                                         | N2   |
-| 2026-11-22 | Hosted review, #156      | The resolved target of a reference must be valid for the place it is used                                                                                                                                                        | N7   |
-| 2026-11-22 | Third review of 0.8.1    | A 3.2 document that names `https://spec.openapis.org/oas/3.1/dialect/base`, which the 3.2.0 text names and the 3.2.1 text does not                                                                                               | N2   |
-| 2026-11-22 | Third review of 0.8.1    | Case 3's "at any revision" reaches dialect addresses the publisher does not serve                                                                                                                                                | N2   |
-| 2026-11-22 | Third review of 0.8.1    | Case 3 gives no address for Draft 2020-12: a trailing `#`, the `http:` form, a value that is not a URI                                                                                                                           | N2   |
-| 2026-11-22 | Third review of 0.8.1    | A `$schema` key that is data (a discriminator's `mapping`, an extension's value) or stands where no schema resource root is                                                                                                      | N2   |
-| 2026-11-22 | Third review of 0.8.1    | Case 2: a number for `openapi` is refused by `type`, not the pattern; "a 3.0.x document" is not defined                                                                                                                          | N2   |
-| 2026-11-22 | Third review of 0.8.1    | Fields a schema refuses where the text says only that they "apply" elsewhere: `allowReserved` on a header (read at 0.8.0's 3.2 revision, refused at the latest), `bearerFormat`, `scheme`, `style` or `explode` beside `content` | N2   |
-| 2026-11-22 | Third review of 0.8.1    | Which revision of a dialect's meta-schema judges a Schema Object: 0.8.0 names none                                                                                                                                               | N2   |
-| 2026-11-22 | Fourth review of 0.8.1   | Every document whose outcome under case 4 differs between the revisions 0.8.0 names and the latest                                                                                                                               | N2   |
-| 2026-11-22 | Fourth review of 0.8.1   | A reference whose target is inside an `x-` field of a Callback Object; a Callback Object key that begins `x-` and is also an expression                                                                                          | N7   |
-| 2026-11-22 | Third review of 0.8.1    | Which document's Components Object, operations or `tags` a name is resolved in, for the three rules N7 now carries                                                                                                               | N7   |
+| Date       | Source                   | Finding                                                                                                                                                                                                                                                                                                                                                                               | Step                                                                                                                                                       |
+| ---------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-11-22 | Adversarial review, #156 | A reference into another file that has no `openapi` field (`lib/examples/openapi/multi-file/main.yaml`): is that file read, and as what                                                                                                                                                                                                                                               | N2                                                                                                                                                         |
+| 2026-11-22 | Adversarial review, #156 | What counts as a reference for case 5: a link's `operationId`, a discriminator's `mapping` value, a security requirement's name                                                                                                                                                                                                                                                       | N7                                                                                                                                                         |
+| 2026-11-22 | Adversarial review, #156 | A reference written as data, such as a property named `$ref` or a `$ref` inside an example, must not be followed                                                                                                                                                                                                                                                                      | N2                                                                                                                                                         |
+| 2026-11-22 | Adversarial review, #156 | A network or file failure while reading a referenced document makes the refusal differ between runs (SPEC-PR-4)                                                                                                                                                                                                                                                                       | N7                                                                                                                                                         |
+| 2026-11-22 | Adversarial review, #156 | A version such as `3.1.0-rc1` matches the publisher's pattern: case 2 says the pattern decides, so it is read; a cell shows it                                                                                                                                                                                                                                                        | N2                                                                                                                                                         |
+| 2026-11-22 | Adversarial review, #156 | A document with both `swagger` and `openapi` fields states two versions                                                                                                                                                                                                                                                                                                               | N2                                                                                                                                                         |
+| 2026-11-22 | Adversarial review, #156 | YAML that parses differently between libraries (merge keys, duplicate keys, `openapi: 3.1` read as a number): who decides well-formedness                                                                                                                                                                                                                                             | N2                                                                                                                                                         |
+| 2026-11-22 | Adversarial review, #156 | JSON Schema that Castr writes declares the format-assertion vocabulary, so its `$schema` may be one case 3 refuses on reading back                                                                                                                                                                                                                                                    | N5                                                                                                                                                         |
+| 2026-11-22 | Adversarial review, #156 | A nested `$schema` naming another dialect inside a 2020-12 schema: which meta-schema judges it, and where each dialect's judgement stops                                                                                                                                                                                                                                              | N2                                                                                                                                                         |
+| 2026-11-22 | Hosted review, #156      | The resolved target of a reference must be valid for the place it is used                                                                                                                                                                                                                                                                                                             | N7                                                                                                                                                         |
+| 2026-11-22 | Third review of 0.8.1    | A 3.2 document that names `https://spec.openapis.org/oas/3.1/dialect/base`, which the 3.2.0 text names and the 3.2.1 text does not                                                                                                                                                                                                                                                    | N2                                                                                                                                                         |
+| 2026-11-22 | Third review of 0.8.1    | Case 3's "at any revision" reaches dialect addresses the publisher does not serve                                                                                                                                                                                                                                                                                                     | N2                                                                                                                                                         |
+| 2026-11-22 | Third review of 0.8.1    | Case 3 gives no address for Draft 2020-12: a trailing `#`, the `http:` form, a value that is not a URI                                                                                                                                                                                                                                                                                | N2                                                                                                                                                         |
+| 2026-11-22 | Third review of 0.8.1    | A `$schema` key that is data (a discriminator's `mapping`, an extension's value) or stands where no schema resource root is                                                                                                                                                                                                                                                           | N2                                                                                                                                                         |
+| 2026-11-22 | Third review of 0.8.1    | Case 2: a number for `openapi` is refused by `type`, not the pattern; "a 3.0.x document" is not defined                                                                                                                                                                                                                                                                               | N2                                                                                                                                                         |
+| 2026-11-22 | Third review of 0.8.1    | Fields a schema refuses where the text says only that they "apply" elsewhere: `allowReserved` on a header (read at 0.8.0's 3.2 revision, refused at the latest), `bearerFormat`, `scheme`, `style` or `explode` beside `content`                                                                                                                                                      | N2                                                                                                                                                         |
+| 2026-11-22 | Third review of 0.8.1    | Which revision of a dialect's meta-schema judges a Schema Object: 0.8.0 names none                                                                                                                                                                                                                                                                                                    | N2                                                                                                                                                         |
+| 2026-11-22 | Fourth review of 0.8.1   | Every document whose outcome under case 4 differs between the revisions 0.8.0 names and the latest                                                                                                                                                                                                                                                                                    | N2                                                                                                                                                         |
+| 2026-11-22 | Fourth review of 0.8.1   | A reference whose target is inside an `x-` field of a Callback Object; a Callback Object key that begins `x-` and is also an expression                                                                                                                                                                                                                                               | N7                                                                                                                                                         |
+| 2026-11-22 | Third review of 0.8.1    | Which document's Components Object, operations or `tags` a name is resolved in, for the three rules N7 now carries                                                                                                                                                                                                                                                                    | N7                                                                                                                                                         |
+| 2026-11-22 | Third review of part two | Zod's `multipleOf` has a tolerance that grows with the value divided by the step, so where that ratio is large it accepts a value that is not a multiple: `z.int().multipleOf(3)` accepts 9007199254740991 and `multipleOf(7)` accepts 4503599627370497, while `multipleOf(1e15)` refuses `1.2e15` and `multipleOf(1000)` refuses 9007199254740991. Castr's output widens there today | N6                                                                                                                                                         |
+| 2026-11-22 | Reviews of part two      | Dropped today and written as `z.int()` or `z.number()` alone: a `maximum` in a typeless `allOf` branch, a bound beside a `$ref`, a `const` of 9007199254740992, a `not`. `int64` is written as `bigint`                                                                                                                                                                               | N6                                                                                                                                                         |
+| 2026-11-22 | Reviews of part two      | The reference validator refuses 0.3 as a multiple of 0.1, accepts `1e19` as an `int64` and accepts an infinity: the proof of SPEC-G-4 needs a reference that decides those as the source does                                                                                                                                                                                         | N6                                                                                                                                                         |
+| 2026-11-22 | Reviews of part two      | A narrowed integer has no class; the annotation that states the narrowing has no form; a parameter's text becomes a number by no clause; a place that cannot be written soundly has no kind of rejection that fits                                                                                                                                                                    | N5, with numbers wherever the owner puts them                                                                                                              |
+| 2026-11-22 | Reviews of part two      | Numbers in a JSON document Castr reads have been through the parser, against section 3 and SPEC-P-5 (a bound of `9223372036854775807` arrives as 9223372036854775808)                                                                                                                                                                                                                 | N6 for a file; N5 for a document given as a value, in the text that carries numbers, since no reader can make that exact and the specification must say so |
 
 ## What is not in this plan
 
