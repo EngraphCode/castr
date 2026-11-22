@@ -718,7 +718,7 @@ string; [key: string]: string | number }` accepts every valid value and also
   | ------------------------------------------------------------------------ | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | Which validator judges the cells                                         | Strict: the judge must decide the schemas as published | `@hyperjump/json-schema` 1.18.1. On 186 judgements (31 documents against six pinned files) it and the Python `jsonschema` 4.25.1, a separate codebase, agree on every one. `json-schema-library` 11.6.16 disagrees with both on two, wrongly: it loses an evaluated property through `dependentSchemas`. Ajv 8.20.0 cannot judge a Schema Object under these schemas |
   | Whether a second validator runs in the repository's tests                | Proportionality (instrument), then strict              | No. The only second JavaScript validator tried is wrong, and a Python one is a second toolchain. The proof in the tree is each document with its expected outcome, which two validators computed alike; the test recomputes it with the judge                                                                                                                        |
-  | Whether the judge may fetch a schema                                     | Strict                                                 | Never. The http, https and file schemes are removed from the library before anything is judged, and a test shows an unregistered address throws                                                                                                                                                                                                                      |
+  | Whether the judge may fetch a schema                                     | Strict                                                 | Never. The http, https and file schemes are removed from the library before anything is judged, and the judge refuses any address that is not pinned, which a test holds. That nothing is requested was shown once by the reviewer with a counting server, and no test holds it                                                                                      |
   | What decides a reference's target outside Castr, across files            | Proportionality (scope)                                | A later slice of N2; not needed to judge case 4                                                                                                                                                                                                                                                                                                                      |
   | Whether a document Castr converts and 0.8.0 refuses is a cell of its own | Proportionality (scope)                                | A later slice of N2, with the documents for cases 1 to 3                                                                                                                                                                                                                                                                                                             |
 
@@ -777,6 +777,27 @@ string; [key: string]: string | number }` accepts every valid value and also
   - _Left for later slices,_ and said in the README: a `$schema` below a component
     schema; a Schema Object against its dialect at the revisions 0.8.0 names (only the
     latest `schema-base` is pinned); case 5; the rules of SPEC-FV-2.
+
+- 2026-11-22, N2. **#167 merged (`1e20183c`); step back at its fifth push and at the
+  end of the slice.**
+  1. _Serves._ As at the start. A reader of `pnpm picture` now sees two sections: what
+     Castr does with 29 inputs against the cases of SPEC-FV-1, and the 16 documents the
+     newer schema revisions judge differently.
+  2. _Changed for Oak's document._ Nothing; five steps in a row. N2 is not on the path
+     to the fix, N5 is, and N5 waits on nothing. So N5's opening is next, not a third
+     slice of N2. The plan's start instructions now say so.
+  3. _Size._ Five pushes against two or three. Each push after the first answered a
+     true finding: CI ran the picture for the first time and timed a test out; Sonar
+     refused duplicated lines; three reviews each found a place the decider answered
+     where it should have said "not decided" or decided an earlier case. The decider is
+     the kind of code the plan says to have attacked before the first push, and it was;
+     the hosted reviews still found three more. For the next deciders the expected
+     outcomes are written by hand first.
+  4. _Checking larger than the work._ No.
+  5. _Not yet said to the owner, and said in this session's report._ Castr has no bot
+     route: every pull request of 22 November was opened, answered and merged through
+     the owner's sign-in, with the line that says an agent seat did it. The Ecosystem
+     repository has a bot for this and Castr does not.
 
 ### The matrix pass of 22 November 2026
 
