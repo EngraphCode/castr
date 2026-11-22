@@ -418,11 +418,22 @@ string; [key: string]: string | number }` accepts every valid value and also
   corrections alone; numbers follow; part three classes the two rows with every other;
   and the fix of Oak's document is built after part three is approved. It approves no
   text. The plan's order, todos and N0 are changed to say so.
-- 2026-11-22, N3. **What is next in this step.** Read from both texts which dialect each
-  names as the OpenAPI dialect. Redraft the corrections alone (the revisions, cases 2
-  and 3, the list of SPEC-FV-2) with the second review's wording faults closed; attack
-  it; run the conscience check on the plan as it now stands; then ask for the owner's
-  words on 0.8.1. N2 waits on nothing and may be worked beside it.
+- 2026-11-22, N3. **The dialect each text names, read word for word.** Both texts, 3.1.2
+  at section 4.8.24.1 and 3.2.0 at section 4.24.1, say: "The OpenAPI Schema Object
+  dialect for this version of the specification is identified by the URI
+  https://spec.openapis.org/oas/3.1/dialect/base (the "OAS dialect schema id")." The
+  3.2 text names the 3.1 address. The publisher's 3.2 `schema-base` fixes the dialect to
+  `https://spec.openapis.org/oas/3.2/dialect/2026-02-26`. Case 3 as approved reads "the
+  OpenAPI dialect its publisher gives for the document's version line, at any
+  revision", which does not say whether a 3.2 document that names the address its own
+  text names is read. It is a fault in approved text, and the redraft of 0.8.1 corrects
+  it: a document is read when it names the dialect its version's text names or the one
+  its version's published schemas give, at any revision.
+- 2026-11-22, N3. **What is next in this step.** Redraft the corrections alone (the
+  revisions, cases 2 and 3, the list of SPEC-FV-2) with the second review's wording
+  faults closed and the dialect fault above; attack it; run the conscience check on the
+  plan as it now stands; then ask for the owner's words on 0.8.1. N2 waits on nothing
+  and may be worked beside it.
 
 ### The matrix pass of 22 November 2026
 
