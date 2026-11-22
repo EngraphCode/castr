@@ -28,6 +28,11 @@ targets. Those are parts two and three.
   SPEC-FV-2 as drafted says this; its list is still to be written from the published
   text.
 
+- **22 November 2026, decision thirteen.** A reference that points at nothing, which
+  the OpenAPI text has no rule against: "Refused by design", as Castr's own declared
+  rule, with the required check resolving references itself so that a reference Castr
+  merely fails to follow still counts as a defect.
+
 ## Facts the draft rests on
 
 Each was run or read on 22 November 2026 at `main` commit `11abb58e`.
@@ -142,17 +147,22 @@ After:
 >      location. A document that breaks a rule listed in SPEC-FV-2 is refused under this
 >      case too.
 >
+>   5. _A reference with no target._ After every document a reference names has been
+>      read, its target is not there. This is a profile decision: the OpenAPI text
+>      states no rule against it. The rejection names the reference and where it is. A
+>      target that is there and that Castr does not reach is `NOT-YET-BUILT`.
+>
 >   The revisions are `https://spec.openapis.org/oas/3.1/schema/2022-10-07` and
 >   `https://spec.openapis.org/oas/3.2/schema/2025-09-17`; a change of revision is a
 >   change to this document.
 >
->   A document that none of the four cases describes never receives `NOT-READ`.
+>   A document that none of the five cases describes never receives `NOT-READ`.
 >   Whatever Castr cannot do with it is `NOT-YET-BUILT` or `UNEXPRESSIBLE`. A reader's
->   refusal for a reason that is none of the four cases is `NOT-YET-BUILT`. A document
+>   refusal for a reason that is none of the five cases is `NOT-YET-BUILT`. A document
 >   that receives `NOT-READ` produces no output for any target. A `NOT-READ` rejection
 >   is not unbuilt work and SPEC-PR-6 does not count it.
 >
->   The required check of SPEC-PR-6 decides the four cases itself for every document it
+>   The required check of SPEC-PR-6 decides the five cases itself, resolving each reference as the format's text says, for every document it
 >   runs, with a loader and a validator that are not Castr's reader, and fails when the
 >   reader gives `NOT-READ` where no case holds, gives none where one holds, or gives it
 >   for a different case. The documents it runs include at least one for each case, one
@@ -269,11 +279,8 @@ above.
    and `v3.2.0.html`), and written into SPEC-FV-2 above. Three things the reading
    changed or left open:
    - **A reference whose target is absent is not a stated rule.** Neither text says a
-     document with such a reference is invalid. 3.2 says only that an implementation
-     "MUST NOT treat a reference as unresolvable before completely parsing all
-     documents" (4.1.2.1). So the list does not hold it, and under this draft a
-     reference Castr cannot resolve is `NOT-YET-BUILT`, which no code can cure where the
-     target truly is not there. This needs words before approval.
+     document with such a reference is invalid. The owner decided on 22 November that
+     Castr refuses it by design (decision thirteen); it is case 5 above.
    - **A security requirement naming no declared scheme** is a rule in both texts
      (4.8.30; 4.30) that was read only in summary. It is listed once read word for word.
    - **The pinned schemas are old revisions.** The picture pins the 3.1 schema of
@@ -283,7 +290,7 @@ above.
      in case 4 should be the latest, re-pinned in the picture first.
    - The pinned 3.1 schema already holds two rules that looked word-only: a path begins
      with `/`, and a path parameter is required.
-4. **To do before asking for approval.** Word the absent reference; re-pin the
+4. **To do before asking for approval.** Re-pin the
    publisher's schemas at their latest revisions and name those in case 4; read the
    security-requirement rule word for word; one more adversarial review. The 3.1
    dialect has dated revisions (2024-10-25 and 2024-11-10) beside `base`, which "at any

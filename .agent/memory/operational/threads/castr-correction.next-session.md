@@ -43,6 +43,10 @@ below this one are the dated record; none of them is a newer instruction than th
   only in words: "Refuse it as invalid", each rule listed in the specification with the
   section that states it, and an unlisted rule Castr trips over counts as unbuilt until
   an amendment lists it. Neither approves text.
+- **Owner decision thirteen, by question prompt, 22 November 2026.** A reference that
+  points at nothing, which the OpenAPI text has no rule against: "Refused by design",
+  as Castr's own declared rule; the required check resolves references itself, so a
+  reference Castr merely fails to follow still counts as a defect.
 - **Two facts found that day by running Castr.** It converts an OpenAPI 2.0 document,
   which section 6 says is refused. It reads 3.0 only after a third-party library rewrites
   the document to 3.1 (`lib/src/shared/load-openapi-document/upgrade-validate.ts`).
@@ -53,8 +57,7 @@ below this one are the dated record; none of them is a newer instruction than th
   with its latest approved record. The draft is not approved. One adversarial review
   broke the first draft in six places; the second draft is in that file with each
   finding's disposition (#156). Left before the owner is asked for words, each
-  named in the draft's "Points that wait": word what a reference with no target
-  receives (the OpenAPI text states no rule against it); re-pin the publisher's schemas
+  named in the draft's "Points that wait": re-pin the publisher's schemas
   at their latest revisions (the picture pins 2022-10-07 for 3.1 and newer ones exist);
   read the security-requirement rule word for word; one more adversarial review.
 - **#155 was merged with the hosted review of its last commit reported as failed,** not
