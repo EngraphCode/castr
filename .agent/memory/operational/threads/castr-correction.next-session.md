@@ -108,8 +108,7 @@ record says something else about the next step, that plan governs.
   `feat/explicit-additional-properties-2026-04` (tip `SHA:e150a0e8`) and
   `feat/explicit-additional-properties-rebased` (tip `SHA:a48eced8`), each with a commit
   "Support explicit additionalProperties honestly" touching 44 files under `lib/src`.
-  Both were deleted that day, here and on the remote, at the owner's word. Neither was
-  read. The plan's first step is written from the specification and the picture.
+  The seat's attempt to delete them was denied by the session's permission settings, so the owner was given the two commands to run. Until `git branch -a` shows neither, they exist and are not to be read or merged. Neither was read. The plan's first step is written from the specification and the picture.
 
 **Step log.** Each step of the plan writes here, dated: its step-back answers at its
 start and its end, and a row for each unknown it decides (question, lens, disposition).

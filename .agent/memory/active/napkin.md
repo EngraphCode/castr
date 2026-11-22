@@ -34,7 +34,7 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   repository holds no copy of the cognitive skills; I wrote it into the plan. One `ls`
   showed otherwise. A reviewer's statement about the tree is checked like any other.
 - **A handover check found prior work no record named.** Listing unmerged branches
-  showed two that had attempted the plan's first step in April; the owner had them
+  showed two that had attempted the plan's first step in April; the owner ruled them
   removed as superseded. List the branches before planning a fix, not after.
 - **The commit helper refuses a subject with an apostrophe,** by design. Write the
   subject without one.
