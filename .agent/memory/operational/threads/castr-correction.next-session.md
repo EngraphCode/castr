@@ -799,6 +799,39 @@ string; [key: string]: string | number }` accepts every valid value and also
      the owner's sign-in, with the line that says an agent seat did it. The Ecosystem
      repository has a bot for this and Castr does not.
 
+- 2026-11-22, N5. **Opening: the Cricket panel, the step back, and the first piece.**
+  #168 merged (`bc8cf16b`): the plan says N5 is next.
+  - _The panel._ Four roles in two stances, on one frame; the reading was repaired
+    between the waves because no seat of the normal wave found it sound. Work verdicts:
+    seven ON-TRACK, one DRIFTING. Frame verdicts: none SOUND, five NARROWED, three
+    CONTRADICTED. What the frame got wrong, each time the seat's own reading: it gave
+    the goal as "converts Oak's document rightly" where the owner's words are about
+    not reworking Castr when Oak adds a valid field type; it said N5 "waits on nothing"
+    beside a line saying N2 fills N5's waits on the owner; and, after repair, it let N0
+    start at the first part's approval, which contradicts the plan and the seat's own
+    reading of decision eighteen an hour before.
+  - _What every return gave._ The first piece of N5 is the table vocabulary and the
+    schema-row tables, starting with the two rows that stop Oak's document, not the
+    design of SPEC-N-4.
+  - _Step back._ (1) Serves "the specification says exactly what right is for every
+    construct", and the measure that is the owner's goal: every row of the picture has
+    a class in approved text and a cell, whether Oak's document uses it or not. (2)
+    Changed for Oak's document: nothing, six steps in a row; told to the owner at the
+    third and in each report since. The first code change is N0, which waits on this
+    step. (3) Size: the largest step, in parts; the first part is one pull request for
+    its draft and one for its landing. (4) Checking larger than the work: the panel was
+    eight returns for a choice of first piece that all eight agreed on; one stance
+    would have shown it. (5) Lost if it stopped here: the reorder, which is in the plan
+    with this entry.
+
+  | Question                                                       | Lens that settles it                                                                                                                                         | Disposition                                                                                                                                                                                                |
+  | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | What N5's first piece is                                       | Architectural: the schema-row tables depend on nothing else in the step and N0 on them                                                                       | The vocabulary and the schema-row tables, starting with `additionalProperties` and `propertyNames`. The design of SPEC-N-4 runs beside it, never ahead in the landing queue. The plan is changed to say so |
+  | Whether N0 starts when the first part is approved              | Strict, with the seat's reading of decision eighteen                                                                                                         | No. N0 waits on the whole step; code does not change while the integer rows are open                                                                                                                       |
+  | Whether the two rows can be classed without the numbers text   | Computed, not a lens: in Oak's document `propertyNames` holds `type: string` and `additionalProperties` a string with an `enum`; no number, `oneOf` or `not` | Yes for what Oak states. Whether the class of `propertyNames` in Zod needs the mark on a Zod check is the first thing the piece's draft must settle                                                        |
+  | Whether to ask the owner if a fix may be built before its text | The owner's decision seventeen and "asking me is the wrong move"                                                                                             | Not asked. The trial that sized the fix exists from N0's trace; an unmerged exploration beside the first draft is allowed and is not required                                                              |
+  | Whether Castr needs a bot route for pull requests              | Not the seat's: it is the owner's account and their colleagues' reading of it                                                                                | Said to the owner in the session's report. No change is made here                                                                                                                                          |
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
