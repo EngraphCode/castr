@@ -126,7 +126,7 @@ publisher's schema revision does, and an input for each of cases 1 to 4 with wha
 does with it.
 
 - **The cases are decided outside Castr.**
-  [`refusals/reader-cases.ts`](refusals/reader-cases.ts) holds 27 small inputs and
+  [`refusals/reader-cases.ts`](refusals/reader-cases.ts) holds 29 small inputs and
   decides, for each, the first case of SPEC-FV-1 that holds: the text parses as neither
   JSON nor YAML 1.2 (the `yaml` package, which Castr's reader does not use); a `swagger`
   field, or an `openapi` field that does not match the pattern either pinned schema
@@ -152,7 +152,7 @@ does with it.
   for the amendment on references to say. A dialect that is not a string names none: as the
   document's it is left to case 4, and as a schema's it is not decided, because the
   publisher's plain schema does not look inside a Schema Object. A text that is well formed and holds a value JSON cannot state,
-  such as `1e999`, is not decided. JSON with a key twice is read last wins. A `$schema`
+  such as `1e999`, is not decided, unless case 2 or 3 already holds for it. JSON with a key twice is read last wins. A `$schema`
   deeper than a component schema is not looked for. Case 4 is the document against the publisher's schema; whether each Schema
   Object passes its dialect's meta-schema is not decided, because `schema-base` is
   pinned only at the latest revision. A text that both parsers refuse is case 1 even

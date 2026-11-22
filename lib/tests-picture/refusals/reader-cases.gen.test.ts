@@ -140,6 +140,8 @@ const EXPECTED: readonly Expected[] = [
     'Zod: 1 validator; TypeScript: 1 type; endpoint definitions: 1 endpoint definition',
   ],
   ['a number larger than a JavaScript number holds', 'not decided', 'not judged', READS],
+  ['an OpenAPI 3.0.3 document in YAML that also holds `.inf`', 2, 'reads it', READS],
+  ['a 3.1 document in YAML that holds `.inf`', 'not decided', 'not judged', READS],
   [
     'a document with no `info`',
     4,

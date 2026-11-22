@@ -189,6 +189,16 @@ export const READER_CASES: readonly ReaderCase[] = [
     text: '{"openapi":"3.1.0","info":{"title":"t","version":"1"},"paths":{},"components":{"schemas":{"A":{"type":"string"}}},"x-n":1e999}',
   },
   {
+    name: 'an OpenAPI 3.0.3 document in YAML that also holds `.inf`',
+    extension: 'yaml',
+    text: `openapi: 3.0.3\nx-a: .inf\n${YAML_REST}`,
+  },
+  {
+    name: 'a 3.1 document in YAML that holds `.inf`',
+    extension: 'yaml',
+    text: `openapi: 3.1.0\nx-a: .inf\n${YAML_REST}`,
+  },
+  {
     name: 'a document with no `info`',
     extension: 'json',
     text: json({ openapi: '3.1.0', paths: {}, components: { schemas: SCHEMAS } }),
@@ -290,9 +300,6 @@ export async function caseThatHolds(text: string): Promise<CaseThatHolds> {
     return 1;
   }
   const document = parsed.value;
-  if (!isJsonValue(document)) {
-    return 'not decided';
-  }
   if (!isJsonObject(document) || 'swagger' in document) {
     return 2;
   }
@@ -310,7 +317,13 @@ export async function caseThatHolds(text: string): Promise<CaseThatHolds> {
   if (dialects.includes('another')) {
     return 3;
   }
-  if (dialects.includes('not known') || ofSchemas.some((dialect) => typeof dialect !== 'string')) {
+  // A value JSON cannot state is looked for only now: an earlier case that holds is
+  // decided whatever else the text holds.
+  const undecided =
+    dialects.includes('not known') ||
+    ofSchemas.some((dialect) => typeof dialect !== 'string') ||
+    !isJsonValue(document);
+  if (undecided) {
     return 'not decided';
   }
   return (await judgeDocument(REVISIONS[line].named, document)).passes ? 'none' : 4;
