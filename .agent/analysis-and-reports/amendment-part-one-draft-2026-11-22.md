@@ -1,6 +1,8 @@
 # Draft amendment, part one: what the reader refuses, and the versions read
 
-Status: second draft, after one adversarial review broke the first. It is not approved
+Status: approved as specification 0.8.0 on 22 November 2026; the specification now holds this text and governs. What follows is the record of how it was drafted.
+
+Earlier status: second draft, after one adversarial review broke the first. It is not approved
 and changes nothing in `docs/SPECIFICATION.md`. Approval is the owner's typed words
 naming a version (SPEC-CC-2). The version this part would carry is 0.8.0. The owner has decided the two points that were theirs. Two wait on text not yet read, and the draft is not ready for approval until they are closed.
 

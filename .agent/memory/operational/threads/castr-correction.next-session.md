@@ -47,6 +47,19 @@ below this one are the dated record; none of them is a newer instruction than th
   points at nothing, which the OpenAPI text has no rule against: "Refused by design",
   as Castr's own declared rule; the required check resolves references itself, so a
   reference Castr merely fails to follow still counts as a defect.
+- **Specification 0.8.0, approved on 22 November 2026, verbatim "I approve revision
+  0.8.0".** It is part one of the amendment: `NOT-READ` and the five cases of
+  SPEC-FV-1, the listed rules of SPEC-FV-2, 3.0.x as the later capability SPEC-C-3, and
+  the measure of a capability. The owner approved while three things were still listed
+  as open, and was told they follow as later amendments: name the latest revisions of
+  the publisher's schemas (re-pin the picture first); list the rules on security
+  requirements, Link Objects and a server variable's default, each read word for word
+  from the OpenAPI text; give the refusals of a JSON Schema reader and of a Zod reader
+  their kinds. The second adversarial review the seat had promised was not run; hosted
+  review ran four rounds. Also owed in the landing or soon after: correct ADR-030 and
+  `.agent/directives/requirements.md` section 2, which still promise 3.0 support.
+  Next: parts two (numbers in JavaScript targets) and three (the table vocabulary with
+  the tables).
 - **Two facts found that day by running Castr.** It converts an OpenAPI 2.0 document,
   which section 6 says is refused. It reads 3.0 only after a third-party library rewrites
   the document to 3.1 (`lib/src/shared/load-openapi-document/upgrade-validate.ts`).
