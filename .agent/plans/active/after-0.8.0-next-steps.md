@@ -86,11 +86,12 @@ and the other is corrected.
 6. Before a step's first edit, do its step back and run the decision matrix on its
    unknowns, and write both under "Step log" in the thread record. N0's are there,
    dated 22 November. N1 is done; N3 and N4 are withdrawn. The next step is N5, the
-   tables, which now carry numbers: it is on the path to the fix and waits on nothing.
+   tables, which now carry numbers: it is on the path to the fix, and no other step has
+   to finish before its drafting starts. Each of its parts then waits on the owner's
+   approval.
    Its Cricket panel ran on 22 November; its first piece is the table vocabulary and
    the tables for schema rows, with the design of SPEC-N-4 beside it. N2 has its
-   judge and two slices merged; its remaining slices are worked where N5 waits on the
-   owner.
+   judge and two slices merged; its remaining slices are worked during those waits.
 7. Read "Review dispositions" at the foot of this plan and give each row its
    disposition before starting the step it names.
 
@@ -486,12 +487,15 @@ validate-specification-approval`), or by the record.
   shown as a type exported under the name. No rule quantified over a list that nothing
   forces to be complete.
 - **Its first piece is the vocabulary and the tables for schema rows,** starting with
-  `additionalProperties` and `propertyNames`, the two rows that stop Oak's document.
+  `additionalProperties` and `propertyNames`, the two rows that stop Oak's document:
+  Castr refuses the schema-valued `additionalProperties` first, and with that alone
+  fixed `propertyNames` stops the same two schemas (N0).
   This is the seat's order, set at the step's opening on 22 November after a Cricket
   panel of eight returns, every one of which gave it: those tables do not wait on the
-  public surface, and they are what N0 waits on. In Oak's document both rows hold only
-  `type: string` and an `enum` of strings (computed, 22 November), so classing them
-  needs no word of the numbers text. The piece is a part of part three that can be
+  public surface, and they are what N0 waits on. In Oak's document `propertyNames`
+  holds `{"type": "string"}` and `additionalProperties` holds a string with an `enum`
+  of two strings (computed, 22 November); neither holds a number, `oneOf` or `not`, so
+  classing them for what Oak states needs no word of the numbers text. The piece is a part of part three that can be
   approved alone. Before a reviewer sees a sentence of it, the sentence is run against
   the composition cases (see N4).
 - **The design of SPEC-N-4 runs beside it and never ahead of it in the landing queue.**
@@ -633,7 +637,7 @@ of three.
 | N7   | Whether a rule that differs between 3.1 and 3.2 is one entry or two                                                                             |
 | N7   | Whether the sweep of every "MUST" belongs in this step                                                                                          |
 | N5   | What the picture's cell for a declared narrowing is called and how it is judged (from N4; a first disposition is in the thread record)          |
-| N5   | The form of addressing a validator (SPEC-N-4), designed as this step's first piece                                                              |
+| N5   | The form of addressing a validator (SPEC-N-4), designed beside the step's first piece and landed after it                                       |
 | N5   | How the tables are held so that the picture's proposals are computed from them                                                                  |
 | N5   | What the mark on a Zod check Castr writes is, given that reading Zod is not designed (SPEC-N-3)                                                 |
 | N6   | Where the model's design (SPEC-N-1) is done                                                                                                     |
