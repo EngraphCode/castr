@@ -682,6 +682,18 @@ string; [key: string]: string | number }` accepts every valid value and also
     against a draft's sentences before any reviewer sees it. Nothing changed for Oak's
     document in N1, N3 or N4.
 
+- 2026-11-22. **Owner decision eighteen, by question prompt.** Asked where numbers are
+  written after three drafts of part two failed (with the tables; after the fix for
+  Oak's document; again now), the owner answered, verbatim: "Whatever is best for strict correctness".
+  The seat's reading, by the strict lens: with the tables. A clause written before the
+  words it needs exist is not exact, and one written after the fix leaves the integer
+  rows of the tables open while code changes against them. Part two is withdrawn as a
+  part of its own; N5 carries numbers; the order is N5, then N0. The seat had favoured
+  "after the fix" before asking, on the ground that Oak's document states no integer;
+  that ground is speed, not correctness, and the owner's measure excludes it.
+  - _Next work._ N2 (its validator first; two candidates agree, see the trial above),
+    and the start of N5, which opens with a Cricket panel and the design of SPEC-N-4.
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
