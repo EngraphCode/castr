@@ -23,7 +23,7 @@ todos:
     depends_on: [N3-CORRECTIONS]
   - id: N1-REPIN
     content: 'The picture pins the latest revisions of the publisher schemas for OpenAPI 3.1 and 3.2. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
-    status: pending
+    status: completed
     depends_on: []
   - id: N2-REFUSALS
     content: 'The picture has cells for what the reader refuses under SPEC-FV-1 and SPEC-FV-2, and they show what Castr does today. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
@@ -119,7 +119,7 @@ and the other is corrected.
   (`NOT-READ`, SPEC-FV-1, SPEC-FV-2) and 3.0.x as a later capability. It is part one of
   three.
 - The picture (`lib/tests-picture/`, `pnpm picture`, `pnpm test:picture`) has cells for
-  317 rows in three columns and for whole documents.
+  315 rows in three columns and for whole documents (317 before the re-pin of N1).
 - Castr refuses Oak's v1 document in every output. `pnpm picture` lists the rows Oak's
   document uses that are not right: 31 of 74.
 - No commit has touched `lib/src` since 18 November (`git log --since=2026-11-18 --
@@ -249,25 +249,27 @@ validate-specification-approval`), or by the record.
 
 - **Serves.** SPEC-FV-1 case 4 names the publisher's schema by revision, and 0.8.0
   names the revisions the picture pins, which are old.
-- **Do.** The publisher's index is `https://spec.openapis.org/oas/`. On 22 November it
-  listed, for 3.1, schema revisions up to 2026-11-05 against the pinned 2022-10-07, and
-  for 3.2 up to 2026-11-12 against the pinned 2025-09-17; and dated dialect and meta
-  revisions (for 3.1, 2024-10-25 and 2024-11-10; for 3.2, up to 2026-02-26). Read the
-  index on the day; do not trust these dates. The picture pins six OpenAPI files
-  (`lib/tests-picture/__fixtures__/definitions/provenance.json`); the 3.1 dialect and
-  meta are pinned by the undated `base` address, so decide by the lenses whether a
-  dated revision replaces them. A newer revision is a new pin: it is added beside the
-  old file, recorded in `docs/THIRD_PARTY_NOTICES.md`, and the old file stays until
-  nothing reads it (the picture's README says so). `lib/tests-picture/rows/
-published-rows.ts` names the files and holds the correction that a Link Object's
-  `body` is `server`. The publisher also gives a second schema for each line,
-  `schema-base`, which validates Schema Objects; decide by the lenses whether the
-  picture pins it.
+- **Done on 22 November 2026.** The publisher's index is
+  `https://spec.openapis.org/oas/`. The picture reads its rows from the latest revisions
+  listed that day: for 3.1 the schema of 2026-11-05 and the vocabulary of 2024-11-10,
+  for 3.2 the schema of 2026-11-12 and the vocabulary of 2026-02-26. It pins ten
+  OpenAPI files (`lib/tests-picture/__fixtures__/definitions/provenance.json`): for each
+  version the latest schema, its `schema-base`, the dialect and the vocabulary, and the
+  schema that specification 0.8.0 names, which stays until 0.8.1 names another. The
+  dated 3.1 dialect and vocabulary replaced the undated `base` pair. The thread record's
+  "Step log" has the matrix rows for those choices and the rows that changed.
+- **For a later re-pin.** A newer revision is a new pin: it is added beside the old
+  file, recorded in `docs/THIRD_PARTY_NOTICES.md`, and the old file stays until nothing
+  reads it (the picture's README says so). `lib/tests-picture/rows/published-rows.ts`
+  names the files read, and `lib/tests-picture/documents/rows-used.ts` holds what the
+  document walker assumes about where a path item may be a reference; both are read
+  again against the new revision and the text.
 - **Finished when.** `pnpm test:picture` passes; every row that appears, disappears or
   changes is named in the pull request with the reason; each correction to the old
   schema is either still needed or removed, and what that does to rule 7 of SPEC-FV-2
   is noted for N3.
-- **Size.** One pull request, about six files, one or two pushes.
+- **Size, as it turned out.** One pull request of 25 files, 12 of them pinned
+  definitions added or removed, and two pushes.
 
 ### N2-REFUSALS: cells for what the reader refuses
 
@@ -369,7 +371,7 @@ published-rows.ts` names the files and holds the correction that a Link Object's
   Where N6 has already written legs, they are read again against the approved tables
   in this step's pull request, and any leg whose exit state a table changed is
   corrected in the course.
-- **Size.** The largest step: 317 rows in three columns. At least two pull requests.
+- **Size.** The largest step: 315 rows in three columns. At least two pull requests.
   Size it at its start with what is known then.
 
 ### N6-PLOT: the remaining legs

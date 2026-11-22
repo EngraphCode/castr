@@ -47,7 +47,7 @@ describe('the pinned definitions', () => {
   it('every pinned file still has the bytes and the identifier its pin records', () => {
     const pins = readPins();
 
-    expect(pins).toHaveLength(14);
+    expect(pins).toHaveLength(18);
     for (const pin of pins) {
       expect(loadDefinition(pin.file).pin).toEqual(pin);
     }
@@ -119,7 +119,7 @@ describe('OpenAPI 3.1 objects', () => {
     for (const name of ['parameter', 'media-type', 'header']) {
       expect(fieldNames(inventory, name)).toEqual(expect.arrayContaining(['example', 'examples']));
     }
-    expect(inventory.folded).toEqual(['examples']);
+    expect(inventory.folded).toEqual(['examples', 'explode-for-form']);
   });
 
   it('gives a parameter its four locations and its seven styles', () => {
@@ -135,7 +135,7 @@ describe('OpenAPI 3.1 objects', () => {
     ]);
   });
 
-  it('reads the link object as the specification states it, not as the schema spells it', () => {
+  it('reads the link object with the field the specification states, `server`', () => {
     const fields = fieldNames(inventory, 'link');
 
     expect(fields).toContain('server');

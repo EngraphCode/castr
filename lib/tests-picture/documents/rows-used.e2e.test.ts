@@ -35,7 +35,7 @@ describe('the rows a document uses', () => {
       .filter(({ rowId, document }) => !rowsUsedBy(document, rowIds).used.has(rowId))
       .map(({ rowId }) => rowId);
 
-    expect(cases).toHaveLength(210);
+    expect(cases).toHaveLength(208);
     expect(notNamed).toEqual([]);
   });
 

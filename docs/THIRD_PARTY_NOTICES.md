@@ -101,15 +101,19 @@ recorded for them.
 
 ## Published definitions of the formats
 
-- **Files:** the fourteen files pinned in `lib/tests-picture/__fixtures__/definitions/`,
-  unchanged from the bytes their publishers served on 20 November 2026. That directory's
-  `provenance.json` records each file's identifier, URL, fetch time and SHA-256, and
-  [the picture's README](../lib/tests-picture/README.md) says what reads them.
+- **Files:** the eighteen files pinned in `lib/tests-picture/__fixtures__/definitions/`,
+  unchanged from the bytes their publishers served on the day each was fetched (20 or 22
+  November 2026). That directory's `provenance.json` records each file's identifier, URL,
+  fetch time and SHA-256, and [the picture's README](../lib/tests-picture/README.md) says
+  what reads them.
 
 ### OpenAPI Initiative schemas
 
-- **Files:** the six whose names begin `oas-`: the OpenAPI 3.1 and 3.2 document schemas,
-  and the vocabulary and dialect each version adds to JSON Schema.
+- **Files:** the ten whose names begin `oas-`. For each of OpenAPI 3.1 and 3.2: the
+  document schema at the latest revision listed on 22 November 2026, the `schema-base`
+  of that revision, and the vocabulary and dialect the version adds to JSON Schema; and
+  the document schema at the earlier revision that version 0.8.0 of the specification
+  names. A newer revision is a new pin, added beside the one it follows.
 - **Source:** the OpenAPI Initiative, served at <https://spec.openapis.org/oas/>, and
   maintained in [OAI/OpenAPI-Specification](https://github.com/OAI/OpenAPI-Specification).
 - **Licence:** Apache License 2.0, the licence of that repository (its `LICENSE` at commit

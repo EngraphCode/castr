@@ -219,6 +219,58 @@ enum: [...]}}`. Neither names a property. They are the only schema-valued
   | 8. Found: the shared JSON Schema writer would narrow a schema-valued `additionalProperties` | Strict: SPEC-PR-2, nothing changes silently                                  | Fixed in the same change as the reader: it writes the schema, which that format states directly and which is built as a value, not as text                                                                                                                                                                                  |
   | 9. Found: the Zod writer's existing checks are text and judge a value by `typeof` alone     | Proportionality                                                              | Not in N0. A leg N6 writes                                                                                                                                                                                                                                                                                                  |
 
+- 2026-11-22, N1, start. **Step back.**
+  1. _Which sentence it moves._ "the specification says exactly what 'right' is for
+     every construct a valid OpenAPI 3.1 or 3.2 document can hold". A reader of
+     `pnpm picture` sees the rows read from the publisher's latest schemas.
+  2. _Changed for Oak's document since the last step back._ Nothing, and this step
+     changes nothing for it. N3 follows and will not either; the owner chose that order.
+  3. _Size._ One pull request, as the plan gave it.
+  4. _Checking larger than the work._ No; the existing tests of the rows are the proof.
+  5. _Lost if it stopped here._ 0.8.1 would name revisions the picture does not read.
+- 2026-11-22, N1, start. **Found by reading the publisher's index and files** (fetched
+  22 November 2026, 14:22 UTC). The latest revisions are, for 3.1, schema `2026-11-05`,
+  dialect and meta `2024-11-10`; for 3.2, schema `2026-11-12`, dialect and meta
+  `2026-02-26`. The undated 3.1 `dialect/base` and `meta/base` are still served
+  byte-for-byte as pinned; the dated 3.1 dialect and meta differ from them only in
+  their identifiers, a title's capital letter and a description. The 3.1 schema at
+  `2026-11-05` spells the Link Object's field `server`, so the correction of `body` is
+  not needed at that revision. Each line's `schema-base` is 721 bytes: it refers to the
+  line's `schema` and fixes `jsonSchemaDialect` and each Schema Object's `$schema` to
+  the dated dialect.
+- 2026-11-22, N1, start. **The matrix on N1's unknowns.**
+
+  | Question                                                           | Lens that settles it                                                              | Disposition                                                                                                                                                                                                                                                                         |
+  | ------------------------------------------------------------------ | --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | Do dated revisions replace the undated 3.1 `base` dialect and meta | Strict: a pin names a revision, and `base` is an address whose content can change | Yes. The dated files are pinned and read; the latest `schema-base` cites them by date                                                                                                                                                                                               |
+  | Does the picture pin `schema-base` as well as `schema`             | Strict, then proportionality                                                      | Yes, both lines' latest. It is the publisher's schema that also validates each Schema Object, which is what SPEC-FV-1 case 4 needs judged; N2's judge and N3's text choose between it and `schema`, and they cannot choose a file that is not pinned. Nothing reads it in this step |
+  | Which old files stay                                               | The picture's rule: an old file stays until nothing reads it; SPEC-FV-1 names two | The two schemas 0.8.0 names (3.1 `2022-10-07`, 3.2 `2025-09-17`) stay until 0.8.1 names others, because case 4 is judged at them until then. The 3.1 `base` pair and the 3.2 dialect and meta of `2025-09-17` are read by nothing after this step and are removed with their pins   |
+  | Found: rule 7 of SPEC-FV-2 and the `body` correction               | Not N1's                                                                          | Noted for N3: at the latest 3.1 revision the schema and the text agree on `server`                                                                                                                                                                                                  |
+
+- 2026-11-22, N1, end. **What changed in the rows,** each checked against the published
+  text (OpenAPI 3.1.2 and 3.2.0, read that day). The picture has 315 rows, where it had
+  317; Oak's document uses the same 74 and its counts are unchanged.
+  - `path-item: $ref` is now a row of 3.1 as well as 3.2. The 3.1 schema of 2022-10-07
+    did not declare it; the 3.1 text does ("Allows for a referenced definition of this
+    path item").
+  - `media-type: description` is gone. The 3.2 schema of 2025-09-17 declared it; the
+    3.2 text's Media Type Object has no such field. Its case is removed.
+  - `header: allowReserved` is gone. The 3.2 schema of 2025-09-17 declared it; the 3.2
+    text's Header Object does not name it. Its case is removed.
+  - The 3.1 schema now spells the Link Object's field `server`, so the picture's one
+    correction is removed; the mechanism for a correction stays.
+  - The 3.1 schema factors the default of `explode` into a shared definition, which the
+    reading folds into the objects that use it, as it does `examples`.
+  - Found by a hosted review of the pull request: the document walker
+    (`documents/rows-used.ts`) still read a 3.1 path item with `$ref` under `webhooks`,
+    `components.pathItems` and a callback as a bare reference, as the older schema had
+    it. The latest 3.1 schema and the 3.1.2 text make it a Path Item Object in all
+    three places, so the walker no longer depends on the version.
+- 2026-11-22, N1, end. **Step back.** Nothing changed for Oak's document, as expected.
+  The step stayed one pull request. For N3: rule 7 of SPEC-FV-2 describes a difference
+  that the latest 3.1 revision no longer has, and the text must say which of `schema`
+  and `schema-base` case 4 is judged by; both are pinned.
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the

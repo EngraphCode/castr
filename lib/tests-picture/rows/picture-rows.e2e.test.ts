@@ -35,7 +35,7 @@ describe('the picture rows', () => {
     expect(count('format value')).toBe(25);
     expect(count('schema construct')).toBe(6);
     expect(count('schema vocabulary')).toBe(20);
-    expect(count('document')).toBe(202);
+    expect(count('document')).toBe(200);
   });
 
   it('marks the rows only OpenAPI 3.2 declares', () => {
