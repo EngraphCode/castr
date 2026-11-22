@@ -138,9 +138,9 @@ lib/src` is empty). Every pull request since has been the picture, the specifica
   tables, in order" (decision seventeen). So 0.8.1 is the corrections alone, numbers
   follow, the tables class the two rows with every other, and the fix is built after
   the tables are approved. This replaces "Fix first" and "Carry in 0.8.1" for where
-  the fix sits. What N0 waits on is the approved text for the two rows, not N5 ending:
-  if part three is withdrawn, or is approved without them, N0 does not start and where
-  its text comes from goes back to the owner.
+  the fix sits. N0 waits on N5 ending with the two rows classed in approved text. If part three is
+  withdrawn, or is approved without them, N0 does not start and where its text comes
+  from goes back to the owner.
 - **N1 before N3 is the seat's.** N3 names the revisions N1 pins, so it waits on the
   re-pin.
 - **N4 then N5 is the owner's** accepted order for the amendment's remaining parts.
@@ -346,8 +346,11 @@ validate-specification-approval`), or by the record.
   again. Commit the specification alone, and the record in a commit of its own. Then
   search the repository for sentences the amendment makes false and correct or mark
   them in the same pull request.
-- **Size.** One pull request, three to five pushes. The 0.8.0 pull request took about
-  ten; if this one passes five, step back.
+- **Size.** First given as one pull request of three to five pushes. As it turned out,
+  the record of the draft as attacked, with the owner's decision seventeen, landed as a
+  pull request of its own (#163). The redraft, its attack and, after the owner's words,
+  the landing of the text are one further pull request; if it passes five pushes, step
+  back. The 0.8.0 pull request took about ten.
 
 ### N4-NUMBERS: part two of the amendment
 

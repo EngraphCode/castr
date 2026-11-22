@@ -347,6 +347,12 @@ is a hypothesis until it is.
 | Clause 3, "at any depth", reaches a `$schema` inside data (`const`, `enum`, `example`, `default`)                                                                                                              | "Of a Schema Object, however nested; not a `$schema` in data"                                                                    |
 | Oak's outputs do not follow from clauses 5 and 6 alone: they need `example` to be an annotation and a row for `S` (`type` with `enum`), and SPEC-N-5 leaves every row open                                     | The two rows cannot be cut cleanly from the tables: each leans on rows and words the tables have not written                     |
 
+A hosted review of the pull request that carried this draft added one finding for the
+redraft: rule 6 leaves out the 3.2 text's second sentence, "Property names that are
+identical to a component name under the Components Object MUST be treated as a
+component name", which decides what a name is when it could also be read as a URI. The
+redraft keeps it.
+
 What held under the second attack: rules 6 to 9 are each a rule neither schema holds;
 removing the old rule 6 loses nothing; clause 2 mis-sorts nothing tried; the index
 signature and the Zod catchall are assignable in both directions for every `S` tried;

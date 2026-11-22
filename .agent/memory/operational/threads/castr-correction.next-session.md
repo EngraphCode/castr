@@ -329,10 +329,15 @@ string; [key: string]: string | number }` accepts every valid value and also
      Oak's document it is the text the fix waits on.
   2. _Changed for Oak's document since the last step back._ Nothing. This is the second
      step in a row of which that is true; the owner chose the order on 22 November
-     knowing it, and the plan's rule to say so before a third is met by N0 being the
-     third.
-  3. _Size._ One pull request for the draft; a second, after the owner's words, lands
-     the text. The plan gave three to five pushes.
+     knowing it. When this was written N0 was to be the third step. Decision seventeen
+     later put numbers and the tables before the fix; the question that decision
+     answered told the owner that Oak's document stays refused until part three is
+     approved and the fix is built, which is the plain statement the plan's rule asks
+     for before a third such step starts.
+  3. _Size._ The plan gave one pull request of three to five pushes. The draft as
+     attacked and the decision it led to landed as a pull request of their own (#163);
+     the redraft and the landing of the text are one further pull request, as the plan
+     now says.
   4. _Checking larger than the work._ No.
   5. _Lost if it stopped here._ The draft is a tracked file; the trials and the texts
      read word for word are in it.
