@@ -142,9 +142,10 @@ After:
 >   4. _Validity._ The document fails the schema its publisher gives for its version
 >      line, at the revision this section names, or a Schema Object in it fails the
 >      meta-schema of the dialect it is in, with `format` treated as that meta-schema's
->      vocabularies declare. The rejection carries every failure, each with its
->      location. A document that breaks a rule listed in SPEC-FV-2 is refused under this
->      case too.
+>      vocabularies declare. A failure of the publisher's schema at a place where
+>      SPEC-FV-2 says the text allows what the schema refuses is not a failure. The
+>      rejection carries every failure, each with its location. A document that breaks
+>      a rule listed in SPEC-FV-2 is refused under this case too.
 >
 >   5. _A reference with no target._ After every document a reference names has been
 >      read, its target is not there. This is a profile decision: the OpenAPI text
