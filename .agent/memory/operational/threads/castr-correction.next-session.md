@@ -36,6 +36,13 @@ below this one are the dated record; none of them is a newer instruction than th
   version": one refusal naming the version and the later capability that will read it,
   and the third-party upgrade step is removed. It is a decision about what the
   specification will say, not an approval of text.
+- **Owner decisions eleven and twelve, by question prompt, 22 November 2026.** Eleven:
+  a Draft-07 schema inside an OpenAPI document, for the first capability: "Refuse until
+  the second capability", by dialect, as a 3.0 document is refused by version. Twelve: a
+  document that passes the published schema and breaks a rule the OpenAPI text states
+  only in words: "Refuse it as invalid", each rule listed in the specification with the
+  section that states it, and an unlisted rule Castr trips over counts as unbuilt until
+  an amendment lists it. Neither approves text.
 - **Two facts found that day by running Castr.** It converts an OpenAPI 2.0 document,
   which section 6 says is refused. It reads 3.0 only after a third-party library rewrites
   the document to 3.1 (`lib/src/shared/load-openapi-document/upgrade-validate.ts`).
@@ -43,8 +50,11 @@ below this one are the dated record; none of them is a newer instruction than th
   [amendment-part-one-draft-2026-11-22.md](../../../analysis-and-reports/amendment-part-one-draft-2026-11-22.md),
   with the exact before and after of each clause. A draft cannot be committed into
   `docs/SPECIFICATION.md` before approval, because the approval check compares that file
-  with its latest approved record. The draft is not approved; it goes to adversarial
-  review and then to the owner.
+  with its latest approved record. The draft is not approved. One adversarial review
+  broke the first draft in six places; the second draft is in that file with each
+  finding's disposition (#156). Left before the owner is asked for words: read the
+  OpenAPI text for each rule SPEC-FV-2 would list, from the published text and not from
+  memory; check the dated revisions of the 3.1 dialect; one more adversarial review.
 - **#155 was merged with the hosted review of its last commit reported as failed,** not
   completed: the reviewer did not run on that commit. The three earlier commits were
   reviewed and all seven findings fixed. The owner was told on 22 November.

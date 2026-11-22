@@ -2,9 +2,7 @@
 
 Status: second draft, after one adversarial review broke the first. It is not approved
 and changes nothing in `docs/SPECIFICATION.md`. Approval is the owner's typed words
-naming a version (SPEC-CC-2). The version this part would carry is 0.8.0. Two points
-below wait on the owner, and two on text not yet read; the draft is not ready for
-approval until all four are closed.
+naming a version (SPEC-CC-2). The version this part would carry is 0.8.0. The owner has decided the two points that were theirs. Two wait on text not yet read, and the draft is not ready for approval until they are closed.
 
 This is the first of three parts. It does not touch the classes of the
 scope-and-fidelity table, the fifth class, the "read" outcome or numbers in JavaScript
@@ -21,6 +19,14 @@ targets. Those are parts two and three.
   3.0 is built, the owner chose "Refuse it by version": one refusal naming the version
   and the later capability that will read it, and the third-party upgrade step is
   removed.
+
+- **22 November 2026, decision eleven.** A Draft-07 schema inside an OpenAPI document,
+  for the first capability: "Refuse until the second capability". Case 3 as drafted
+  says this.
+- **22 November 2026, decision twelve.** A document that passes the published schema
+  and breaks a rule the OpenAPI text states only in words: "Refuse it as invalid".
+  SPEC-FV-2 as drafted says this; its list is still to be written from the published
+  text.
 
 ## Facts the draft rests on
 
@@ -238,18 +244,11 @@ above.
 
 ## Points that wait
 
-1. **For the owner: a Draft-07 schema inside an OpenAPI document.** Section 6 lists
-   Draft-07 as a JSON Schema dialect Castr reads, and full Draft-07 support is the
-   second capability. Case 3 as drafted refuses it inside an OpenAPI document. The
-   review found that the specification as it stands forces the other reading: such a
-   document is valid, so the first capability cannot be called done until Draft-07
-   schemas inside OpenAPI are built. Approving case 3 as drafted would decide this, so
-   it is asked first.
-2. **For the owner: a rule stated only in words.** Two operations with one
-   `operationId` pass the publisher's schema and break a rule the OpenAPI text states.
-   Either Castr refuses such a document as invalid, each rule listed in SPEC-FV-2 with
-   the section that states it, or Castr judges no rule the schemas do not hold and
-   carries what the document says (SPEC-PR-7: the source's stated meaning governs).
+1. **Decided on 22 November (decision eleven).** A Draft-07 schema inside an OpenAPI
+   document is refused by dialect until the second capability. Case 3 needs a few more
+   words to name SPEC-C-2 as the capability that will read it.
+2. **Decided on 22 November (decision twelve).** A rule stated only in words is listed
+   in SPEC-FV-2 and a document that breaks it is refused as invalid.
 3. **To read before the list is written.** If rules are listed, each needs the section
    of the OpenAPI text that states it, read from the published text and not from
    memory: a reference whose target is absent, a path template and its parameters, a
