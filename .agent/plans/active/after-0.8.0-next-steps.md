@@ -179,9 +179,10 @@ validate-specification-approval`), or by the record.
     `propertyNames` as impossible
     (`lib/src/schema-processing/writers/typescript/type-writer/fail-fast.ts`).
 - **There is no prior work to build on.** Two branches of April 2026 had attempted this
-  ("Support explicit additionalProperties honestly"). The owner had them removed on 22
-  November: "remove the april work, it is superseded and likely wrong". The fix is
-  written from the specification and the picture, not from them.
+  ("Support explicit additionalProperties honestly"). The owner ruled on 22 November that they be removed: "remove the april work, it is superseded and likely wrong". The fix is
+  written from the specification and the picture, not from them. If `git branch -a`
+  still shows a branch named `feat/explicit-additional-properties`, it is not read and
+  not merged.
 - **What the first telling got wrong.** The seat told the owner the fix "does not wait
   on any part of the amendment", and the owner chose "Fix first" on that. A reviewer
   then showed it holds for the Zod column only. Fixing `additionalProperties` alone
