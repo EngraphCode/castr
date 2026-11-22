@@ -126,7 +126,7 @@ publisher's schema revision does, and an input for each of cases 1 to 4 with wha
 does with it.
 
 - **The cases are decided outside Castr.**
-  [`refusals/reader-cases.ts`](refusals/reader-cases.ts) holds 25 small inputs and
+  [`refusals/reader-cases.ts`](refusals/reader-cases.ts) holds 26 small inputs and
   decides, for each, the first case of SPEC-FV-1 that holds: the text parses as neither
   JSON nor YAML 1.2 (the `yaml` package, which Castr's reader does not use); a `swagger`
   field, or an `openapi` field that does not match the pattern either pinned schema
@@ -140,14 +140,14 @@ does with it.
   that names its case, and nothing in what Castr says is that yet. Such a cell is not
   counted right, and it does not say Castr refused for the right reason: `openapi:
 4.0.0` is refused today with "version must be a string". Castr's own words are shown
-  beside each verdict for that. `pnpm picture` prints the section;
-  [`refusals/reader-cases.e2e.test.ts`](refusals/reader-cases.e2e.test.ts) holds the
-  case decided for every input, and
-  [`refusals/reader-cases.gen.test.ts`](refusals/reader-cases.gen.test.ts) holds
-  Castr's verdict and words.
+  beside each verdict for that. `pnpm picture` prints the section, and
+  [`refusals/reader-cases.gen.test.ts`](refusals/reader-cases.gen.test.ts) holds, for
+  every input, the case decided, Castr's verdict and Castr's words.
 - **Limits of what is decided.** The line's dialect is taken to be the address its
   publisher gives: `.../oas/3.1/dialect/base` or that with a date for `base`, and for
-  3.2 the address with a date. Addresses are compared as written, with no equivalence
+  3.2 the address with a date. Of those, only an address that some pinned file of the
+  publisher's names is known to be one it gives; another of that form, such as a date
+  it never issued, is not decided. Addresses are compared as written, with no equivalence
   of URIs applied; whether a fragment or a difference of case names the same dialect is
   for the amendment on references to say. A dialect that is not a string names none and
   is left to case 4. A text that is well formed and holds a value JSON cannot state,

@@ -11,8 +11,10 @@
  *   `components.schemas`, that is a string and is neither the line's OpenAPI dialect nor
  *   JSON Schema Draft 2020-12. The line's dialect is the address the publisher gives it:
  *   for 3.1, `.../oas/3.1/dialect/base` or the same with a date in place of `base`; for
- *   3.2, the address with a date. An address is compared as written: no fragment, case
- *   or other equivalence of URIs is applied. A dialect that is not a string names none,
+ *   3.2, the address with a date. Of those, only an address some pinned file of the
+ *   publisher's names is known to be one it gives; another of that form is not decided.
+ *   An address is compared as written: no fragment, case or other equivalence of URIs
+ *   is applied. A dialect that is not a string names none,
  *   and is left to case 4. A `$schema` deeper in the document is not looked for yet.
  * - Case 4: the document fails the publisher's schema at the revision 0.8.0 names. Whether
  *   each Schema Object passes its dialect's meta-schema is not decided yet.
@@ -24,7 +26,7 @@
 
 import { parseDocument } from 'yaml';
 
-import { loadDefinition } from '../rows/definitions.js';
+import { loadDefinition, readPins } from '../rows/definitions.js';
 import { isJsonObject, type JsonObject } from '../rows/json.js';
 
 import { isJsonValue, judgeDocument } from './judge.js';
@@ -42,6 +44,7 @@ export interface ReaderCase {
 
 const DRAFT_2020_12 = 'https://json-schema.org/draft/2020-12/schema';
 const DRAFT_07 = 'http://json-schema.org/draft-07/schema#';
+const PUBLISHER = 'https://spec.openapis.org/oas';
 
 const PINNED: Readonly<Record<Line, string>> = {
   '3.1': 'oas-3.1-schema-2022-10-07.json',
@@ -163,6 +166,15 @@ export const READER_CASES: readonly ReaderCase[] = [
     ),
   },
   {
+    name: 'a `jsonSchemaDialect` naming the 3.1 dialect at a date no pinned file names',
+    extension: 'json',
+    text: json(
+      documentWith('3.1.0', {
+        jsonSchemaDialect: 'https://spec.openapis.org/oas/3.1/dialect/1900-01-01',
+      }),
+    ),
+  },
+  {
     name: 'a `jsonSchemaDialect` with a path below the 3.1 dialect',
     extension: 'json',
     text: json(
@@ -245,8 +257,24 @@ const LINE_DIALECT: Readonly<Record<Line, RegExp>> = {
   '3.2': /^https:\/\/spec\.openapis\.org\/oas\/3\.2\/dialect\/\d{4}-\d{2}-\d{2}$/u,
 };
 
-function isDialectRead(dialect: string, line: Line): boolean {
-  return dialect === DRAFT_2020_12 || LINE_DIALECT[line].test(dialect);
+const ANY_DIALECT = /https:\/\/spec\.openapis\.org\/oas\/3\.[12]\/dialect\/[^"\\]+/gu;
+
+/** Every dialect address of a line that a pinned file of the publisher's names. */
+function dialectsGiven(line: Line): ReadonlySet<string> {
+  const ofLine = readPins().filter((pin) => pin.id.startsWith(`${PUBLISHER}/${line}/`));
+  const named = ofLine.flatMap(
+    (pin) => JSON.stringify(loadDefinition(pin.file).schema).match(ANY_DIALECT) ?? [],
+  );
+  return new Set(named.filter((dialect) => LINE_DIALECT[line].test(dialect)));
+}
+
+type DialectIs = 'read' | 'another' | 'not known';
+
+function dialectIs(dialect: string, line: Line): DialectIs {
+  if (dialect === DRAFT_2020_12 || dialectsGiven(line).has(dialect)) {
+    return 'read';
+  }
+  return LINE_DIALECT[line].test(dialect) ? 'not known' : 'another';
 }
 
 function statedDialects(document: JsonObject): readonly string[] {
@@ -281,8 +309,12 @@ export async function caseThatHolds(text: string): Promise<CaseThatHolds> {
   if (line === undefined) {
     return 2;
   }
-  if (!statedDialects(document).every((dialect) => isDialectRead(dialect, line))) {
+  const dialects = statedDialects(document).map((dialect) => dialectIs(dialect, line));
+  if (dialects.includes('another')) {
     return 3;
+  }
+  if (dialects.includes('not known')) {
+    return 'not decided';
   }
   return (await judgeDocument(REVISIONS[line].named, document)).passes ? 'none' : 4;
 }

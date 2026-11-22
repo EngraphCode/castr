@@ -51,14 +51,20 @@ export async function runReaderCases(cases: readonly ReaderCase[]): Promise<read
   await mkdir(TEMP_ROOT, { recursive: true });
   const directory = await mkdtemp(join(TEMP_ROOT, 'reader-'));
   try {
-    const documents = await Promise.all(
-      cases.map(async (readerCase, index) => {
-        const file = join(directory, `input-${String(index + 1)}.${readerCase.extension}`);
-        await writeFile(file, readerCase.text, 'utf8');
-        return { name: readerCase.name, file: relative(PACKAGE, file) };
-      }),
+    const names = cases.map(
+      (readerCase, index) => `input-${String(index + 1)}.${readerCase.extension}`,
     );
-    const lines = await runDocuments(documents);
+    await Promise.all(
+      cases.map(async (readerCase, index) =>
+        writeFile(join(directory, names[index] ?? ''), readerCase.text, 'utf8'),
+      ),
+    );
+    const lines = await runDocuments(
+      cases.map((readerCase, index) => ({
+        name: readerCase.name,
+        file: relative(PACKAGE, join(directory, names[index] ?? '')),
+      })),
+    );
     return await Promise.all(
       cases.map(async (readerCase, index) => {
         const line = lines[index];
@@ -66,11 +72,15 @@ export async function runReaderCases(cases: readonly ReaderCase[]): Promise<read
           throw new Error(`no line for ${readerCase.name}`);
         }
         const did = castrDid(line);
+        // The directory and the file's name are this run's and this list's; a cell must
+        // hold neither.
+        const detail = did.detail
+          .replaceAll(directory + sep, '')
+          .replaceAll(names[index] ?? '', 'the input');
         return {
           name: readerCase.name,
           holds: await caseThatHolds(readerCase.text),
-          // The directory is new on every run; a cell must not differ from run to run.
-          did: { ...did, detail: did.detail.replaceAll(directory + sep, '') },
+          did: { ...did, detail },
         };
       }),
     );
