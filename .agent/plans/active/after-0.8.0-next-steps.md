@@ -45,7 +45,11 @@ todos:
   - id: N6-PLOT
     content: 'The remaining legs that fix Castr are written into the course from the picture''s cells, each with an observable exit state, and reviewed. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
-    depends_on: [N0-FIX, N2-REFUSALS]
+    depends_on: [N0-FIX, N2-REFUSALS, N7-REFERENCES]
+  - id: N7-REFERENCES
+    content: 'An amendment on references across documents, written from the picture''s cells for what the reader refuses: what a reference is for case 5 of SPEC-FV-1, that a target must be valid for the place the reference stands, and what a failed fetch says. Approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
+    status: pending
+    depends_on: [N2-REFUSALS, N3-CORRECTIONS]
 ---
 
 # After specification 0.8.0: the next steps
@@ -151,8 +155,12 @@ lib/src` is empty). Every pull request since has been the picture, the specifica
   case 4 uses the publisher's schema, so N2 does not wait on N1. N3 does, for the
   revisions it names. N1 is first because N3 waits on it; N2 is fitted in
   where it does not hold them. The todos' `depends_on` say the same.
-- **N6 waits on N0 and N2.** What N0 learns is its main input, and N2's cells for
-  what the reader refuses are work the legs must hold. A leg whose "right" the
+- **N7 waits on N2 and N3, and is the seat's.** It is the three things on references
+  that 0.8.1 could not say exactly. N2's cells give it a judge outside Castr, and it
+  amends the text 0.8.1 leaves. It is not ordered against N4 and N5; only landing is
+  serial.
+- **N6 waits on N0, N2 and N7.** What N0 learns is its main input, and N2's cells for
+  what the reader refuses, with N7's text for references, are work the legs must hold. A leg whose "right" the
   tables define waits on N5; the others do not. N6 writes the legs; it does not by
   itself complete the course's PLOT todo, which keeps its own dependencies (PICTURE and
   CORPUS) and is marked complete in the course when they are.
@@ -318,7 +326,7 @@ validate-specification-approval`), or by the record.
   - What a reference is for case 5, that a reference's target must be valid for the
     place it is used, and what a failed fetch says are not in 0.8.1 either. Each was
     tried and was a list nothing forced complete. They are written from N2's cells,
-    which give a judge outside Castr, as an amendment of their own after N2.
+    which give a judge outside Castr, as an amendment of their own after N2 (N7).
   - The corrections that remain (the revisions, cases 2 and 3, the list of SPEC-FV-2)
     are redrafted with the second review's wording faults closed, and attacked again
     before the owner sees them. One thing is read word for word first: which dialect
@@ -395,6 +403,26 @@ validate-specification-approval`), or by the record.
   corrected in the course.
 - **Size.** The largest step: 315 rows in three columns. At least two pull requests.
   Size it at its start with what is known then.
+
+### N7-REFERENCES: references across documents
+
+- **Serves.** Three corrections to part one that the draft of 0.8.1 tried and could not
+  state exactly (its record is
+  `.agent/analysis-and-reports/amendment-corrections-draft-2026-11-22.md`, "Deferred"
+  and both reviews): what a reference is for case 5 of SPEC-FV-1; that a reference's
+  target, in the document or another, must be valid for the place the reference stands,
+  and that cases 1 to 3 apply to every document read; and what the rejection says when
+  a referenced document cannot be fetched.
+- **Do.** Write it from N2's cells, which decide each case outside Castr. Known hard
+  places, from the reviews: a discriminator `mapping` value that is both a schema name
+  and a relative URI reference, which the 3.2 text calls implementation-defined; a
+  `$ref` written as data; a 3.2 security requirement name that is a URI; a Link
+  Object's `operationRef`, which "MUST point to an Operation Object"; a target inside a
+  file with no `openapi` field. A tracked draft, attacked before the owner sees it, as
+  N3.
+- **Finished when.** As N3, for the version this amendment carries.
+- **Size.** One pull request for the draft and its landing. Size it at its start from
+  N2's cells.
 
 ### N6-PLOT: the remaining legs
 
