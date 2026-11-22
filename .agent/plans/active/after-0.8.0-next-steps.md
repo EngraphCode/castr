@@ -495,7 +495,13 @@ validate-specification-approval`), or by the record.
   public surface, and they are what N0 waits on. In Oak's document `propertyNames`
   holds `{"type": "string"}` and `additionalProperties` holds a string with an `enum`
   of two strings (computed, 22 November); neither holds a number, `oneOf` or `not`, so
-  classing them for what Oak states needs no word of the numbers text. The piece is a part of part three that can be
+  classing them for what Oak states needs no word of the numbers text. The piece's
+  boundary: every schema row except those whose class turns on a number, which are left
+  to the numbers part and named in the piece's draft. To start from: `type: integer`,
+  `type: number`, the numeric values of `format`, and `minimum`, `maximum`,
+  `exclusiveMinimum`, `exclusiveMaximum` and `multipleOf`. A row such as `const` or
+  `enum`, which can hold a number among its values, is classed in this piece for values
+  that are not numbers, and its draft says so. The piece is a part of part three that can be
   approved alone. Before a reviewer sees a sentence of it, the sentence is run against
   the composition cases (see N4).
 - **The design of SPEC-N-4 runs beside it and never ahead of it in the landing queue.**
