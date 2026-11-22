@@ -695,6 +695,51 @@ string; [key: string]: string | number }` accepts every valid value and also
   - _Next work._ N2 (its validator first; two candidates agree, see the trial above),
     and the start of N5, which opens with a Cricket panel and the design of SPEC-N-4.
 
+- 2026-11-22, N2. **Step back at the start, and the first slice.** #165 is merged
+  (`cc8a882e`).
+  1. _Serves._ "The picture shows what Castr does against it, judged from outside
+     Castr": 0.8.0 says what the reader refuses and no cell shows it. A reader of
+     `pnpm picture` gets a section of its own.
+  2. _Changed for Oak's document._ Nothing; the fourth step in a row. The owner was
+     told at the third.
+  3. _Size._ N2 as written is several things under one name (proportionality, scope):
+     a judge for case 4; documents for cases 1 to 3 and 5; a judge outside Castr for
+     each of the seven rules of SPEC-FV-2; a resolver of references across files. It
+     is cut into slices, one pull request each. The first is the judge of case 4 and
+     the list of documents the two sets of revisions judge differently, which is the
+     one thing N7 cannot start without.
+  4. _Checking larger than the work._ The tie-break below used a third validator in
+     scratch once. Nothing of it is in the tree.
+  5. _Lost if it stopped here._ The record that Ajv cannot judge the pinned schemas,
+     with nothing in its place.
+- 2026-11-22, N2. **Matrix rows.**
+
+  | Question                                                                 | Lens that settles it                                   | Disposition                                                                                                                                                                                                                                                                                                                                                          |
+  | ------------------------------------------------------------------------ | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | Which validator judges the cells                                         | Strict: the judge must decide the schemas as published | `@hyperjump/json-schema` 1.18.1. On 186 judgements (31 documents against six pinned files) it and the Python `jsonschema` 4.25.1, a separate codebase, agree on every one. `json-schema-library` 11.6.16 disagrees with both on two, wrongly: it loses an evaluated property through `dependentSchemas`. Ajv 8.20.0 cannot judge a Schema Object under these schemas |
+  | Whether a second validator runs in the repository's tests                | Proportionality (instrument), then strict              | No. The only second JavaScript validator tried is wrong, and a Python one is a second toolchain. The proof in the tree is each document with its expected outcome, which two validators computed alike; the test recomputes it with the judge                                                                                                                        |
+  | Whether the judge may fetch a schema                                     | Strict                                                 | Never. The http, https and file schemes are removed from the library before anything is judged, and a test shows an unregistered address throws                                                                                                                                                                                                                      |
+  | What decides a reference's target outside Castr, across files            | Proportionality (scope)                                | A later slice of N2; not needed to judge case 4                                                                                                                                                                                                                                                                                                                      |
+  | Whether a document Castr converts and 0.8.0 refuses is a cell of its own | Proportionality (scope)                                | A later slice of N2, with the documents for cases 1 to 3                                                                                                                                                                                                                                                                                                             |
+
+- 2026-11-22, N2. **The first slice built, and reviewed before its first push.**
+  `lib/tests-picture/refusals/` holds the judge and 28 small documents; `pnpm picture`
+  prints the 16 of 56 that the revision 0.8.0 names and the latest revision judge
+  differently. The test reviewer ran inputs against it and found eight things, none of
+  which changed an outcome; all are fixed: the judge now refuses any schema that is not
+  pinned (the library carries undated copies of the publisher's schemas and would have
+  judged by them); the README no longer says the judge reads only pinned files (the
+  2020-12 meta-schema is the library's own copy); a case that failed on 3.1 for a
+  second reason is renamed; the tests are named `e2e` because they read files, and
+  assert the place of a failure and not only that one exists; `isJsonValue` refuses
+  what is not plain JSON. Two things found beside the work and done with it: the
+  unused-code check did not look inside the picture's helper files, so its scope now
+  includes them and seven unused exports are no longer exported; and CI did not run
+  the picture's tests, which only the local gate did, so the CI suite line now does.
+  - _Next slices of N2._ A document for each of cases 1, 2, 3 and 5 with what Castr
+    does set against it; a judge outside Castr for each rule of SPEC-FV-2; the
+    resolver of references across files.
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
