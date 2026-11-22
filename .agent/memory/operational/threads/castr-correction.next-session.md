@@ -572,6 +572,99 @@ string; [key: string]: string | number }` accepts every valid value and also
   - _The seat is not closed out._ No claim is held. The Ecosystem seat was told this
     seat was live and has not been told it paused.
 
+- 2026-11-22. **Resumed; #164 merged (`369b6354`); step back at the end of N3's pull
+  request.** The session resumed after the compaction and told the Ecosystem seat. One
+  more hosted finding was true (the fourth draft's commit is `6636e9e4`, not the record
+  commit after it) and was fixed in both places. The pull request took eleven pushes
+  against a size of three to five. Every push after the withdrawal answered a review
+  point on the record; the exit used for the last round was: fix only a factual error
+  in the record, answer and resolve anything else without a push. That exit is set at
+  the first review round from now on, not the last.
+- 2026-11-22, N4. **Step back at the start.**
+  1. _Serves._ "The specification says exactly what right is for every construct": the
+     integer rows. A reader of `pnpm picture` sees `type: integer` (to Zod) and
+     `format: int64` (both columns) read wrong today; under the owner's decision four
+     the right outcome for a value outside the safe range is refusal, and no approved
+     text says so yet.
+  2. _Changed for Oak's document._ Nothing, and nothing will by this step: none of the
+     31 rows that stop it is a number row. N1 and N3 also changed nothing for it, so
+     this is the third step in a row. The owner chose this order on 22 November knowing
+     it; it is said to them again in plain words in the session's report, not asked.
+  3. _Size._ One pull request, three to five pushes, as given. N4 leads and N2 is worked
+     where N4 waits on the owner, as "Order, and whose it is" says: N4 is on the path to
+     the fix (N4, N5, N0) and N2 is not.
+  4. _Checking larger than the work._ No. One adversarial review of a clause of about
+     forty lines.
+  5. _Lost if it stopped here._ The owner's decisions four and seven stay recorded only
+     in this file, and the writers keep emitting `bigint` for `int64` with nothing in
+     the specification against it.
+- 2026-11-22, N4. **Matrix rows.**
+
+  | Question                                                                  | Lens that settles it                                                   | Disposition                                                                                                                                                                                                                                           |
+  | ------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | What the picture's cell for a declared narrowing is called                | Could it be simpler                                                    | No new name. After approval an integer case states, for a sample outside the safe range, that the specification's outcome is refusal; the cell is right when Castr does that. The picture changes only after the text is approved                     |
+  | Whether the Zod annotation needs the mark part three defines              | Proportionality (whose question), then strict                          | The clause states the requirement (the Zod output carries an annotation; a reader recovers the source's integer). The form goes with the technique for reading Zod (SPEC-N-3) and the mark of N5, as SPEC-AR-6 does for a default given as a function |
+  | Whether the run report states the integer narrowing once or per schema    | Strict: SPEC-PR-8 says a report entry names the construct and location | Per schema. Decision seven's "once, per run" is the decimal limit only                                                                                                                                                                                |
+  | Where the three statements appear                                         | Could it be simpler                                                    | Wherever the assertion can refuse something the same schema object admits, decided from that object's own keywords. A hypothesis until attacked                                                                                                       |
+  | A stated decimal beyond JavaScript precision in a schema that is a number | Strict: SPEC-PR-2 already forbids writing it rounded                   | No new permission. The clause says a JavaScript number stands for the number its shortest text names, and the validator decides each as the stated number does                                                                                        |
+  | Whether `multipleOf` on decimals gets a permission to differ              | Proportionality: nobody decided one, and eight values tried agree      | None given. SPEC-G-4 shows it when the proof runs                                                                                                                                                                                                     |
+  | Which version the part carries                                            | Change control: a new clause, not a correction                         | 0.9.0                                                                                                                                                                                                                                                 |
+
+- 2026-11-22, N4. **Exit set before the attack.** A sentence shown false, or saying two
+  things, is rewritten. A piece that needs a definition the specification lacks, or an
+  outcome that cannot be computed here, is cut and routed (to N5 or N6) when what
+  remains still states decisions four and seven whole. If, after a second attack, a
+  sentence of decision four or seven itself cannot be stated exactly, drafting stops
+  and that sentence goes to the owner by question prompt: it is specification text and
+  theirs. There is no third draft without a step back.
+- 2026-11-22, N2. **The validator trial, widened; scratch only, nothing in the tree.**
+  Fourteen documents against each of the six pinned files (the two `schema` revisions
+  of each line, and `schema-base`), half of them invalid.
+  - `@hyperjump/json-schema` 1.18.1, with its `openapi-3-1` and `openapi-3-2` modules
+    imported (they define the two `vocab/base` vocabularies) and the pinned files
+    registered by their dated `$id`: no throw. The plain `schema` accepts
+    `{"type": "string"}`, `true`, `{}` and `{"type": 5}` as a Schema Object and refuses
+    `7`; `schema-base` refuses `{"type": 5}` and a `discriminator` that is a string. It
+    refuses a missing `info`, an unknown root field, a path key with no slash and a
+    Parameter with no `name` at every revision.
+  - It reproduces two of the fourth review's differences between revisions: a Header
+    Object with `allowReserved` passes the 3.2 schema of 2025-09-17 and fails
+    2026-11-12; Responses holding only an `x-` field passes the 3.1 schema of
+    2022-10-07 and fails 2026-11-05.
+  - `json-schema-library` 11.6.16, a separate codebase, gives the same answer on all 56
+    outcomes for the four plain `schema` files. Against `schema-base` it refuses every
+    document that holds a Schema Object; the cause was not read (the fixtures hold no
+    file for `https://json-schema.org/draft/2020-12/schema` itself, which may be it).
+  - `@exodus/schemasafe` 1.3.0 does not compile the pinned files in its strict mode
+    (`format: media-range` unknown; the 2020-12 meta-schema not found).
+  - Case 4 names the plain `schema`, so two validators that agree there are available.
+    The choice is still N2's matrix row.
+
+- 2026-11-22, N4. **Two attacks, and the step back before a third draft.** The first
+  review broke the first draft in twelve places; ten were in rules the seat had added
+  to the owner's two decisions (a term for precision, a rule for every stated number,
+  an exception to where the narrowing is stated). The second draft cut those. The
+  second review broke it in seven places, one at the core of decision four as the seat
+  had proposed it: asserting the safe range at one schema widens under `oneOf` or
+  `not` (`oneOf: [{type: integer}, {type: number}]` and 9007199254740992: the source
+  refuses, Castr's Zod accepts). Checked by reasoning and by the reviewer's run.
+  1. _Is this N3 again?_ In part. The same error: a mechanism written down and its
+     consequences read, not run. Different in that every finding here was computed in
+     minutes with what is installed, and each has a cure the specification already
+     holds.
+  2. _Whose the core finding is._ The exit set before the first attack said a sentence
+     of the decision that cannot be stated exactly goes to the owner. It can be stated
+     exactly: SPEC-PR-2 already forbids the widening, so the lens is strict and nothing
+     is left to choose. The clause states what holds of the whole validator and keeps
+     the assertion as the means. The owner is told in the draft, in plain words, that
+     the decision as worded could widen; they approve or refuse the text as a whole.
+  3. _Exit for the third attack._ A wording fault is fixed and the draft goes to a pull
+     request. One more fault at the core of either decision, or more than three faults
+     of any kind, stops drafting: the seat reports to the owner that numbers cannot yet
+     be written alone and asks, by question prompt, whether part two is folded into
+     part three, which is a change to the plan's order and theirs.
+  4. _Size._ Still one pull request; nothing is pushed yet.
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
