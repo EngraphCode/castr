@@ -36,7 +36,7 @@ todos:
     depends_on: [N1-REPIN]
   - id: N4-NUMBERS
     content: 'Part two of the amendment, numbers in JavaScript targets, approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
-    status: pending
+    status: in_progress
     depends_on: [N3-CORRECTIONS]
   - id: N5-TABLES
     content: 'Part three of the amendment, the table vocabulary with the tables (SPEC-N-5), approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
