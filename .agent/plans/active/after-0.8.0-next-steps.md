@@ -41,7 +41,7 @@ todos:
   - id: N6-PLOT
     content: 'The remaining legs that fix Castr are written into the course from the picture''s cells, each with an observable exit state, and reviewed. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
-    depends_on: [N0-FIX]
+    depends_on: [N0-FIX, N2-REFUSALS]
 ---
 
 # After specification 0.8.0: the next steps
@@ -67,11 +67,13 @@ and the other is corrected.
 4. Work in this repository only. The owner set one seat per repository on 21 November.
    Tell the Ecosystem repository's seat before anything is written there; nothing in
    this plan writes there.
-5. The cognitive skills and the decision lenses this plan names are the Ecosystem
-   repository's, a sibling checkout (`oak-open-curriculum-ecosystem`): the skills under
+5. The cognitive skills this plan names are in this repository under
    `.agent/skills/cognition/` (`metacognition`, `proportionality`, `cricket`,
-   `concept-exploration`, `reason`) and the lenses in `.agent/directives/principles.md`
-   under "Decision Lenses". This repository has no copy.
+   `concept-exploration`, `reason`), and the decision lenses are in
+   `.agent/directives/principles.md` under "Decision Lenses". The owner ruled on 20
+   November that sessions here work by the Ecosystem repository's Practice, a sibling
+   checkout (`oak-open-curriculum-ecosystem`); where that checkout is present and its
+   copy of a skill or of the lenses differs, its copy governs.
 6. Before the first edit, do the first step back and run the decision matrix on the
    unknowns of N0, and write both under "Step log" in the thread record.
 7. Read "Review dispositions" at the foot of this plan and give each row its
@@ -131,7 +133,8 @@ lib/src` is empty). Every pull request since has been the picture, the specifica
 - **N1 and N2 come after N0** by the owner's "Fix first", and are not ordered between
   themselves: only SPEC-FV-1 case 4 uses the publisher's schema, so N2 does not wait on
   N1. N3 does, for the revisions it names. The todos' `depends_on` say the same.
-- **N6 waits on N0 only.** What N0 learns is its main input. A leg whose "right" the
+- **N6 waits on N0 and N2.** What N0 learns is its main input, and N2's cells for
+  what the reader refuses are work the legs must hold. A leg whose "right" the
   tables define waits on N5; the others do not. N6 writes the legs; it does not by
   itself complete the course's PLOT todo, which keeps its own dependencies (PICTURE and
   CORPUS) and is marked complete in the course when they are.
