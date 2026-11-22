@@ -56,8 +56,12 @@ below this one are the dated record; none of them is a newer instruction than th
   requirements, Link Objects and a server variable's default, each read word for word
   from the OpenAPI text; give the refusals of a JSON Schema reader and of a Zod reader
   their kinds. The second adversarial review the seat had promised was not run; hosted
-  review ran four rounds. ADR-030 and `.agent/directives/requirements.md` promised 3.0 support and each now
-  carries a note that 0.8.0 governs.
+  review ran four rounds. Nine older documents promised or described the 3.0 upgrade (ADR-018, ADR-019,
+  ADR-030, the requirements, vision and testing-strategy directives, the Scalar pipeline
+  page and two guides); each now opens with a dated note that 0.8.0 governs. A gap a
+  hosted review found in the approved text, for the next amendment: case 4 validates
+  the entry document, and nothing says a reference's resolved target in another file
+  must itself be valid for the place it is used.
   Next: parts two (numbers in JavaScript targets) and three (the table vocabulary with
   the tables).
 - **Two facts found that day by running Castr.** It converts an OpenAPI 2.0 document,
