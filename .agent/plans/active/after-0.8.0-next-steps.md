@@ -291,7 +291,7 @@ validate-specification-approval`), or by the record.
 - **Finished when.** `pnpm test:picture` passes; every row that appears, disappears or
   changes is named in the pull request with the reason; each correction to the old
   schema is either still needed or removed, and what that does to the entry of
-  SPEC-FV-2 on a Link Object's `body` (rule 7 in 0.8.0) is noted for N3.
+  SPEC-FV-2 on a Link Object's `body` (rule 7 in 0.8.0) is noted for the amendment that names the new revisions (N7, since N3's withdrawal).
 - **Size, as it turned out.** One pull request of 25 files, 12 of them pinned
   definitions added or removed, and two pushes.
 
@@ -334,7 +334,7 @@ validate-specification-approval`), or by the record.
      requirement names a declared scheme; a Link Object's `operationRef` and
      `operationId` identify an operation; a server variable's default is one of its
      `enum` values. Read each word for word from the published text
-     (`https://spec.openapis.org/oas/v3.1.2.html` and `v3.2.0.html`) first.
+     (`https://spec.openapis.org/oas/v3.1.2.html` and `v3.2.1.html`, the latest the publisher's index lists) first.
 - **Where it stands, 22 November.** The draft
   (`.agent/analysis-and-reports/amendment-corrections-draft-2026-11-22.md`) has had two
   attacks, and holds every finding. Three things follow.
@@ -369,17 +369,19 @@ validate-specification-approval`), or by the record.
     validator that judges the pinned schemas correctly, which N2 chooses and proves. No
     version 0.8.1 exists. The corrections are written from N2's cells in N7; the
     redraft file says what stands from the four drafts. Nothing was put to the owner.
+- **What follows is how the step was to run. It is withdrawn; nothing below is to be
+  done under N3.** The way an approved amendment lands still holds for N4, N5 and N7.
 - **Not in this step unless the matrix puts it there.** A sweep of every "MUST" and
   "MUST NOT" in the two texts. The owner's decision twelve already says what an
   unlisted rule costs: Castr reads the document, and a refusal it then gives counts as
   unbuilt until an amendment lists the rule. Completeness now is a choice to size, not
   a need.
-- **Do.** A tracked draft beside the last one
+- **Do (as planned).** A tracked draft beside the last one
   (`.agent/analysis-and-reports/amendment-part-one-draft-2026-11-22.md` shows the form:
   the before and after of each clause). One adversarial review before the first push,
   with the instruction that worked: "find a document that gets the design refusal and
   is really a defect". Then the owner's words, asked for once the findings are closed.
-- **Finished when.** The owner's typed words name 0.8.1 and it is on `main` with the
+- **Finished when (as planned; it ended by withdrawal).** The owner's typed words name 0.8.1 and it is on `main` with the
   approval check passing, or the draft is withdrawn with the reason recorded.
 - **How an approved amendment lands.** The specification cannot hold a draft: the
   approval check compares it with its latest approved record. After the owner's words:

@@ -101,7 +101,7 @@ seat alone where it says so.
 Read from `https://spec.openapis.org/oas/v3.1.2.html`, `v3.2.0.html` and `v3.2.1.html`.
 The publisher's index lists 3.1.2 as the latest 3.1 text and 3.2.1 (10 September 2026)
 as the latest 3.2 text. Each sentence below is the same in all three, and the section
-numbers of 3.2.0 and 3.2.1 are the same for every section section 6 cites (seat's
+numbers of 3.2.0 and 3.2.1 are the same for every section that section 6 of the specification cites (seat's
 reading: the headings of both, and a comparison of every sentence holding "MUST",
 "SHALL" or "REQUIRED").
 
