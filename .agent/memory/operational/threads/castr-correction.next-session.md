@@ -78,6 +78,35 @@ below this one are the dated record; none of them is a newer instruction than th
   completed: the reviewer did not run on that commit. The three earlier commits were
   reviewed and all seven findings fixed. The owner was told on 22 November.
 
+### The matrix pass of 22 November 2026
+
+The owner asked for the open questions to be run through the decision lenses of the
+Ecosystem repository's principles (architectural excellence; strict everywhere; could it
+be simpler; would it be simpler if the system changed; user value), with proportionality
+as the sizing gate. Each disposition is the seat's, and each that changes the
+specification still needs the owner's words on a version. None was left for the owner
+to decide.
+
+| Question                                                                                      | Lens that settles it                                                                                                    | Disposition                                                                                                                                                                                                                                                                                                                                                              |
+| --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Which revision of the publisher's schemas the specification names                             | Strict, and change control: the revision decides which documents are refused, so a change of it changes the destination | The specification keeps naming the revision, as 0.8.0 does. The picture re-pins to the latest, and the next amendment names those. The seat first settled this the other way (drop the revision from the text, since the OpenAPI text is normative and its schema is not) and two hosted reviews showed that a re-pin would then change what is refused with no approval |
+| Rules not yet listed (security requirement, Link Object, a server variable's default)         | Strict                                                                                                                  | Listed, each read word for word from the published text first. Next amendment                                                                                                                                                                                                                                                                                            |
+| A reference's target in another file that is itself invalid                                   | Strict                                                                                                                  | The target must be valid for the place it is used. Next amendment                                                                                                                                                                                                                                                                                                        |
+| One amendment for those three, or fold them into part two                                     | Simpler: one concern per change                                                                                         | A corrections amendment, 0.8.1, before part two                                                                                                                                                                                                                                                                                                                          |
+| Kinds for the refusals of a JSON Schema reader and of a Zod reader                            | Proportionality: no reader of either exists in the first capability                                                     | Written by the amendment that opens the capability needing them                                                                                                                                                                                                                                                                                                          |
+| A bound, `const` or `enum` member beyond the safe integer range                               | Strict, with the owner's decision four                                                                                  | Never accepted rounded. A bound that the safe range already implies (a maximum above it, a minimum below it) adds nothing. A bound that excludes the whole safe range (a minimum above it, a maximum below it), and a `const` or member beyond it, accept no value. Each is reported. Part two says so                                                                   |
+| Three discriminator rows proposed as carried as structure by TypeScript, which change no type | Strict: the class must be one the target can show                                                                       | Reclassed as carried by companion: TypeScript cannot say it, the Zod output of the same run does, and a comment shows it. Part three                                                                                                                                                                                                                                     |
+| `$id`, `$anchor` and `$defs` in the TypeScript column                                         | Excellence: a name is meaning (SPEC-PR-3)                                                                               | Stay carried as structure, shown as a type exported under the name; the case is changed to look for that. Part three                                                                                                                                                                                                                                                     |
+| The fifth class and boundary slots and naming                                                 | Strict                                                                                                                  | The owner's bar stands as stated and extends mechanically; part three writes it                                                                                                                                                                                                                                                                                          |
+| A generator as a capability of its own (an old review thread)                                 | Settled by the text: the definition reads "a directed format pair or generator"                                         | Closed                                                                                                                                                                                                                                                                                                                                                                   |
+| Where moving writers from text to syntax-tree nodes sits in the order                         | Excellence, and the owner's ruling of 18 November                                                                       | A writer is moved when it is first touched for a fix; no separate leg                                                                                                                                                                                                                                                                                                    |
+| A second judge for seven rows                                                                 | Strict (SPEC-G-7)                                                                                                       | Cases judged against the defining text, with a second independent validator where one exists                                                                                                                                                                                                                                                                             |
+| Castr converting 2.0 and 3.0 documents and stamping 3.2.0                                     | Strict: every found issue gets a decision                                                                               | Picture cells are added now so they read wrong; the code is fixed first in the fixing leg                                                                                                                                                                                                                                                                                |
+| The form of addressing a validator (SPEC-N-4)                                                 | User value: the consumer's use fixes it                                                                                 | Designed from how the Ecosystem repository uses the output, with its seat asked for facts, then brought as an amendment. Design work, not a question                                                                                                                                                                                                                     |
+
+Standing with the owner and not reopened: where the code not yet written is written
+(the ruling of 18 November, make Castr correct in its own repository, stands).
+
 ### The accepted plan and the next step
 
 The owner's instruction, verbatim, on 21 November: "fine, that remains the accepted plan,
@@ -106,20 +135,16 @@ throughout". The order is PICTURE, the specification amendment, fixing Castr, HO
    - The amendment must define a cell for a declared narrowing. `type: integer` reads
      wrong today because Castr refuses an integer beyond the safe range, which is the
      narrowing the owner decided Castr makes and reports.
-   - It must settle how the bar on a fifth class ("outside the target", barred from
-     schema keywords) meets boundary slots and naming, and the form of addressing
-     (SPEC-N-4).
-   - A question the picture leaves for the tables: `$id`, `$anchor`, `$defs` and the
-     three discriminator rows are proposed as carried as structure by TypeScript, and
-     none changes a type. Their cell cannot tell "dropped" from "nowhere to go". `$ref`
-     can only read missing in that column, because a reference reads as the type written
-     in place.
+   - The fifth class's bar, the six TypeScript rows that change no type, and the form
+     of addressing each have a disposition in the matrix pass of 22 November above.
+   - `$ref` can only read missing in the TypeScript column, because a reference reads as
+     the type written in place.
    - Questions go to the owner through a question prompt, formed as better questions.
      The owner's correction of 19 November stands: a card that reflects the decision
      back with a recommendation attached is not helpful. Verdicts are given in prose.
 3. **Fixing Castr** follows the amendment. New writer output is built as syntax-tree
-   nodes (SPEC-AR-3); where the move from text to nodes belongs in the order is not
-   decided. Two findings wait there as facts, not yet cases: a response with no content
+   nodes (SPEC-AR-3); a writer is moved from text to nodes when it is first touched for a fix (the matrix
+   pass of 22 November). Two findings wait there as facts, not yet cases: a response with no content
    is given an empty closed object as its schema, and the comment `// MCP Tools` is
    written inside the `endpoints` array by position.
 4. **Before MOVE:** rehearse the consumer's generation step against a Castr build with no
