@@ -299,6 +299,59 @@ string; [key: string]: string | number }` accepts every valid value and also
     object that names a property whose type its `additionalProperties` does not admit
     is carried by companion in TypeScript at best.
 
+- 2026-11-22, N0, row 1 attacked. A principles-first reviewer was given the row that
+  says changing the model's validator is not "the model changes", with SPEC-N-1,
+  SPEC-AR-2 and the course's sentence, and told to break it. It held: no approved text
+  names the validator or the values the model accepts; a reference in the model is a
+  string, so a schema that refers back to itself is no cycle; and the validator already
+  admits a schema-valued `unevaluatedProperties`. The reviewer added what the row had
+  missed. Today the validator is the only thing between a schema-valued
+  `additionalProperties` and three writers that would narrow or drop it, and a model
+  value can reach the writers with no reader (`ir/serialization.ts`). SPEC-AR-5 binds:
+  "a writer expresses it in the class its table names or gives a located rejection".
+  The seat checked the cited lines of the specification and adopts four conditions for
+  N0's building:
+  1. `ir/models/` is unchanged and the model's version stays as it is.
+  2. In the same change every writer (Zod, TypeScript, the shared JSON Schema writer)
+     writes a constrained object or gives a located rejection, each proved by a test
+     that hands it a model value directly, not through a reader.
+  3. The validator's test that pins the refusal is inverted first, and a test shows the
+     validator ends on an `additionalProperties` that refers to its own parent.
+  4. A schema-valued `additionalProperties` inside a branch of `allOf` is a located
+     rejection until the specification says what it means there.
+
+  Not checked by the reviewer and still to check when N0 is built: whether the two
+  validators exported from the package's entry point touch the public surface
+  (SPEC-N-4), and the Markdown writer.
+
+- 2026-11-22, N3, start. **Step back.**
+  1. _Which sentence it moves._ "the specification says exactly what 'right' is". For
+     Oak's document it is the text the fix waits on.
+  2. _Changed for Oak's document since the last step back._ Nothing. This is the second
+     step in a row of which that is true; the owner chose the order on 22 November
+     knowing it, and the plan's rule to say so before a third is met by N0 being the
+     third.
+  3. _Size._ One pull request for the draft; a second, after the owner's words, lands
+     the text. The plan gave three to five pushes.
+  4. _Checking larger than the work._ No.
+  5. _Lost if it stopped here._ The draft is a tracked file; the trials and the texts
+     read word for word are in it.
+- 2026-11-22, N3, start. **The matrix on N3's unknowns and on the review dispositions
+  the plan routes to it.**
+
+  | Question                                                                  | Lens that settles it                                            | Disposition                                                                                                                                                                                                                  |
+  | ------------------------------------------------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | Is a rule that differs between 3.1 and 3.2 one entry or two               | Could it be simpler                                             | One entry that says the difference, as rules 1 to 5 give both section numbers. The Security Requirement rule is the only one that differs                                                                                    |
+  | Does the sweep of every "MUST" belong in this step                        | Proportionality, with the owner's decision twelve               | No. An unlisted rule costs a `NOT-YET-BUILT` count until an amendment lists it; this step lists the three already known                                                                                                      |
+  | Which of `schema` and `schema-base` case 4 is judged by                   | Strict                                                          | `schema`. Case 3 reads a document that states Draft 2020-12 as its dialect, and `schema-base` refuses it                                                                                                                     |
+  | What counts as a reference for case 5                                     | Strict: a reference has a target elsewhere; a name does not     | `$ref`, `$dynamicRef`, a link's `operationRef`, and a discriminator `mapping` value that is a URI reference. A link's `operationId` and a security requirement's name are names, and get rules in SPEC-FV-2                  |
+  | A network or file failure while reading a referenced document             | Strict: SPEC-PR-4, the same inputs give the same output         | It has no target, and the rejection says it could not be read                                                                                                                                                                |
+  | A version such as `3.1.0-rc1`                                             | Strict: case 2 names the publisher's pattern as what decides    | Read as its version line; the clause says so                                                                                                                                                                                 |
+  | A nested `$schema` naming another dialect                                 | Strict                                                          | Case 3 already covers it; "at any depth" says so                                                                                                                                                                             |
+  | The resolved target of a reference must be valid for the place it is used | Strict                                                          | Added to case 4                                                                                                                                                                                                              |
+  | Can 0.8.1 class `propertyNames` for Zod without part three's mark         | Strict, after the scratch trial                                 | Only for an object that names no property, where Zod's own checker holds it as a record. Elsewhere it is `NOT-YET-BUILT` until part three. Oak's two schemas are of the first kind                                           |
+  | One TypeScript class for a constrained object, or one per shape           | Excellence: SPEC-PR-1, expressed wherever the target can say it | Per shape: carried where the object names no property; carried by companion where it names one. The simpler test (no named property) is used in place of assignability, which a generator cannot decide from the model alone |
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
