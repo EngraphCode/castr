@@ -114,7 +114,7 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 0. **What is next is in one place:
    [after-0.8.0-next-steps.md](../../plans/active/after-0.8.0-next-steps.md).**
    Specification 0.8.0 was approved on 22 November 2026 ("I approve revision 0.8.0"): it
-   is part one of the amendment, what the reader refuses. That plan orders the six steps
+   is part one of the amendment, what the reader refuses. That plan orders the seven steps
    after it and says how a fresh session starts. Where anything below says something
    else about the next step, the plan governs.
 1. **Then read "Start here: handover of 21 November 2026" at the top of the
