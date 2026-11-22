@@ -673,13 +673,14 @@ string; [key: string]: string | number }` accepts every valid value and also
   a place that cannot be written soundly; the first three are part three's. The draft
   file holds every finding, where it goes and what stands. The owner is asked, by
   question prompt, where numbers are written: it is the order of the plan and theirs.
-  Found on the way and routed to N6: Zod's `multipleOf` accepts every integer from
-  about 1.1e15 up whatever the step, and Castr drops a `not`.
+  Found on the way and routed to N6: Zod's `multipleOf` accepts a value that is not a
+  multiple where the value divided by the step is large (the plan's "Review
+  dispositions" has the cases run), and Castr drops a `not`.
   - _Step back at the stop._ Two amendments in one day reached no approved text (N3 by
     four drafts, N4 by three). The error common to both: the seat drafts a rule, reads
     its consequences, and a reviewer then runs them. What is cheap and was not done:
-    run the composition cases (`oneOf`, `not`, `allOf`, a list of types, a parameter)
-    against a draft's sentences before any reviewer sees it. Nothing changed for Oak's
+    run the composition cases (the list is in the plan under N4) against a draft's
+    sentences before any reviewer sees it. Nothing changed for Oak's
     document in N1, N3 or N4.
 
 - 2026-11-22. **Owner decision eighteen, by question prompt.** Asked where numbers are
