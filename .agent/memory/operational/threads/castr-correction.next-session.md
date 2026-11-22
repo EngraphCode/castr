@@ -665,6 +665,23 @@ string; [key: string]: string | number }` accepts every valid value and also
      part three, which is a change to the plan's order and theirs.
   4. _Size._ Still one pull request; nothing is pushed yet.
 
+- 2026-11-22, N4. **The third attack met the exit; drafting stopped.** Core faults
+  none, text faults six, minor two. No review found the owner's decisions wrong. The
+  cause the three share is in the draft file under "Why it stopped": a clause on
+  numbers needs the class of a narrowed integer, the form of the annotation, how a
+  parameter's text becomes a number, what the proofs excuse and sample, and a rule for
+  a place that cannot be written soundly; the first three are part three's. The draft
+  file holds every finding, where it goes and what stands. The owner is asked, by
+  question prompt, where numbers are written: it is the order of the plan and theirs.
+  Found on the way and routed to N6: Zod's `multipleOf` accepts every integer from
+  about 1.1e15 up whatever the step, and Castr drops a `not`.
+  - _Step back at the stop._ Two amendments in one day reached no approved text (N3 by
+    four drafts, N4 by three). The error common to both: the seat drafts a rule, reads
+    its consequences, and a reviewer then runs them. What is cheap and was not done:
+    run the composition cases (`oneOf`, `not`, `allOf`, a list of types, a parameter)
+    against a draft's sentences before any reviewer sees it. Nothing changed for Oak's
+    document in N1, N3 or N4.
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
