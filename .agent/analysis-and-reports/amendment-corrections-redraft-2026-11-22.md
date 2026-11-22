@@ -1,11 +1,37 @@
 # Draft amendment 0.8.1: corrections to part one
 
-Status: fourth draft, not yet attacked. It is not approved and changes nothing in
-`docs/SPECIFICATION.md`. Approval is the owner's typed words naming a version (SPEC-CC-2).
-The version this draft would carry is 0.8.1.
+Status: withdrawn on 22 November 2026. It was never put to the owner, is not approved,
+and changes nothing in `docs/SPECIFICATION.md`. No version 0.8.1 exists; the next
+approved amendment takes the next version.
 
-It changes two places in section 6: the revisions SPEC-FV-1 names, and the list of
-SPEC-FV-2. It changes nothing for Oak's document.
+This file is the record of the fourth draft as attacked. It proposed two changes in
+section 6: the revisions SPEC-FV-1 names, and the list of SPEC-FV-2.
+
+## Why it was withdrawn
+
+Before the fourth attack the seat set its exit: a finding that an "after" text is
+false, says two things, or refuses or reads the wrong document withdraws the draft. The
+attack found two ("The fourth review" at the end).
+
+1. The last sentence of the new entry 7 says two things about a document that holds a
+   reference into an `x-` field of a Callback Object.
+2. Naming the new revisions is not only bringing a date up to date. It changes which
+   documents case 4 refuses, in both directions, and one of those changes turns on a
+   reading of the OpenAPI text that is the owner's. The draft presented the change as
+   "out of date" and listed none of them.
+
+The second is the reason no fifth draft was written. What the change of revisions does
+can only be listed by running documents at both revisions through a validator that
+judges these schemas correctly, and the one installed here does not (finding 12 of the
+third review). The picture's cells for what the reader refuses (the plan's N2) are that
+instrument. The corrections are written from those cells, in the amendment the plan
+calls N7, with the list of what changes beside them.
+
+What stands from this draft, as input to that amendment, each confirmed by two reviews:
+the present rule 6 is held by the 3.2 schema at both revisions and was never needed;
+the present rule 7 is untrue of the 3.1 schema of 2026-11-05; the rule on a Server
+Variable Object's `default` is stated by all three texts and held by no schema; both
+schemas refuse an `x-` field of a Callback Object unless its value is a valid Path Item.
 
 ## How this draft was cut
 
@@ -198,8 +224,27 @@ Two statements of fact in the third draft were wrong and are gone: that the numb
 `3.1` is refused "by the pattern" (the refusing keyword is `type`), and that the
 dialect sentence is the same in every text.
 
-## Open before approval
+## The fourth review
 
-- One attack on this draft. If it finds a place where an "after" text is false, says
-  two things, or refuses or reads the wrong document, the draft is withdrawn by the
-  plan's path, and the two forced corrections wait for the next amendment.
+One adversarial review of the fourth draft (commit `1f793ef5`), 22 November 2026. Its
+runs used Ajv with each `"$dynamicRef": "#meta"` replaced in memory where a document
+holds a Schema Object, and said so; runs with no Schema Object used the schemas as
+published. Nothing here was re-run by the seat.
+
+| No. | Finding                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Disposition                                                                                                                                                             |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Entry 7, "judged as if the Callback Object did not have those fields": a `$ref` from `components.pathItems`, `webhooks` or `components.responses` into `#/components/callbacks/c/x-shared` passes every schema and is read under 0.8.0. Read literally the sentence makes the target absent, which is case 5; the draft's "Why" says only that nothing inside the field is judged, which reads the document.                                                                                                                                                                                                                                                        | Breaks. The draft is withdrawn. The reviewer's wording ("No case of SPEC-FV-1 and no rule listed here is applied to such a field or to anything inside it") goes to N7. |
+| 2   | The new revisions change what case 4 refuses. Read at 0.8.0's revisions and refused at the new ones: in 3.2, `allowReserved` on a header parameter, on a Header Object and on a `style: cookie` parameter; a header name that is not a token; `description` on a Media Type Object; in both, a path parameter named `a{b}`; in 3.1, a Responses Object holding only an `x-` field, and `example` beside `examples`. Refused before and read now, in 3.1: `$ref` on a Path Item under `paths`; a Reference Object with a sibling field; a Link Object's `server`. For `allowReserved` on a header the 3.2 text states no prohibition, and removed the one 3.1.2 had. | The draft is withdrawn. N2 runs each document at both revisions; N7 carries the list, and the reading of "only applies" goes to the owner with it.                      |
+| 3   | A Callback Object key may begin with literal text, so `x-cb://{$request.body#/host}/cb` is both an expression key and an `x-` field. The text gives no precedence; it does say extensions "are always prefixed by x-".                                                                                                                                                                                                                                                                                                                                                                                                                                              | To N7: the entry says a key beginning `x-` is never read as an expression, as Castr's reading.                                                                          |
+| 4   | "a field of a Callback Object whose name begins `x-`" can be read as a Callback Object named `x-cb`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | To N7: "a field whose name begins `x-`, in a Callback Object".                                                                                                          |
+| 5   | The two quoted sentences stand under 4.8.6.1 / 4.6.1 and 4.8.18.1 / 4.18.1; rules 1, 3 and 5 cite the `.1` subsections.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | To N7: cite the `.1` numbers.                                                                                                                                           |
+| 6   | Row 15 of the third review was false for 3.2 (0.8.0 reads `allowReserved` on a header there), and the plan's row left out `style` or `explode` beside `content`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Corrected in the plan's review dispositions.                                                                                                                            |
+| 7   | Row 9 of the third review said the dialect meta-schema revisions were routed to N2; the plan had no row naming them.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Row added to the plan.                                                                                                                                                  |
+| 8   | "Only `{}` passes" holds under `components.schemas`; at a Parameter's `schema`, unpatched Ajv refuses `{}` too.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Corrected in the plan's N2.                                                                                                                                             |
+
+Confirmed by this review and standing: the two addresses equal the pinned files' `$id`
+and are the latest the publisher lists; nothing else in the specification depends on
+the revisions; the removal of the present rules 6 and 7; the new rule on a Server
+Variable Object (string equality, every Server Variable Object, no schema holds it);
+the section numbers are the same in 3.2.0 and 3.2.1; every fact under "Facts the draft
+rests on".
