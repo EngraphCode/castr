@@ -47,7 +47,7 @@ todos:
     status: pending
     depends_on: [N0-FIX, N2-REFUSALS, N7-REFERENCES]
   - id: N7-REFERENCES
-    content: 'An amendment on references across documents, written from the picture''s cells for what the reader refuses: what a reference is for case 5 of SPEC-FV-1, that a target must be valid for the place the reference stands, and what a failed fetch says. Approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
+    content: 'An amendment on references across documents, written from the picture''s cells for what the reader refuses: what a reference is for case 5 of SPEC-FV-1, that a target must be valid for the place the reference stands, what a failed fetch says, and the rules of SPEC-FV-2 that turn on which documents make up a description. Approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
     depends_on: [N2-REFUSALS, N3-CORRECTIONS]
 ---
@@ -85,8 +85,8 @@ and the other is corrected.
    sibling checkout is absent, stop and say so; do not fall back to the local copies.
 6. Before a step's first edit, do its step back and run the decision matrix on its
    unknowns, and write both under "Step log" in the thread record. N0's are there,
-   dated 22 November. N1 is done. The next step is the redraft of N3's corrections
-   ("Where it stands" under N3); N2 waits on nothing and may be worked beside it.
+   dated 22 November. N1 is done. The next step is N3 ("Where it stands" under N3
+   says how far it has got); N2 waits on nothing and may be worked beside it.
 7. Read "Review dispositions" at the foot of this plan and give each row its
    disposition before starting the step it names.
 
@@ -156,7 +156,8 @@ lib/src` is empty). Every pull request since has been the picture, the specifica
   revisions it names. N1 is first because N3 waits on it; N2 is fitted in
   where it does not hold them. The todos' `depends_on` say the same.
 - **N7 waits on N2 and N3, and is the seat's.** It is the three things on references
-  that 0.8.1 could not say exactly. N2's cells give it a judge outside Castr, and it
+  that 0.8.1 could not say exactly, with the three rules that turn on which documents
+  make up a description. N2's cells give it a judge outside Castr, and it
   amends the text 0.8.1 leaves. It is not ordered against N4 and N5; only landing is
   serial.
 - **N6 waits on N0, N2 and N7.** What N0 learns is its main input, and N2's cells for
@@ -287,8 +288,8 @@ validate-specification-approval`), or by the record.
   again against the new revision and the text.
 - **Finished when.** `pnpm test:picture` passes; every row that appears, disappears or
   changes is named in the pull request with the reason; each correction to the old
-  schema is either still needed or removed, and what that does to rule 7 of SPEC-FV-2
-  is noted for N3.
+  schema is either still needed or removed, and what that does to the entry of
+  SPEC-FV-2 on a Link Object's `body` (rule 7 in 0.8.0) is noted for N3.
 - **Size, as it turned out.** One pull request of 25 files, 12 of them pinned
   definitions added or removed, and two pushes.
 
@@ -299,8 +300,18 @@ validate-specification-approval`), or by the record.
   document through a third-party rewrite, and stamps every document as 3.2.0.
 - **Do.** One document for each case of SPEC-FV-1 and each rule SPEC-FV-2 lists, with
   the outcome decided outside Castr's reader, and Castr's outcome set against it. Until
-  0.8.1 lands, case 4 is judged at the revisions 0.8.0 names. The 3.0 example
+  0.8.1 lands, case 4 is judged at the revisions 0.8.0 names, and no cell is built for
+  a rule or an "Allowed" place that only the draft of 0.8.1 lists. The 3.0 example
   documents read wrong, not converted.
+- **The judge is chosen and proved first.** Ajv 8.20.0, the validator installed here,
+  cannot judge the pinned schemas as published. Run on 22 November 2026 against the 3.1
+  schema of 2026-11-05 and the 3.2 schema of 2026-11-12: a document whose
+  `components.schemas` holds `{"type": "string"}` is refused with
+  `unevaluatedProperties`, and one that holds `true` is refused with `type`; only `{}`
+  passes. The schemas reach a Schema Object through `"$dynamicRef": "#meta"`. Before a
+  cell is written, pick the validator by the matrix and prove it on those three
+  documents and on one invalid Schema Object. Any earlier result in this repository's
+  records that ran a document holding a Schema Object through Ajv is not evidence.
 - **Finished when.** `pnpm picture` prints a section for the reader's refusals; the
   cells are held by a test; the README says what is judged and by what.
 - **Size.** One pull request, about ten files, two or three pushes. Before the first
@@ -311,7 +322,8 @@ validate-specification-approval`), or by the record.
 ### N3-CORRECTIONS: specification 0.8.1
 
 - **Serves.** Things known when 0.8.0 was approved or found just after.
-  1. Name the revisions N1 pins, and settle rule 7 of SPEC-FV-2 against them.
+  1. Name the revisions N1 pins, and settle the entry of SPEC-FV-2 on a Link Object's
+     `body` (rule 7 in 0.8.0) against them.
   2. List the rules read only in summary or reported by a reviewer: a security
      requirement names a declared scheme; a Link Object's `operationRef` and
      `operationId` identify an operation; a server variable's default is one of its
@@ -327,11 +339,26 @@ validate-specification-approval`), or by the record.
     place it is used, and what a failed fetch says are not in 0.8.1 either. Each was
     tried and was a list nothing forced complete. They are written from N2's cells,
     which give a judge outside Castr, as an amendment of their own after N2 (N7).
-  - The corrections that remain (the revisions, cases 2 and 3, the list of SPEC-FV-2)
-    are redrafted with the second review's wording faults closed, and attacked again
-    before the owner sees them. One thing is read word for word first: which dialect
-    the 3.2 text names as the OpenAPI dialect, because case 3 as approved may refuse a
-    3.2 document that names it.
+  - The corrections that remained (the revisions, cases 2 and 3, the list of
+    SPEC-FV-2) were redrafted and attacked a third time, and broke in fifteen places.
+    The redraft
+    (`.agent/analysis-and-reports/amendment-corrections-redraft-2026-11-22.md`) holds
+    every finding and where it went.
+  - The seat had read the 3.2.0 text where the specification names 3.2.1. The 3.2.1
+    text names the OpenAPI dialect by an address "of the form
+    https://spec.openapis.org/oas/3.2/dialect/YYYY-MM-DD", which is what case 3 as
+    approved says. Case 3 has no fault there and is not changed. From here the texts
+    read are 3.1.2 and 3.2.1, the latest the publisher's index lists.
+  - The fourth draft, in the same file, keeps a change only where 0.8.0 is false or out
+    of date against a primary source and the correction needs no definition the
+    specification lacks. That leaves the revisions named, the two entries of SPEC-FV-2
+    the new revisions make untrue, one rule on a Server Variable Object, and one
+    "Allowed" place on a Callback Object. Cases 2 and 3 are unchanged. The rules that
+    turn on which documents make up a description go to N7; the unclear places in
+    cases 2 and 3 go to N2's cells ("Review dispositions").
+  - It is attacked once more. If that attack finds an "after" text that is false, says
+    two things, or refuses or reads the wrong document, 0.8.1 is withdrawn with the
+    reason recorded, and the forced corrections are carried in the next amendment.
 - **Not in this step unless the matrix puts it there.** A sweep of every "MUST" and
   "MUST NOT" in the two texts. The owner's decision twelve already says what an
   unlisted rule costs: Castr reads the document, and a refusal it then gives counts as
@@ -356,9 +383,10 @@ validate-specification-approval`), or by the record.
   them in the same pull request.
 - **Size.** First given as one pull request of three to five pushes. As it turned out,
   the record of the draft as attacked, with the owner's decision seventeen, landed as a
-  pull request of its own (#163). The redraft, its attack and, after the owner's words,
-  the landing of the text are one further pull request; if it passes five pushes, step
-  back. The 0.8.0 pull request took about ten.
+  pull request of its own (#163). The redraft with its attacks is a second pull
+  request, merged before the owner is asked so that the text they read is on `main`;
+  the landing of the approved text is a third. If either passes five pushes, step back.
+  The 0.8.0 pull request took about ten.
 
 ### N4-NUMBERS: part two of the amendment
 
@@ -412,7 +440,13 @@ validate-specification-approval`), or by the record.
   and both reviews): what a reference is for case 5 of SPEC-FV-1; that a reference's
   target, in the document or another, must be valid for the place the reference stands,
   and that cases 1 to 3 apply to every document read; and what the rejection says when
-  a referenced document cannot be fetched.
+  a referenced document cannot be fetched. With them, three rules the OpenAPI text
+  states and no schema holds, which cannot be listed in SPEC-FV-2 until the text says
+  which documents make up a description: a security requirement's name corresponds to
+  a declared security scheme (and in 3.2 may be a URI); a Link Object's `operationId`
+  is that of an operation; a 3.2 Tag Object's `parent` names a tag and no chain of
+  parents returns to its start. The redraft of 0.8.1 has each sentence word for word in
+  its third review.
 - **Do.** Write it from N2's cells, which decide each case outside Castr. Known hard
   places, from the reviews: a discriminator `mapping` value that is both a schema name
   and a relative URI reference, which the 3.2 text calls implementation-defined; a
@@ -535,12 +569,19 @@ step it names starts.
 | 2026-11-22 | Adversarial review, #156 | What counts as a reference for case 5: a link's `operationId`, a discriminator's `mapping` value, a security requirement's name           | N7   |
 | 2026-11-22 | Adversarial review, #156 | A reference written as data, such as a property named `$ref` or a `$ref` inside an example, must not be followed                          | N2   |
 | 2026-11-22 | Adversarial review, #156 | A network or file failure while reading a referenced document makes the refusal differ between runs (SPEC-PR-4)                           | N7   |
-| 2026-11-22 | Adversarial review, #156 | A version such as `3.1.0-rc1` matches the publisher's pattern: is it in the Read column                                                   | N3   |
+| 2026-11-22 | Adversarial review, #156 | A version such as `3.1.0-rc1` matches the publisher's pattern: case 2 says the pattern decides, so it is read; a cell shows it            | N2   |
 | 2026-11-22 | Adversarial review, #156 | A document with both `swagger` and `openapi` fields states two versions                                                                   | N2   |
 | 2026-11-22 | Adversarial review, #156 | YAML that parses differently between libraries (merge keys, duplicate keys, `openapi: 3.1` read as a number): who decides well-formedness | N2   |
 | 2026-11-22 | Adversarial review, #156 | JSON Schema that Castr writes declares the format-assertion vocabulary, so its `$schema` may be one case 3 refuses on reading back        | N5   |
-| 2026-11-22 | Adversarial review, #156 | A nested `$schema` naming another dialect inside a 2020-12 schema                                                                         | N3   |
+| 2026-11-22 | Adversarial review, #156 | A nested `$schema` naming another dialect inside a 2020-12 schema: which meta-schema judges it, and where each dialect's judgement stops  | N2   |
 | 2026-11-22 | Hosted review, #156      | The resolved target of a reference must be valid for the place it is used                                                                 | N7   |
+| 2026-11-22 | Third review of 0.8.1    | A 3.2 document that names `https://spec.openapis.org/oas/3.1/dialect/base`, which the 3.2.0 text names and the 3.2.1 text does not        | N2   |
+| 2026-11-22 | Third review of 0.8.1    | Case 3's "at any revision" reaches dialect addresses the publisher does not serve                                                         | N2   |
+| 2026-11-22 | Third review of 0.8.1    | Case 3 gives no address for Draft 2020-12: a trailing `#`, the `http:` form, a value that is not a URI                                    | N2   |
+| 2026-11-22 | Third review of 0.8.1    | A `$schema` key that is data (a discriminator's `mapping`, an extension's value) or stands where no schema resource root is               | N2   |
+| 2026-11-22 | Third review of 0.8.1    | Case 2: a number for `openapi` is refused by `type`, not the pattern; "a 3.0.x document" is not defined                                   | N2   |
+| 2026-11-22 | Third review of 0.8.1    | Fields a schema refuses where the text says only that they "apply" elsewhere: `allowReserved` on a header, `bearerFormat`, `scheme`       | N2   |
+| 2026-11-22 | Third review of 0.8.1    | Which document's Components Object, operations or `tags` a name is resolved in, for the three rules N7 now carries                        | N7   |
 
 ## What is not in this plan
 
