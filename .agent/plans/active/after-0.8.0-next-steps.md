@@ -320,10 +320,12 @@ published-rows.ts` names the files and holds the correction that a Link Object's
   companion for TypeScript; `$id`, `$anchor` and `$defs` stay carried as structure,
   shown as a type exported under the name. No rule quantified over a list that nothing
   forces to be complete.
-- **Waits on.** The 56 Zod cells for rows outside a schema need the form of addressing
-  a validator (SPEC-N-4). That is design work: read how the Ecosystem repository uses
-  the output, ask its seat for facts, and bring a design as an amendment. Decide by the
-  lenses whether SPEC-N-4 is part of this step or its own, before starting.
+- **Starts with the design of SPEC-N-4.** The 56 Zod cells for rows outside a schema
+  need the form of addressing a validator, which is the public surface and is not
+  designed. It is the first piece of this step, in a pull request of its own: read how
+  the Ecosystem repository uses the output, ask its seat for facts, write the design as
+  a tracked draft, have it attacked, and bring it to the owner as an amendment. The
+  tables for those 56 cells follow it; the other tables do not wait on it.
 - **Finished when.** As N3, for the version this part carries, with the tables in the
   specification and the picture's proposals computed from them and not kept beside them.
   Where N6 has already written legs, they are read again against the approved tables
@@ -419,7 +421,7 @@ of three.
 | N3   | Whether a rule that differs between 3.1 and 3.2 is one entry or two                                    |
 | N3   | Whether the sweep of every "MUST" belongs in this step                                                 |
 | N4   | What the picture's cell for a declared narrowing is called and how it is judged                        |
-| N5   | The form of addressing a validator (SPEC-N-4), and whether it is part of this step                     |
+| N5   | The form of addressing a validator (SPEC-N-4), designed as this step's first piece                     |
 | N5   | How the tables are held so that the picture's proposals are computed from them                         |
 | N5   | What the mark on a Zod check Castr writes is, given that reading Zod is not designed (SPEC-N-3)        |
 | N6   | Where the model's design (SPEC-N-1) is done                                                            |
