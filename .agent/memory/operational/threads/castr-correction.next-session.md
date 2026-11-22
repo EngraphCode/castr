@@ -740,13 +740,13 @@ string; [key: string]: string | number }` accepts every valid value and also
     does set against it; a judge outside Castr for each rule of SPEC-FV-2; the
     resolver of references across files.
 
-- 2026-11-22, N2. **#166 merged (`b35d714e`); the second slice.** An input for each of
-  cases 1 to 4 of SPEC-FV-1 and three that no case describes, 17 in all, with the case
-  decided outside Castr and what Castr does set against it. Castr is right on 4 (the
-  four it should read). It reads five it should refuse: an OpenAPI 2.0 document, a
-  3.0.3 document, a `jsonSchemaDialect` naming Draft-07, a component schema whose
-  `$schema` names Draft-07, and a 3.2 document naming the 3.1 dialect. It refuses the
-  other eight, in words that give no kind or case.
+- 2026-11-22, N2. **#166 merged (`b35d714e`); the second slice.** Inputs for cases 1 to
+  4 of SPEC-FV-1 and for documents no case describes, with the case decided outside
+  Castr and what Castr does set against it. As merged: 26 inputs; 7 right; 6 read that
+  should be refused (an OpenAPI 2.0 document, a 3.0.3 document, a `jsonSchemaDialect`
+  naming Draft-07, a component schema whose `$schema` names Draft-07, a 3.2 document
+  naming the 3.1 dialect, a path below the 3.1 dialect); 11 refused in words that give
+  no kind or case; 2 not decided here. The first form of the slice had 17 inputs.
   - _Matrix row: whether a document Castr converts and 0.8.0 refuses is a cell of its
     own._ Lens: strict. Yes: `reads it` is a verdict of its own, apart from the
     existing "wrong", because the fault is in reading at all and not in an output. And
@@ -764,8 +764,14 @@ string; [key: string]: string | number }` accepts every valid value and also
     3.1, a date for 3.2), compared as written. A dialect that is not a string goes to
     case 4. Castr's words are held beside each verdict, since a refusal for another
     reason reads the same in the verdict. Eight inputs were added so that each of five
-    wrong deciders the reviewer wrote now fails. With them: 25 inputs, 7 right, 6 read
-    that should be refused, 11 refused with no kind, 1 not judged.
+    wrong deciders the reviewer wrote now fails.
+  - _From the hosted reviews and CI of #167._ CI ran the picture for the first time and
+    the test that runs Castr on every input passed the default five seconds there; it
+    has the time limit the other tests of its kind have. Sonar refused the two recorded
+    tables as duplicated lines; they are one table. A dialect address with a date the
+    publisher never issued was read as the line's dialect; only an address a pinned
+    file names is known, and another of that form is "not decided". The file name of an
+    input no longer appears in Castr's recorded words.
   - _For N7,_ from this slice: whether a dialect address with a fragment, a query or a
     difference of case names the same dialect; whether 3.2 has a `base` address.
   - _Left for later slices,_ and said in the README: a `$schema` below a component
