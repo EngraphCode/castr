@@ -67,13 +67,14 @@ and the other is corrected.
 4. Work in this repository only. The owner set one seat per repository on 21 November.
    Tell the Ecosystem repository's seat before anything is written there; nothing in
    this plan writes there.
-5. The cognitive skills this plan names are in this repository under
-   `.agent/skills/cognition/` (`metacognition`, `proportionality`, `cricket`,
-   `concept-exploration`, `reason`), and the decision lenses are in
-   `.agent/directives/principles.md` under "Decision Lenses". The owner ruled on 20
-   November that sessions here work by the Ecosystem repository's Practice, a sibling
-   checkout (`oak-open-curriculum-ecosystem`); where that checkout is present and its
-   copy of a skill or of the lenses differs, its copy governs.
+5. Use the Ecosystem repository's copies of the cognitive skills and the decision
+   lenses, never this repository's. The owner, 22 November 2026: "Don't use the local
+   copies of the skills, use the OCE copies". They are in the sibling checkout
+   `oak-open-curriculum-ecosystem`: the skills under `.agent/skills/cognition/`
+   (`metacognition`, `proportionality`, `cricket`, `concept-exploration`, `reason`) and
+   the lenses in `.agent/directives/principles.md` under "Decision Lenses". This
+   repository holds copies of both at an older revision; they are not used. If the
+   sibling checkout is absent, stop and say so; do not fall back to the local copies.
 6. Before the first edit, do the first step back and run the decision matrix on the
    unknowns of N0, and write both under "Step log" in the thread record.
 7. Read "Review dispositions" at the foot of this plan and give each row its
