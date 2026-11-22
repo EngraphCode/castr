@@ -62,8 +62,7 @@ below this one are the dated record; none of them is a newer instruction than th
   hosted review found in the approved text, for the next amendment: case 4 validates
   the entry document, and nothing says a reference's resolved target in another file
   must itself be valid for the place it is used.
-  Next: parts two (numbers in JavaScript targets) and three (the table vocabulary with
-  the tables).
+  What is next is in the plan named under "What is next, and the step log".
 - **Two facts found that day by running Castr.** It converts an OpenAPI 2.0 document,
   which section 6 says is refused. It reads 3.0 only after a third-party library rewrites
   the document to 3.1 (`lib/src/shared/load-openapi-document/upgrade-validate.ts`).
@@ -77,6 +76,34 @@ below this one are the dated record; none of them is a newer instruction than th
 - **#155 was merged with the hosted review of its last commit reported as failed,** not
   completed: the reviewer did not run on that commit. The three earlier commits were
   reviewed and all seven findings fixed. The owner was told on 22 November.
+
+### What is next, and the step log
+
+**What is next is in one place:**
+[after-0.8.0-next-steps.md](../../../plans/active/after-0.8.0-next-steps.md). Where this
+record says something else about the next step, that plan governs.
+
+- **Owner decision fourteen, by question prompt, 22 November 2026.** Asked where a
+  bounded fix of Oak's refusals goes in the next session's plan, the owner chose "Fix
+  first", over finishing the amendment first. It replaces the order accepted on 21
+  November for that one step; the rest of the amendment's order stands.
+- **The fact the owner decided on was wider than what was checked.** The seat said the
+  fix of a schema-valued `additionalProperties` "does not wait on any part of the
+  amendment". A reviewer then showed that holds for the Zod column only: Oak's two
+  schemas also hold `propertyNames`, the TypeScript writer throws on it, no approved
+  text says what TypeScript writes for either, the model's own validator refuses a
+  schema there, and the Zod writer must move from text to syntax-tree nodes when
+  touched. So the fix alone does not make Oak's document convert. The owner was told
+  this the same day, after deciding. The plan's first step carries each of these as an
+  unknown to settle before code is written.
+
+**Step log.** Each step of the plan writes here, dated: its step-back answers at its
+start and its end, and a row for each unknown it decides (question, lens, disposition).
+A step is not finished until its entries are here.
+
+- 2026-11-22, before N0, a conscience check of the plan's first form: drifting. None of
+  its six steps changed product code, and the owner's words of 18 November asked for
+  reaching the state to be explored, not only defined. The owner put the fix first.
 
 ### The matrix pass of 22 November 2026
 
@@ -107,7 +134,13 @@ to decide.
 Standing with the owner and not reopened: where the code not yet written is written
 (the ruling of 18 November, make Castr correct in its own repository, stands).
 
-### The accepted plan and the next step
+### The plan as accepted on 21 November (history; its order is superseded)
+
+On 22 November the owner put a bounded fix of what stops Oak's document first, and the
+steps and their order are now in
+[after-0.8.0-next-steps.md](../../../plans/active/after-0.8.0-next-steps.md). What
+follows is the plan as it stood the day before. Its notes on each part of the amendment
+still hold; its order does not.
 
 The owner's instruction, verbatim, on 21 November: "fine, that remains the accepted plan,
 please continue /oak-start-right-team use the cognitive skills and reviewers as appropriate
