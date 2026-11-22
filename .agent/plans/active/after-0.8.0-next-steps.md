@@ -441,8 +441,8 @@ validate-specification-approval`), or by the record.
 ## Stepping back to assess value
 
 This is a requirement of the plan. Use `metacognition` to look at the work and
-`proportionality` to size it. Use the `cricket` panel at the start of N0, N3, N5 and
-N6, and whenever a step back leaves doubt; not at every step back.
+`proportionality` to size it. Use the `cricket` panel at the start of N0, N3, N5, N6
+and N7, and whenever a step back leaves doubt; not at every step back.
 
 **When.** Before the next action, at each of these:
 
@@ -516,6 +516,8 @@ of three.
 | N5   | What the mark on a Zod check Castr writes is, given that reading Zod is not designed (SPEC-N-3)                                                 |
 | N6   | Where the model's design (SPEC-N-1) is done                                                                                                     |
 | N6   | The seven rows with no second judge: which validator or which text judges each                                                                  |
+| N7   | What a discriminator `mapping` value is read as when it is both a schema name and a relative URI reference                                      |
+| N7   | Whether a target is judged by the schema of the place the reference stands, and what that is for an `operationRef`                              |
 
 **Unknowns found by doing,** recorded when found and not run through the lenses: which
 rows change under the latest revisions (N1); how many more word-only rules the two
@@ -530,15 +532,15 @@ step it names starts.
 | Date       | Source                   | Finding                                                                                                                                   | Step |
 | ---------- | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | ---- |
 | 2026-11-22 | Adversarial review, #156 | A reference into another file that has no `openapi` field (`lib/examples/openapi/multi-file/main.yaml`): is that file read, and as what   | N2   |
-| 2026-11-22 | Adversarial review, #156 | What counts as a reference for case 5: a link's `operationId`, a discriminator's `mapping` value, a security requirement's name           | N3   |
+| 2026-11-22 | Adversarial review, #156 | What counts as a reference for case 5: a link's `operationId`, a discriminator's `mapping` value, a security requirement's name           | N7   |
 | 2026-11-22 | Adversarial review, #156 | A reference written as data, such as a property named `$ref` or a `$ref` inside an example, must not be followed                          | N2   |
-| 2026-11-22 | Adversarial review, #156 | A network or file failure while reading a referenced document makes the refusal differ between runs (SPEC-PR-4)                           | N3   |
+| 2026-11-22 | Adversarial review, #156 | A network or file failure while reading a referenced document makes the refusal differ between runs (SPEC-PR-4)                           | N7   |
 | 2026-11-22 | Adversarial review, #156 | A version such as `3.1.0-rc1` matches the publisher's pattern: is it in the Read column                                                   | N3   |
 | 2026-11-22 | Adversarial review, #156 | A document with both `swagger` and `openapi` fields states two versions                                                                   | N2   |
 | 2026-11-22 | Adversarial review, #156 | YAML that parses differently between libraries (merge keys, duplicate keys, `openapi: 3.1` read as a number): who decides well-formedness | N2   |
 | 2026-11-22 | Adversarial review, #156 | JSON Schema that Castr writes declares the format-assertion vocabulary, so its `$schema` may be one case 3 refuses on reading back        | N5   |
 | 2026-11-22 | Adversarial review, #156 | A nested `$schema` naming another dialect inside a 2020-12 schema                                                                         | N3   |
-| 2026-11-22 | Hosted review, #156      | The resolved target of a reference must be valid for the place it is used                                                                 | N3   |
+| 2026-11-22 | Hosted review, #156      | The resolved target of a reference must be valid for the place it is used                                                                 | N7   |
 
 ## What is not in this plan
 
