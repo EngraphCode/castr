@@ -24,7 +24,7 @@ export interface ObjectProposals {
  * What an object's keyed entries are, and the proposal for them. One object may key
  * entries of more than one kind (an exact status code, a status range).
  */
-export type KeyedProposal = readonly [what: string, proposal: Coded];
+type KeyedProposal = readonly [what: string, proposal: Coded];
 
 const ANY_KEY = '*';
 const COMPONENT_NAME: readonly KeyedProposal[] = [

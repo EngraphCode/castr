@@ -4,7 +4,7 @@
  * 20 November 2026; `read` is the sixth outcome the owner decided the same day, for the
  * declarations a reader spends in reading.
  */
-export type Outcome =
+type Outcome =
   | 'carried'
   | 'carried as structure'
   | 'carried by companion'
@@ -32,7 +32,7 @@ export interface Proposal {
  * C carried, X carried by a check Castr writes (Zod only), S carried as structure,
  * K carried by companion, O outside the target, U unexpressible, R read.
  */
-export type Code = 'C' | 'X' | 'S' | 'K' | 'O' | 'U' | 'R';
+type Code = 'C' | 'X' | 'S' | 'K' | 'O' | 'U' | 'R';
 
 const OUTCOME_OF_CODE: ReadonlyMap<Code, Outcome> = new Map([
   ['C', 'carried'],

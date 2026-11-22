@@ -11,7 +11,7 @@
  * - `missing`: Castr ran and emitted no validator, or no type, for the shape.
  * - `not judged`: the reference validator cannot read the case, so nothing is claimed.
  */
-export type Verdict = 'right' | 'wrong' | 'refused' | 'crashed' | 'missing' | 'not judged';
+type Verdict = 'right' | 'wrong' | 'refused' | 'crashed' | 'missing' | 'not judged';
 
 /**
  * A verdict with the plain words that explain it.

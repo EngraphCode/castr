@@ -1,7 +1,8 @@
 /**
  * Prints the picture: every construct kind of an OpenAPI 3.1 or 3.2 document with its
  * proposed outcome in each of the three outputs, and, for the rows that have a case, what
- * each of Castr's outputs does for it today; and what Castr makes of each whole document.
+ * each of Castr's outputs does for it today; what Castr makes of each whole document; and
+ * which documents the publisher's schema judges differently at a later revision.
  *
  * Run with: `pnpm picture`
  */
@@ -21,6 +22,11 @@ import { renderNotRight, renderUsage } from './documents/render-usage.js';
 import { rowsUsedBy } from './documents/rows-used.js';
 import { readDocument, runDocuments } from './documents/run-documents.js';
 import { usageOf } from './documents/usage.js';
+import {
+  judgeRevisionCases,
+  renderRevisionDifferences,
+  REVISION_CASES,
+} from './refusals/revision-cases.js';
 import { loadDefinition } from './rows/definitions.js';
 import { pictureRows } from './rows/picture-rows.js';
 import { renderRows, renderToday, renderUnexercised } from './rows/render.js';
@@ -54,6 +60,7 @@ if (problems.length > 0) {
   console.log(renderToday(rows, typesHeld, "Castr's TypeScript output holds"));
   console.log(renderToday(rows, endpoints, "Castr's endpoint definitions hold"));
   console.log(renderDocuments(await runDocuments(DOCUMENTS)));
+  console.log(renderRevisionDifferences(await judgeRevisionCases(REVISION_CASES)));
   const rowIds = new Set(rows.map((row) => row.id));
   const usages = DOCUMENTS.map((document) => {
     const { used, unrecognised } = rowsUsedBy(readDocument(document), rowIds);
