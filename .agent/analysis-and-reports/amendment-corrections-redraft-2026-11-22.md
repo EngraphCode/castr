@@ -226,7 +226,7 @@ dialect sentence is the same in every text.
 
 ## The fourth review
 
-One adversarial review of the fourth draft (commit `1f793ef5`), 22 November 2026. Its
+One adversarial review of the fourth draft (commit `6636e9e4`), 22 November 2026. Its
 runs used Ajv with each `"$dynamicRef": "#meta"` replaced in memory where a document
 holds a Schema Object, and said so; runs with no Schema Object used the schemas as
 published. Nothing here was re-run by the seat.
