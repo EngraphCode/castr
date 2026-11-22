@@ -134,7 +134,13 @@ to decide.
 Standing with the owner and not reopened: where the code not yet written is written
 (the ruling of 18 November, make Castr correct in its own repository, stands).
 
-### The accepted plan and the next step
+### The plan as accepted on 21 November (history; its order is superseded)
+
+On 22 November the owner put a bounded fix of what stops Oak's document first, and the
+steps and their order are now in
+[after-0.8.0-next-steps.md](../../../plans/active/after-0.8.0-next-steps.md). What
+follows is the plan as it stood the day before. Its notes on each part of the amendment
+still hold; its order does not.
 
 The owner's instruction, verbatim, on 21 November: "fine, that remains the accepted plan,
 please continue /oak-start-right-team use the cognitive skills and reviewers as appropriate
