@@ -461,6 +461,49 @@ string; [key: string]: string | number }` accepts every valid value and also
   continuity records land as their own `chore(continuity)` commit. History here is
   append-only, so the earlier commits stand as they are; from this commit on, this
   record and the continuity file are committed apart from everything else.
+- 2026-11-22, N3. **The third draft, its attack and the conscience check.** The third
+  draft (corrections alone, commit `86edae41`) was attacked once and broke in fifteen
+  places. The Cricket panel ran in both stances on one frame: seven ON-TRACK and one
+  DRIFTING (the procedure seat, normal stance: no first-hand read shown for two
+  boundary claims, which the attack then supplied); seven NARROWED and one SOUND.
+- 2026-11-22, N3. **A correction to the entry above headed "The dialect each text
+  names".** That entry read the 3.2.0 text. The specification names 3.2.1 (10 September
+  2026), and the 3.2.1 text at section 4.24.1 says the dialect "is identified by the
+  URI of the form https://spec.openapis.org/oas/3.2/dialect/YYYY-MM-DD". Case 3 as
+  approved says the same. There is no fault in case 3 on that point. The seat's error:
+  it took "the 3.2 text" to be the file it had fetched and did not check it against
+  the version the specification names. From here the texts read are 3.1.2 and 3.2.1,
+  the latest in the publisher's index, and a quote is checked in each.
+- 2026-11-22, N3. **Step back, after three drafts broke.**
+  1. _Which sentence it moves._ None for Oak's document. For the owner's words of 20
+     November ("not have to rework Castr if Oak adds an additional, valid field type"),
+     it makes the approved text name the schemas that the check already uses to decide
+     what is valid.
+  2. _Changed for Oak's document._ Nothing.
+  3. _Size._ Three drafts drew eleven, ten and fifteen findings. Adding words was not
+     converging: most findings fell on words no correction forced. The fourth draft
+     keeps a change only where 0.8.0 is false or out of date against a primary source
+     and the correction needs no definition the specification lacks.
+  4. _Checking larger than the work._ Yes, for the drafts that tried to clarify. The
+     fourth draft changes one sentence and one list.
+  5. _Exit._ One more attack. A finding that an "after" text is false, says two things,
+     or refuses or reads the wrong document withdraws 0.8.1 by the plan's path; there
+     is no fifth draft.
+- 2026-11-22, N3. **Matrix on what the third attack and the panel raised.** Lenses in
+  the order the Ecosystem's principles give; "strict" applied throughout.
+
+  | Unknown                                                                                            | Disposition                                                                                                                                                                                                                                                      |
+  | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | A rule that differs between 3.1 and 3.2 (the security requirement's name): one entry, two, or none | None in 0.8.1. Strict: an entry for 3.1 alone leaves 3.2 unjudged, and refusing an undeclared 3.2 name would refuse a document the text allows, since the name may be a URI. Neither can be written until the text says which documents count. Goes to N7 whole. |
+  | The rules on a Link Object's `operationId` and a Tag Object's `parent`                             | N7, for the same reason: the texts call resolution across documents implementation-defined.                                                                                                                                                                      |
+  | The rule on a Server Variable Object's `default`                                                   | Stays. It concerns one object; no schema holds it; the sentence is the same in 3.1.2, 3.2.0 and 3.2.1.                                                                                                                                                           |
+  | The Callback Object's `x-` fields                                                                  | Stays, as the one "Allowed" place. Strict: without it 0.8.0 refuses a document the text allows. Its scope sentence covers every case and rule, so an extension's contents are never judged.                                                                      |
+  | Cases 2 and 3: clarify now, or leave                                                               | Leave. 0.8.0 is unclear there, not false. Each unclear place is a row in the plan's review dispositions for N2, whose cells decide it outside Castr before any words are written.                                                                                |
+  | Naming the dialect meta-schema revisions                                                           | Not in 0.8.1. Naming a judge without saying where a nested resource in another dialect stops being judged by it is new behaviour. To N2 with the nested `$schema` row.                                                                                           |
+  | The numbers 6 and 7 used again                                                                     | Accepted: an ordered list cannot leave a gap. The plan's two mentions are reworded; dated entries here stand.                                                                                                                                                    |
+  | Whether N2 may start before the owner's words                                                      | Yes, with one limit: no cell for a rule or "Allowed" place that only the draft lists. Cases 2 and 3 are now unchanged by the draft, so their cells do not wait.                                                                                                  |
+  | Which validator judges the cells                                                                   | Open, and N2's first act. Ajv 8.20.0 refuses any document with a Schema Object other than `{}` under the pinned schemas (run by the seat). The plan's N2 says how the choice is proved.                                                                          |
+  | Merge the draft before asking the owner, or one pull request for draft and landing                 | Merge first: the owner then reads text that is on `main`, and the landing is a change of the specification alone. The plan's size line for N3 says so.                                                                                                           |
 
 ### The matrix pass of 22 November 2026
 
