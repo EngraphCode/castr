@@ -15,11 +15,10 @@ type Holds = readonly [kind: string, shape: 'one' | 'list' | 'map'];
 
 const SCHEMA = 'schema';
 /**
- * A place that holds a path item, where OpenAPI 3.1 reads an object with `$ref` as a
- * reference and nothing else. Under `paths`, and everywhere in 3.2, such an object is a
- * path item whose `$ref` is one of its fields.
+ * A path item. Wherever one is held, in 3.1 and in 3.2, an object with `$ref` is a path
+ * item whose `$ref` is one of its fields, and never a reference.
  */
-const PATH_ITEM_OR_REFERENCE = 'path-item-or-reference';
+const PATH_ITEM = 'path-item';
 const one = (kind: string): Holds => [kind, 'one'];
 const list = (kind: string): Holds => [kind, 'list'];
 const map = (kind: string): Holds => [kind, 'map'];
@@ -36,7 +35,7 @@ const CHILDREN: Readonly<Record<string, Readonly<Record<string, Holds>>>> = {
     info: one('info'),
     servers: list('server'),
     paths: one('paths'),
-    webhooks: map(PATH_ITEM_OR_REFERENCE),
+    webhooks: map(PATH_ITEM),
     components: one('components'),
     security: list('security-requirement'),
     tags: list('tag'),
@@ -54,7 +53,7 @@ const CHILDREN: Readonly<Record<string, Readonly<Record<string, Holds>>>> = {
     securitySchemes: map('security-scheme'),
     links: map('link'),
     callbacks: map('callbacks'),
-    pathItems: map(PATH_ITEM_OR_REFERENCE),
+    pathItems: map(PATH_ITEM),
     mediaTypes: map('media-type'),
   },
   'path-item': {
@@ -110,9 +109,9 @@ const CHILDREN: Readonly<Record<string, Readonly<Record<string, Holds>>>> = {
 const KEYED: Readonly<
   Record<string, (key: string) => readonly [row: string, kind: string] | undefined>
 > = {
-  paths: () => ['paths[a path template]', 'path-item'],
+  paths: () => ['paths[a path template]', PATH_ITEM],
   content: () => ['content[a media type]', 'media-type'],
-  callbacks: () => ['callbacks[a callback expression]', PATH_ITEM_OR_REFERENCE],
+  callbacks: () => ['callbacks[a callback expression]', PATH_ITEM],
   responses: (key) => {
     if (key === 'default') {
       return ['responses.default', 'response'];
@@ -321,24 +320,11 @@ export function rowsUsedBy(document: JsonObject, rows: ReadonlySet<string>): Row
     }
   };
 
-  const is31 = typeof document['openapi'] === 'string' && document['openapi'].startsWith('3.1');
-
-  /** The kind of object at a place, which for a path item depends on the version. */
-  const kindAt = (placed: string, node: unknown): string => {
-    if (placed !== PATH_ITEM_OR_REFERENCE) {
-      return placed;
-    }
-    return is31 && isJsonObject(node) && '$ref' in node ? 'reference' : 'path-item';
-  };
-
   // A reference stands in for the object, and holds only what a reference holds: it
   // admits no extension. A path item is the exception: its `$ref` is a field of its
   // own beside the others.
   const isReferenceAt = (kind: string, node: JsonObject): boolean => {
-    if (kind === 'reference') {
-      return true;
-    }
-    const mayBeReference = kind in KEYED ? KEYED_BY_REFERENCE.has(kind) : kind !== 'path-item';
+    const mayBeReference = kind in KEYED ? KEYED_BY_REFERENCE.has(kind) : kind !== PATH_ITEM;
     return '$ref' in node && mayBeReference;
   };
 
@@ -359,8 +345,7 @@ export function rowsUsedBy(document: JsonObject, rows: ReadonlySet<string>): Row
     }
   };
 
-  function walk(placed: string, node: unknown): void {
-    const kind = kindAt(placed, node);
+  function walk(kind: string, node: unknown): void {
     if (kind === SCHEMA) {
       walkSchema(node);
     } else if (!isJsonObject(node)) {

@@ -249,25 +249,27 @@ validate-specification-approval`), or by the record.
 
 - **Serves.** SPEC-FV-1 case 4 names the publisher's schema by revision, and 0.8.0
   names the revisions the picture pins, which are old.
-- **Do.** The publisher's index is `https://spec.openapis.org/oas/`. On 22 November it
-  listed, for 3.1, schema revisions up to 2026-11-05 against the pinned 2022-10-07, and
-  for 3.2 up to 2026-11-12 against the pinned 2025-09-17; and dated dialect and meta
-  revisions (for 3.1, 2024-10-25 and 2024-11-10; for 3.2, up to 2026-02-26). Read the
-  index on the day; do not trust these dates. The picture pins six OpenAPI files
-  (`lib/tests-picture/__fixtures__/definitions/provenance.json`); the 3.1 dialect and
-  meta are pinned by the undated `base` address, so decide by the lenses whether a
-  dated revision replaces them. A newer revision is a new pin: it is added beside the
-  old file, recorded in `docs/THIRD_PARTY_NOTICES.md`, and the old file stays until
-  nothing reads it (the picture's README says so). `lib/tests-picture/rows/
-published-rows.ts` names the files and holds the correction that a Link Object's
-  `body` is `server`. The publisher also gives a second schema for each line,
-  `schema-base`, which validates Schema Objects; decide by the lenses whether the
-  picture pins it.
+- **Done on 22 November 2026.** The publisher's index is
+  `https://spec.openapis.org/oas/`. The picture reads its rows from the latest revisions
+  listed that day: for 3.1 the schema of 2026-11-05 and the vocabulary of 2024-11-10,
+  for 3.2 the schema of 2026-11-12 and the vocabulary of 2026-02-26. It pins ten
+  OpenAPI files (`lib/tests-picture/__fixtures__/definitions/provenance.json`): for each
+  version the latest schema, its `schema-base`, the dialect and the vocabulary, and the
+  schema that specification 0.8.0 names, which stays until 0.8.1 names another. The
+  dated 3.1 dialect and vocabulary replaced the undated `base` pair. The thread record's
+  "Step log" has the matrix rows for those choices and the rows that changed.
+- **For a later re-pin.** A newer revision is a new pin: it is added beside the old
+  file, recorded in `docs/THIRD_PARTY_NOTICES.md`, and the old file stays until nothing
+  reads it (the picture's README says so). `lib/tests-picture/rows/published-rows.ts`
+  names the files read, and `lib/tests-picture/documents/rows-used.ts` holds what the
+  document walker assumes about where a path item may be a reference; both are read
+  again against the new revision and the text.
 - **Finished when.** `pnpm test:picture` passes; every row that appears, disappears or
   changes is named in the pull request with the reason; each correction to the old
   schema is either still needed or removed, and what that does to rule 7 of SPEC-FV-2
   is noted for N3.
-- **Size.** One pull request, about six files, one or two pushes.
+- **Size, as it turned out.** One pull request of 25 files, 12 of them pinned
+  definitions added or removed, and two pushes.
 
 ### N2-REFUSALS: cells for what the reader refuses
 

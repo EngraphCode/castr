@@ -14,6 +14,7 @@ const ROWS = new Set([
   'openapi.components',
   'components.schemas',
   'components.parameters',
+  'components.pathItems',
   'components[a component name]',
   'paths[a path template]',
   'path-item.get',
@@ -163,19 +164,26 @@ describe('rowsUsedBy', () => {
     expect(used({ components: { parameters: { Q: {} } } })).toContain(named);
   });
 
-  it('reads a path item given by reference as its version of OpenAPI does', () => {
-    const webhooks = { onKestrel: { $ref: '#/components/pathItems/K', get: {} } };
-    const in31 = rowsUsedBy({ openapi: '3.1.0', webhooks }, ROWS);
-    const in32 = rowsUsedBy({ openapi: '3.2.0', webhooks }, ROWS);
+  it('reads a path item with `$ref` as a path item, in 3.1 and in 3.2, wherever it is held', () => {
+    const referenced = { $ref: '#/components/pathItems/K', get: {} };
+    const callbacks = { onEvent: { '{$request.body#/url}': referenced } };
+    const documents = [
+      { webhooks: { onKestrel: referenced } },
+      { components: { pathItems: { Other: referenced } } },
+      { paths: { '/k': { get: { callbacks } } } },
+    ];
 
-    // In 3.1 a webhook with `$ref` is a reference, which holds no `get`.
-    expect(in31.used.has('reference.$ref')).toBe(true);
-    expect(in31.used.has('path-item.$ref')).toBe(false);
-    expect(in31.unrecognised).toEqual(['reference.get']);
-    // In 3.2 it is a path item, whose `$ref` is a field of its own.
-    expect(in32.used.has('path-item.$ref')).toBe(true);
-    expect(in32.used.has('path-item.get')).toBe(true);
-    expect(in32.unrecognised).toEqual([]);
+    // Its `$ref` is a field of its own beside the others, and it is not a reference.
+    for (const openapi of ['3.1.0', '3.2.0']) {
+      for (const document of documents) {
+        const found = rowsUsedBy({ openapi, ...document }, ROWS);
+
+        expect(found.used.has('path-item.$ref')).toBe(true);
+        expect(found.used.has('path-item.get')).toBe(true);
+        expect(found.used.has('reference.$ref')).toBe(false);
+        expect(found.unrecognised).toEqual([]);
+      }
+    }
   });
 
   it('reads a media type whose name begins `x-` as a media type', () => {

@@ -261,6 +261,11 @@ enum: [...]}}`. Neither names a property. They are the only schema-valued
     correction is removed; the mechanism for a correction stays.
   - The 3.1 schema factors the default of `explode` into a shared definition, which the
     reading folds into the objects that use it, as it does `examples`.
+  - Found by a hosted review of the pull request: the document walker
+    (`documents/rows-used.ts`) still read a 3.1 path item with `$ref` under `webhooks`,
+    `components.pathItems` and a callback as a bare reference, as the older schema had
+    it. The latest 3.1 schema and the 3.1.2 text make it a Path Item Object in all
+    three places, so the walker no longer depends on the version.
 - 2026-11-22, N1, end. **Step back.** Nothing changed for Oak's document, as expected.
   The step stayed one pull request. For N3: rule 7 of SPEC-FV-2 describes a difference
   that the latest 3.1 revision no longer has, and the text must say which of `schema`
