@@ -111,7 +111,13 @@ thread convention. Re-read live claims and queue entries before writing/staging.
 
 ## Next safe steps
 
-0. **Read "Start here: handover of 21 November 2026" at the top of the
+0. **What is next is in one place:
+   [after-0.8.0-next-steps.md](../../plans/active/after-0.8.0-next-steps.md).**
+   Specification 0.8.0 was approved on 22 November 2026 ("I approve revision 0.8.0"): it
+   is part one of the amendment, what the reader refuses. That plan orders the six steps
+   after it and says how a fresh session starts. Where anything below says something
+   else about the next step, the plan governs.
+1. **Then read "Start here: handover of 21 November 2026" at the top of the
    [thread record](threads/castr-correction.next-session.md) first.** It is the newest
    state, written at an account change, and holds how work lands here. The paragraph
    below is the history that led to it. On 20 November 2026
@@ -148,9 +154,10 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    `propertyNames`), three wrong, one missing. What PICTURE has left: seven rows in each deciding column, which need a
    second judge (four formats the reference has no checker for are not judged, and
    `int64`, `float` and `double` have cells that decide nothing); the Zod cells for rows outside a schema, which
-   wait on SPEC-N-4; and the library's documents, which wait on EC-1. The next step
-   is the specification amendment.
-1. **PICTURE: one repeatable command that shows what Castr does, judged from outside it.**
+   wait on SPEC-N-4; and the library's documents, which wait on EC-1. On 22 November part one of
+   the amendment was approved as specification 0.8.0; the steps after it are in the plan
+   named at the top of this list.
+2. **PICTURE: one repeatable command that shows what Castr does, judged from outside it.**
    The owner asked on 18 November 2026 what working, working well and correct look like.
    The seat answered with cards and a draft amendment, and on 19 November the owner sent it
    back, verbatim: "Reflecting the decision back to me is not helpful." (the whole
@@ -171,17 +178,17 @@ thread convention. Re-read live claims and queue entries before writing/staging.
    13 not judged; the wrong count is a floor. One more owner step
    lies ahead: before MOVE, the course's HOME todo changes section 10's "early in the
    course".
-2. **The example-input library continues at EC-1**, the pin record's shape for many
+3. **The example-input library continues at EC-1**, the pin record's shape for many
    sources ([its plan](../../plans/active/example-input-library.md)). EC-0, attribution and
    third-party notices, is done: a newer copy of any example is a new pin recorded in the
    notices file, and the directory is never re-fetched as a whole. Its OpenAPI tranches
    precede MOVE and its JSON Schema tranches wait for SPEC-C-2. The owner asked for the
    library on 25 September 2026; the course's "MOVE: what travels" names what travels
    with it.
-3. **Dependency alerts.** `main` has none open. An alert that arrives holds merges until
+4. **Dependency alerts.** `main` has none open. An alert that arrives holds merges until
    its cure lands (SPEC-G-1); one with no patched version needs a trace (is the code used,
    can the function go, can it be done another way) before anything else is decided.
-4. **The SPEC-CC-3 check compares approval records with `main`'s.** An approval record that
+5. **The SPEC-CC-3 check compares approval records with `main`'s.** An approval record that
    `origin/main` holds must still open the branch's records, in order and with the same
    approver, date, words and digest. The check reads `origin/main` from git, so a checkout
    that has not fetched it exits 2.
