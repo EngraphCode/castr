@@ -85,9 +85,9 @@ and the other is corrected.
    sibling checkout is absent, stop and say so; do not fall back to the local copies.
 6. Before a step's first edit, do its step back and run the decision matrix on its
    unknowns, and write both under "Step log" in the thread record. N0's are there,
-   dated 22 November. N1 is done and N3 is withdrawn. The next steps are N2, whose first
-   act is to choose and prove its validator, and N4, the next amendment; neither waits
-   on the other.
+   dated 22 November. N1 is done; N3 and N4 are withdrawn. The next steps are N2, whose
+   first act is to choose and prove its validator, and N5, the tables, which now carry
+   numbers; neither waits on the other.
 7. Read "Review dispositions" at the foot of this plan and give each row its
    disposition before starting the step it names.
 
@@ -135,7 +135,8 @@ lib/src` is empty). Every pull request since has been the picture, the specifica
 
 ## Order, and whose it is
 
-- **N4, N5, then N0 is the owner's**, 22 November. After the trace of N0 the owner
+- **N4, N5, then N0 was the owner's**, 22 November, and is now N5, then N0 (the point
+  after this one). After the trace of N0 the owner
   chose that the fix is built with its text ("Build with the text") and that the text
   for the two rows is carried in 0.8.1 ("Carry in 0.8.1"). Two attacks on the draft of
   0.8.1 then showed the two rows cannot be written there: they need words only part
@@ -156,12 +157,13 @@ lib/src` is empty). Every pull request since has been the picture, the specifica
 - **N3 before N4 was the seat's** disposition (the matrix pass: one concern per
   change), and N3 is withdrawn by the seat, 22 November: four drafts were attacked and
   the last showed that the change of schema revisions cannot be written until N2's
-  cells list what it does. Its corrections are carried by N7. N4 is the next amendment.
+  cells list what it does. Its corrections are carried by N7. N4 was then the next amendment and is withdrawn
+  too; N5 is the next.
   Numbers share no clause with the reader's refusals; only landing is serial, because
   the approval check allows one approved text at a time.
 - **N1 and N2 wait on nothing** and are not ordered between themselves: only SPEC-FV-1
   case 4 uses the publisher's schema, so N2 does not wait on N1. N1 is done. N2 is worked
-  beside N4, and first wherever N4 waits on the owner. The todos' `depends_on` say the same.
+  beside N5, and first wherever N5 waits on the owner. The todos' `depends_on` say the same.
 - **N7 waits on N2, and is the seat's.** It is the three things on references
   that the drafts of 0.8.1 could not say exactly, the three rules that turn on which
   documents make up a description, and the corrections the withdrawn draft leaves. N2's
@@ -375,7 +377,7 @@ validate-specification-approval`), or by the record.
     version 0.8.1 exists. The corrections are written from N2's cells in N7; the
     redraft file says what stands from the four drafts. Nothing was put to the owner.
 - **What follows is how the step was to run. It is withdrawn; nothing below is to be
-  done under N3.** The way an approved amendment lands still holds for N4, N5 and N7.
+  done under N3.** The way an approved amendment lands still holds for N5 and N7.
 - **Not in this step unless the matrix puts it there.** A sweep of every "MUST" and
   "MUST NOT" in the two texts. The owner's decision twelve already says what an
   unlisted rule costs: Castr reads the document, and a refusal it then gives counts as
@@ -596,7 +598,7 @@ of three.
 | N2   | Which validator judges the cells, given that Ajv cannot judge the pinned schemas as published                                                   |
 | N7   | Whether a rule that differs between 3.1 and 3.2 is one entry or two                                                                             |
 | N7   | Whether the sweep of every "MUST" belongs in this step                                                                                          |
-| N4   | What the picture's cell for a declared narrowing is called and how it is judged                                                                 |
+| N5   | What the picture's cell for a declared narrowing is called and how it is judged (from N4; a first disposition is in the thread record)          |
 | N5   | The form of addressing a validator (SPEC-N-4), designed as this step's first piece                                                              |
 | N5   | How the tables are held so that the picture's proposals are computed from them                                                                  |
 | N5   | What the mark on a Zod check Castr writes is, given that reading Zod is not designed (SPEC-N-3)                                                 |
