@@ -134,8 +134,7 @@ After:
 >      The rejection names the place the text stops being well formed.
 >   2. _Version._ The document has a `swagger` field, or its `openapi` field is absent
 >      or does not match the pattern the publisher's schema gives for a version line in
->      the Read column. The rejection names the version stated, or that none is, and
->      SPEC-C-3 where that capability will read it.
+>      the Read column. The rejection names the version stated, or that none is, and for a 3.0.x document, and no other, names SPEC-C-3 as the capability that will read it.
 >   3. _Dialect._ The document's `jsonSchemaDialect`, or the `$schema` of a schema in
 >      it, names a dialect other than the OpenAPI dialect its publisher gives for the
 >      document's version line, at any revision, and JSON Schema Draft 2020-12. The
@@ -166,8 +165,7 @@ After:
 >   runs, with a loader and a validator that are not Castr's reader, and fails when the
 >   reader gives `NOT-READ` where no case holds, gives none where one holds, or gives it
 >   for a different case. The documents it runs include at least one for each case, one
->   OpenAPI 2.0 document, one 3.0.x document, and one valid document for each version
->   line in the Read column.
+>   OpenAPI 2.0 document, one 3.0.x document, one valid document for each version line in the Read column, and one for each rule SPEC-FV-2 lists. Every document the check of SPEC-PR-6 runs for a construct kind is judged the same way, so a reader that refuses a construct by design where no case holds fails on that construct's document.
 >
 > - **SPEC-FV-2 Validity rules a schema does not hold.** A rule listed here is one the
 >   OpenAPI specification states in words, at the section named beside it, and the
@@ -203,8 +201,7 @@ Before:
 After:
 
 > A directed format pair or generator whose corpus passes §8 with no `NOT-YET-BUILT`
-> rejection reachable from any document of its source format that its reader does not
-> refuse as `NOT-READ`. The README's capability table is generated from that fact.
+> rejection reachable from any document of its source format that none of the cases of SPEC-FV-1 describes. The README's capability table is generated from that fact.
 
 ### 5. SPEC-PR-6
 
@@ -216,8 +213,7 @@ Before, its first sentence:
 After:
 
 > A capability is advertised, accepted or called done only when no `NOT-YET-BUILT`
-> rejection is reachable from any document of its source format that its reader does not
-> refuse as `NOT-READ`.
+> rejection is reachable from any document of its source format that none of the cases of SPEC-FV-1 describes.
 
 Before, a later sentence:
 
@@ -257,6 +253,17 @@ above.
 | SPEC-AR-2, the model is designed for all of §6 | Removing 3.0.x takes its constructs out of that design                       | Not changed: that is the meaning of the owner's decisions six and ten. SPEC-C-3 brings them back, and the owner should know it costs |
 | SPEC-P-2, SPEC-P-5, SPEC-AR-6 and Appendix A   | A Zod reader's refusals have no kind                                         | Not changed here: see "Scope of this part"                                                                                           |
 
+## Other documents in the repository that say otherwise
+
+A hosted review found two, and both were read. They are corrected in the landing that
+carries the approved text, since the specification is the only description of the
+destination and they would otherwise promise what it refuses.
+
+- `docs/architectural_decision_records/ADR-030-full-openapi-syntax-support.md` says
+  Castr supports all valid 3.0.x syntax and upgrades 3.0.x to 3.1.0 internally.
+- `.agent/directives/requirements.md`, section 2, requires every field of OpenAPI 3.0.x
+  to be accepted.
+
 ## What this does to Castr and to the picture
 
 - The code that upgrades 2.0 and 3.0 documents and stamps every document as 3.2.0 is
@@ -281,6 +288,10 @@ above.
    - **A reference whose target is absent is not a stated rule.** Neither text says a
      document with such a reference is invalid. The owner decided on 22 November that
      Castr refuses it by design (decision thirteen); it is case 5 above.
+   - **A Link Object's `operationRef` and `operationId`** must identify an operation
+     (3.1.2, 4.8.20.1), a hosted review reports; not yet read word for word here. Any
+     rule left off the list means only that Castr reads the document: a refusal it then
+     gives is counted as unbuilt, so a short list shows.
    - **A security requirement naming no declared scheme** is a rule in both texts
      (4.8.30; 4.30) that was read only in summary. It is listed once read word for word.
    - **The pinned schemas are old revisions.** The picture pins the 3.1 schema of
@@ -292,7 +303,7 @@ above.
      with `/`, and a path parameter is required.
 4. **To do before asking for approval.** Re-pin the
    publisher's schemas at their latest revisions and name those in case 4; read the
-   security-requirement rule word for word; one more adversarial review. The 3.1
+   security-requirement and Link Object rules word for word; one more adversarial review. The 3.1
    dialect has dated revisions (2024-10-25 and 2024-11-10) beside `base`, which "at any
    revision" in case 3 covers.
 
