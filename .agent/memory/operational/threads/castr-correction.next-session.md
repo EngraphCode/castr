@@ -506,7 +506,7 @@ string; [key: string]: string | number }` accepts every valid value and also
   | Merge the draft before asking the owner, or one pull request for draft and landing                 | Merge first: the owner then reads text that is on `main`, and the landing is a change of the specification alone. The plan's size line for N3 says so.                                                                                                           |
 
 - 2026-11-22, N3. **The fourth attack, and the withdrawal.** The fourth draft (commit
-  `1f793ef5`) met the exit set above. Entry 7's last sentence says two things about a
+  `6636e9e4`) met the exit set above. Entry 7's last sentence says two things about a
   reference into an `x-` field of a Callback Object. And naming the new revisions
   changes which documents case 4 refuses, in both directions: for one, `allowReserved`
   on a 3.2 header parameter is read at the revision 0.8.0 names and refused at the
