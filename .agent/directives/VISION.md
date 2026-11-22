@@ -1,5 +1,11 @@
 # Vision: Universal Schema Conversion
 
+> **22 November 2026:** [the specification](../../docs/SPECIFICATION.md) at 0.8.0 governs where this document
+> differs. OpenAPI 2.0 and 3.0.x are not read (SPEC-FV-1), reading 3.0.x is a later
+> capability (SPEC-C-3), and no document is rewritten from one version into another
+> before Castr's parser reads it. What this document says about upgrading 3.0 or 2.0
+> input no longer stands.
+
 **Last Updated:** 2026-04-02
 
 Castr is **strict and complete everywhere, all the time**. It **fails fast and hard**.

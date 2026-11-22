@@ -29,6 +29,55 @@ below this one are the dated record; none of them is a newer instruction than th
 - **The owner was given this report in prose on 21 November** and then asked for this
   handover. No question is waiting on the owner. No approval is pending.
 
+### After the handover: 22 November 2026
+
+- **Owner decision ten, by question prompt, 22 November 2026.** Asked what Castr does
+  with an OpenAPI 3.0 document until 3.0 is built, the owner chose "Refuse it by
+  version": one refusal naming the version and the later capability that will read it,
+  and the third-party upgrade step is removed. It is a decision about what the
+  specification will say, not an approval of text.
+- **Owner decisions eleven and twelve, by question prompt, 22 November 2026.** Eleven:
+  a Draft-07 schema inside an OpenAPI document, for the first capability: "Refuse until
+  the second capability", by dialect, as a 3.0 document is refused by version. Twelve: a
+  document that passes the published schema and breaks a rule the OpenAPI text states
+  only in words: "Refuse it as invalid", each rule listed in the specification with the
+  section that states it, and an unlisted rule Castr trips over counts as unbuilt until
+  an amendment lists it. Neither approves text.
+- **Owner decision thirteen, by question prompt, 22 November 2026.** A reference that
+  points at nothing, which the OpenAPI text has no rule against: "Refused by design",
+  as Castr's own declared rule; the required check resolves references itself, so a
+  reference Castr merely fails to follow still counts as a defect.
+- **Specification 0.8.0, approved on 22 November 2026, verbatim "I approve revision
+  0.8.0".** It is part one of the amendment: `NOT-READ` and the five cases of
+  SPEC-FV-1, the listed rules of SPEC-FV-2, 3.0.x as the later capability SPEC-C-3, and
+  the measure of a capability. The owner approved while three things were still listed
+  as open, and was told they follow as later amendments: name the latest revisions of
+  the publisher's schemas (re-pin the picture first); list the rules on security
+  requirements, Link Objects and a server variable's default, each read word for word
+  from the OpenAPI text; give the refusals of a JSON Schema reader and of a Zod reader
+  their kinds. The second adversarial review the seat had promised was not run; hosted
+  review ran four rounds. Nine older documents promised or described the 3.0 upgrade (ADR-018, ADR-019,
+  ADR-030, the requirements, vision and testing-strategy directives, the Scalar pipeline
+  page and two guides); each now opens with a dated note that 0.8.0 governs. A gap a
+  hosted review found in the approved text, for the next amendment: case 4 validates
+  the entry document, and nothing says a reference's resolved target in another file
+  must itself be valid for the place it is used.
+  Next: parts two (numbers in JavaScript targets) and three (the table vocabulary with
+  the tables).
+- **Two facts found that day by running Castr.** It converts an OpenAPI 2.0 document,
+  which section 6 says is refused. It reads 3.0 only after a third-party library rewrites
+  the document to 3.1 (`lib/src/shared/load-openapi-document/upgrade-validate.ts`).
+- **How part one was drafted** is in
+  [amendment-part-one-draft-2026-11-22.md](../../../analysis-and-reports/amendment-part-one-draft-2026-11-22.md):
+  the before and after of each clause, the adversarial review that broke the first
+  draft in six places, and each finding's disposition (#156). A draft cannot be
+  committed into `docs/SPECIFICATION.md` before approval, because the approval check
+  compares that file with its latest approved record; a later part is drafted the same
+  way, in a tracked file.
+- **#155 was merged with the hosted review of its last commit reported as failed,** not
+  completed: the reviewer did not run on that commit. The three earlier commits were
+  reviewed and all seven findings fixed. The owner was told on 22 November.
+
 ### The accepted plan and the next step
 
 The owner's instruction, verbatim, on 21 November: "fine, that remains the accepted plan,
@@ -43,7 +92,9 @@ throughout". The order is PICTURE, the specification amendment, fixing Castr, HO
    outside a schema wait on the form of the public surface (SPEC-N-4). The example input
    library's documents are not pinned (EC-1 of
    [its plan](../../../plans/active/example-input-library.md)).
-2. **The next step is the specification amendment, in three parts small enough to close:**
+2. **Part one of the amendment is approved as specification 0.8.0** (22 November; see
+   "After the handover" above). Parts two and three remain. As first written on 21
+   November: the specification amendment, in three parts small enough to close:
    the reader's rejections and the versions read; numbers in JavaScript targets; the
    table vocabulary together with the tables. The owner's nine decisions of 20 November
    (recorded below, from "Six decisions, by question prompt, 20 November 2026" onward) are its content.

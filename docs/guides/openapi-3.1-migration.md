@@ -1,5 +1,11 @@
 # OpenAPI 3.1 Type System Migration Guide
 
+> **22 November 2026:** [the specification](../SPECIFICATION.md) at 0.8.0 governs where this document
+> differs. OpenAPI 2.0 and 3.0.x are not read (SPEC-FV-1), reading 3.0.x is a later
+> capability (SPEC-C-3), and no document is rewritten from one version into another
+> before Castr's parser reads it. What this document says about upgrading 3.0 or 2.0
+> input no longer stands.
+
 **Status:** Implemented ✅  
 **Date:** November 2025  
 **Related ADRs:** [ADR-018: OpenAPI 3.1-First Architecture](../../docs/architectural_decision_records/ADR-018-openapi-3.1-first-architecture.md)

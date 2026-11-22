@@ -2,6 +2,27 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-11-22 (amendment part one, first drafts — Ingot binds Patina / 194219, claude-code)
+
+- **I merged #155 with the hosted review of its head reported as failed,** not completed.
+  The reviewer had not run on the last commit. The rule I had just written into the
+  handover says completed. What works: read the review's status word, not only that a
+  state line names the head commit.
+- **I wrote in the tree while a push gate ran, a day after recording that mistake.** The
+  gate was the background push of the draft branch; I edited two record files under it.
+  They were formatted documentation and the gate passed, but the rule has no size
+  exemption. What works: after starting a push, the next tree write waits for its exit.
+- **The first draft of part one repeated the loophole it named.** I wrote that a refusal
+  by design is decided outside Castr, and three of its cases were decided by Castr's own
+  code (whether a reference resolves, the value domain, which address is a dialect). One
+  adversarial reviewer with the text and the instruction "find a document that gets the
+  design refusal and is really a defect" found all three. Ask that of every clause that
+  sorts refusals.
+- **The publisher's OpenAPI schema does not validate schemas,** says so in its
+  description, and the text calls itself the only normative description. The picture's
+  pins are old revisions of it. I had read these files for two days for their field
+  lists and never their description line.
+
 ## 2026-11-21 (picture: the TypeScript structure cells and whole documents — Ingot binds Patina / 194219, claude-code)
 
 - **A background task shown as running had failed at its first step.** A command that
