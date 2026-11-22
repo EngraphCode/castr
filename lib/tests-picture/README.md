@@ -121,8 +121,41 @@ is held as YAML and as JSON the YAML is read.
 
 Specification 0.8.0 says when the reader of an OpenAPI document refuses it (SPEC-FV-1)
 and which rules it holds that no schema does (SPEC-FV-2). The picture's cells for that
-are being built in slices. The first is here: the judge of case 4, and what a change of
-the publisher's schema revision does.
+are being built in slices. Two are here: the judge of case 4 with what a change of the
+publisher's schema revision does, and an input for each of cases 1 to 4 with what Castr
+does with it.
+
+- **The cases are decided outside Castr.**
+  [`refusals/reader-cases.ts`](refusals/reader-cases.ts) holds 25 small inputs and
+  decides, for each, the first case of SPEC-FV-1 that holds: the text parses as neither
+  JSON nor YAML 1.2 (the `yaml` package, which Castr's reader does not use); a `swagger`
+  field, or an `openapi` field that does not match the pattern either pinned schema
+  gives; a `jsonSchemaDialect`, or the `$schema` of a schema directly under
+  `components.schemas`, that is a string and is neither the line's OpenAPI dialect nor
+  Draft 2020-12; a failure of the publisher's schema at the revision 0.8.0 names.
+- **What Castr does is set against it.** Each input is written to a file and given to
+  Castr as a consumer would give it. No case and Castr reads it: right. A case holds and
+  Castr reads it: `reads it`, which is wrong. A case holds and Castr refuses:
+  `refuses, with no kind`, because the specification's refusal is a `NOT-READ` rejection
+  that names its case, and nothing in what Castr says is that yet. Such a cell is not
+  counted right, and it does not say Castr refused for the right reason: `openapi:
+4.0.0` is refused today with "version must be a string". Castr's own words are shown
+  beside each verdict for that. `pnpm picture` prints the section;
+  [`refusals/reader-cases.e2e.test.ts`](refusals/reader-cases.e2e.test.ts) holds the
+  case decided for every input, and
+  [`refusals/reader-cases.gen.test.ts`](refusals/reader-cases.gen.test.ts) holds
+  Castr's verdict and words.
+- **Limits of what is decided.** The line's dialect is taken to be the address its
+  publisher gives: `.../oas/3.1/dialect/base` or that with a date for `base`, and for
+  3.2 the address with a date. Addresses are compared as written, with no equivalence
+  of URIs applied; whether a fragment or a difference of case names the same dialect is
+  for the amendment on references to say. A dialect that is not a string names none and
+  is left to case 4. A text that is well formed and holds a value JSON cannot state,
+  such as `1e999`, is not decided. JSON with a key twice is read last wins. A `$schema`
+  deeper than a component schema is not looked for. Case 4 is the document against the publisher's schema; whether each Schema
+  Object passes its dialect's meta-schema is not decided, because `schema-base` is
+  pinned only at the latest revision. A text that both parsers refuse is case 1 even
+  where one of them is stricter than its format's text.
 
 - **The judge is outside Castr.** [`refusals/judge.ts`](refusals/judge.ts) runs a
   document against one pinned schema of the OpenAPI Initiative's and says whether it
@@ -156,8 +189,9 @@ the publisher's schema revision does.
   `{"type": 5}`. The test holds both. The picture's section compares the plain `schema`,
   which is the one 0.8.0 names.
 
-Not built yet: a document for each of cases 1, 2, 3 and 5; a judge outside Castr for
-each rule SPEC-FV-2 lists; what Castr does set against each.
+Not built yet: an input for case 5, which needs a resolver of references outside Castr;
+a judge outside Castr for each rule SPEC-FV-2 lists; a 3.0.x and a 2.0 document from the
+example library, which the specification's check also runs.
 
 ## Run it
 
