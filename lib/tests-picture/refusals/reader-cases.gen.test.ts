@@ -88,6 +88,7 @@ const EXPECTED: readonly Expected[] = [
   ['`jsonSchemaDialect` naming Draft-07', 3, 'reads it', READS],
   ['`jsonSchemaDialect` naming Draft 2020-12', 'none', 'right', READS],
   ['a component schema whose `$schema` names Draft-07', 3, 'reads it', READS],
+  ['a component schema whose `$schema` is a number', 'not decided', 'not judged', READS],
   ['a 3.2 document whose `jsonSchemaDialect` names the 3.1 dialect', 3, 'reads it', READS],
   [
     'a 3.1 document whose `jsonSchemaDialect` names the 3.1 dialect at a revision',

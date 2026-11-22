@@ -14,8 +14,9 @@
  *   3.2, the address with a date. Of those, only an address some pinned file of the
  *   publisher's names is known to be one it gives; another of that form is not decided.
  *   An address is compared as written: no fragment, case or other equivalence of URIs
- *   is applied. A dialect that is not a string names none,
- *   and is left to case 4. A `$schema` deeper in the document is not looked for yet.
+ *   is applied. A dialect that is not a string names none: as the document's it is
+ *   left to case 4, and as a schema's it is not decided, since the publisher's plain
+ *   schema does not look inside a Schema Object. A `$schema` deeper in the document is not looked for yet.
  * - Case 4: the document fails the publisher's schema at the revision 0.8.0 names. Whether
  *   each Schema Object passes its dialect's meta-schema is not decided yet.
  * - Case 5 and the rules of SPEC-FV-2 are not decided yet.
@@ -68,6 +69,16 @@ function documentWith(openapi: string, members: JsonObject = {}): JsonObject {
     components: { schemas: SCHEMAS },
     ...members,
   };
+}
+
+const DIALECT_3_1 = 'https://spec.openapis.org/oas/3.1/dialect';
+
+function withDialect(
+  name: string,
+  openapi: string,
+  jsonSchemaDialect: string | number,
+): ReaderCase {
+  return { name, extension: 'json', text: json(documentWith(openapi, { jsonSchemaDialect })) };
 }
 
 export const READER_CASES: readonly ReaderCase[] = [
@@ -123,71 +134,44 @@ export const READER_CASES: readonly ReaderCase[] = [
     extension: 'yaml',
     text: `openapi: 3.1\n${YAML_REST}`,
   },
-  {
-    name: '`jsonSchemaDialect` naming Draft-07',
-    extension: 'json',
-    text: json(documentWith('3.1.0', { jsonSchemaDialect: DRAFT_07 })),
-  },
-  {
-    name: '`jsonSchemaDialect` naming Draft 2020-12',
-    extension: 'json',
-    text: json(documentWith('3.1.0', { jsonSchemaDialect: DRAFT_2020_12 })),
-  },
+  withDialect('`jsonSchemaDialect` naming Draft-07', '3.1.0', DRAFT_07),
+  withDialect('`jsonSchemaDialect` naming Draft 2020-12', '3.1.0', DRAFT_2020_12),
   {
     name: 'a component schema whose `$schema` names Draft-07',
     extension: 'json',
     text: json(documentWith('3.1.0', { components: { schemas: { A: { $schema: DRAFT_07 } } } })),
   },
   {
-    name: 'a 3.2 document whose `jsonSchemaDialect` names the 3.1 dialect',
+    name: 'a component schema whose `$schema` is a number',
     extension: 'json',
-    text: json(
-      documentWith('3.2.0', {
-        jsonSchemaDialect: 'https://spec.openapis.org/oas/3.1/dialect/2024-11-10',
-      }),
-    ),
+    text: json(documentWith('3.1.0', { components: { schemas: { A: { $schema: 5 } } } })),
   },
-  {
-    name: 'a 3.1 document whose `jsonSchemaDialect` names the 3.1 dialect at a revision',
-    extension: 'json',
-    text: json(
-      documentWith('3.1.0', {
-        jsonSchemaDialect: 'https://spec.openapis.org/oas/3.1/dialect/2024-11-10',
-      }),
-    ),
-  },
-  {
-    name: 'a 3.1 document whose `jsonSchemaDialect` names the 3.1 dialect as `base`',
-    extension: 'json',
-    text: json(
-      documentWith('3.1.0', {
-        jsonSchemaDialect: 'https://spec.openapis.org/oas/3.1/dialect/base',
-      }),
-    ),
-  },
-  {
-    name: 'a `jsonSchemaDialect` naming the 3.1 dialect at a date no pinned file names',
-    extension: 'json',
-    text: json(
-      documentWith('3.1.0', {
-        jsonSchemaDialect: 'https://spec.openapis.org/oas/3.1/dialect/1900-01-01',
-      }),
-    ),
-  },
-  {
-    name: 'a `jsonSchemaDialect` with a path below the 3.1 dialect',
-    extension: 'json',
-    text: json(
-      documentWith('3.1.0', {
-        jsonSchemaDialect: 'https://spec.openapis.org/oas/3.1/dialect/base/x',
-      }),
-    ),
-  },
-  {
-    name: 'a `jsonSchemaDialect` that is a number',
-    extension: 'json',
-    text: json(documentWith('3.1.0', { jsonSchemaDialect: 5 })),
-  },
+  withDialect(
+    'a 3.2 document whose `jsonSchemaDialect` names the 3.1 dialect',
+    '3.2.0',
+    `${DIALECT_3_1}/2024-11-10`,
+  ),
+  withDialect(
+    'a 3.1 document whose `jsonSchemaDialect` names the 3.1 dialect at a revision',
+    '3.1.0',
+    `${DIALECT_3_1}/2024-11-10`,
+  ),
+  withDialect(
+    'a 3.1 document whose `jsonSchemaDialect` names the 3.1 dialect as `base`',
+    '3.1.0',
+    `${DIALECT_3_1}/base`,
+  ),
+  withDialect(
+    'a `jsonSchemaDialect` naming the 3.1 dialect at a date no pinned file names',
+    '3.1.0',
+    `${DIALECT_3_1}/1900-01-01`,
+  ),
+  withDialect(
+    'a `jsonSchemaDialect` with a path below the 3.1 dialect',
+    '3.1.0',
+    `${DIALECT_3_1}/base/x`,
+  ),
+  withDialect('a `jsonSchemaDialect` that is a number', '3.1.0', 5),
   {
     name: '`swagger: null` beside `openapi: 3.1.0`',
     extension: 'json',
@@ -277,16 +261,23 @@ function dialectIs(dialect: string, line: Line): DialectIs {
   return LINE_DIALECT[line].test(dialect) ? 'not known' : 'another';
 }
 
-function statedDialects(document: JsonObject): readonly string[] {
+/**
+ * The dialects a document states: its `jsonSchemaDialect`, and the `$schema` of each
+ * schema directly under `components.schemas`.
+ */
+function statedDialects(document: JsonObject): {
+  readonly ofDocument: unknown;
+  readonly ofSchemas: readonly unknown[];
+} {
   const { jsonSchemaDialect, components } = document;
   const schemas = isJsonObject(components) ? components['schemas'] : undefined;
   const ofSchemas = isJsonObject(schemas)
     ? Object.values(schemas)
         .filter(isJsonObject)
         .map((schema) => schema['$schema'])
+        .filter((dialect) => dialect !== undefined)
     : [];
-  // A dialect that is not a string names none; the publisher's schema refuses it.
-  return [jsonSchemaDialect, ...ofSchemas].filter((dialect) => typeof dialect === 'string');
+  return { ofDocument: jsonSchemaDialect, ofSchemas };
 }
 
 /**
@@ -309,11 +300,17 @@ export async function caseThatHolds(text: string): Promise<CaseThatHolds> {
   if (line === undefined) {
     return 2;
   }
-  const dialects = statedDialects(document).map((dialect) => dialectIs(dialect, line));
+  const { ofDocument, ofSchemas } = statedDialects(document);
+  // A dialect that is not a string names none. The publisher's schema refuses one that
+  // is the document's; it does not look inside a Schema Object, so one that is a
+  // schema's is not decided here.
+  const dialects = [ofDocument, ...ofSchemas]
+    .filter((dialect) => typeof dialect === 'string')
+    .map((dialect) => dialectIs(dialect, line));
   if (dialects.includes('another')) {
     return 3;
   }
-  if (dialects.includes('not known')) {
+  if (dialects.includes('not known') || ofSchemas.some((dialect) => typeof dialect !== 'string')) {
     return 'not decided';
   }
   return (await judgeDocument(REVISIONS[line].named, document)).passes ? 'none' : 4;
