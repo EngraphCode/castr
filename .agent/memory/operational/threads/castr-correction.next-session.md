@@ -103,6 +103,14 @@ record says something else about the next step, that plan governs.
   with no sibling checkout stops and says so. This follows the ruling of 20 November
   that sessions here work by the Ecosystem repository's Practice.
 
+- **Owner ruling, 22 November 2026, verbatim:** "remove the april work, it is superseded
+  and likely wrong". A handover check had found two unmerged branches of April 2026,
+  `feat/explicit-additional-properties-2026-04` (tip `SHA:e150a0e8`) and
+  `feat/explicit-additional-properties-rebased` (tip `SHA:a48eced8`), each with a commit
+  "Support explicit additionalProperties honestly" touching 44 files under `lib/src`.
+  Both were deleted that day, here and on the remote, at the owner's word. Neither was
+  read. The plan's first step is written from the specification and the picture.
+
 **Step log.** Each step of the plan writes here, dated: its step-back answers at its
 start and its end, and a row for each unknown it decides (question, lens, disposition).
 A step is not finished until its entries are here.
