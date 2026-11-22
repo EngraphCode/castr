@@ -410,6 +410,20 @@ string; [key: string]: string | number }` accepts every valid value and also
   | Found: a 3.2 document that names the dialect the 3.2 text names may be refused by case 3 | Strict: read before writing                                                                | Not yet read word for word. It is read from both texts before the corrections are redrafted, and if true it is a defect in approved text that 0.8.1 corrects                                                                                                                                                                                    |
   | The conscience check's second wave                                                       | The panel's own rule: a frame overtaken by a re-plan is not re-run                         | Not run. The first wave (three on track, one drifting on a missing status line; all four said the frame understated `__proto__` and the three deferred items) judged a plan this finding has replaced. The panel runs again on the plan that follows the owner's answer                                                                         |
 
+- **Owner decision seventeen, by question prompt, 22 November 2026.** Told that two
+  attacks had shown the two rows cannot be written in 0.8.1, and why, and asked where
+  their text comes from now (with the tables in the accepted order; the tables' words
+  next, ahead of numbers; or kept in 0.8.1 with a declared acceptance and removal of
+  `__proto__`), the owner chose "With the tables, in order". So 0.8.1 is the
+  corrections alone; numbers follow; part three classes the two rows with every other;
+  and the fix of Oak's document is built after part three is approved. It approves no
+  text. The plan's order, todos and N0 are changed to say so.
+- 2026-11-22, N3. **What is next in this step.** Read from both texts which dialect each
+  names as the OpenAPI dialect. Redraft the corrections alone (the revisions, cases 2
+  and 3, the list of SPEC-FV-2) with the second review's wording faults closed; attack
+  it; run the conscience check on the plan as it now stands; then ask for the owner's
+  words on 0.8.1. N2 waits on nothing and may be worked beside it.
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
