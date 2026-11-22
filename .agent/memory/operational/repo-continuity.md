@@ -76,10 +76,10 @@ found, including that most of today's product code is replaced by the constructi
 
 ## Active threads
 
-| Thread                                                       | Role and next step                                                                                    | Latest identity                                                                                              |
-| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| [Castr correction](threads/castr-correction.next-session.md) | PICTURE, the command that shows what Castr does; then PLOT, its legs, CURRENCY, RULES, HOME and MOVE. | claude-code / claude-fable-5-2 / Ingot binds Patina / 0.6.0, 0.7.0, the construct report, pause / 2026-11-20 |
-| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                        | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23     |
+| Thread                                                       | Role and next step                                                                                                                                                                    | Latest identity                                                                                                      |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| [Castr correction](threads/castr-correction.next-session.md) | The steps of [after-0.8.0-next-steps.md](../../plans/active/after-0.8.0-next-steps.md), the fix of what stops Oak's document first; then the course's CURRENCY, RULES, HOME and MOVE. | claude-code / claude-fable-5-2 / Ingot binds Patina / 0.6.0 to 0.8.0, the picture, the plan after 0.8.0 / 2026-11-22 |
+| [Proof programme](threads/proof-programme.next-session.md)   | Programme authority and additive identity history; scheduled execution paused.                                                                                                        | claude-code / claude-opus-5-5 / Mussel mends Buoy / Q-30 superseded, links repointed (#110) / 2026-09-23             |
 
 ## Paused threads and historical records
 
