@@ -440,6 +440,28 @@ string; [key: string]: string | number }` accepts every valid value and also
   plan as it now stands; then ask for the owner's words on 0.8.1. N2 waits on nothing
   and may be worked beside it.
 
+- 2026-11-22, N3, at the fifth push of the pull request that carries the draft's record
+  (#163). **Step back.**
+  1. _Which sentence it moves._ None for Oak's document. It makes the plan and the
+     records say one thing after the order changed three times in a day.
+  2. _Changed for Oak's document._ Nothing.
+  3. _Size._ Past what a record should cost. Three review rounds each found places where
+     a change to the plan's order was made in one file and not in another. The cause is
+     the seat's: each change of order was edited where it was noticed, not swept through
+     every place that states the order (the todos, the prose, the review-dispositions
+     table, the continuity row, the step log). A change of order is now swept through
+     all five before it is committed.
+  4. _Checking larger than the work._ Close to it; the cure is the sweep above, not
+     fewer reviews.
+  5. _Lost if it stopped here._ The owner's decision seventeen and both reviews of the
+     draft would not be on `main`.
+- 2026-11-22. **A rule the seat broke all day, found by a hosted review.** Edits to
+  this record and to the continuity file were committed together with plan, test and
+  draft changes in three pull requests. The Ecosystem repository's rule is that
+  continuity records land as their own `chore(continuity)` commit. History here is
+  append-only, so the earlier commits stand as they are; from this commit on, this
+  record and the continuity file are committed apart from everything else.
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
