@@ -326,6 +326,9 @@ published-rows.ts` names the files and holds the correction that a Link Object's
   lenses whether SPEC-N-4 is part of this step or its own, before starting.
 - **Finished when.** As N3, for the version this part carries, with the tables in the
   specification and the picture's proposals computed from them and not kept beside them.
+  Where N6 has already written legs, they are read again against the approved tables
+  in this step's pull request, and any leg whose exit state a table changed is
+  corrected in the course.
 - **Size.** The largest step: 317 rows in three columns. At least two pull requests.
   Size it at its start with what is known then.
 
