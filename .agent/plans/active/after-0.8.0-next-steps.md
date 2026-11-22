@@ -21,11 +21,11 @@ todos:
   - id: N1-REPIN
     content: 'The picture pins the latest revisions of the publisher schemas for OpenAPI 3.1 and 3.2. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
-    depends_on: []
+    depends_on: [N0-FIX]
   - id: N2-REFUSALS
     content: 'The picture has cells for what the reader refuses under SPEC-FV-1 and SPEC-FV-2, and they show what Castr does today. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
-    depends_on: []
+    depends_on: [N0-FIX]
   - id: N3-CORRECTIONS
     content: 'Specification 0.8.1, the corrections to part one, approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
@@ -33,7 +33,7 @@ todos:
   - id: N4-NUMBERS
     content: 'Part two of the amendment, numbers in JavaScript targets, approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
-    depends_on: []
+    depends_on: [N3-CORRECTIONS]
   - id: N5-TABLES
     content: 'Part three of the amendment, the table vocabulary with the tables (SPEC-N-5), approved in the owner''s words or withdrawn. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
@@ -128,11 +128,13 @@ lib/src` is empty). Every pull request since has been the picture, the specifica
 - **N3 before N4 is the seat's** disposition (the matrix pass: one concern per change).
   Numbers share no clause with the reader's refusals; only landing is serial, because
   the approval check allows one approved text at a time.
-- **N1 and N2 are not ordered by anything but convenience.** Only SPEC-FV-1 case 4 uses
-  the publisher's schema, so N2 does not wait on N1. N3 does, for the revisions it
-  names.
+- **N1 and N2 come after N0** by the owner's "Fix first", and are not ordered between
+  themselves: only SPEC-FV-1 case 4 uses the publisher's schema, so N2 does not wait on
+  N1. N3 does, for the revisions it names. The todos' `depends_on` say the same.
 - **N6 waits on N0 only.** What N0 learns is its main input. A leg whose "right" the
-  tables define waits on N5; the others do not.
+  tables define waits on N5; the others do not. N6 writes the legs; it does not by
+  itself complete the course's PLOT todo, which keeps its own dependencies (PICTURE and
+  CORPUS) and is marked complete in the course when they are.
 
 ## The steps
 
@@ -195,9 +197,14 @@ validate-specification-approval`), or by the record.
   record. Then the part that is specified today: the reader and the model's validator
   accept a schema-valued `additionalProperties`, and the Zod output carries it, test
   first, with new writer output as syntax-tree nodes. The picture's cells are the
-  proof. Parts that need an owner's answer stop and ask, once, with the trace.
+  proof. The TypeScript writer today neither writes nor refuses `additionalProperties`:
+  it writes the named properties and drops the rest. So in the same change the
+  TypeScript output refuses a schema-valued `additionalProperties` with a located
+  rejection, until an approved text says what it writes; a constraint is never dropped
+  silently (SPEC-PR-2). Parts that need an owner's answer stop and ask, once, with the trace.
 - **Finished when.** The picture's Zod cell for `additionalProperties` reads right and
-  is held by its test; no cell that read right reads otherwise; Oak's whole-document
+  is held by its test; its TypeScript cell reads refused or right, never wrong or
+  missing; no cell that read right reads otherwise; Oak's whole-document
   line says exactly what stops it next; and the thread record says what of Oak's
   refusal is fixed, what is not, and what each remaining part waits on.
 - **Size.** Unknown until the trace: this is the plan's least-sized step. Size it after

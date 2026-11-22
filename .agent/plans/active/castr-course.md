@@ -75,7 +75,7 @@ and its acceptance a workspace dependency. The specification's computed count of
 ## Order of the legs
 
 State on 22 November 2026: PICTURE has run as far as it can today, and part one of the
-specification amendment is approved as 0.8.0. The next six steps, in detail, are in
+specification amendment is approved as 0.8.0. The next seven steps, in detail, are in
 [after-0.8.0-next-steps.md](after-0.8.0-next-steps.md), which is the one statement of
 what is next. What follows is the record of how the order was reached.
 
