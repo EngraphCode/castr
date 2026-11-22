@@ -530,6 +530,48 @@ string; [key: string]: string | number }` accepts every valid value and also
   5. _What is next._ N2, starting with its validator, and N4. Neither waits on the
      other. The corrections return in N7 with the list of what the revisions change.
 
+- 2026-11-22. **Pause at the owner's word, before a compaction and a change of
+  account. State for whoever resumes.**
+  - _Live state._ Branch `docs/spec-0.8.1-corrections`, pull request #164, open. It
+    holds the record of the third and fourth drafts of 0.8.1, the withdrawal, and the
+    plan changes. `docs/SPECIFICATION.md` is unchanged at 0.8.0. No code is changed.
+    Check `gh pr view 164` and `git status` first; this entry is a pointer.
+  - _To finish #164._ Read the checks, the hosted review of the head commit (the issue
+    comment carrying `codex-review-state:v1`) and the review threads, by the list under
+    "How work lands here". Six threads from the first round are answered and resolved:
+    five fixed, one declined with evidence (it said the continuity files were bundled;
+    they are in `chore(continuity)` commits of their own). A seventh, on the plan's
+    "Unknowns found by doing" still naming N3, is fixed in the commit that carries this
+    entry and still needs its reply and resolution. Merge with
+    `gh pr merge 164 --merge` when clean; it is not the owner's to approve.
+  - _What the owner has not been told in a question prompt, and need not be asked._
+    0.8.1 is withdrawn by the seat. The owner's order (numbers, the tables, the fix) is
+    untouched. Say it plainly in the next report: four drafts, no approved text, and
+    why (the step back above).
+  - _Next work._ N2 and N4; neither waits on the other. N2 starts on a branch of its
+    own from `main`, with its step back and matrix written here first, and its first
+    act is the validator.
+  - _A scratch trial for N2's validator, not yet in the plan._ `@hyperjump/json-schema`
+    1.18.1, installed outside the repository, registered the pinned 3.1 and 3.2
+    `schema` and `schema-base` files and judged the proof documents correctly against
+    `schema` (`{"type": "string"}`, `true`, `{}` and `{"type": 5}` under
+    `components.schemas` and at a Parameter's `schema` all pass, as they should: the
+    plain `schema` does not judge a Schema Object). Against `schema-base` it threw,
+    because the dialect's meta-schema names the vocabulary
+    `https://spec.openapis.org/oas/3.1/vocab/base` (and the 3.2 one), which the library
+    must be told about with its `defineVocabulary`. The library ships its own
+    `openapi-3-1` and `openapi-3-2` modules; which revisions those hold was not read.
+    It is a candidate, not a choice: the matrix row is N2's, and a second validator to
+    agree with it is worth weighing, since one validator's defect cost this step a day.
+  - _Method facts that cost time today._ The commit helper refuses a subject with an
+    apostrophe. A commit message body line over 100 characters fails the hook. In zsh a
+    shell variable named `path` replaces `PATH`. The OpenAPI texts saved as plain text
+    are under `lib/tests-picture/.tmp/review-081c/` (`t312.txt`, `t320.txt`,
+    `net/t321.txt`); that directory is ignored by git and may be gone, so fetch
+    `https://spec.openapis.org/oas/v3.1.2.html` and `v3.2.1.html` again if it is.
+  - _The seat is not closed out._ No claim is held. The Ecosystem seat was told this
+    seat was live and has not been told it paused.
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
