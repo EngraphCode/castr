@@ -1,8 +1,10 @@
 /**
  * Shared strict object-semantics helpers.
  *
- * Under IDENTITY doctrine, Castr supports one object model only:
- * closed-world objects with explicit properties.
+ * Castr reads a closed object (`additionalProperties: false`). The OpenAPI reader also
+ * reads a constrained map, the first row of the specification's Appendix B.2; the JSON
+ * Schema and Zod readers do not yet. Every other object input is refused with the
+ * messages built here.
  *
  * @internal
  */

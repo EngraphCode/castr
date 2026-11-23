@@ -41,10 +41,13 @@ Zod 4 top-level format functions are preferred (tree-shakable, future-proof):
 
 ## Object Strictness
 
-- Object output is strict-only.
-- Canonical object emission uses `z.strictObject({...})`.
+- Object output starts from `z.strictObject({...})`.
+- A constrained map (an object that names no property and whose `additionalProperties`
+  is a schema; the specification's Appendix B.2) is written as
+  `z.strictObject({}).catchall(S)`. Any other schema-valued `additionalProperties` is
+  refused by the writer.
 - Inline endpoint objects (queryParams, pathParams, headers) are also emitted as `z.strictObject({...})`.
-- Non-strict object modes are rejected during ingest rather than preserved for output.
+- Open and stripping object modes are rejected during ingest rather than preserved for output.
 
 ## Recursive Schemas
 
