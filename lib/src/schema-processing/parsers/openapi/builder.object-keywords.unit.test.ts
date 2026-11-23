@@ -98,6 +98,17 @@ describe('buildCastrSchemas object keyword preservation', () => {
       expect(() => buildCastrSchemas(components)).toThrow(rejected);
     });
 
+    it('is rejected beside a reference', () => {
+      const components: ComponentsObject = {
+        schemas: {
+          Base: { type: 'object', additionalProperties: false },
+          Counted: { $ref: '#/components/schemas/Base', [keyword]: 1 },
+        },
+      };
+
+      expect(() => buildCastrSchemas(components)).toThrow(rejected);
+    });
+
     it('is rejected below the root of a schema', () => {
       const components: ComponentsObject = {
         schemas: {
