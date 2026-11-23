@@ -1827,6 +1827,7 @@ export const perform_search_Body = z.strictObject({
     .meta({
       description:
         "Uses Lucene Query Syntax in the format of propertyName:value, propertyName:[num1 TO num2] and date range format: propertyName:[yyyyMMdd TO yyyyMMdd]. In the response please see the 'docs' element which has the list of record objects. Each record structure would consist of all the fields and their corresponding values.",
+      default: "*:*",
     }),
   rows: z
     .int()
@@ -1834,11 +1835,15 @@ export const perform_search_Body = z.strictObject({
     .meta({
       description:
         "Specify number of rows to be returned. If you run the search with default values, in the response you will see 'numFound' attribute which will tell the number of records available in the dataset.",
+      default: 100,
     }),
   start: z
     .int()
     .optional()
-    .meta({ description: "Starting record number. Default value is 0." }),
+    .meta({
+      description: "Starting record number. Default value is 0.",
+      default: 0,
+    }),
 });
 // Endpoints
 export const endpoints = [
@@ -1917,13 +1922,13 @@ export const endpoints = [
       {
         name: "version",
         type: "Path",
-        schema: z.string(),
+        schema: z.string().meta({ default: "v1" }),
         description: "Version of the dataset.",
       },
       {
         name: "dataset",
         type: "Path",
-        schema: z.string(),
+        schema: z.string().meta({ default: "oa_citations" }),
         description:
           "Name of the dataset. In this case, the default value is oa_citations",
       },
@@ -1936,6 +1941,7 @@ export const endpoints = [
             .meta({
               description:
                 "Uses Lucene Query Syntax in the format of propertyName:value, propertyName:[num1 TO num2] and date range format: propertyName:[yyyyMMdd TO yyyyMMdd]. In the response please see the 'docs' element which has the list of record objects. Each record structure would consist of all the fields and their corresponding values.",
+              default: "*:*",
             }),
           rows: z
             .int()
@@ -1943,12 +1949,14 @@ export const endpoints = [
             .meta({
               description:
                 "Specify number of rows to be returned. If you run the search with default values, in the response you will see 'numFound' attribute which will tell the number of records available in the dataset.",
+              default: 100,
             }),
           start: z
             .int()
             .optional()
             .meta({
               description: "Starting record number. Default value is 0.",
+              default: 0,
             }),
         }),
       },
@@ -1974,8 +1982,8 @@ export const endpoints = [
     request: {
       pathParams: z
         .object({
-          version: z.string(),
-          dataset: z.string(),
+          version: z.string().meta({ default: "v1" }),
+          dataset: z.string().meta({ default: "oa_citations" }),
         })
         .strict(),
       body: z.strictObject({
@@ -1984,6 +1992,7 @@ export const endpoints = [
           .meta({
             description:
               "Uses Lucene Query Syntax in the format of propertyName:value, propertyName:[num1 TO num2] and date range format: propertyName:[yyyyMMdd TO yyyyMMdd]. In the response please see the 'docs' element which has the list of record objects. Each record structure would consist of all the fields and their corresponding values.",
+            default: "*:*",
           }),
         rows: z
           .int()
@@ -1991,11 +2000,15 @@ export const endpoints = [
           .meta({
             description:
               "Specify number of rows to be returned. If you run the search with default values, in the response you will see 'numFound' attribute which will tell the number of records available in the dataset.",
+            default: 100,
           }),
         start: z
           .int()
           .optional()
-          .meta({ description: "Starting record number. Default value is 0." }),
+          .meta({
+            description: "Starting record number. Default value is 0.",
+            default: 0,
+          }),
       }),
     },
     alias: "perform-search",

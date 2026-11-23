@@ -387,8 +387,8 @@ specification are approved and on `main`.
 
    1. **Unit 6, in two parts.** The first part is done as amendment 0.10.0, approved on
       23 November: rows for `default` and `format: uri` (Appendix B.3) and SPEC-P-8. The
-      owner chose `z.url()` with a declared limit over a pattern of RFC 3986. Its code
-      follows, test first: the Zod writer writes a source `default` into `.meta(…)`; and
+      owner chose `z.url()` with a declared limit over a pattern of RFC 3986. The specification stands at 0.10.1 after two adjustments from its review. Its code
+      follows: the Zod writer writes a source `default` into `.meta(…)` (done); and
       the picture's sample that SPEC-P-8 concerns becomes a tracked case of the declared
       limit. The second part is held for its own amendment: the shape of an endpoint
       definition and where a run's report is returned, both the public surface
@@ -413,6 +413,23 @@ specification are approved and on `main`.
    parameter's schema is named `/things/post/q` and a response header's
    `/things/post/headers/X-Thing`, with no status. Its tests hold the places as they
    are; making them uniform is its own change, with unit 9.
+
+   For the next amendment, from the review of pull request 186: section 3 words "by
+   companion" for a constraint a companion enforces, and Appendix B.3 uses it for a
+   `default`, an annotation that nothing enforces. One class for annotations is to be
+   settled for all the annotation rows together (`title`, `description`, `examples`,
+   `default`), with the owner.
+
+   **The Zod reader passes over a declaration it cannot read, without a word** (found in
+   the review of pull request 187, run on 23 November). Castr writes
+   `A.and(B).meta({ description: "both" })` for a described `allOf`, and
+   `z.strictObject({}).catchall(z.number()).meta(…)` for a map with an annotation. Read
+   back by the Zod reader, neither component is in the model at all, and nothing is
+   reported. So Zod that Castr writes does not survive Castr reading it, and the loss is
+   a whole component. It is older than the `default` annotation, which only makes the
+   first form more common. It breaks SPEC-PR-2, and it is its own unit: first a refusal
+   for any exported declaration the reader cannot read, then reading these two forms.
+   It ranks above the leftovers of unit 5, because it loses whole schemas.
 
    **State of unit 5 after pull request 184.** Done: the count of properties (182) and
    boolean schemas (184). Merged as 185: the refusal of `not`, `if`, `then` and `else`. Left:

@@ -123,7 +123,10 @@ test('jsdoc', async () => {
       str: z.string().optional(),
     });
     export const ComplexObject = z.strictObject({
-      bool: z.boolean().optional().meta({ description: "A boolean" }),
+      bool: z
+        .boolean()
+        .optional()
+        .meta({ description: "A boolean", default: true }),
       example: z
         .string()
         .optional()
@@ -143,6 +146,7 @@ test('jsdoc', async () => {
         .meta({
           description: "A number with many tags",
           examples: [3],
+          default: 5,
           externalDocs: { url: "https://example.com" },
         }),
       manyTagsStr: z

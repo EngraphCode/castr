@@ -151,6 +151,7 @@ export const RIGHT_TODAY_ENDPOINTS: readonly string[] = [
 export const RIGHT_TODAY_ZOD_STRUCTURE: readonly string[] = [
   'keyword:title',
   'keyword:description',
+  'keyword:default',
   'keyword:examples',
   'schema.example',
   'schema.externalDocs',

@@ -45,9 +45,9 @@ test('number-default-cast', async () => {
     };
     // Zod Schemas
     export const test1 = z.strictObject({
-      isFine: z.number().optional(),
-      shouldBeFixed: z.number().optional(),
-      text1: z.string().optional(),
+      isFine: z.number().optional().meta({ default: 30 }),
+      shouldBeFixed: z.number().optional().meta({ default: "20" }),
+      text1: z.string().optional().meta({ default: "aaa" }),
     });
     // Endpoints
     export const endpoints = [

@@ -125,17 +125,23 @@ test('array-default-values', async () => {
           {
             name: "array-empty",
             type: "Query",
-            schema: z.array(z.string()).optional(),
+            schema: z.array(z.string()).optional().meta({ default: [] }),
           },
           {
             name: "array-string",
             type: "Query",
-            schema: z.array(z.string()).optional(),
+            schema: z
+              .array(z.string())
+              .optional()
+              .meta({ default: ["one", "two"] }),
           },
           {
             name: "array-number",
             type: "Query",
-            schema: z.array(z.number()).optional(),
+            schema: z
+              .array(z.number())
+              .optional()
+              .meta({ default: [1, 2] }),
           },
           {
             name: "array-object",
@@ -146,17 +152,24 @@ test('array-default-values', async () => {
                   foo: z.string().optional(),
                 }),
               )
-              .optional(),
+              .optional()
+              .meta({ default: [{ foo: "bar" }] }),
           },
           {
             name: "array-ref-object",
             type: "Query",
-            schema: z.array(MyComponent).optional(),
+            schema: z
+              .array(MyComponent)
+              .optional()
+              .meta({ default: [{ id: 1, name: "foo" }] }),
           },
           {
             name: "array-ref-enum",
             type: "Query",
-            schema: z.array(MyEnum).optional(),
+            schema: z
+              .array(MyEnum)
+              .optional()
+              .meta({ default: ["one", "two"] }),
           },
         ],
         response: z.strictObject({}),
@@ -170,18 +183,31 @@ test('array-default-values', async () => {
         request: {
           queryParams: z
             .object({
-              "array-empty": z.array(z.string()).optional(),
-              "array-string": z.array(z.string()).optional(),
-              "array-number": z.array(z.number()).optional(),
+              "array-empty": z.array(z.string()).optional().meta({ default: [] }),
+              "array-string": z
+                .array(z.string())
+                .optional()
+                .meta({ default: ["one", "two"] }),
+              "array-number": z
+                .array(z.number())
+                .optional()
+                .meta({ default: [1, 2] }),
               "array-object": z
                 .array(
                   z.strictObject({
                     foo: z.string().optional(),
                   }),
                 )
-                .optional(),
-              "array-ref-object": z.array(MyComponent).optional(),
-              "array-ref-enum": z.array(MyEnum).optional(),
+                .optional()
+                .meta({ default: [{ foo: "bar" }] }),
+              "array-ref-object": z
+                .array(MyComponent)
+                .optional()
+                .meta({ default: [{ id: 1, name: "foo" }] }),
+              "array-ref-enum": z
+                .array(MyEnum)
+                .optional()
+                .meta({ default: ["one", "two"] }),
             })
             .strict(),
         },
