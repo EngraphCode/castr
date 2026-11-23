@@ -3,7 +3,7 @@ title: After specification 0.8.0 — the next steps
 status: active
 lane: active
 created: 2026-11-22
-last_updated: 2026-11-22
+last_updated: 2026-11-23
 destination: docs/SPECIFICATION.md
 parent: castr-course.md
 owner_directive: >-
@@ -19,7 +19,7 @@ owner_directive: >-
   be written in 0.8.1, asked where their text comes from: "With the tables, in order".
 todos:
   - id: N0-FIX
-    content: 'The fix of what stops Oak''s document, built once part three of the amendment classes its two rows, proved by the picture. Its trace is done. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
+    content: 'The fix of what stops Oak''s document, built once approved text classes the rows it touches (not every row of the tables), proved by the picture. Its trace is done. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
     depends_on: [N5-TABLES]
   - id: N1-REPIN
@@ -86,14 +86,86 @@ and the other is corrected.
 6. Before a step's first edit, do its step back and run the decision matrix on its
    unknowns, and write both under "Step log" in the thread record. N0's are there,
    dated 22 November. N1 is done; N3 and N4 are withdrawn. The next step is N5, the
-   tables, which now carry numbers: it is on the path to the fix, and no other step has
-   to finish before its drafting starts. Each of its parts then waits on the owner's
-   approval.
+   tables, reshaped on 23 November: read "The reframing of 23 November 2026" below
+   before anything else in this plan.
    Its Cricket panel ran on 22 November; its first piece is the table vocabulary and
    the tables for schema rows, with the design of SPEC-N-4 beside it. N2 has its
    judge and two slices merged; its remaining slices are worked during those waits.
 7. Read "Review dispositions" at the foot of this plan and give each row its
    disposition before starting the step it names.
+
+## The reframing of 23 November 2026
+
+Where a line lower in this plan says otherwise, this section governs, and the line is
+corrected when its step is next worked.
+
+The owner, 23 November 2026, verbatim: "1. We are not building for OCE as it works now,
+we are building for OCE as it should work. 2. Step back and use the OCE skills to
+assess and question assumptions and framings and perspectives, and then step back again
+and assess the framing of the framings. 3. You deciding something is waiting for me
+does not mean I know about it, or even that I agree it should be blocked on me. Bring
+blocking issues to my attedntion with blocking user questions".
+
+Asked four questions by prompt the same day, the owner sent three back to the lenses.
+On whether code may explore ahead of text: "I don't know, and this decision should not
+be put to me unless it passes the decision matrix without resolution. What enables
+excellence, what enables strict, everywhere, all the time, what creates value that
+enables impact, and above all, what makes sense?" On how the closed reading works
+across composition: "Same as before, run the decision matrix, explore the tradeoffs,
+make a decision aligned with the values of the repo". On the name `__proto__`: "Is this
+actually an important edge case, or is it hand wringing over a non-problem? If it is
+real, consider the users, what is of value to them?" On pull requests through the
+owner's sign-in: "That is an OCE rule, it does not apply to Castr while Castr is
+outside OCE".
+
+What the seat had wrong, and a conscience panel of four confirmed (the thread record's
+"Step log" has the whole of it): it read "strict" as an order of work; it used prose
+attacked by reviewers for questions a run decides; it stretched owner words past their
+scope; it took the Ecosystem repository as it works now as the consumer; and it scored
+the work on Oak's document as it is today.
+
+What changes, each decided by the lenses and recorded with its row in the step log:
+
+- **The consumer is the Ecosystem repository as it should work:** the whole Oak
+  document, nothing removed first, nothing rewritten after. What its code does today is
+  evidence, never a requirement and never a reason to value a fix less.
+- **What right is, is found by running, and the proposals become runnable.** For a row,
+  the seat writes by hand the output that would be right (the Zod, the type), and the
+  picture's outside judges decide it: the reference validator on the source, and the
+  compiler. That is test code in the picture, outside Castr, and it assumes nothing in
+  Castr's code. A row's class is then read from a proposal that passes, and the tables
+  are generated from those, with a short vocabulary beside them. How JSON Schema's
+  keywords compose is not restated: section 5 already says meaning is the source
+  format's.
+- **No product code explores ahead of its text.** Section 12 says "no code assumes an
+  answer", and SPEC-I-1 says no agent reinterprets a clause; with runnable proposals an
+  exploration in product code is not needed.
+- **The fix (N0) waits on approved text for the rows it touches,** not on every row of
+  the tables. "The fix waits on the whole step" was the seat's stretching of decision
+  eighteen, which answered where numbers text is written.
+- **The closed reading closes the outermost object over what its branches evaluate.**
+  An object that states no policy is read as if it stated `unevaluatedProperties:
+false`, where it stands by itself: never at a schema applied in place (a branch of
+  `allOf`, `anyOf` or `oneOf`, a `not`, an `if`, `then` or `else`, a reference's target
+  reached in place) and never under `contains`. Run on 35 values: it never accepts what
+  the source refuses, so SPEC-P-1's sentence that the reading narrows is true of it,
+  and Oak's 16 quiz schemas accept what one branch accepts. The fault found on
+  23 November was in the seat's literal reading, not in the approved sentence. The
+  words that say which schemas describe objects are still owed as text.
+- **The name `__proto__` is a declared limit of JavaScript targets, not a check.** A
+  value that has a property of that name is outside what a JavaScript target carries;
+  Zod drops the property; the specification and each run's report say so once, as the
+  owner decided for decimal precision (decision seven). The first slice's proposed
+  refusal, its clause and its row G are withdrawn: they cost every consumer a Zod
+  object's own methods and a walk of every value, for a name no real document uses.
+- **Pull requests** go through the owner's sign-in with the line that an agent did it.
+- **A wait on the owner exists only once the owner has been asked by a blocking
+  question,** and a question goes to the owner only after the lenses fail to settle
+  it or it is theirs by nature.
+
+Size, re-read: the first slice took seven rows, two pull requests and six pushes as
+prose. The step is not worked that way again. The next piece is the mechanism: a
+runnable proposal for each of the rows Oak's two schemas use, judged in the picture.
 
 ## What this serves
 
