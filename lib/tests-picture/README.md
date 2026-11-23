@@ -87,9 +87,10 @@ construct of, then sets those rows against today's cells
 ([`documents/usage.ts`](documents/usage.ts)). It prints a count for each document and
 each output, and for Oak's document the rows that are not right.
 
-Oak's document uses 74 of the 318 rows. In the Zod output none of them is refused, one
-is wrong (`format: uri`) and one is missing (`default`). [`documents/documents.gen.test.ts`](documents/documents.gen.test.ts) holds
-that no row it uses stops it.
+In the Zod output none of the rows Oak's document uses is refused, and
+[`documents/documents.gen.test.ts`](documents/documents.gen.test.ts) holds that no row it
+uses stops it. Which of its rows are not right is printed by `pnpm picture` and is not
+repeated here, where it would go out of date.
 
 Three rows are narrower than the row of their keyword, and a schema in one of them is
 named by it and not by the keyword ([`documents/map-rows.ts`](documents/map-rows.ts)):
