@@ -5,16 +5,16 @@ import { generateZodClientFromOpenAPI } from './test-utils.js';
 
 const EPERUSTEET_EXT_FIXTURE = 'tests-fixtures/openapi-samples/real-world/eperusteet-ext.json';
 
-describe('Generated Code - Real-World Rejection Validation', () => {
-  it('rejects the ePerusteet real-world fixture with the strict-object error', async () => {
-    await expect(
-      generateZodClientFromOpenAPI({
-        input: join(process.cwd(), EPERUSTEET_EXT_FIXTURE),
-        disableWriteToFile: true,
-        options: {
-          withAlias: true,
-        },
-      }),
-    ).rejects.toThrow(/schema-valued additionalProperties|closed-world object semantics/i);
+describe('Generated Code - a real-world fixture once refused for its constrained maps', () => {
+  it('is no longer refused: its maps are written as catchalls', async () => {
+    const result = await generateZodClientFromOpenAPI({
+      input: join(process.cwd(), EPERUSTEET_EXT_FIXTURE),
+      disableWriteToFile: true,
+      options: {
+        withAlias: true,
+      },
+    });
+
+    expect(JSON.stringify(result)).toContain('.catchall(');
   });
 });

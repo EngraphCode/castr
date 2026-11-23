@@ -448,8 +448,8 @@ describe('Characterisation: Schema Dependency Resolution - Circular Dependencies
 });
 
 describe('Characterisation: Schema Dependency Resolution - Additional Dependency Scenarios', () => {
-  it('should reject schema dependencies through schema-valued additionalProperties', async () => {
-    // Arrange: schema-valued additionalProperties encodes a non-strict catchall object.
+  it('should resolve a schema dependency through the values of a constrained map', async () => {
+    // Arrange: a map whose values are another named schema (specification Appendix B.2).
     const spec: OpenAPIDocument = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
@@ -486,12 +486,17 @@ describe('Characterisation: Schema Dependency Resolution - Additional Dependency
       },
     };
 
-    await expect(
-      generateZodClientFromOpenAPI({
-        openApiDoc: spec,
-        disableWriteToFile: true,
-      }),
-    ).rejects.toThrow(/schema-valued additionalProperties/);
+    const result = await generateZodClientFromOpenAPI({
+      openApiDoc: spec,
+      disableWriteToFile: true,
+    });
+
+    // Assert: the map is written over the schema it depends on, declared before it
+    const content = extractContent(result);
+    expect(content).toContain('export const Dictionary = z.strictObject({}).catchall(Value)');
+    expect(content.indexOf('export const Value')).toBeLessThan(
+      content.indexOf('export const Dictionary'),
+    );
   });
 
   it('should handle dependencies in oneOf/anyOf union members', async () => {
