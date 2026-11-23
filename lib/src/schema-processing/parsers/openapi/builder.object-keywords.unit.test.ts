@@ -64,20 +64,69 @@ describe('buildCastrSchemas object keyword preservation', () => {
     expect(schema.propertyNames).toMatchObject({ type: 'string' });
   });
 
-  it.each(['minProperties', 'maxProperties'] as const)(
-    'rejects a constrained map that also holds %s, which the model cannot carry',
-    (keyword) => {
+  describe.each(['minProperties', 'maxProperties'] as const)('%s', (keyword) => {
+    const rejected = new RegExp(`${keyword}.*rejected`);
+
+    it('is rejected on an object that names its properties', () => {
+      const components: ComponentsObject = {
+        schemas: {
+          Counted: {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            additionalProperties: false,
+            [keyword]: 1,
+          },
+        },
+      };
+
+      expect(() => buildCastrSchemas(components)).toThrow(rejected);
+      expect(() => buildCastrSchemas(components)).toThrow(/at .*Counted/);
+    });
+
+    it('is rejected beside a constrained map', () => {
       const components: ComponentsObject = {
         schemas: {
           Counted: { type: 'object', additionalProperties: { type: 'string' }, [keyword]: 1 },
         },
       };
 
-      expect(() => buildCastrSchemas(components)).toThrow(
-        new RegExp(`constrained map.*${keyword}.*rejected`),
-      );
-    },
-  );
+      expect(() => buildCastrSchemas(components)).toThrow(rejected);
+    });
+
+    it('is rejected on a schema that states no type', () => {
+      const components: ComponentsObject = { schemas: { Counted: { [keyword]: 1 } } };
+
+      expect(() => buildCastrSchemas(components)).toThrow(rejected);
+    });
+
+    it('is rejected beside a reference', () => {
+      const components: ComponentsObject = {
+        schemas: {
+          Base: { type: 'object', additionalProperties: false },
+          Counted: { $ref: '#/components/schemas/Base', [keyword]: 1 },
+        },
+      };
+
+      expect(() => buildCastrSchemas(components)).toThrow(rejected);
+    });
+
+    it('is rejected below the root of a schema', () => {
+      const components: ComponentsObject = {
+        schemas: {
+          Holder: {
+            type: 'object',
+            properties: {
+              inner: { type: 'object', additionalProperties: false, [keyword]: 1 },
+            },
+            additionalProperties: false,
+          },
+        },
+      };
+
+      expect(() => buildCastrSchemas(components)).toThrow(rejected);
+      expect(() => buildCastrSchemas(components)).toThrow(/at .*Holder.*inner/);
+    });
+  });
 
   it('rejects a schema-valued additionalProperties on an object that names a property', () => {
     const components: ComponentsObject = {

@@ -74,8 +74,6 @@ export const RIGHT_TODAY_TYPESCRIPT: readonly string[] = [
   'keyword:maxItems',
   'keyword:minItems',
   'keyword:uniqueItems',
-  'keyword:maxProperties',
-  'keyword:minProperties',
   'keyword:required',
   'keyword:dependentRequired',
   'keyword:properties',
