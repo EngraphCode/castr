@@ -21,7 +21,11 @@ todos:
   - id: N0-FIX
     content: 'The fix of what stops Oak''s document, built once approved text classes the rows it touches (not every row of the tables), proved by the picture. Its trace is done. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: pending
-    depends_on: [N5-TABLES]
+    depends_on: [N5A-ROWS-FOR-N0]
+  - id: N5A-ROWS-FOR-N0
+    content: 'The small amendment (0.9.0) that classes the rows the fix touches, approved by the owner in their own words. It is the first part of the tables step and the only part the fix waits on. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
+    status: pending
+    depends_on: []
   - id: N1-REPIN
     content: 'The picture pins the latest revisions of the publisher schemas for OpenAPI 3.1 and 3.2. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
     status: completed
@@ -145,20 +149,34 @@ What changes, each decided by the lenses and recorded with its row in the step l
   eighteen, which answered where numbers text is written.
 - **The closed reading closes the outermost object over what its branches evaluate.**
   An object that states no policy is read as if it stated `unevaluatedProperties:
-false`, where it stands by itself: never at a schema applied in place (a branch of
-  `allOf`, `anyOf` or `oneOf`, a `not`, an `if`, `then` or `else`, a reference's target
-  reached in place) and never under `contains`. Run on 35 values: it never accepts what
-  the source refuses, so SPEC-P-1's sentence that the reading narrows is true of it,
-  and Oak's 16 quiz schemas accept what one branch accepts. The fault found on
-  23 November was in the seat's literal reading, not in the approved sentence. The
-  words that say which schemas describe objects are still owed as text.
-- **The name `__proto__` is a declared limit of JavaScript targets, not a check.** A
-  value that has a property of that name is outside what a JavaScript target carries;
-  Zod drops the property; the specification and each run's report say so once, as the
-  owner decided for decimal precision (decision seven). The first slice's proposed
-  refusal, its clause and its row G are withdrawn: they cost every consumer a Zod
-  object's own methods and a walk of every value, for a name no real document uses.
-- **Pull requests** go through the owner's sign-in with the line that an agent did it.
+false`, where it stands by itself. It is never read so at a schema applied in place (a
+  branch of `allOf`, `anyOf` or `oneOf`, a `then` or `else`, a reference's target reached
+  in place), and never at any depth under `not`, `if` or `contains`, nor inside a
+  definition reached from there. The last part was added on 23 November after a review
+  of pull request 172 showed, and the seat reproduced, that closing an object nested
+  under `not` widens. On the 48 values of the
+  [trial](../../analysis-and-reports/closed-reading-trial-2026-11-23.md) the reading
+  never accepts what the source refuses, and a schema of the shape of Oak's quiz
+  schemas accepts what one branch accepts. That all 16 of Oak's quiz schemas have that
+  shape was computed from the document; the trial runs one schema of the shape, not the 16. The trial is a result about its cases, not a proof that SPEC-P-1's sentence
+  ("narrows the source's accepted set") holds of every schema: act 5's generated-schema
+  check tests that more widely. The seat's literal reading widens in cases the trial
+  shows, so the fault found on 23 November was in that reading. The words that say
+  which schemas describe objects are still owed as text.
+- **The name `__proto__` is a declared limit of the Zod target, not a check.**
+  JavaScript can hold an own property of that name (`JSON.parse` makes one), and Zod
+  drops it wherever unknown keys are allowed. So a value with such a property is not
+  carried whole by the generated validator. The specification and each run's report say
+  so once, as the owner decided for decimal precision (decision seven), so the loss is
+  stated and not silent. The first slice's proposed refusal, its clause and its row G
+  are withdrawn: they cost every consumer a Zod object's own methods and a walk of
+  every value, for a name no real document uses. A review of pull request 172 asked for
+  the refusal back; the owner's test for an edge (is it a real case, and what do users
+  value) settles it as above.
+- **Pull requests in Castr** are made through the owner's `gh` sign-in, each with the
+  line that an agent did it. The Ecosystem repository's rule against using that sign-in
+  does not apply to Castr while Castr is outside that repository (the owner's answer
+  above).
 - **A wait on the owner exists only once the owner has been asked by a blocking
   question,** and a question goes to the owner only after the lenses fail to settle
   it or it is theirs by nature.
