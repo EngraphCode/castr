@@ -80,6 +80,8 @@ November:
 >
 > - a document that holds `webhooks` or `$defs`;
 > - an operation under `query`, or in `additionalOperations`;
+> - a path item that is a reference, and the parameters of a path item that holds no
+>   operation;
 > - a parameter or a header that holds `content` in place of `schema`, and a parameter
 >   whose `in` is `querystring`;
 > - a media type that holds no `schema`, that holds `itemSchema`, or that is a reference
@@ -122,6 +124,14 @@ valid document reaches something not built, so SPEC-C-1 stays unadvertised after
 amendment as before it. What the amendment buys is Oak's document, which uses none of
 the constructs left out.
 
+## What the second review round changed
+
+Three findings, each held. A path item that is a reference, and the parameters of a path
+item with no operation, are named in the list of what the rows say nothing of: the row
+for a path item's parameters writes them into its operations, and with none they would
+have vanished under a row that called them carried. And `205` is not among the statuses
+the client takes `data` from.
+
 ## Choices inside the rows, and what each was weighed against
 
 - **The five names are SPEC-C-1's, in its own spelling.** The Ecosystem repository's
@@ -143,9 +153,10 @@ the constructs left out.
 
 ## Observed of the client, and not a row
 
-`openapi-fetch` takes `data` from the statuses `200` to `207` and `2XX`, and `error` from
-a list of `4xx` and `5xx` codes, `4XX`, `5XX` and `default`. A response keyed by `1XX`,
-`3XX` or a code such as `302` is in the type and reaches neither. Oak's document has one
+`openapi-fetch` 0.15.2, by the types of `openapi-typescript-helpers` 0.0.15 it is
+installed with, takes `data` from the statuses `200` to `204`, `206`, `207` and `2XX`, and
+`error` from a list of `4xx` and `5xx` codes, `4XX`, `5XX` and `default`. A response keyed
+by `1XX`, `3XX` or a code such as `205` or `302` is in the type and reaches neither. Oak's document has one
 `302`. The rows write the response into the type under its key, as for any status; what
 a client then does with it is not Castr's to class.
 
