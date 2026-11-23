@@ -129,6 +129,18 @@ function createErrorsArrayWriter(
   };
 }
 
+const DEFAULT_RESPONSE_KEY = 'default';
+
+/**
+ * A response's status as a key of an object literal. An exact code is a number and
+ * `default` an identifier; a range such as `2XX` is neither and is quoted, or the module
+ * would not load.
+ */
+function responseKeyOf(statusCode: string): string {
+  const isNumber = String(Number(statusCode)) === statusCode;
+  return isNumber || statusCode === DEFAULT_RESPONSE_KEY ? statusCode : JSON.stringify(statusCode);
+}
+
 function createResponsesObject(
   endpoint: EndpointDefinition,
   options?: TemplateContextOptions,
@@ -154,7 +166,7 @@ function createResponsesObject(
       }
       return {
         ...acc,
-        [resp.statusCode]: Writers.object(respProps),
+        [responseKeyOf(resp.statusCode)]: Writers.object(respProps),
       };
     }, {}),
   );

@@ -43,8 +43,8 @@ describe('the cases for the rows of a document outside a schema', () => {
       'parameter.in=cookie',
       'response.content',
     ]);
-    // A status range makes Castr emit a module that does not load, so the two other
-    // kinds of response key cannot be set against it. The last two have no case.
+    // Castr refuses a status range among the errors, so the two other kinds of response
+    // key cannot be set against it. The last two have no case.
     expect(rowsWith(cells, 'not judged')).toEqual([
       'responses.default',
       'responses[an exact status code]',
@@ -52,7 +52,10 @@ describe('the cases for the rows of a document outside a schema', () => {
       'header.style=simple',
     ]);
     // Every row that is none of these is missing.
-    expect(rowsWith(cells, 'refused')).toEqual(['media-type.itemSchema']);
-    expect(rowsWith(cells, 'crashed')).toEqual(['responses[a status range]']);
+    expect(rowsWith(cells, 'refused')).toEqual([
+      'media-type.itemSchema',
+      'responses[a status range]',
+    ]);
+    expect(rowsWith(cells, 'crashed')).toEqual([]);
   }, 60_000);
 });
