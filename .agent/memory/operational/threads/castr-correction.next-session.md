@@ -30,8 +30,9 @@ subagents: use the model that fits the task.
      its own amendment (the public surface).
   2. Unit 8, beside it: the `paths` module. A prototype is on the branch
      `feat/paths-type-prototype`, checked at type level against a client of
-     `openapi-fetch`. Its rows are drafted as amendment 0.11.0 and in review before the
-     owner is asked; then the writer. No template emits it before the rows are approved.
+     `openapi-fetch`. Its rows are drafted as amendment 0.11.0 on the branch
+     `docs/amendment-0.11.0-draft` (pull request 190), not in this tree until that
+     merges, and are reviewed before the owner is asked; then the writer. No template emits it before the rows are approved.
   3. The Zod reader, which passes over declarations it cannot read.
   4. The leftovers of unit 5, as one unit.
 - **Also merged on 23 November:** 176 (the sort and its queue, in the plan), 178 (`enum`
