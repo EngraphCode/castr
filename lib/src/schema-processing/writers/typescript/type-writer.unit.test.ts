@@ -768,6 +768,24 @@ describe('Dynamic Reference Keywords — TypeScript fail-fast', () => {
       expect(generate(schema)).toBe('"a" | "b" | "c"');
     });
 
+    it('refuses an enum beside a const, which the union of literals would drop', () => {
+      const schema: CastrSchema = { const: 'a', enum: ['a', 'b'], metadata };
+
+      expect(() => generate(schema)).toThrow(/enum beside a const/);
+    });
+
+    it('refuses an enum of 64-bit integers, which are written as bigint', () => {
+      const schema: CastrSchema = {
+        type: 'integer',
+        format: 'int64',
+        integerSemantics: 'int64',
+        enum: [1, 2],
+        metadata,
+      };
+
+      expect(() => generate(schema)).toThrow(/enum.*bigint/);
+    });
+
     it('refuses an enum with a member that is an object or an array', () => {
       expect(() => generate({ enum: [{ a: 1 }], metadata })).toThrow(/enum.*object or an array/);
     });
@@ -817,6 +835,18 @@ describe('Dynamic Reference Keywords — TypeScript fail-fast', () => {
       expect(generate(arrayOf({ type: 'string', enum: ['a', 'b'], metadata }))).toBe(
         '("a" | "b")[]',
       );
+    });
+
+    it('keeps an intersection whole when the items are an allOf', () => {
+      const items: CastrSchema = {
+        allOf: [
+          { $ref: '#/components/schemas/A', metadata },
+          { $ref: '#/components/schemas/B', metadata },
+        ],
+        metadata,
+      };
+
+      expect(generate(arrayOf(items))).toBe('(A & B)[]');
     });
 
     it('writes no parentheses round items that are one type', () => {

@@ -2,7 +2,11 @@ import type { CodeBlockWriter } from 'ts-morph';
 
 import { parseComponentRef } from '../../../../shared/ref-resolution.js';
 import { safeSchemaName } from '../../../../shared/utils/identifier-utils.js';
-import { type CastrSchema, whyConstDoesNotDecideAlone } from '../../../ir/index.js';
+import {
+  type CastrSchema,
+  getIntegerSemantics,
+  whyConstDoesNotDecideAlone,
+} from '../../../ir/index.js';
 
 /**
  * Write a `const` as its literal type, the one value it names: what the Zod writer's
@@ -77,6 +81,19 @@ export function writeEnumType(schema: CastrSchema, writer: CodeBlockWriter): boo
   if (schema.enum === undefined || schema.enum.length === 0) {
     return false;
   }
+  // A model another reader built can hold an enum beside a keyword that also decides.
+  if (schema.const !== undefined) {
+    throw new Error(
+      'An enum beside a const is not written in TypeScript: the union of the ' +
+        "enum's literals would drop the const.",
+    );
+  }
+  if (getIntegerSemantics(schema) !== undefined) {
+    throw new Error(
+      'An enum of 64-bit integers is not written in TypeScript: their type is bigint, ' +
+        'and the members are held as numbers.',
+    );
+  }
   if (!schema.enum.every(isPrimitive)) {
     throw new Error(
       'An enum with a member that is an object or an array is not written in TypeScript: ' +
@@ -85,6 +102,21 @@ export function writeEnumType(schema: CastrSchema, writer: CodeBlockWriter): boo
   }
   writer.write(schema.enum.map((member) => JSON.stringify(member)).join(' | '));
   return true;
+}
+
+/**
+ * Whether a schema is written with `|` or `&` at its top, so that it needs parentheses
+ * where it is an array's items: `A & B[]` is A and an array of B.
+ *
+ * @internal
+ */
+export function isUnionOrIntersection(schema: CastrSchema): boolean {
+  return (
+    isUnion(schema) ||
+    schema.allOf !== undefined ||
+    schema.dependentRequired !== undefined ||
+    schema.dependentSchemas !== undefined
+  );
 }
 
 /**

@@ -11,6 +11,7 @@ import {
 } from './fail-fast.js';
 import {
   isUnion,
+  isUnionOrIntersection,
   writeBooleanSchemaType,
   writeConstType,
   writeEnumType,
@@ -162,8 +163,8 @@ function writeArrayType(schema: CastrSchema, writer: CodeBlockWriter): void {
     return;
   }
   if (schema.items && !Array.isArray(schema.items)) {
-    // `A | B[]` is A or an array of B, so a union is kept whole.
-    const [open, close] = isUnion(schema.items) ? ['(', ')[]'] : ['', '[]'];
+    // `A | B[]` is A or an array of B, so a union or an intersection is kept whole.
+    const [open, close] = isUnionOrIntersection(schema.items) ? ['(', ')[]'] : ['', '[]'];
     writer.write(open);
     writeTypeDefinition(schema.items)(writer);
     writer.write(close);
