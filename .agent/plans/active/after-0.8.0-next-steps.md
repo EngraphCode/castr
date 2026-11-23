@@ -435,6 +435,44 @@ specification are approved and on `main`.
    read, for any annotation, and a lazy reference drops it without a word (second
    review round of 187).
 
+   **Unit 8, the prototype of the `paths` module (23 November).** It is
+   `lib/tests-picture/prototypes/paths-type.ts`, written from the model alone, with its
+   tests beside it. No template writes it and nothing in `src` reads it, because its
+   rows are not approved. Every schema position is written by the type writer that
+   writes the exported component types. Its tests are at type level, on a client of
+   `openapi-fetch` built over the type: `data` is the success body and `error` each
+   error body; `components["schemas"]["X"]` is the type `X`, and `X` is `z.output` of
+   the Zod schema; a missing path parameter, an undeclared method, a missing required
+   body and a body of the wrong type each fail to compile; and it is written for the
+   whole of Oak's document, where a client reads a lesson. The tests were checked to
+   have teeth by compiling wrong client code and reading the compiler's messages.
+
+   What it found, each a choice the rows for the document's structure have to state:
+
+   - **A status the client's types do not key.** `openapi-fetch` takes `data` from
+     `200` to `207` and `2XX`, and `error` from a list of `4xx` and `5xx` codes, `4XX`,
+     `5XX` and `default`. A `302`, `1XX` or `3XX` is in the type and reaches neither.
+     Oak's one `302` is such a response. The type is right; the row says so.
+   - **A response with no body** is `content?: never`, and a call to it gives `data` of
+     `undefined`. Nothing is invented for it.
+   - **An operation with no `operationId`** has no key in `operations`, so it is written
+     in place in `paths`.
+   - **Parameters stated on a path item** are folded into each operation by the model,
+     so a path item's own `parameters` is always empty in the type.
+   - **A response header** is a property of `headers`, optional unless `required`.
+   - **Not supplied by the model or not written yet:** a media type component that is
+     referred to; a parameter that holds `content` in place of a schema; the
+     `querystring` location; `webhooks` and `$defs`, written empty; a method outside the
+     eight; and the names `paths`, `operations` and `components` clashing with a
+     component of the same name.
+   - **Oak's document names only three schemas** (its three error bodies); every other
+     body is written in place. So `components["schemas"]` is small for Oak, and the
+     Ecosystem repository's present file has more names only because it is rewritten
+     after generation.
+
+   Next for unit 8: the rows, as an amendment the owner approves, then the writer in
+   `src` and a template that emits it.
+
    **The picture's own, from the review of pull request 188.** The walk names a `format`
    by its value and does not look at the type beside it, so a format in a schema whose
    type is not `string` alone is counted under its format row, though a format constrains
