@@ -50,6 +50,11 @@ export type {
 export { allOperations, IR_SCHEMA_VERSION } from './models/index.js';
 export { ensureObjectTypeForObjectKeywords, isObjectSchemaType } from './unknown-key-behavior.js';
 export {
+  holdsPropertyNamesThatRefuseNoName,
+  isConstrainedMap,
+  refusesNoPropertyName,
+} from './unknown-keys/map-rows.js';
+export {
   UUID_SCHEMA_TYPE,
   UUID_SCHEMA_FORMAT,
   UUID_V4_PATTERN,

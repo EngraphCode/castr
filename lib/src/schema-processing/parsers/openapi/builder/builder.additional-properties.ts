@@ -1,5 +1,6 @@
-import type { SchemaObject } from '../../../../shared/openapi-types.js';
-import { type CastrSchema, isObjectSchemaType } from '../../../ir/index.js';
+import type { ReferenceObject, SchemaObject } from '../../../../shared/openapi-types.js';
+import { type CastrSchema, isConstrainedMap, isObjectSchemaType } from '../../../ir/index.js';
+import type { IRBuildContext } from '../builder.types.js';
 import {
   buildNonStrictObjectRejectionMessage,
   describePortableNonStrictObjectInput,
@@ -14,19 +15,40 @@ function isObjectKeywordCandidate(schema: SchemaObject, irSchema: CastrSchema): 
   );
 }
 
-export function addAdditionalProperties(schema: SchemaObject, irSchema: CastrSchema): void {
+type BuildSchema = (schema: SchemaObject | ReferenceObject, context: IRBuildContext) => CastrSchema;
+
+/**
+ * Read an object's unknown-key policy into the model.
+ *
+ * An object that states no policy is read as closed (SPEC-P-1). A constrained map, the
+ * first row of the specification's Appendix B.2, is read with the schema its keys must
+ * satisfy. Every other stated policy has no row yet and is refused.
+ */
+export function addAdditionalProperties(
+  schema: SchemaObject,
+  context: IRBuildContext,
+  irSchema: CastrSchema,
+  buildSchema: BuildSchema,
+): void {
   if (!isObjectKeywordCandidate(schema, irSchema)) {
     return;
   }
 
-  if (schema.additionalProperties === false || schema.additionalProperties === undefined) {
+  const { additionalProperties } = schema;
+  if (additionalProperties === false || additionalProperties === undefined) {
     irSchema.additionalProperties = false;
     return;
   }
 
-  const inputDescription = describePortableNonStrictObjectInput({
-    additionalProperties: schema.additionalProperties,
-  });
+  if (additionalProperties !== true && isConstrainedMap(schema)) {
+    irSchema.additionalProperties = buildSchema(additionalProperties, {
+      ...context,
+      path: [...context.path, 'additionalProperties'],
+    });
+    return;
+  }
+
+  const inputDescription = describePortableNonStrictObjectInput({ additionalProperties });
   if (inputDescription === undefined) {
     return;
   }

@@ -10,7 +10,7 @@
  */
 
 import type { CodeBlockWriter } from 'ts-morph';
-import type { CastrSchema } from '../../../ir/index.js';
+import { holdsPropertyNamesThatRefuseNoName, type CastrSchema } from '../../../ir/index.js';
 
 // ---------------------------------------------------------------------------
 // String escaping — private helper for code gen output
@@ -80,11 +80,19 @@ function writePatternPropertiesRefinement(schema: CastrSchema, writer: CodeBlock
   }
 }
 
+/**
+ * The `propertyNames` a refinement is written for. None is written for one that refuses
+ * no name (specification Appendix B.2, second row).
+ */
+function propertyNamesToRefine(schema: CastrSchema): CastrSchema | undefined {
+  return holdsPropertyNamesThatRefuseNoName(schema) ? undefined : schema.propertyNames;
+}
+
 function writePropertyNamesRefinement(schema: CastrSchema, writer: CodeBlockWriter): void {
-  if (schema.propertyNames === undefined) {
+  const nameSchema = propertyNamesToRefine(schema);
+  if (nameSchema === undefined) {
     return;
   }
-  const nameSchema = schema.propertyNames;
   const constraints: string[] = [];
   if (nameSchema.minLength !== undefined) {
     constraints.push(`k.length >= ${nameSchema.minLength}`);

@@ -1,5 +1,10 @@
 import type { CodeBlockWriter } from 'ts-morph';
-import type { CastrSchema, CastrSchemaContext, IRArrayItemsContext } from '../../../ir/index.js';
+import {
+  isConstrainedMap,
+  type CastrSchema,
+  type CastrSchemaContext,
+  type IRArrayItemsContext,
+} from '../../../ir/index.js';
 import type { TemplateContextOptions } from '../../../context/index.js';
 import {
   formatPropertyKey,
@@ -8,6 +13,10 @@ import {
   getSortedPropertyEntries,
 } from '../properties.js';
 import { writeObjectRefinements, writeArrayRefinements } from '../refinements/index.js';
+import {
+  SCHEMA_VALUED_ADDITIONAL_PROPERTIES_OUTSIDE_THE_ROW,
+  writeZodConstrainedMap,
+} from '../../shared/map-nodes.js';
 
 export function writeArraySchema(
   context: CastrSchemaContext,
@@ -87,6 +96,10 @@ export function writeObjectSchema(
 ): void {
   const schema = context.schema;
 
+  if (writeConstrainedMap(schema, writer, writeZodSchemaFn, options)) {
+    return;
+  }
+
   writer
     .write('z.strictObject(')
     .inlineBlock(() => {
@@ -96,6 +109,34 @@ export function writeObjectSchema(
     })
     .write(')');
   writeObjectRefinements(schema, writer);
+}
+
+/**
+ * Write an object whose `additionalProperties` is a schema. A constrained map is written
+ * as the specification's Appendix B.2 says; any other such object has no row there and is
+ * refused, so its constraint is never dropped.
+ */
+function writeConstrainedMap(
+  schema: CastrSchema,
+  writer: CodeBlockWriter,
+  writeZodSchemaFn: (
+    c: CastrSchemaContext,
+    opts?: TemplateContextOptions,
+  ) => (w: CodeBlockWriter) => void,
+  options?: TemplateContextOptions,
+): boolean {
+  const values = schema.additionalProperties;
+  if (values === undefined || typeof values === 'boolean') {
+    return false;
+  }
+  if (!isConstrainedMap(schema)) {
+    throw new Error(SCHEMA_VALUED_ADDITIONAL_PROPERTIES_OUTSIDE_THE_ROW);
+  }
+  const valuesContext: IRArrayItemsContext = { contextType: 'arrayItems', schema: values };
+  const deferred = values.$ref !== undefined && schema.metadata.circularReferences.length > 0;
+  writer.write(writeZodConstrainedMap(writeZodSchemaFn(valuesContext, options), deferred));
+  writeObjectRefinements(schema, writer);
+  return true;
 }
 
 export function writeProperties(

@@ -55,7 +55,7 @@ describe('isCastrSchema', () => {
     expect(isCastrSchema(schema)).toBe(true);
   });
 
-  it('should return false for object schema with schema-valued additionalProperties (catchall)', () => {
+  it('accepts an object schema with a schema-valued additionalProperties, as the type declares', () => {
     const schema = {
       type: 'object',
       properties: new CastrSchemaProperties({
@@ -90,7 +90,7 @@ describe('isCastrSchema', () => {
       },
     };
 
-    expect(isCastrSchema(schema)).toBe(false);
+    expect(isCastrSchema(schema)).toBe(true);
   });
 
   it('should return true for array schema', () => {
@@ -255,6 +255,38 @@ describe('isCastrSchema rejection', () => {
     };
 
     expect(isCastrSchema(schemaWithPlainMetadata)).toBe(false);
+  });
+
+  it('refuses an additionalProperties that is neither a boolean nor a schema', () => {
+    const metadata = {
+      required: false,
+      nullable: false,
+      zodChain: { presence: '', validations: [], defaults: [] },
+      dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+      circularReferences: [],
+    };
+
+    expect(isCastrSchema({ type: 'object', additionalProperties: 'string', metadata })).toBe(false);
+    expect(
+      isCastrSchema({ type: 'object', additionalProperties: { type: 'string' }, metadata }),
+    ).toBe(false);
+  });
+
+  it('ends on a map whose values refer to the map itself', () => {
+    const metadata = {
+      required: false,
+      nullable: false,
+      zodChain: { presence: '', validations: [], defaults: [] },
+      dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+      circularReferences: [],
+    };
+    const tree = {
+      type: 'object',
+      additionalProperties: { $ref: '#/components/schemas/Tree', metadata },
+      metadata,
+    };
+
+    expect(isCastrSchema(tree)).toBe(true);
   });
 
   it('should return false for primitive schemas polluted with additionalProperties', () => {

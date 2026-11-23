@@ -1,6 +1,6 @@
 import type { CodeBlockWriter, WriterFunction } from 'ts-morph';
 import type { CastrSchema } from '../../../ir/index.js';
-import { getIntegerSemantics } from '../../../ir/index.js';
+import { getIntegerSemantics, isConstrainedMap } from '../../../ir/index.js';
 import { assertSchemaSupportsIntegerTargetCapabilities } from '../../../compatibility/integer-target-capabilities.js';
 import { parseComponentRef } from '../../../../shared/ref-resolution.js';
 import { isValidJsIdentifier, safeSchemaName } from '../../../../shared/utils/identifier-utils.js';
@@ -11,6 +11,10 @@ import {
   resolveSchemaTypeString,
 } from './fail-fast.js';
 import { writeDependentRequiredUnions, writeDependentSchemasUnions } from './dependent-keywords.js';
+import {
+  SCHEMA_VALUED_ADDITIONAL_PROPERTIES_OUTSIDE_THE_ROW,
+  writeTypeScriptConstrainedMap,
+} from '../../shared/map-nodes.js';
 
 export function writeTypeDefinition(schema: CastrSchema): WriterFunction {
   return (writer) => {
@@ -196,6 +200,16 @@ function getSortedPropertyEntries(schema: CastrSchema): [string, CastrSchema][] 
 
 function writeObjectType(schema: CastrSchema, writer: CodeBlockWriter): void {
   rejectUnsupportedObjectKeywords(schema);
+  const values = schema.additionalProperties;
+  if (values !== undefined && typeof values !== 'boolean') {
+    // An object whose unknown keys must satisfy a schema: written as a constrained map
+    // (specification Appendix B.2) or refused, so the constraint is never dropped.
+    if (!isConstrainedMap(schema)) {
+      throw new Error(SCHEMA_VALUED_ADDITIONAL_PROPERTIES_OUTSIDE_THE_ROW);
+    }
+    writer.write(writeTypeScriptConstrainedMap(writeTypeDefinition(values)));
+    return;
+  }
   const hasDependentRequired = schema.dependentRequired !== undefined;
   const hasDependentSchemas = schema.dependentSchemas !== undefined;
   if (!hasDependentRequired && !hasDependentSchemas) {

@@ -676,4 +676,57 @@ describe('Dynamic Reference Keywords — TypeScript fail-fast', () => {
     expect(() => generate(schema)).not.toThrow();
     expect(generate(schema)).toBe('string');
   });
+
+  describe('a schema-valued additionalProperties', () => {
+    const metadata: CastrSchema['metadata'] = {
+      required: true,
+      nullable: false,
+      circularReferences: [],
+      dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+      zodChain: { presence: '', validations: [], defaults: [] },
+    };
+
+    it('writes a constrained map as an index signature over string', () => {
+      const schema: CastrSchema = {
+        type: 'object',
+        additionalProperties: { type: 'number', metadata },
+        metadata,
+      };
+
+      expect(generate(schema)).toBe('{ [key: string]: number; }');
+    });
+
+    it('writes nothing for a propertyNames that refuses no name', () => {
+      const schema: CastrSchema = {
+        type: 'object',
+        additionalProperties: { type: 'number', metadata },
+        propertyNames: { type: 'string', metadata },
+        metadata,
+      };
+
+      expect(generate(schema)).toBe('{ [key: string]: number; }');
+    });
+
+    it('refuses a propertyNames that can refuse a name', () => {
+      const schema: CastrSchema = {
+        type: 'object',
+        additionalProperties: false,
+        propertyNames: { type: 'string', pattern: '^[a-z]+$', metadata },
+        metadata,
+      };
+
+      expect(() => generate(schema)).toThrow(/propertyNames cannot be represented/);
+    });
+
+    it('refuses a schema-valued additionalProperties on an object that names a property', () => {
+      const schema: CastrSchema = {
+        type: 'object',
+        properties: new CastrSchemaProperties({ a: { type: 'string', metadata } }),
+        additionalProperties: { type: 'number', metadata },
+        metadata,
+      };
+
+      expect(() => generate(schema)).toThrow(/outside that row/);
+    });
+  });
 });

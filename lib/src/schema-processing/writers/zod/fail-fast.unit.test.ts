@@ -12,7 +12,11 @@
 import { Project, VariableDeclarationKind } from 'ts-morph';
 import { describe, expect, it } from 'vitest';
 import { writeZodSchema } from './index.js';
-import type { CastrSchema, CastrSchemaContext } from '../../ir/index.js';
+import {
+  CastrSchemaProperties,
+  type CastrSchema,
+  type CastrSchemaContext,
+} from '../../ir/index.js';
 
 describe('Zod Writer Fail-Fast Behavior', () => {
   const project = new Project({ useInMemoryFileSystem: true });
@@ -186,14 +190,75 @@ describe('Zod Writer Fail-Fast Behavior', () => {
       expect(output).toContain('patternProperties');
     });
 
-    it('emits .refine() for object schema with propertyNames', () => {
+    it('emits .refine() for a propertyNames that can refuse a name', () => {
       const schema = createMockSchema('object');
-      schema.propertyNames = createMockSchema('string');
+      schema.propertyNames = { ...createMockSchema('string'), pattern: '^[a-z]+$' };
       const context = createComponentContext(schema);
 
       const output = generate(context);
       expect(output).toContain('.refine(');
       expect(output).toContain('propertyNames');
+    });
+
+    it('writes nothing for a propertyNames that refuses no name', () => {
+      const schema = createMockSchema('object');
+      schema.propertyNames = createMockSchema('string');
+      const context = createComponentContext(schema);
+
+      expect(generate(context)).not.toContain('.refine(');
+    });
+
+    it('still writes a refinement for such a propertyNames on an object that names a property', () => {
+      const schema = createMockSchema('object');
+      schema.properties = new CastrSchemaProperties({ a: createMockSchema('string') });
+      schema.propertyNames = createMockSchema('string');
+      const context = createComponentContext(schema);
+
+      expect(generate(context)).toContain('.refine(');
+    });
+  });
+
+  // ============================================================================
+  // A schema-valued additionalProperties: the constrained map, or a refusal
+  // ============================================================================
+
+  describe('schema-valued additionalProperties', () => {
+    it('writes a constrained map as a catchall on a strict object with no properties', () => {
+      const schema = createMockSchema('object');
+      schema.additionalProperties = createMockSchema('string');
+      const context = createComponentContext(schema);
+
+      expect(generate(context)).toBe('z.strictObject({}).catchall(z.string())');
+    });
+
+    it('resolves the values lazily when the map refers back to itself', () => {
+      const schema = createMockSchema('object');
+      schema.metadata.circularReferences = ['#/components/schemas/TestSchema'];
+      schema.additionalProperties = {
+        ...createMockSchema(),
+        type: undefined,
+        $ref: '#/components/schemas/TestSchema',
+      };
+      const context = createComponentContext(schema);
+
+      expect(generate(context)).toBe('z.strictObject({}).catchall(z.lazy(() => TestSchema))');
+    });
+
+    it('refuses a schema-valued additionalProperties on an object that names a property', () => {
+      const schema = createMockSchema('object');
+      schema.properties = new CastrSchemaProperties({ a: createMockSchema('string') });
+      schema.additionalProperties = createMockSchema('number');
+      const context = createComponentContext(schema);
+
+      expect(() => generate(context)).toThrow(/outside that row/);
+    });
+
+    it('refuses a schema-valued additionalProperties that is the empty schema', () => {
+      const schema = createMockSchema('object');
+      schema.additionalProperties = { metadata: createMockSchema().metadata };
+      const context = createComponentContext(schema);
+
+      expect(() => generate(context)).toThrow(/outside that row/);
     });
   });
 

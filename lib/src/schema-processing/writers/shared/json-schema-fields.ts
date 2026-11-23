@@ -106,10 +106,21 @@ export function writeNumberFields<TChild>(
 }
 
 /**
+ * Why a schema-valued `additionalProperties` is not written as JSON Schema or OpenAPI:
+ * the specification's Appendix B.2 classes it for Zod, TypeScript and endpoint
+ * definitions only. Until a row classes it for these outputs it is refused, never
+ * narrowed to `false`.
+ */
+const SCHEMA_VALUED_ADDITIONAL_PROPERTIES_HAS_NO_ROW =
+  'A schema-valued additionalProperties has no row for JSON Schema or OpenAPI output ' +
+  '(specification Appendix B.2 classes it for Zod, TypeScript and endpoint definitions) ' +
+  'and is not written.';
+
+/**
  * Write the `additionalProperties` field.
  *
- * Under IDENTITY doctrine, all objects are closed-world with explicit
- * properties. Always emits `additionalProperties: false`.
+ * An object that states no policy is closed (SPEC-P-1), so every object is written with
+ * `additionalProperties: false` unless its policy is a schema, which is refused.
  *
  * @internal
  */
@@ -117,7 +128,12 @@ function writeAdditionalProperties<TChild>(
   schema: CastrSchema,
   result: JsonSchemaObjectBase<TChild>,
 ): void {
-  if (schema.additionalProperties === false) {
+  const { additionalProperties } = schema;
+  if (additionalProperties !== undefined && typeof additionalProperties !== 'boolean') {
+    throw new Error(SCHEMA_VALUED_ADDITIONAL_PROPERTIES_HAS_NO_ROW);
+  }
+
+  if (additionalProperties === false) {
     result.additionalProperties = false;
     return;
   }

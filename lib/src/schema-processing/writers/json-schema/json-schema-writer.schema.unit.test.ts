@@ -224,6 +224,16 @@ describe('writeJsonSchema', () => {
       expect(result.required).toEqual(['id']);
     });
 
+    it('refuses a schema-valued additionalProperties, which no row classes for this output', () => {
+      const schema: CastrSchema = {
+        type: 'object',
+        additionalProperties: { type: 'string', metadata: createMetadata() },
+        metadata: createMetadata(),
+      };
+
+      expect(() => writeJsonSchema(schema)).toThrow(/schema-valued additionalProperties/);
+    });
+
     it('writes additionalProperties as boolean', () => {
       const schema = createSchema({
         type: 'object',
