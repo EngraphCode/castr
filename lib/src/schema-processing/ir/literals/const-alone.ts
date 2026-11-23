@@ -32,9 +32,9 @@ const KEYWORDS_BESIDE_A_CONST: ReadonlySet<string> = new Set([
   'metadata',
 ]);
 
-type Primitive = string | number | boolean | null;
+export type Primitive = string | number | boolean | null;
 
-function isPrimitive(value: unknown): value is Primitive {
+export function isPrimitive(value: unknown): value is Primitive {
   return value === null || ['string', 'number', 'boolean'].includes(typeof value);
 }
 

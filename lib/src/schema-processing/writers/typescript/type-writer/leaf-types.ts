@@ -5,6 +5,7 @@ import { safeSchemaName } from '../../../../shared/utils/identifier-utils.js';
 import {
   type CastrSchema,
   getIntegerSemantics,
+  isPrimitive,
   whyConstDoesNotDecideAlone,
 } from '../../../ir/index.js';
 
@@ -63,12 +64,6 @@ export function writeBooleanSchemaType(schema: CastrSchema, writer: CodeBlockWri
   // `unknown` is the TypeScript type that accepts all values while remaining type-safe.
   writer.write('unknown');
   return true;
-}
-
-type Primitive = string | number | boolean | null;
-
-function isPrimitive(value: unknown): value is Primitive {
-  return value === null || ['string', 'number', 'boolean'].includes(typeof value);
 }
 
 /**
