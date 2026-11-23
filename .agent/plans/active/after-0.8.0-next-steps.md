@@ -396,7 +396,10 @@ specification are approved and on `main`.
       (SPEC-N-4).
    2. **Unit 8 beside it**, in the wait on the owner: the rows for the document's
       structure to TypeScript, then the `paths` type. It is 21 of the 26.
-   3. **The leftovers of unit 5 become one unit, after those.** Every one of them was
+   3. **The Zod reader and the declarations it passes over**, set out below. It comes
+      before the leftovers of unit 5 because it loses whole schemas, and it depends on
+      nothing above.
+   4. **The leftovers of unit 5 become one unit, after those.** Every one of them was
       the same finding: a keyword the reader did not look at. The reader copies the
       keywords it knows and lets the others fall. The cure proposed is the other kind of
       list: the keywords the reader reads, with any other keyword of a schema refused by
@@ -454,7 +457,8 @@ specification are approved and on `main`.
    - **A status the client's types do not key.** `openapi-fetch` takes `data` from
      `200` to `207` and `2XX`, and `error` from a list of `4xx` and `5xx` codes, `4XX`,
      `5XX` and `default`. A `302`, `1XX` or `3XX` is in the type and reaches neither.
-     Oak's one `302` is such a response. The type is right; the row says so.
+     Oak's one `302` is such a response. That is what was observed of the client; how
+     the row words it is for the amendment, and is not settled here.
    - **A response with no body** is `content?: never`, and a call to it gives `data` of
      `undefined`. Nothing is invented for it.
    - **An operation with no `operationId`** has no key in `operations`, so it is written
@@ -475,12 +479,13 @@ specification are approved and on `main`.
    Next for unit 8: the rows, as an amendment the owner approves, then the writer in
    `src` and a template that emits it.
 
-   **The picture's own, from the review of pull request 188.** The walk names a `format`
-   by its value and does not look at the type beside it, so a format in a schema whose
-   type is not `string` alone is counted under its format row, though a format constrains
-   only strings and Appendix B.3 excludes that schema from the `format: uri` row. It
-   holds for every format row. Oak's uses are all `type: string` alone. The repair is in
-   the walk: such a schema is named by no format row.
+   **The picture's own, from the review of pull request 188. Not repaired.** The walk
+   names a `format` by its value and does not look at the type beside it, so a format in a
+   schema whose type it does not apply to (`format: uri` beside `type: number`, or with
+   no `type`) is counted under its format row, though Appendix B.3 excludes that schema
+   from the `format: uri` row. It holds for every format row, the number formats among
+   them. Oak's uses of `format: uri` are all `type: string` alone. The repair, still to
+   do, is in the walk: a format is named by its row only beside the type it applies to.
 
    **Settled without the owner, at the owner's word of 23 November.** Their approval of
    revision 0.10.1 did not say which of two variants it covered. Asked, they directed the
