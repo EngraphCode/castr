@@ -343,8 +343,8 @@ specification are approved and on `main`.
       The exact status code's cell stays not judged, because the document it is set
       against is now refused where it crashed; it is judged once a range has a shape
       (unit 6).
-   5. A refusal for `minProperties` and `maxProperties`, merged as pull request 182; a boolean where a schema stands, read as the schema it is (its own pull request, after
-      182); and
+   5. A refusal for `minProperties` and `maxProperties`, merged as pull request 182; a boolean where a schema stands, read as the schema it is, merged as pull request
+      184; and
       `const` and `enum` beside a keyword that also decides, in the Zod writer, which
       writes the literal and returns. Its case is `{type: string, enum: ['a', null]}`:
       both writers admit `null`, which the source's `type` refuses (found in the review
@@ -373,6 +373,12 @@ specification are approved and on `main`.
    7. One code unit for each cause the amendment settles, the run report among them.
    8. The `paths` type: its rows, then the writer.
    9. The reader's document pass, position by position (left out of pull request 175).
+
+   **State of unit 5 after pull request 184.** Done: the count of properties (182) and
+   boolean schemas (184). In review: the refusal of `not`, `if`, `then` and `else`. Left:
+   `const` and `enum` beside a keyword that also decides, in the Zod writer, with an enum
+   member its type refuses; the keywords beside a `$ref`; and the OpenAPI writer's refusal
+   of a boolean schema, below.
 
    **Found after the queue was written, and part of unit 5.** The OpenAPI writer refuses
    a boolean schema and says OpenAPI has none. OpenAPI 3.1 and 3.2 take their Schema
