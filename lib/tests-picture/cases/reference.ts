@@ -32,6 +32,9 @@ export function referenceFor(document: UnknownRecord): Reference {
   const ajv = new Ajv2020({
     strict: false,
     validateFormats: true,
+    // JSON Schema speaks of the properties a value has. Without this the validator also
+    // reads the members every JavaScript object inherits (`toString`, `constructor`).
+    ownProperties: true,
     logger: { log: note, warn: note, error: note },
   });
   addFormats.default(ajv);
