@@ -34,7 +34,7 @@ function mapOperationToEndpointDefinition(
   operation: CastrOperation | CastrAdditionalOperation,
 ): EndpointDefinition {
   const parameters = mapParameters(operation.parameters);
-  const errors = mapErrors(ir, operation.responses);
+  const errors = mapErrors(ir, operation.responses, `${operation.method} ${operation.path}`);
   const response = mapSuccessResponse(ir, operation.responses);
   const responses = mapAllResponses(ir, operation.responses);
 
@@ -123,20 +123,23 @@ function toParameterType(
   return mapping[location] || 'Query';
 }
 
-const STATUS_CODE_LENGTH = 3;
+const LOWEST_STATUS_CODE = 100;
+const HIGHEST_STATUS_CODE = 599;
 
 /**
- * An exact status code as a number. A range (`4XX`) is not one, and reading it as a
- * number would collapse it to its first digit, so it is refused until an endpoint
- * definition has a shape for it.
+ * An exact status code as a number: three digits from 100 to 599. A range (`4XX`) is not
+ * one, and reading it as a number would collapse it to its first digit, so it is refused
+ * until an endpoint definition has a shape for it. The rejection names the operation.
  */
-function exactStatusOf(statusCode: string): number {
+function exactStatusOf(statusCode: string, operation: string): number {
   const status = Number(statusCode);
-  if (statusCode.length !== STATUS_CODE_LENGTH || String(status) !== statusCode) {
+  const isExact =
+    String(status) === statusCode && status >= LOWEST_STATUS_CODE && status <= HIGHEST_STATUS_CODE;
+  if (!isExact) {
     throw new Error(
       `A response keyed by the status range ${statusCode} is rejected in the endpoint ` +
-        'definitions: an error there holds an exact status code or "default", and a ' +
-        'range would be collapsed to a number.',
+        `definitions, at ${operation}: an error there holds an exact status code or ` +
+        '"default", and a range would be collapsed to a number.',
     );
   }
   return status;
@@ -145,13 +148,15 @@ function exactStatusOf(statusCode: string): number {
 function mapErrors(
   ir: Pick<CastrDocument, 'components'>,
   responses: CastrResponse[],
+  operation: string,
 ): EndpointError[] {
   return responses
     .filter((r) => !isSuccessStatusCode(r.statusCode))
     .map((r) => {
       const schema = r.schema || getSchemaFromContent(ir, r.content, `responses/${r.statusCode}`);
       const error: EndpointError = {
-        status: r.statusCode === STATUS_DEFAULT ? STATUS_DEFAULT : exactStatusOf(r.statusCode),
+        status:
+          r.statusCode === STATUS_DEFAULT ? STATUS_DEFAULT : exactStatusOf(r.statusCode, operation),
         schema: schema || createEmptySchema(),
       };
       if (r.description) {
