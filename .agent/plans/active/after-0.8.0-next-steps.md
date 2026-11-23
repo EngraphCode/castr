@@ -20,7 +20,7 @@ owner_directive: >-
 todos:
   - id: N0-FIX
     content: 'The fix of what stops Oak''s document, built once approved text classes the rows it touches (not every row of the tables), proved by the picture. Its trace is done. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
-    status: pending
+    status: completed
     depends_on: [N5A-ROWS-FOR-N0]
   - id: N5A-ROWS-FOR-N0
     content: 'The small amendment (0.9.0) that classes the rows the fix touches, approved by the owner in their own words. It is the first part of the tables step and the only part the fix waits on. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
@@ -89,9 +89,10 @@ and the other is corrected.
    sibling checkout is absent, stop and say so; do not fall back to the local copies.
 6. Before a step's first edit, do its step back and run the decision matrix on its
    unknowns, and write both under "Step log" in the thread record. N0's are there,
-   dated 22 November. N1 is done; N3 and N4 are withdrawn. **The next step is N0, the
-   fix.** The part of the tables it waited on is approved (revisions 0.9.0 and 0.9.1,
-   23 November). Read "The reframing of 23 November 2026" below before anything else
+   dated 22 November. N1 is done; N3 and N4 are withdrawn. **N0 is done: it merged as
+   pull request 175 on 23 November. The next step is the first unit not yet merged of
+   the queue under "The sort" in "What is next".** The part of the tables it waited on
+   is approved (revisions 0.9.0 and 0.9.1, 23 November). Read "The reframing of 23 November 2026" below before anything else
    in this plan; its "What is next" gives the order from here. The rest of the tables
    (N5) follows the fix. N2 has its judge and two slices merged; its remaining slices
    are worked during waits.
@@ -321,8 +322,10 @@ specification are approved and on `main`.
    SPEC-P-7's line, and SPEC-P-6's warning for each source `default`.
 
    **The queue, in order.** One unit is one cause: text if it needs any, code, and the
-   picture's cell, in one turn. The one exception is unit 6, where several causes share one
-   amendment because the owner is asked once; each then gets its own code unit.
+   picture's cell, in one turn. Three units hold more than one cause and say so: unit 6, where several
+   causes share one amendment because the owner is asked once and each then gets its own
+   code unit; and units 3 and 5, each a list of small causes of one kind, finished when
+   every part it lists is done, in one pull request or several.
 
    1. `const`, reader and TypeScript writer. Merged as pull request 177.
    2. `enum` to TypeScript.
