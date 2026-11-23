@@ -321,7 +321,7 @@ specification are approved and on `main`.
    SPEC-P-7's line, and SPEC-P-6's warning for each source `default`.
 
    **The queue, in order.** One unit is one cause: text if it needs any, code, and the
-   picture's cell, in one turn. The one exception is unit 7, where four causes share one
+   picture's cell, in one turn. The one exception is unit 6, where several causes share one
    amendment because the owner is asked once; each then gets its own code unit.
 
    1. `const`, reader and TypeScript writer. Open as pull request 177.
@@ -333,12 +333,13 @@ specification are approved and on `main`.
    4. A located refusal for a status range in the endpoint definitions, in place of a
       module that does not load.
    5. A refusal for `minProperties` and `maxProperties`; a case for `items: false`.
-   6. The run report.
-   7. One amendment for the rows that need text, through one round of hosted review
-      before the owner is asked (act 3): `format: uri`; `default` in Zod; the shape of an
-      endpoint definition, which covers the 11 cells of the endpoint column, a response
-      with no body, and a status range and `default` among the errors. Then one code
-      unit for each of the four.
+   6. One amendment for what needs text, through one round of hosted review before the
+      owner is asked (act 3): `format: uri`; `default` in Zod; the shape of an endpoint
+      definition, which covers the 11 cells of the endpoint column, a response with no
+      body, and a status range and `default` among the errors; and where a run's report
+      is returned, since `GenerationResult` is a public type and SPEC-N-4 leaves it open
+      (a finding of the review of pull request 176).
+   7. One code unit for each cause the amendment settles, the run report among them.
    8. The `paths` type: its rows, then the writer.
    9. The reader's document pass, position by position (left out of pull request 175).
 
