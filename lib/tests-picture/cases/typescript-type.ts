@@ -113,7 +113,13 @@ function sourceFileOf(program: Program, name: string): SourceFile {
 export function compiled(
   content: string,
   beside = `import type {} from './picture-generated.js';`,
-): { readonly program: Program; readonly generated: SourceFile; readonly broken?: string } {
+): {
+  readonly program: Program;
+  readonly generated: SourceFile;
+  readonly broken?: string;
+  /** What the compiler says of the file beside the generated one, one message each. */
+  readonly besideMessages: readonly string[];
+} {
   const texts = new Map([
     [GENERATED, content],
     [SAMPLES, beside],
@@ -124,7 +130,12 @@ export function compiled(
     ...program.getSyntacticDiagnostics(generated),
     ...program.getSemanticDiagnostics(generated),
   ]);
-  return broken === undefined ? { program, generated } : { program, generated, broken };
+  const besideMessages = program
+    .getSemanticDiagnostics(sourceFileOf(program, SAMPLES))
+    .map((diagnostic) => onOneLine(flattenDiagnosticMessageText(diagnostic.messageText, ' ')));
+  return broken === undefined
+    ? { program, generated, besideMessages }
+    : { program, generated, broken, besideMessages };
 }
 
 /**
