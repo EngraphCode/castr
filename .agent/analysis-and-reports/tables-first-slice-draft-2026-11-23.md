@@ -2,7 +2,9 @@
 
 Status: a draft by the Castr seat (Firefly mends Quench), 23 November 2026. It is not
 approved text and changes nothing in `docs/SPECIFICATION.md`, which stays at 0.8.0. It
-has had no adversarial review yet; the exit for that review is set at the end.
+has had its one adversarial review, under the exit set at the end. Twelve findings; none
+changed the outcome for Oak's shape, so the slice went on, and the text below is as
+corrected. "The review" lists each finding and what became of it.
 
 It is the first slice of the first piece of step N5 of the
 [plan](../plans/active/after-0.8.0-next-steps.md): the table vocabulary and the tables
@@ -87,7 +89,7 @@ comparison can fail.
 | 5. The same, optional                                                                  | 4      | Row E                                                          |
 | 6. `additionalProperties: true` beside a named property                                | 4      | Row C; the name at the top and at depth                        |
 | 7. `additionalProperties: {}`                                                          | 2      | Row C                                                          |
-| 8. `additionalProperties: false`                                                       | 3      | Row A refuses the name with no check                           |
+| 8. `additionalProperties: false`                                                       | 3      | Row A refuses the name at the top                              |
 | 10. A schema whose `additionalProperties` refers to itself                             | 6      | A reference to the parent, through `z.lazy`                    |
 | 11. Two branches of `allOf`, each stating its policy                                   | 5      | An intersection keeps each branch's own meaning                |
 | 12. `oneOf` of two constrained maps                                                    | 5      | The empty object matches both and is refused                   |
@@ -114,8 +116,16 @@ absent the profile reads the branch as closed, and what `allOf` then means is th
   A Zod schema placed in `params` is still a Zod schema when read back.
 - Either form makes the schema a pipe or an intersection, no longer a Zod object, so a
   consumer that calls an object's own methods on it (`.shape`, `.extend`, `.pick`)
-  cannot. Whether the Ecosystem repository does so on these schemas is a fact its seat
-  has been asked for.
+  cannot. The Ecosystem seat answered on 23 November 2026, from its repository's main
+  branch: two places read `.shape` on a generated response schema, both on closed
+  objects with fixed properties, which this draft leaves as Zod objects; a third reads
+  an array's `.element.options`; no `.extend`, `.pick`, `.omit`, `.partial`, `.keyof`
+  or `.merge` was found on one. Its search did not rule out functional forms such as
+  `z.partial(schema)`.
+- The same answer: the Ecosystem repository removes both `check-restricted` paths
+  before it generates, so it has no Zod schema for either today and one caller, which
+  uses a hand-written `z.record`. The two schemas that stop Castr on Oak's document are
+  ones its consumer does not yet take from a generator.
 
 **TypeScript.**
 
@@ -168,30 +178,36 @@ Added at the end of the clause:
 > writer emits one only where the scope-and-fidelity table says so, as a Zod custom
 > check whose function Castr generates and whose `params` hold one entry, `castr`: the
 > construct kind and its arguments, as data. An argument that is a shape is the Zod
-> schema Castr writes for that shape. This mark is how a check Castr wrote is told from
-> any other function. What a reader of Zod does with it is not stated at this version.
+> schema Castr writes for that shape, given as a function that returns it. The mark
+> says what the check is. It does not prove who wrote the function, and what a reader
+> of Zod does with a marked check is not stated at this version.
 
-Appendix A's row for `.refine`, `.superRefine` and `.check`, and its row for `z.custom`,
-each gain "except a check Castr writes (SPEC-P-2)" under Profile. Section 11's third
-item becomes "Executable Zod refinements, transforms and conversions to host-language
-objects, written by a schema's author."
+Section 11's third item becomes "Executable Zod refinements, transforms and conversions
+to host-language objects, written by a schema's author." Appendix A is not changed: it
+says what a reader of Zod accepts, and it rejects `.refine`, `z.custom` and `.pipe`. So
+the Zod that Castr writes with a check in it is not Zod that Castr's own reader would
+read, until the amendment that opens a Zod reader says what a mark means to it. No
+reader of Zod is in SPEC-C-1.
 
 ### A new SPEC-P-7, the name `__proto__`
 
 > - **SPEC-P-7 A property named `__proto__`.** Every validator Castr writes for a
 >   JavaScript target refuses a value that holds, at any depth, an object with a
 >   property named `__proto__`, whatever the schema says. This narrows the source's
->   accepted set and is a profile decision, as the closed reading is. Wherever unknown
->   keys are allowed, Zod leaves a property of that name unchecked and out of the value
->   it returns, so no Zod schema can accept such a value and return it whole, and
->   SPEC-P-2 allows no other difference between the two sides. The refusal is a check
->   Castr writes. SPEC-G-4's reference validator is made to refuse the same values by a
+>   accepted set and is a profile decision, as the closed reading is. A Zod object that
+>   allows unknown keys leaves a property of that name unchecked and out of the value it
+>   returns, so it cannot accept such a value and return it whole, and SPEC-P-2 allows
+>   no other difference between the two sides. The refusal is a check Castr writes.
+>   SPEC-G-4's reference validator is made to refuse the same values by a
 >   transformation independent of Castr's parser, and its samples hold the name at the
->   top of a value and inside it. The run's report states the refusal once. A schema
->   that names `__proto__` as a property (a key of `properties` or of
->   `dependentSchemas`, a member of `required` or of a list in `dependentRequired`)
->   receives `UNEXPRESSIBLE` for the Zod and the TypeScript output: Zod cannot hold a
->   property of that name.
+>   top of a value and inside it, for every validator a consumer can address. The run's
+>   report states the refusal once.
+
+The clause says which values are refused, not where the check sits. Placement is the
+writer's, and is proved by the samples: a closed object does not refuse the name inside
+an unconstrained property (`z.strictObject({a: z.unknown().optional()})` accepts
+`{"a": {"__proto__": 1}}`), and a check at the top of every named schema walks a deep
+recursive value once for each level.
 
 ### SPEC-G-5, the sample is adequate
 
@@ -204,21 +220,37 @@ The sentence that gives the one exception gains a third route:
 
 ### The rows
 
-For an object schema: `type` is `object`, and the schema holds no `patternProperties`
-and no `unevaluatedProperties`. `S` is the value of `additionalProperties`. An object
-names a property when its `properties` holds at least one name.
+For an object schema: `type` is `object`, and the schema holds no `patternProperties`,
+no `unevaluatedProperties`, and none of the keywords that apply a subschema in place or
+refer to one (`$ref`, `$dynamicRef`, `allOf`, `anyOf`, `oneOf`, `not`, `if`,
+`dependentSchemas`; JSON Schema Core 8.2.3 and 10.2). A schema that holds one of those
+beside these keywords is in no row of this slice. `S` is the value of
+`additionalProperties`. An object names a property when its `properties` or its
+`required` holds at least one name; a name that only `required` holds is written as a
+property whose shape is what the row gives an unknown key.
 
-| Row                                                   | Zod                                                                       | TypeScript                                                                                                                             | Endpoint definitions |
-| ----------------------------------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| A. `additionalProperties: false` (closed)             | Carried: `z.strictObject`                                                 | By companion (Zod): the type holds the named properties and cannot refuse another                                                      | By companion (Zod)   |
-| B. `additionalProperties` absent (closed by SPEC-P-1) | As A, and listed in the run's report                                      | As A                                                                                                                                   | As A                 |
-| C. `true` or `{}` (open)                              | Carried: `z.looseObject`                                                  | Carried: an index signature over `string` of `unknown`, beside the named properties                                                    | By companion (Zod)   |
-| D. Any other `S`, and the object names no property    | Carried: `.catchall(S)` on a strict object with no properties             | Carried: an index signature over `string` of the type of `S`                                                                           | By companion (Zod)   |
-| E. Any other `S`, and the object names a property     | Carried: `.catchall(S)` on a strict object of the named properties        | By companion (Zod): the intersection of the named properties' type and the index signature. It reads rightly; a literal may not fit it | By companion (Zod)   |
-| F. `propertyNames: K`                                 | Carried, by a check Castr writes: every name passes the Zod of `K`        | By companion (Zod)                                                                                                                     | By companion (Zod)   |
-| G. The refusal of SPEC-P-7                            | Carried, by a check Castr writes, before any other schema reads the value | By companion (Zod)                                                                                                                     | By companion (Zod)   |
+| Row                                                   | Zod                                                                | TypeScript                                                                                                                       | Endpoint definitions |
+| ----------------------------------------------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| A. `additionalProperties: false` (closed)             | Carried: `z.strictObject`                                          | By companion (Zod): the type holds the named properties and cannot refuse another                                                | By companion (Zod)   |
+| B. `additionalProperties` absent (closed by SPEC-P-1) | As A, and listed in the run's report                               | As A                                                                                                                             | As A                 |
+| C. `true` or `{}` (open)                              | Carried: `z.looseObject`                                           | Carried: an index signature over `string` of `unknown`, beside the named properties                                              | By companion (Zod)   |
+| D. Any other `S`, and the object names no property    | Carried: `.catchall(S)` on a strict object with no properties      | Carried: an index signature over `string` of the type of `S`                                                                     | By companion (Zod)   |
+| E. Any other `S`, and the object names a property     | Carried: `.catchall(S)` on a strict object of the named properties | By companion (Zod): the intersection of the named properties' type and the index signature. It reads rightly; see the note below | By companion (Zod)   |
+| F. `propertyNames: K`                                 | Carried, by a check Castr writes: every name passes the Zod of `K` | By companion (Zod)                                                                                                               | By companion (Zod)   |
+| G. The refusal of SPEC-P-7                            | Carried, by a check Castr writes                                   | By companion (Zod)                                                                                                               | By companion (Zod)   |
 
 The keyword row for `additionalProperties` says "one row per case: A to E".
+
+Row E's type: where a named property's type is not admitted by `S`, no literal that
+holds that property fits the type, and neither does a spread or `Object.assign`. A
+value read through the type is right.
+
+Rows A, C and E say "carried" for the unknown-key policy. They lean on the rows for
+`properties` and `required`, which the piece owes and which must settle two things the
+review found: Zod reads a member an object inherits as a property (`toString`,
+`constructor`, `valueOf`), so a named property of such a name is decided wrongly for a
+value that lacks it; and under the repository's compiler settings Zod's type for an
+optional property is assignable with the TypeScript type in one direction only.
 
 ## What this makes of Oak's document
 
@@ -245,8 +277,12 @@ document refused at its first stop shows no later one.
   property fits. The other candidates: `UNEXPRESSIBLE` for TypeScript, which refuses a
   shape Zod carries exactly; or a weaker type with a comment, which fails SPEC-G-4's
   mutual assignability as approved.
-- **A `const` or `enum` member that holds the name.** Under SPEC-P-7 no value equals
-  it. The draft gives it no sentence; it is data, not a property the schema names.
+- **A schema that names `__proto__`.** Under SPEC-P-7 no accepted value has the
+  property, so a schema that requires it accepts nothing and one that allows it loses
+  nothing. The first draft gave a list of the places a schema can name it and called
+  each `UNEXPRESSIBLE`; the list was not complete and TypeScript can express the name.
+  Each row whose keyword can name a property says what it writes for this name, and the
+  piece owes those rows.
 - **Vocabulary 4 against the code.** Today one module holds the types and the Zod
   schemas, and a refusal by either writer refuses both. The sentence says what is right;
   the code is changed when N0 or a later leg reaches it.
@@ -268,3 +304,32 @@ answer to an open item of section 12.
   attacked in the same session.
 - Any other finding that is a factual error or changes an outcome is fixed once, and
   the fix is run. The rest are recorded with a disposition. There is no second round.
+
+## The review
+
+One adversarial review, 23 November 2026, by a reviewer told to break the draft by
+running things. The seat re-ran findings 1, 2, 3, 7, 8 and 9 and they hold. Finding 10's
+circular structure was not reproduced by the seat; its other half, that the message
+prints the schema's definition, was. The exit's first branch did not fire: no finding
+changes the class of row D, F or G for Oak's shape, and none shows the mark needs
+SPEC-N-3.
+
+| Finding                                                                                                                                                | Disposition                                                                                                                                                                            |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1, 2. Zod reads an inherited member as a property: a schema that names `toString` refuses `{}`, and one that requires `constructor` accepts it         | True, and wider than this slice. Recorded under the rows as owed by the rows for `properties` and `required`. Oak's document names no such property (computed)                         |
+| 1. The reference the seat used (Ajv as configured) is wrong the same way, so the two agreeing proved less than claimed                                 | True. The 74 values were re-run with Ajv reading own properties only; none differed. The picture's reference has the same setting and is corrected in a pull request of its own        |
+| 3. `required` with no `properties`, `dependentSchemas`, `if` and a sibling `allOf` each fall in row D as stated and are decided wrongly                | Fixed: the conditions exclude the keywords that apply a subschema in place, and a name only `required` holds counts as named. The `required` case was run and decides as the reference |
+| 4. Row B beside a `$ref` closes what the reference leaves open                                                                                         | Fixed by the same conditions                                                                                                                                                           |
+| 5. The Appendix A exception states what a reader does, which is SPEC-N-3's; and a mark cannot tell a forged check from Castr's                         | Fixed: Appendix A is not changed and the sentence now says the mark does not prove who wrote the function                                                                              |
+| 6. The form uses `.pipe`, which Appendix A rejects                                                                                                     | Appendix A is the reader's table. The draft now says plainly that Castr's reader would not read this output until a reader amendment says so                                           |
+| 7. "Root" is not defined; a closed object does not refuse the name at depth; a check on each named recursive schema repeats the walk                   | Fixed: the clause says which values are refused, row G no longer says where, and the two facts are in the draft for N0                                                                 |
+| 8. "No Zod schema can accept such a value and return it whole" is false for `z.unknown()`                                                              | Fixed: the sentence is about a Zod object that allows unknown keys                                                                                                                     |
+| 9. The `UNEXPRESSIBLE` list is incomplete, TypeScript can express the name, and a Zod object given the name as a property accepts `{}`                 | Fixed: the list is removed. See "Open, and whose"                                                                                                                                      |
+| 10. A Zod schema held in `params` is printed in every error message                                                                                    | Fixed: a shape in a mark is a function that returns the schema. Run: the message no longer holds the definition and the function returns the schema. Not run for a recursive `K`       |
+| 11. Under the repository's compiler settings an optional property is assignable one way only in rows A, C and E; row E's literal fault was understated | The first is the `required` row's and is recorded under the rows. Row E's note is corrected. Row D is mutual in both directions with the whole written form                            |
+| 12. A recursive value 2,000 levels deep makes Zod throw where the reference accepts                                                                    | True of every recursive schema, not of these rows. Owed by the row for a reference to an enclosing schema; Oak's two schemas are not recursive                                         |
+| `z.toJSONSchema` on the written form loses `propertyNames`                                                                                             | No change: Castr writes JSON Schema from the model, never from the Zod it wrote                                                                                                        |
+| A `pattern` of one character against an astral character                                                                                               | The `pattern` row's                                                                                                                                                                    |
+
+Not run by the reviewer or the seat: reaching `params` from source text through a
+syntax tree; the endpoint-definitions column; Oak's real document through any of this.
