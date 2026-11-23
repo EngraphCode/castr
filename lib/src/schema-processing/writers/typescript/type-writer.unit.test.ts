@@ -781,6 +781,12 @@ describe('Dynamic Reference Keywords — TypeScript fail-fast', () => {
       },
     );
 
+    it('refuses an enum beside a reference', () => {
+      const schema: CastrSchema = { $ref: '#/components/schemas/A', enum: ['a', 'b'], metadata };
+
+      expect(() => generate(schema)).toThrow(/enum beside \$ref/);
+    });
+
     it('refuses an enum beside a const, which the union of literals would drop', () => {
       const schema: CastrSchema = { const: 'a', enum: ['a', 'b'], metadata };
 

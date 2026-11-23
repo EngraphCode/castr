@@ -66,8 +66,11 @@ export function writeBooleanSchemaType(schema: CastrSchema, writer: CodeBlockWri
   return true;
 }
 
-/** Keywords the writer reaches only after an enum, so an enum beside one would drop it. */
-const KEYWORDS_AN_ENUM_WOULD_DROP = ['const', 'allOf', 'anyOf', 'oneOf'] as const;
+/**
+ * What this writer wrote, where a schema held it, before it wrote an enum as literals:
+ * a reference, a const, and each composition.
+ */
+const WRITTEN_BEFORE_AN_ENUM = ['$ref', 'const', 'allOf', 'anyOf', 'oneOf'] as const;
 
 /**
  * Write an `enum` as the union of its members' literal types: what the Zod writer's
@@ -79,8 +82,9 @@ export function writeEnumType(schema: CastrSchema, writer: CodeBlockWriter): boo
   if (schema.enum === undefined || schema.enum.length === 0) {
     return false;
   }
-  // A model another reader built can hold an enum beside a keyword that also decides.
-  const beside = KEYWORDS_AN_ENUM_WOULD_DROP.find((keyword) => schema[keyword] !== undefined);
+  // Before an enum was written as literals, this writer wrote each of these in its place.
+  // An enum beside one would now drop it, so the pair is refused.
+  const beside = WRITTEN_BEFORE_AN_ENUM.find((keyword) => schema[keyword] !== undefined);
   if (beside !== undefined) {
     throw new Error(
       `An enum beside ${beside} is not written in TypeScript: the union of the ` +
