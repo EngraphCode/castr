@@ -87,16 +87,17 @@ construct of, then sets those rows against today's cells
 ([`documents/usage.ts`](documents/usage.ts)). It prints a count for each document and
 each output, and for Oak's document the rows that are not right.
 
-Oak's document uses 75 of the 318 rows. In the Zod output none of them is refused, three
-are wrong (`const`, `format: uri` and `false` as a schema) and one is missing
-(`default`). [`documents/documents.gen.test.ts`](documents/documents.gen.test.ts) holds
+Oak's document uses 74 of the 318 rows. In the Zod output none of them is refused, one
+is wrong (`format: uri`) and one is missing (`default`). [`documents/documents.gen.test.ts`](documents/documents.gen.test.ts) holds
 that no row it uses stops it.
 
 Three rows are narrower than the row of their keyword, and a schema in one of them is
 named by it and not by the keyword ([`documents/map-rows.ts`](documents/map-rows.ts)):
 `additionalProperties: false`, and the two rows of a map the specification's Appendix B.2
 holds. The keywords' own rows keep their cases, which are schemas none of the three
-covers, and Castr still refuses those.
+covers, and Castr still refuses those. The `false` of a closed object is part of its row
+and is not counted again as a schema: every `false` that stands where a schema stands in
+Oak's document is the value of `additionalProperties`.
 
 How to read it:
 
