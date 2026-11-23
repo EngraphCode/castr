@@ -164,8 +164,60 @@ false`, where it stands by itself: never at a schema applied in place (a branch 
   it or it is theirs by nature.
 
 Size, re-read: the first slice took seven rows, two pull requests and six pushes as
-prose. The step is not worked that way again. The next piece is the mechanism: a
-runnable proposal for each of the rows Oak's two schemas use, judged in the picture.
+prose. The step is not worked that way again.
+
+### What is next, written before the owner's compaction of 23 November
+
+Decided the same day by the seat with the Ecosystem repository's metacognition,
+concept-exploration, reason and parallax skills; the thread record's last entry of
+23 November has the reasoning, each proposal's warrant and what would show it wrong.
+An hour earlier this section said the next piece was the mechanism for runnable
+proposals. The exploration changed that: the proof for Oak's two rows has already been
+run and is tracked (the appendix of the first slice's draft), so a mechanism placed
+before the first value step would be an instrument ahead of the work.
+
+1. **Pull request #172** holds this reframing. Its hosted reviews were not answered
+   before the compaction. Read every thread, change only what is a factual error,
+   reply, resolve, and merge when clean and green.
+2. **Read the course on the model before building** ([castr-course.md](castr-course.md),
+   the owner's cards of 18 November: "A repair that adds no text-building goes into
+   today's code ... the model is redesigned by an approved amendment (SPEC-N-1) before
+   it changes"; about 26,500 of 35,655 product lines are the model or written against
+   its shape). Write one matrix row on whether N0, as a repair of today's code, stands.
+   The seat's reading is that it does, by that card; the course was not re-read in full
+   on 23 November.
+3. **A small amendment, 0.9.0,** holding text only where a choice exists or no approved
+   clause already says it: the five vocabulary sentences; the sentence on a check Castr
+   writes and its mark, with section 11's change; one sentence on the limits of
+   JavaScript targets (the name `__proto__`); SPEC-G-5's third route; and the rows for a
+   constrained map and for `propertyNames`, with their conditions. All of it is in the
+   first slice's draft as reviewed, less what was withdrawn. SPEC-N-5 stays open, with
+   words saying the table is written row by row. Before the owner is asked: run the
+   composition script again without the check in front and without the `__proto__`
+   samples; run whether `params` is reachable from source text through the compiler's
+   syntax tree, which has only been run on a loaded module; and read in the thread
+   record how 0.8.0's approval was recorded. Then one blocking question to the owner
+   carrying the exact text, for their words naming the version. Approval of
+   specification text is theirs by SPEC-CC-2 and is not a question the lenses settle.
+4. **N0, the fix,** test first, under the conditions the reviews of 22 and 23 November
+   set. The picture's cells for the two rows turn right, and Oak's whole-document line
+   names what stops it next.
+5. **Beside those, in their waits,** each replacing hand-written prose with a judge
+   outside Castr: the closed reading's transformation as the picture's second reference
+   (SPEC-G-4 asks for one and none exists), with a check over generated schemas that it
+   never accepts what the source refuses; the JSON Schema Test Suite, which SPEC-C-2
+   already names, pinned as the source of composition cases for each keyword; the
+   findings of the reviews of 22 and 23 November turned into cases; a case for a
+   property whose name every object inherits; and the words that say which schemas
+   describe objects, as the next small amendment if Oak's next stop is its quiz schemas.
+6. **Rows follow what stops Oak's document next, and each is classed for any valid
+   schema.** The order follows value; the measure stays every row. A schema outside a
+   row's stated conditions is `NOT-YET-BUILT`, never a default.
+
+What would show this wrong: the approval question comes back as one the owner should
+not have been asked; or the amendment draws a finding that changes the outcome for Oak's
+shape; or N0 passes three pull requests; or two turns of this loop leave the picture's
+count for Oak's document where it was. Any of them is a step back before more work.
 
 ## What this serves
 
