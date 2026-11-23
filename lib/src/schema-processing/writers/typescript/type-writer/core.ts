@@ -2,14 +2,14 @@ import type { CodeBlockWriter, WriterFunction } from 'ts-morph';
 import type { CastrSchema } from '../../../ir/index.js';
 import { getIntegerSemantics, isConstrainedMap } from '../../../ir/index.js';
 import { assertSchemaSupportsIntegerTargetCapabilities } from '../../../compatibility/integer-target-capabilities.js';
-import { parseComponentRef } from '../../../../shared/ref-resolution.js';
-import { isValidJsIdentifier, safeSchemaName } from '../../../../shared/utils/identifier-utils.js';
+import { isValidJsIdentifier } from '../../../../shared/utils/identifier-utils.js';
 import {
   rejectDynamicReferenceKeywords,
   rejectUnsupportedObjectKeywords,
   rejectUnsupportedArrayKeywords,
   resolveSchemaTypeString,
 } from './fail-fast.js';
+import { writeConstType, writeRefType } from './leaf-types.js';
 import { writeDependentRequiredUnions, writeDependentSchemasUnions } from './dependent-keywords.js';
 import {
   DEPENDENT_REQUIRED_BESIDE_A_TYPESCRIPT_MAP,
@@ -25,16 +25,6 @@ export function writeTypeDefinition(schema: CastrSchema): WriterFunction {
       writer.write(' | null');
     }
   };
-}
-
-/** Write a $ref type name. @internal */
-function writeRefType(schema: CastrSchema, writer: CodeBlockWriter): boolean {
-  if (schema.$ref) {
-    const { componentName } = parseComponentRef(schema.$ref);
-    writer.write(safeSchemaName(componentName));
-    return true;
-  }
-  return false;
 }
 
 /** Write composition types (allOf → intersection, oneOf/anyOf → union). @internal */
@@ -94,7 +84,7 @@ function writeTypeBody(schema: CastrSchema): WriterFunction {
       return;
     }
     rejectDynamicReferenceKeywords(schema);
-    if (writeRefType(schema, writer)) {
+    if (writeRefType(schema, writer) || writeConstType(schema, writer)) {
       return;
     }
     if (writeCompositionType(schema, writer)) {
@@ -199,10 +189,8 @@ function getSortedPropertyEntries(schema: CastrSchema): [string, CastrSchema][] 
   return [...schema.properties.entries()].sort(([a], [b]) => a.localeCompare(b));
 }
 
-/**
- * An object whose unknown keys must satisfy a schema: written as a constrained map
- * (specification Appendix B.2) or refused, so no constraint is ever dropped.
- */
+// An object whose unknown keys must satisfy a schema: written as a constrained map
+// (specification Appendix B.2) or refused, so no constraint is ever dropped.
 function writeMapType(schema: CastrSchema, values: CastrSchema, writer: CodeBlockWriter): void {
   if (!isConstrainedMap(schema)) {
     throw new Error(SCHEMA_VALUED_ADDITIONAL_PROPERTIES_OUTSIDE_THE_ROW);
