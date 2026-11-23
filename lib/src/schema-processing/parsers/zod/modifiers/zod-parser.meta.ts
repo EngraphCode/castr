@@ -5,7 +5,7 @@
  */
 
 import type { CastrSchema } from '../../../ir/index.js';
-import { Node } from 'ts-morph';
+import { Node, SyntaxKind } from 'ts-morph';
 import { extractLiteralValue, type ZodMethodCall } from '../ast/zod-ast.js';
 import { ZOD_METHOD_META } from '../zod-constants.js';
 import type { UnknownRecord } from '../../../../shared/type-utils/types.js';
@@ -289,7 +289,16 @@ function parseMetaValue(node: Node): unknown | undefined {
     return parseGenericObject(node);
   }
 
-  return extractLiteralValue(node);
+  return negativeNumberOf(node) ?? extractLiteralValue(node);
+}
+
+/** A negative number is written as a minus sign before a numeric literal. */
+function negativeNumberOf(node: Node): number | undefined {
+  if (!Node.isPrefixUnaryExpression(node) || node.getOperatorToken() !== SyntaxKind.MinusToken) {
+    return undefined;
+  }
+  const operand = node.getOperand();
+  return Node.isNumericLiteral(operand) ? -operand.getLiteralValue() : undefined;
 }
 
 function isPlainObject(value: unknown): value is JsonObject {

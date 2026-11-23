@@ -50,6 +50,7 @@ export function writeMetadata(schema: CastrSchema, writer: CodeBlockWriter): voi
     return;
   }
 
+  rejectAPropertyNamedProto(meta);
   writer.write('.meta(');
   writer.write(JSON.stringify(meta));
   writer.write(')');
@@ -118,4 +119,25 @@ function collectMetadata(schema: CastrSchema): ZodMetadata {
   collectCoreMetadata(schema, meta);
   collectExtendedMetadata(schema, meta);
   return meta;
+}
+
+const PROTO = '__proto__';
+
+/**
+ * The metadata is written as an object literal, and in a literal a property named
+ * `__proto__` sets the prototype and makes no property. A value that holds one, at any
+ * depth, would be written as a different value, so it is refused.
+ * @internal
+ */
+function rejectAPropertyNamedProto(value: unknown): void {
+  if (typeof value !== 'object' || value === null) {
+    return;
+  }
+  if (Object.hasOwn(value, PROTO)) {
+    throw new Error(
+      `A schema annotation that holds a property named ${PROTO} is rejected: written as ` +
+        'an object literal in .meta(), it would set a prototype and the property would be lost.',
+    );
+  }
+  Object.values(value).forEach(rejectAPropertyNamedProto);
 }

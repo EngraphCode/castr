@@ -226,6 +226,13 @@ describe('ZodWriter', () => {
       );
     });
 
+    it('is refused where it holds a property named __proto__, which a literal would lose', () => {
+      const held: unknown = JSON.parse('{"b": 2, "nested": [{"__proto__": {"a": 1}}]}');
+      const schema: CastrSchema = { ...createMockSchema('object'), default: held };
+
+      expect(() => generate(createPropertyContext(schema, false))).toThrow(/__proto__/);
+    });
+
     it('is not written again beside a Zod default, which inserts', () => {
       const base = createMockSchema('number');
       const schema: CastrSchema = {
