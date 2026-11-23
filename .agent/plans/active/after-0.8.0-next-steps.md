@@ -324,14 +324,13 @@ specification are approved and on `main`.
    picture's cell, in one turn. The one exception is unit 6, where several causes share one
    amendment because the owner is asked once; each then gets its own code unit.
 
-   1. `const`, reader and TypeScript writer. Open as pull request 177.
+   1. `const`, reader and TypeScript writer. Merged as pull request 177.
    2. `enum` to TypeScript.
    3. The picture's own four causes: the walk and `` `false` as a schema ``; a kind of
       case that can judge `parameter: in: path`, or the cell stated as one the picture
-      cannot judge; the case for a component's name read and its two cells classed; and,
-      once unit 4 lands, the exact status code's cell judged.
+      cannot judge; and the case for a component's name read and its two cells classed.
    4. A located refusal for a status range in the endpoint definitions, in place of a
-      module that does not load.
+      module that does not load; with it, the exact status code's cell judged.
    5. A refusal for `minProperties` and `maxProperties`; a case for `items: false`.
    6. One amendment for what needs text, through one round of hosted review before the
       owner is asked (act 3): `format: uri`; `default` in Zod; the shape of an endpoint
