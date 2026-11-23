@@ -343,8 +343,8 @@ specification are approved and on `main`.
       The exact status code's cell stays not judged, because the document it is set
       against is now refused where it crashed; it is judged once a range has a shape
       (unit 6).
-   5. A refusal for `minProperties` and `maxProperties`, merged as pull request 182; a boolean where a schema stands, read as the schema it is (its own pull request, after
-      182); and
+   5. A refusal for `minProperties` and `maxProperties`, merged as pull request 182; a boolean where a schema stands, read as the schema it is, merged as pull request
+      184; and
       `const` and `enum` beside a keyword that also decides, in the Zod writer, which
       writes the literal and returns. Its case is `{type: string, enum: ['a', null]}`:
       both writers admit `null`, which the source's `type` refuses (found in the review
@@ -373,6 +373,42 @@ specification are approved and on `main`.
    7. One code unit for each cause the amendment settles, the run report among them.
    8. The `paths` type: its rows, then the writer.
    9. The reader's document pass, position by position (left out of pull request 175).
+
+   **Step back before the third compaction of 23 November: the order changes.** The
+   picture's table for Oak's document holds 26 rows that are not right. Two are schema
+   rows, `format: uri` and `default`, and both wait on the amendment (unit 6). Of the 24
+   structure rows, 21 cells are the `paths` type that nothing writes (unit 8), and the
+   rest are the endpoint definition's shape (unit 6 again). Units 4 and 5 moved none of
+   them: each was a silent drop in a construct Oak does not send, found by the review of
+   the one before. They were right to close and wrong to keep choosing, because the
+   reviews will supply one more for as long as they are taken one at a time.
+
+   So, from here:
+
+   1. **Unit 6 next**: draft the amendment, put it through one round of hosted review,
+      then one blocking question to the owner (act 3). It is the only door to Oak's two
+      schema rows and to the endpoint rows.
+   2. **Unit 8 beside it**, in the wait on the owner: the rows for the document's
+      structure to TypeScript, then the `paths` type. It is 21 of the 26.
+   3. **The leftovers of unit 5 become one unit, after those.** Every one of them was
+      the same finding: a keyword the reader did not look at. The reader copies the
+      keywords it knows and lets the others fall. The cure proposed is the other kind of
+      list: the keywords the reader reads, with any other keyword of a schema refused by
+      one rule, in the one function every schema is built by, and checked against the
+      picture's keyword rows, which are computed from the publisher's schema and so
+      cannot fall one short. It replaces the refusals written one keyword at a time and
+      takes in the keywords beside a `$ref`. What would show it wrong: most keywords
+      turn out to need handling of their own beside the list, so the rule buys nothing;
+      or the picture's rows and the reader's keywords cannot be set against each other
+      without a hand-written table. Not in it, because they are faults of writers and
+      not of reading: `const` and `enum` beside a keyword that also decides, and the
+      OpenAPI writer's refusal of a boolean schema.
+
+   **State of unit 5 after pull request 184.** Done: the count of properties (182) and
+   boolean schemas (184). In review: the refusal of `not`, `if`, `then` and `else`. Left:
+   `const` and `enum` beside a keyword that also decides, in the Zod writer, with an enum
+   member its type refuses; the keywords beside a `$ref`; and the OpenAPI writer's refusal
+   of a boolean schema, below.
 
    **Found after the queue was written, and part of unit 5.** The OpenAPI writer refuses
    a boolean schema and says OpenAPI has none. OpenAPI 3.1 and 3.2 take their Schema

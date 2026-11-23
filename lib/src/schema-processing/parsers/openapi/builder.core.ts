@@ -23,7 +23,7 @@ import {
 } from '../../ir/index.js';
 import type { IRBuildContext } from './builder.types.js';
 import { addConstraints } from './schemas/builder.constraints.js';
-import { rejectPropertyCount } from './builder/builder.property-count.js';
+import { rejectKeywordsNotCarried } from './builder/builder.refused-keywords.js';
 import { addOpenAPIExtensions } from './schemas/builder.json-schema-2020-12.js';
 import { updateZodChain } from './schemas/builder.zod-chain.js';
 import { addSchemaDocumentation } from './builder/builder.documentation.js';
@@ -55,7 +55,7 @@ export function buildCastrSchema(
   if (typeof schema === 'boolean') {
     return { booleanSchema: schema, metadata: buildCastrSchemaNode({}, context) };
   }
-  rejectPropertyCount(schema, context.path);
+  rejectKeywordsNotCarried(schema, context.path);
   if (isReferenceObject(schema)) {
     // For references, create a minimal schema object for metadata building
     const emptySchema: SchemaObject = {};
