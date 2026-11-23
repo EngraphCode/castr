@@ -28,10 +28,33 @@ subagents: use the model that fits the task.
 - **Merged later on 23 November:** 180 (this record), 181 (a status range: its key
   quoted so the module loads, and a located refusal among the errors) and 182
   (`minProperties` and `maxProperties` refused where the reader reads a schema).
-- **The queue stands in unit 5.** Units 1 to 4 are done. The plan's "State of unit 5"
-  paragraph says which parts of unit 5 are merged and which are left; read it and
-  `gh pr list` before acting. After unit 5 comes unit 6, the amendment, which ends in a
-  question to the owner.
+- **The order changed at the step back before the third compaction.** Read the plan's
+  paragraph of that name first. In short: unit 6 (the amendment, ending in a question to
+  the owner) is next, unit 8 (the `paths` type) runs beside it, and the leftovers of
+  unit 5 become one unit after those. The reason is the picture's table for Oak's
+  document: all 26 rows left run through units 6 and 8.
+- **How this seat works a pull request**, since no file says it:
+  - A review arrives a few minutes after each push. The reviewer's summary comment on
+    the pull request holds the commit it reviewed and whether anything is unresolved;
+    wait for it to name the head commit before merging.
+  - A merge refused with "the base branch policy prohibits the merge" has always meant
+    an unresolved review thread.
+  - Every thread gets a reply that opens with a line saying an agent seat wrote it, then
+    is resolved. A finding is run before it is accepted or declined.
+  - A documents-only pull request draws a new point at every push. Its exit is one
+    round; a later point is answered on the thread and taken into the next change.
+  - Stage by explicit path after a rename: the status line of a rename holds the old
+    name first, and a commit made from it left the new file out while every check
+    passed against the working tree. Read what a commit holds.
+  - A commit that fails in lint with a missing `tsup.config.bundled_*` file is a race
+    with the build; run it again.
+  - The commit helper this seat used is a scratch script, not in the repository. It
+    opens a claim on the git index, then runs the commit queue's `enqueue`, `guard`,
+    `record-staged` and `commit` in turn, and closes the claim. Without it, run those
+    commands, or commit by explicit path as a sole writer may.
+- **The owner's word before the third compaction** (23 November, verbatim): "Please
+  prepare for compaction, post-compaction we continue". So the seat carries on after it
+  without being asked again. A third letter to a successor is under `.agent/experience/`.
 - **The picture:** `pnpm picture` from `lib/` prints the counts. Oak's document uses 74
   of 318 rows and 26 are not right; it was 29 of 75 after 175. Units 4 and 5 touch no
   row Oak uses.
