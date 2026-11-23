@@ -1162,6 +1162,19 @@ string; [key: string]: string | number }` accepts every valid value and also
     is unchanged, because its two cases for these keywords are outside the approved rows
     (one names a property, one has a pattern) and are still refused, correctly. The
     cases for the approved rows are owed.
+  - _The first push of the fix was refused, and the seat did not read it._ The push ran
+    in the background and its task ended with a zero status, which was the status of the
+    seat's own wrapper and not of the push. The pre-push check had failed: five suites
+    that the default test run does not include (characterisation, snapshot, generated
+    code, transforms, the picture) each pinned the old refusal, six tests in all. The
+    seat found this only when a second push failed, after it had written above that the
+    slice was pushed. Each test now states what Castr does. Two real documents among the
+    fixtures were refused only for their constrained maps and are no longer refused: the
+    ePerusteet document and the USPTO example. Nobody has judged their output. The rule
+    this repeats is in "How work lands here": read a background push's own output before
+    building on it. And the fix is run against every suite, not the default one:
+    `pnpm character`, `pnpm test:snapshot`, `pnpm test:gen`, `pnpm test:transforms`,
+    `pnpm test:picture` from `lib`.
   - _Found while building._ With the reader letting a map through, both writers wrote an
     empty object and dropped the constraint without a word; the reader's refusal had been
     hiding that. Others of the kind may sit behind each refusal the reader still makes.
