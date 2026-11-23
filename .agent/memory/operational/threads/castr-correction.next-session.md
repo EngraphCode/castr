@@ -19,8 +19,10 @@ subagents: use the model that fits the task.
   `propertyNames` that refuses no name (row 2); every writer refuses a schema-valued
   `additionalProperties` outside the row; and Oak's document converts in every output.
   With 177 a `const` that decides alone is read and written as a literal. The
-  specification is 0.10.0 once its pull request merges: the owner approved it on 23
-  November by question ("I approve revision 0.10.0"), choosing `z.url()` with a declared
+  specification is 0.10.1 once its pull request merges: the owner approved it on 23
+  November by question ("I approve revision 0.10.0", then "I approve revision 0.10.1" for two
+  adjustments from the first hosted review: the `format: uri` row covers `type: string`
+  alone, and a new class, carried with a declared limit), choosing `z.url()` with a declared
   limit (SPEC-P-8) for `format: uri`. Its code is next: a source `default` written into
   `.meta(…)` in Zod, and the picture's sample for the limit made a tracked case. Then
   unit 8, the `paths` type.
