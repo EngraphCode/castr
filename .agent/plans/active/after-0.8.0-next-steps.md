@@ -330,12 +330,19 @@ specification are approved and on `main`.
    1. `const`, reader and TypeScript writer. Merged as pull request 177.
    2. `enum` to TypeScript, with a union kept whole and its members told apart by what
       is written. Merged as pull request 178.
-   3. Three of the picture's own causes (the fourth is in unit 4): the walk and
-      `` `false` as a schema ``, merged as pull request 179; a kind of
-      case that can judge `parameter: in: path`, or the cell stated as one the picture
-      cannot judge; and the case for a component's name read and its two cells classed.
-   4. A located refusal for a status range in the endpoint definitions, in place of a
-      module that does not load; with it, the exact status code's cell judged.
+   3. Three of the picture's own causes. The walk and `` `false` as a schema `` merged as
+      pull request 179. `parameter: in: path` stays "not judged" with its reason printed
+      beside it, which is the cell stated as one the picture cannot judge; nothing more
+      is owed. The case for a component's name was read: it declares a `parameters`
+      component and Castr writes the parameter in place, losing the name (SPEC-PR-3).
+      Oak's document has no such component; its uses of the row are schema components,
+      whose names Castr keeps. So the row is to be split by kind of component, and how a
+      named parameter is written joins the endpoint definition's shape in unit 6.
+   4. A status range in the endpoint definitions: the key quoted so the module loads,
+      and a located refusal for a range among the errors. Open as its own pull request.
+      The exact status code's cell stays not judged, because the document it is set
+      against is now refused where it crashed; it is judged once a range has a shape
+      (unit 6).
    5. A refusal for `minProperties` and `maxProperties`; a case for `items: false`; and
       `const` and `enum` beside a keyword that also decides, in the Zod writer, which
       writes the literal and returns. Its case is `{type: string, enum: ['a', null]}`:
