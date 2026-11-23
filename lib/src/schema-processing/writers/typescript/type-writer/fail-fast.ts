@@ -12,9 +12,7 @@
  */
 
 import type { CastrSchema } from '../../../ir/index.js';
-import { getIntegerSemantics, holdsPropertyNamesThatRefuseNoName } from '../../../ir/index.js';
-import { parseComponentRef } from '../../../../shared/ref-resolution.js';
-import { safeSchemaName } from '../../../../shared/utils/identifier-utils.js';
+import { holdsPropertyNamesThatRefuseNoName } from '../../../ir/index.js';
 
 /**
  * Reject genuinely impossible 2020-12 object keywords.
@@ -126,112 +124,4 @@ export function rejectDynamicReferenceKeywords(schema: CastrSchema): void {
         'there is no static type-system equivalent.',
     );
   }
-}
-
-// ---------------------------------------------------------------------------
-// Union Deduplication — type string resolution
-// ---------------------------------------------------------------------------
-
-/**
- * Resolve a schema to its TypeScript type string for deduplication.
- *
- * Lightweight string representation used to detect and remove duplicate
- * types in unions (e.g., `number | number | number` → `number`).
- *
- * @internal
- */
-export function resolveSchemaTypeString(schema: CastrSchema): string {
-  return (
-    resolveEnumTypeString(schema) ??
-    resolveRefTypeString(schema) ??
-    resolveConstTypeString(schema) ??
-    resolveCompositionTypeString(schema) ??
-    resolvePrimitiveTypeString(schema)
-  );
-}
-
-function resolveRefTypeString(schema: CastrSchema): string | undefined {
-  if (!schema.$ref) {
-    return undefined;
-  }
-  const { componentName } = parseComponentRef(schema.$ref);
-  // The emitted symbol, never the wire name: a component named `string` emits
-  // `stringSchema` and must not deduplicate against the primitive `string`.
-  return safeSchemaName(componentName);
-}
-
-// A const is written as its literal, so two members that differ only in their const are
-// two types and neither is a duplicate of the other.
-function resolveConstTypeString(schema: CastrSchema): string | undefined {
-  return schema.const === undefined ? undefined : JSON.stringify(schema.const);
-}
-
-// An enum is written as its members' literals, so the same holds of two enums.
-function resolveEnumTypeString(schema: CastrSchema): string | undefined {
-  return schema.enum === undefined || schema.enum.length === 0
-    ? undefined
-    : schema.enum.map((member) => JSON.stringify(member)).join(' | ');
-}
-
-function resolveCompositionTypeString(schema: CastrSchema): string | undefined {
-  if (schema.allOf) {
-    return schema.allOf.map((s) => resolveSchemaTypeString(s)).join(' & ');
-  }
-  const unionMembers = schema.oneOf ?? schema.anyOf;
-  if (unionMembers) {
-    return unionMembers.map((s) => resolveSchemaTypeString(s)).join(' | ');
-  }
-  return undefined;
-}
-
-function resolveScalarTypeToken(schema: CastrSchema): string | undefined {
-  if (getIntegerSemantics(schema) !== undefined) {
-    return 'bigint';
-  }
-  switch (schema.type) {
-    case 'string':
-      return 'string';
-    case 'number':
-    case 'integer':
-      return 'number';
-    case 'boolean':
-      return 'boolean';
-    case 'null':
-      return 'null';
-    default:
-      return undefined;
-  }
-}
-
-function resolvePrimitiveTypeString(schema: CastrSchema): string {
-  const scalarTypeToken = resolveScalarTypeToken(schema);
-  if (scalarTypeToken !== undefined) {
-    return scalarTypeToken;
-  }
-  switch (schema.type) {
-    case 'array':
-      return resolveArrayTypeString(schema);
-    case 'object':
-      return resolveObjectTypeString(schema);
-    default:
-      return 'unknown';
-  }
-}
-
-function resolveObjectTypeString(schema: CastrSchema): string {
-  if (!schema.properties) {
-    return 'object';
-  }
-  const keys = [...schema.properties.keys()].sort((a, b) => a.localeCompare(b));
-  return `{${keys.join(',')}}`;
-}
-
-function resolveArrayTypeString(schema: CastrSchema): string {
-  if (schema.prefixItems !== undefined) {
-    return `[${schema.prefixItems.map((s) => resolveSchemaTypeString(s)).join(', ')}]`;
-  }
-  if (schema.items && !Array.isArray(schema.items)) {
-    return `${resolveSchemaTypeString(schema.items)}[]`;
-  }
-  return 'unknown[]';
 }

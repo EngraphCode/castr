@@ -849,6 +849,43 @@ describe('Dynamic Reference Keywords — TypeScript fail-fast', () => {
       expect(generate(arrayOf(items))).toBe('(A & B)[]');
     });
 
+    it('keeps both branches of a union whose objects differ only in a const', () => {
+      const branch = (kind: string): CastrSchema => ({
+        type: 'object',
+        properties: new CastrSchemaProperties({
+          kind: { type: 'string', const: kind, metadata },
+        }),
+        required: ['kind'],
+        additionalProperties: false,
+        metadata,
+      });
+
+      const written = generate({ oneOf: [branch('a'), branch('b')], metadata });
+
+      expect(written).toContain('kind: "a"');
+      expect(written).toContain('kind: "b"');
+    });
+
+    it('keeps an array of a union apart from the members it would read as unbracketed', () => {
+      const stringOrNumber: CastrSchema = {
+        anyOf: [
+          { type: 'string', metadata },
+          { type: 'number', metadata },
+        ],
+        metadata,
+      };
+      const schema: CastrSchema = {
+        anyOf: [
+          arrayOf(stringOrNumber),
+          { type: 'string', metadata },
+          arrayOf({ type: 'number', metadata }),
+        ],
+        metadata,
+      };
+
+      expect(generate(schema)).toBe('(string | number)[] | string | number[]');
+    });
+
     it('writes no parentheses round items that are one type', () => {
       expect(generate(arrayOf({ type: 'string', metadata }))).toBe('string[]');
     });

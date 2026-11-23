@@ -1,4 +1,4 @@
-import type { CodeBlockWriter, WriterFunction } from 'ts-morph';
+import { CodeBlockWriter, type WriterFunction } from 'ts-morph';
 import type { CastrSchema } from '../../../ir/index.js';
 import { getIntegerSemantics, isConstrainedMap } from '../../../ir/index.js';
 import { assertSchemaSupportsIntegerTargetCapabilities } from '../../../compatibility/integer-target-capabilities.js';
@@ -7,7 +7,6 @@ import {
   rejectDynamicReferenceKeywords,
   rejectUnsupportedObjectKeywords,
   rejectUnsupportedArrayKeywords,
-  resolveSchemaTypeString,
 } from './fail-fast.js';
 import {
   isUnion,
@@ -132,21 +131,15 @@ function writeUnion(schemas: CastrSchema[], writer: CodeBlockWriter): void {
     writer.write('unknown');
     return;
   }
-  const seen = new Set<string>();
-  const uniqueSchemas: CastrSchema[] = [];
-  for (const s of schemas) {
-    const typeStr = resolveSchemaTypeString(s);
-    if (!seen.has(typeStr)) {
-      seen.add(typeStr);
-      uniqueSchemas.push(s);
-    }
+  // Two members are one only when they are written the same. Each is written apart and
+  // compared as text, so no summary of a member can make two different types look alike.
+  const written = new Set<string>();
+  for (const member of schemas) {
+    const memberWriter = new CodeBlockWriter();
+    writeTypeBody(member)(memberWriter);
+    written.add(memberWriter.toString());
   }
-  uniqueSchemas.forEach((s, i) => {
-    if (i > 0) {
-      writer.write(' | ');
-    }
-    writeTypeBody(s)(writer);
-  });
+  writer.write([...written].join(' | '));
 }
 
 function writeArrayType(schema: CastrSchema, writer: CodeBlockWriter): void {
