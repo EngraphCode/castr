@@ -54,6 +54,7 @@ export {
   isConstrainedMap,
   refusesNoPropertyName,
 } from './unknown-keys/map-rows.js';
+export { whyConstDoesNotDecideAlone } from './literals/const-alone.js';
 export {
   UUID_SCHEMA_TYPE,
   UUID_SCHEMA_FORMAT,
