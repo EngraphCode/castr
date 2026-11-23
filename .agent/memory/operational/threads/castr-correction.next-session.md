@@ -7,52 +7,35 @@ change was coming and asked that all reasoning be made local, then that the seat
 A successor has no memory of the session. Everything it needs is in this section or in a
 file it names. Verify each line against git and GitHub before acting.
 
-### Update of 23 November, after the account change
-
-The owner resumed the seat ("The account switch is complete and pauses are lifted") and
-lifted the Fable-only limit on subagents: use the model that fits the task.
-
-- Pull request 175 (the fix) is **merged**: `main` is at `bc0595d3`. Its one review round
-  found four faults that held when run; all are fixed with tests in `a397c574`. The
-  reader's document pass stays left out, with the reason answered on the thread.
-- The plan's act 2 is **done**: the sorted table and the queue of nine units are in the
-  plan under "The sort". Next act is unit 1 of that queue, `const`.
-- Where "Where things stand" and "What to do next" below differ from this, this is newer.
-
 ### Where things stand
 
-- **`main`** is at the merge of pull request 173 (`c276cb68`). The specification on it is
-  0.9.1. Pull requests 172, 173 and 174 are merged. No pull request is open.
-- **The branch `fix/n0-constrained-map`** holds the fix (N0) and is pushed. It has **no
-  pull request**: the seat stopped at the owner's word before opening one, because an
-  open pull request needs a seat to read its reviews. Opening it is the next act. The
-  branch is not behind `main`.
-- **What the branch does.** The OpenAPI reader, the model's validator and the Zod and
-  TypeScript writers handle a constrained map (Appendix B.2, row 1); nothing is written
-  for a `propertyNames` that refuses no name (row 2); every writer refuses a
-  schema-valued `additionalProperties` outside the row. Oak's document converts in every
-  output. The picture has a row and a case for each of the two rows, both right in the
-  Zod and TypeScript columns, and a tracked case for SPEC-P-7.
-- **The picture today:** Oak's document uses 75 of 318 rows; 29 are not right, none is
-  refused. All six suites (`pnpm test`, `character`, `test:snapshot`, `test:gen`,
-  `test:transforms`, `test:picture`), type-check, lint and knip passed before the push.
-- Nothing runs under this seat: no watcher, heartbeat, monitor or schedule. No claim is
-  open. The Ecosystem repository's pull request 1082 belongs to its own seat (Petrel
-  mends Pinnacle), by the owner's word quoted below.
+Rewritten after the account change of 23 November. The owner resumed the seat ("The
+account switch is complete and pauses are lifted") and lifted the Fable-only limit on
+subagents: use the model that fits the task.
+
+- **`main`** is at the merge of pull request 175 (`bc0595d3`). The specification on it
+  is 0.9.1. Pull requests 172 to 175 are merged.
+- **Pull request 175, the fix (N0), is merged.** The OpenAPI reader, the model's
+  validator and the Zod and TypeScript writers handle a constrained map (Appendix B.2,
+  row 1); nothing is written for a `propertyNames` that refuses no name (row 2); every
+  writer refuses a schema-valued `additionalProperties` outside the row. Oak's document
+  converts in every output. Its one review round found four faults that held when run,
+  fixed with tests in `a397c574`.
+- **Two pull requests are open, both this seat's:** 176 (`docs/act2-sort`: the sort of
+  the plan's second act, and this record) and 177 (`fix/const-read`: the first repair of
+  the queue). Each merges when clean and green; nobody is asked. Verify their state on
+  GitHub before acting, since this line is true only until they merge.
+- **The picture on `main`:** Oak's document uses 75 of 318 rows; 29 are not right, none
+  is refused. With 177 it is 28.
+- No watcher, heartbeat, monitor or schedule runs under this seat. No claim is open. The
+  Ecosystem repository's pull request 1082 belongs to its own seat (Petrel mends
+  Pinnacle), by the owner's word quoted below.
 
 ### What to do next, in order
 
 The plan's ["What is next"](../../../plans/active/after-0.8.0-next-steps.md) is the one
-statement of order; its act 1 now carries a "State after the resume" paragraph.
-
-1. Open the pull request for `fix/n0-constrained-map`. Its body opens with the line that
-   an agent seat did the work and says plainly what is not done (the three items
-   below). Review exit, set at opening: two rounds, and a third only for a fault in what
-   the code does. Merge when clean and green; nobody is asked.
-2. Then the plan's act 2: sort the 29 rows of Oak's document that are not right into
-   three (breaks an approved clause, needs text, touches the model) and write the table
-   in the plan as the queue.
-3. Acts 3 to 5 of the plan as written.
+statement of order. Its second act holds the sorted table and a queue of nine units
+under "The sort"; work the queue from the first unit not yet merged.
 
 ### Not done on the branch, each with its reason
 
