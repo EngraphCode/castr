@@ -1,5 +1,14 @@
 # Amendment 0.9.0, proposed: the two rows that stop Oak's document
 
+**Approved, and adjusted, on 23 November 2026.** The owner approved the text below as
+revision 0.9.0 ("I approve revision 0.9.0 and minor adjustement to revision 0.9.1"). The
+hosted review of the specification change then found three things in the two rows, and
+they were adjusted as revision 0.9.1: the `propertyNames` row covers `{type: string}`
+only with no other keyword, because an annotation beside it is meaning and writing
+nothing would drop it; its endpoint-definitions cell names its class; and a sentence says
+each row classes its own keyword and no other. The specification is the text of record;
+this file is the draft as it was brought, kept as the record of how it was reached.
+
 A draft for the owner's approval, written on 23 November 2026 by the seat Firefly mends
 Quench. Nothing here is in `docs/SPECIFICATION.md`, which stays at 0.8.0 until the owner
 approves this text in their own words, naming the version (SPEC-CC-2).
@@ -35,9 +44,11 @@ things in it are not here.
   sentence. Oak's `propertyNames` is `{type: string}`, which refuses nothing: JSON Schema
   says a property name "will always be a string". A check that cannot fail is noise in
   the consumer's code. So this amendment classes only a `propertyNames` that refuses no
-  name, and writes nothing for it. Any other `propertyNames` stays in no row, and Castr
-  goes on refusing it as it does today, until a later amendment brings the check and its
-  mark. This is the seat's decision by the owner's lenses of 23 November ("what
+  name, and writes nothing for it. Any other `propertyNames` stays in no row until a later amendment
+  brings the check and its mark, and this amendment changes nothing for it. What Castr
+  does with one today, read from the code on 23 November: the reader keeps it, the Zod
+  writer writes a refinement for it, and the TypeScript writer refuses it as impossible;
+  because one module holds both outputs, that refusal refuses the conversion. This is the seat's decision by the owner's lenses of 23 November ("what
   creates value", "what makes sense"); it is smaller than the plan's third act as
   written, and the plan is changed to match.
 - **The sentence "no row, no default"** (a construct in no row receives `NOT-YET-BUILT`)
@@ -154,3 +165,168 @@ by hand first.
 
 The specification changes in its own pull request, with the owner's words and the hash in
 the change log. Then the fix (N0), test first, under the conditions the plan records.
+
+## Appendix: the cases for the two rows, as run
+
+Save the block as a `.mts` file in `lib/tests-picture/.tmp` and run
+`npx tsx tests-picture/.tmp/<name>.mts` from `lib`. It exits with a failure if any value
+differs or the returned value is not the input. The four assignments near its end are the
+TypeScript check, read by the compiler (`npx tsc --ignoreConfig --noEmit --strict
+--exactOptionalPropertyTypes --noUncheckedIndexedAccess
+--noPropertyAccessFromIndexSignature --module nodenext --moduleResolution nodenext
+--target es2022 --skipLibCheck` on the file; the one error it reports is the missing
+Node types for `process`). The fourth case holds annotations beside `type: string`,
+which revision 0.9.1 takes out of the row; it was run and agrees on what is accepted.
+
+```ts
+import { z } from 'zod';
+import { Ajv2020 } from 'ajv/dist/2020.js';
+// The rows proposed for 0.9.0, each expectation written by hand first.
+// D: additionalProperties S (not true, {} or false), no named property -> z.strictObject({}).catchall(S).
+// F: propertyNames K where K refuses no string (true, {}, {type: string}) -> nothing written.
+const P = (j: string) => JSON.parse(j) as unknown;
+const ab = z.enum(['ogl-compatible', 'restricted']);
+const S = { type: 'string', enum: ['ogl-compatible', 'restricted'] };
+const map = z.strictObject({}).catchall(ab);
+const Tree: z.ZodType = z.strictObject({}).catchall(z.lazy(() => Tree));
+const cases: { name: string; schema: object; zod: z.ZodType; values: [string, boolean][] }[] = [
+  {
+    name: 'Oak: names {type: string}',
+    schema: {
+      type: 'object',
+      propertyNames: { type: 'string' },
+      additionalProperties: S,
+      example: { a: 'restricted' },
+    },
+    zod: map,
+    values: [
+      ['{}', true],
+      ['{"x":"restricted"}', true],
+      ['{"x":"restricted","y":"ogl-compatible"}', true],
+      ['{"x":"zzz"}', false],
+      ['{"x":1}', false],
+      ['{"":"restricted"}', true],
+      ['3', false],
+      ['null', false],
+      ['[]', false],
+      ['"s"', false],
+    ],
+  },
+  {
+    name: 'names true',
+    schema: { type: 'object', propertyNames: true, additionalProperties: S },
+    zod: map,
+    values: [
+      ['{"x":"restricted"}', true],
+      ['{"x":1}', false],
+    ],
+  },
+  {
+    name: 'names {}',
+    schema: { type: 'object', propertyNames: {}, additionalProperties: S },
+    zod: map,
+    values: [
+      ['{"x":"restricted"}', true],
+      ['{"x":null}', false],
+    ],
+  },
+  {
+    name: 'names {type: string} with annotations',
+    schema: {
+      type: 'object',
+      propertyNames: { type: 'string', description: 'a slug', title: 'Slug' },
+      additionalProperties: S,
+    },
+    zod: map,
+    values: [
+      ['{"x":"restricted"}', true],
+      ['{"x":[]}', false],
+    ],
+  },
+  {
+    name: 'no names keyword',
+    schema: { type: 'object', additionalProperties: { type: 'integer', minimum: 0 } },
+    zod: z.strictObject({}).catchall(z.int().min(0)),
+    values: [
+      ['{}', true],
+      ['{"a":0}', true],
+      ['{"a":-1}', false],
+      ['{"a":1.5}', false],
+    ],
+  },
+  {
+    name: 'S is an object',
+    schema: {
+      type: 'object',
+      additionalProperties: {
+        type: 'object',
+        properties: { n: { type: 'number' } },
+        required: ['n'],
+        additionalProperties: false,
+      },
+    },
+    zod: z.strictObject({}).catchall(z.strictObject({ n: z.number() })),
+    values: [
+      ['{"a":{"n":1}}', true],
+      ['{"a":{"n":1,"z":2}}', false],
+      ['{"a":{}}', false],
+    ],
+  },
+  {
+    name: 'S refers to the map itself',
+    schema: {
+      $defs: { T: { type: 'object', additionalProperties: { $ref: '#/$defs/T' } } },
+      $ref: '#/$defs/T',
+    },
+    zod: Tree,
+    values: [
+      ['{}', true],
+      ['{"a":{"b":{}}}', true],
+      ['{"a":{"b":1}}', false],
+    ],
+  },
+];
+const ajv = new Ajv2020({ strict: false, ownProperties: true });
+let wrong = 0,
+  n = 0;
+for (const c of cases) {
+  const v = ajv.compile(c.schema);
+  for (const [text, expected] of c.values) {
+    n++;
+    const value = P(text);
+    const r = v(value),
+      zz = c.zod.safeParse(value).success;
+    if (r !== expected || zz !== expected) {
+      wrong++;
+      console.log('DIFFERS', c.name, text, { expected, reference: r, zod: zz });
+    }
+  }
+}
+// The produced value equals the input (SPEC-G-4, produced side).
+const out = map.parse(P('{"x":"restricted","y":"ogl-compatible"}'));
+const same = JSON.stringify(out) === '{"x":"restricted","y":"ogl-compatible"}';
+// The declared limit: an own property named __proto__ is dropped, so a value the source refuses is accepted.
+const proto = P('{"__proto__":"zzz"}');
+console.log(
+  'cases',
+  cases.length,
+  'values',
+  n,
+  'differ',
+  wrong,
+  '| produced equals input',
+  same,
+  '| limit: reference',
+  ajv.compile(cases[0]!.schema)(proto),
+  'zod',
+  map.safeParse(proto).success,
+);
+// Types: the TypeScript the row gives, mutually assignable with each side of the Zod.
+type T = { [key: string]: 'ogl-compatible' | 'restricted' };
+const a1: T = {} as z.input<typeof map>;
+const a2: z.input<typeof map> = {} as T;
+const a3: T = {} as z.output<typeof map>;
+const a4: z.output<typeof map> = {} as T;
+void [a1, a2, a3, a4];
+if (wrong > 0 || !same) process.exit(1);
+```
