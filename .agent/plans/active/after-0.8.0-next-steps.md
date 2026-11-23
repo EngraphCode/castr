@@ -355,10 +355,10 @@ specification are approved and on `main`.
       `not`, `if`, `then` and `else`: `{type: string, not: {const: 'a'}}` is written
       `z.string()`, and the picture reads the four rows wrong in the Zod column. The
       document pass before it does walk under those four keywords, so a rule it holds is
-      applied there; it is the model that loses them. The repair is a refusal in the
-      builder wherever it builds a schema (a component, a property, items, a member of a
-      composition, a map's values, a parameter, a body, a response), with a case for each
-      keyword at each of those positions written first (run in the review of pull
+      applied there; it is the model that loses them. The repair is one refusal inside `buildCastrSchema`, the one function every
+      position's schema goes through, so no position is left out by a list that is one
+      short. Its cases are found, not listed here: one for each keyword at each caller of
+      that function, a response header's schema among them, written first (run in the review of pull
       request 182).
    6. One amendment for what needs text, through one round of hosted review before the
       owner is asked (act 3): `format: uri`; `default` in Zod; the shape of an endpoint
