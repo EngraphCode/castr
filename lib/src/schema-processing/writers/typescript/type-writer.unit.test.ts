@@ -696,6 +696,18 @@ describe('Dynamic Reference Keywords — TypeScript fail-fast', () => {
       expect(generate({ type: undefined, const: value, metadata })).toBe(written);
     });
 
+    it('keeps every member of a union whose members are each a const of one type', () => {
+      const schema: CastrSchema = {
+        anyOf: [
+          { type: 'number', const: 200, metadata },
+          { type: 'number', const: 404, metadata },
+        ],
+        metadata,
+      };
+
+      expect(generate(schema)).toBe('200 | 404');
+    });
+
     it('writes the literal for a const beside its type', () => {
       expect(generate({ type: 'string', const: 'a', metadata })).toBe('"a"');
     });
