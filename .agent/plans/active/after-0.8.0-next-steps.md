@@ -209,19 +209,17 @@ before the first value step would be an instrument ahead of the work.
    its shape). Write one matrix row on whether N0, as a repair of today's code, stands.
    The seat's reading is that it does, by that card; the course was not re-read in full
    on 23 November.
-3. **A small amendment, 0.9.0,** holding text only where a choice exists or no approved
-   clause already says it: the five vocabulary sentences; the sentence on a check Castr
-   writes and its mark, with section 11's change; one sentence on the limits of
-   JavaScript targets (the name `__proto__`); SPEC-G-5's third route; and the rows for a
-   constrained map and for `propertyNames`, with their conditions. All of it is in the
-   first slice's draft as reviewed, less what was withdrawn. SPEC-N-5 stays open, with
-   words saying the table is written row by row. Before the owner is asked: run the
-   composition script again without the check in front and without the `__proto__`
-   samples; run whether `params` is reachable from source text through the compiler's
-   syntax tree, which has only been run on a loaded module; and read in the thread
-   record how 0.8.0's approval was recorded. Then one blocking question to the owner
-   carrying the exact text, for their words naming the version. Approval of
-   specification text is theirs by SPEC-CC-2 and is not a question the lenses settle.
+3. **A small amendment, 0.9.0,** drafted on 23 November in
+   [amendment-0.9.0-draft-2026-11-23.md](../../analysis-and-reports/amendment-0.9.0-draft-2026-11-23.md)
+   and smaller than first planned: a clause declaring the limit for a property named
+   `__proto__`; SPEC-G-5's third route; SPEC-N-5 reworded so the tables arrive row by
+   row; and a new Appendix B with three sentences on how a table is read and two rows,
+   a constrained map that names no property and a `propertyNames` that refuses no name.
+   The check Castr writes and its mark, the sentence "no row, no default" and the other
+   rows of the first slice are left out, each for a reason the draft gives. The three
+   things to run before asking are run (the thread record's step log). One blocking
+   question to the owner carries the text, for their words naming the version. Approval
+   of specification text is theirs by SPEC-CC-2 and is not a question the lenses settle.
 4. **N0, the fix,** test first, under the conditions the reviews of 22 and 23 November
    set. The picture's cells for the two rows turn right, and Oak's whole-document line
    names what stops it next.
