@@ -81,7 +81,10 @@ test('same-schema-different-name - Generation Snapshot', async () => {
           {
             name: "anotherDifferentNameWithSlightlyDifferentSchema",
             type: "Query",
-            schema: z.enum(["aaa", "bbb", "ccc"]).optional(),
+            schema: z
+              .enum(["aaa", "bbb", "ccc"])
+              .optional()
+              .meta({ default: "aaa" }),
           },
         ],
         response: z.string(),
@@ -98,7 +101,8 @@ test('same-schema-different-name - Generation Snapshot', async () => {
               differentNameSameSchema: z.enum(["aaa", "bbb", "ccc"]).optional(),
               anotherDifferentNameWithSlightlyDifferentSchema: z
                 .enum(["aaa", "bbb", "ccc"])
-                .optional(),
+                .optional()
+                .meta({ default: "aaa" }),
             })
             .strict(),
         },

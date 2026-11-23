@@ -99,6 +99,9 @@ describe('object-default-values', () => {
     const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
     assertSingleFileResult(output);
 
-    expect(output.content).toContain('z.strictObject({}).catchall(MyComponent)');
+    // The map's default follows as an annotation, so the expression runs over several lines.
+    const written = output.content.split(' ').join('').split('\n').join('');
+    expect(written).toContain('z.strictObject({}).catchall(MyComponent)');
+    expect(written).toContain('.meta({default:{id:1,name:"foo"}})');
   });
 });

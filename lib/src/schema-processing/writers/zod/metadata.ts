@@ -22,6 +22,7 @@ interface ZodMetadata {
   examples?: unknown[];
   externalDocs?: { url: string; description?: string };
   xml?: unknown;
+  default?: unknown;
 }
 
 /**
@@ -55,6 +56,18 @@ export function writeMetadata(schema: CastrSchema, writer: CodeBlockWriter): voi
 }
 
 /**
+ * A source `default` is an annotation: it is written into the metadata and inserts
+ * nothing (SPEC-P-6, Appendix B.3). A Zod `.default`, which inserts, is carried by the
+ * chain and is not written a second time here.
+ * @internal
+ */
+function collectSourceDefault(schema: CastrSchema, meta: ZodMetadata): void {
+  if (schema.default !== undefined && schema.metadata.zodChain.defaults.length === 0) {
+    meta.default = schema.default;
+  }
+}
+
+/**
  * Collects core metadata fields (title, description, deprecated, examples).
  * @internal
  */
@@ -76,6 +89,7 @@ function collectCoreMetadata(schema: CastrSchema, meta: ZodMetadata): void {
   if (schema.examples !== undefined && schema.examples.length > 0) {
     meta.examples = schema.examples;
   }
+  collectSourceDefault(schema, meta);
 }
 
 /**

@@ -18,6 +18,8 @@ export interface ParsedZodMeta {
   examples?: unknown[];
   externalDocs?: { url: string; description?: string };
   xml?: UnknownRecord;
+  /** A default held as an annotation: it inserts nothing (SPEC-P-6). */
+  default?: unknown;
 }
 
 type JsonObject = UnknownRecord;
@@ -81,6 +83,17 @@ function applyExtendedMetaToSchema(schema: CastrSchema, meta: ParsedZodMeta): vo
 }
 
 /**
+ * A default in the metadata is an annotation. A Zod `.default` on the same schema
+ * inserts, is carried by the chain, and is the value the schema keeps.
+ * @internal
+ */
+function applyAnnotationDefault(schema: CastrSchema, meta: ParsedZodMeta): void {
+  if (meta.default !== undefined && schema.default === undefined) {
+    schema.default = meta.default;
+  }
+}
+
+/**
  * Apply parsed metadata fields to a schema.
  * @internal
  */
@@ -91,6 +104,7 @@ export function applyMetaToSchema(schema: CastrSchema, meta: ParsedZodMeta | und
 
   applyCoreMetaToSchema(schema, meta);
   applyExtendedMetaToSchema(schema, meta);
+  applyAnnotationDefault(schema, meta);
 }
 
 /**
@@ -154,6 +168,13 @@ function assignPrimitiveFields(meta: ParsedZodMeta, raw: JsonObject): void {
   }
   if (raw['example'] !== undefined) {
     meta.example = raw['example'];
+  }
+  assignAnnotationDefault(meta, raw);
+}
+
+function assignAnnotationDefault(meta: ParsedZodMeta, raw: JsonObject): void {
+  if (raw['default'] !== undefined) {
+    meta.default = raw['default'];
   }
 }
 

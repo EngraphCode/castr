@@ -5476,7 +5476,10 @@ export const endpoints = [
       {
         name: "status",
         type: "Query",
-        schema: z.enum(["available", "pending", "sold"]).optional(),
+        schema: z
+          .enum(["available", "pending", "sold"])
+          .optional()
+          .meta({ default: "available" }),
         description: "Status values that need to be considered for filter",
       },
     ],
@@ -5501,7 +5504,10 @@ export const endpoints = [
     request: {
       queryParams: z
         .object({
-          status: z.enum(["available", "pending", "sold"]).optional(),
+          status: z
+            .enum(["available", "pending", "sold"])
+            .optional()
+            .meta({ default: "available" }),
         })
         .strict(),
     },
