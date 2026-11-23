@@ -7,9 +7,29 @@ review of the specification change is the first. The specification is the text o
 record; this file is the draft as it was brought, kept as the record of how it was
 reached.
 
-A draft for the owner's approval, written on 23 November 2026 by the seat Firefly mends
-Quench. Nothing here is in `docs/SPECIFICATION.md`, which stays at 0.9.1 until the owner
-approves this text in their own words, naming the version (SPEC-CC-2).
+What follows is the draft as it stood before that approval, written on 23 November 2026
+by the seat Firefly mends Quench. When it was written the specification was at 0.9.1
+and held none of it.
+
+## Adjustment 0.10.1, after the first hosted review
+
+The owner approved it on 23 November, asked by question with both adjustments set out
+("I approve revision 0.10.1"). The review of the specification change found two things in the `format: uri` row, and
+both hold.
+
+1. **The row is wider than its form.** A `format` constrains only strings: `{format: uri}`
+   with no `type`, or beside `type: number`, accepts every number. `z.url()` refuses
+   every value that is not a string. Run on 23 November: Castr refuses `format: uri`
+   beside `type: number` today, with a located error. The row is narrowed to a schema
+   whose `type` is `string` alone; any other schema that holds `format: uri` is in no
+   row.
+2. **"Carried" says more than is true.** Section 3 defines carried as "the target
+   expresses it and its own checker enforces it". SPEC-P-8 says that for some strings
+   the checker and the source disagree. A fifth class is proposed for the definition,
+   **carried with a declared limit** (the target expresses it, and its own checker
+   enforces it except in the cases a named clause declares), and the cell uses it. The
+   map row of B.2 leans on SPEC-P-7 in the same way, and its Zod cell takes the same
+   class.
 
 ## What it is for
 
