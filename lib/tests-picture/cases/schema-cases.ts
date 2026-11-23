@@ -205,7 +205,9 @@ export const SCHEMA_CASES: readonly SchemaCase[] = [
   format('ipv4', '127.0.0.1', '999.1.1.1'),
   format('ipv6', '::1', 'zz::1'),
   // RFC 3986 refuses a malformed percent-encoding; a WHATWG URL parser accepts it.
-  format('uri', 'https://example.com/a', 'https://example.com/%ZZ', 'not a uri'),
+  // No sample here is a string on which `z.url()` and RFC 3986 differ: that is the
+  // declared limit of SPEC-P-8, held in `declared-limits.gen.test.ts`.
+  format('uri', 'https://example.com/a', 'urn:isbn:0451450523', '/a/b', 'not a uri'),
   format('uri-reference', '/a/b', String.raw`not a uri \ ^`),
   format('iri', 'https://example.com/ä', 'not an iri'),
   format('iri-reference', '/ä/b', String.raw`not an iri \ ^`),

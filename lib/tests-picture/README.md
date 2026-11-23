@@ -298,10 +298,13 @@ document, read by a reference and by Castr:
   ([`cases/castr-convert.ts`](cases/castr-convert.ts)). That module holds a Zod validator
   and a TypeScript type for the shape, and each has a column.
 
-One limit the specification declares is held as a case of its own and is no cell
+A limit the specification declares is held as a case of its own and is no cell
 ([`cases/declared-limits.gen.test.ts`](cases/declared-limits.gen.test.ts)): for a value
 with an own property named `__proto__`, the reference refuses, Castr's Zod accepts, and
 the value it returns lacks the property (SPEC-P-7). No sample of a case holds one.
+A second is held beside it: `format: uri` is written `z.url()`, which accepts some strings
+RFC 3986 refuses and refuses `http://`, which it accepts (SPEC-P-8). The row's samples
+hold none of those strings, so its cell reads right on the strings the two agree on.
 
 ### The Zod column
 
