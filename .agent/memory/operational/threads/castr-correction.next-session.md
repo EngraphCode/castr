@@ -832,6 +832,35 @@ string; [key: string]: string | number }` accepts every valid value and also
   | Whether to ask the owner if a fix may be built before its text | The owner's decision seventeen and "asking me is the wrong move"                                                                                             | Not asked. The trial that sized the fix exists from N0's trace; an unmerged exploration beside the first draft is allowed and is not required                                                              |
   | Whether Castr needs a bot route for pull requests              | Not the seat's: it is the owner's account and their colleagues' reading of it                                                                                | Said to the owner in the session's report. No change is made here                                                                                                                                          |
 
+- 2026-11-23, N5, first piece. **Start: the two rows as one slice, taken all the way
+  down.** The seat resumed after a change of account; no heartbeat or watcher runs, and
+  the Ecosystem seat was told so. The
+  [draft](../../../analysis-and-reports/tables-first-slice-draft-2026-11-23.md) holds
+  the proposed text, every trial and the exit set for its one adversarial review.
+  - _Step back._ (1) Serves the measure that every row of the picture has a class in
+    approved text; for Oak's document it is the text the fix waits on. (2) Changed for
+    Oak's document: nothing, seven steps in a row; said in each report. (3) Size: one
+    pull request for the slice's draft. The piece widens to the other schema rows only
+    if the slice closes, because whether a first piece can be approved alone was never
+    tested. (4) Checking larger than the work: no; one review, its exit set first. (5)
+    Lost if it stopped here: nothing, the draft is tracked.
+  - _Run, with every expected outcome written by hand first_ (Zod 4.6.7, Ajv, the
+    compiler). Sixteen composition cases and 74 values: none differed between the
+    expectation, the reference and the hand-built Zod; removing one check made two
+    differ. A check written after an object does not see `__proto__`; one written
+    before it, as `z.custom<T>(f, {params}).pipe(S)`, does, and keeps the types. `params`
+    on a custom check is held in the check's definition and on its issue.
+
+  | Question                                                  | Lens that settles it                                                                                       | Disposition                                                                                                                                                                                                 |
+  | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | What the unit of a row is                                 | Strict: the trials show one keyword has several outcomes                                                   | A keyword, a value of a keyword, or keywords standing together, with cases stated so a schema falls in exactly one; a construct in no row is `NOT-YET-BUILT`                                                |
+  | Whether `propertyNames` in Zod needs the mark             | Could it be simpler                                                                                        | Yes, always. One check Castr writes for every `K` needs no list of annotation keywords and no definition of a map. A `K` that refuses nothing is excused by a third route in SPEC-G-5, not by a special row |
+  | Whether Oak's row needs the mark                          | Strict, with the disposition of 22 November to refuse `__proto__`                                          | Yes: the refusal is a check Castr writes                                                                                                                                                                    |
+  | Where the refusal of `__proto__` is stated                | Strict, and the lesson of the numbers drafts: a narrowing stated for one schema widens under `not`         | Of the whole validator: any value holding the name at any depth is refused, whatever the schema says. Run against `not` and `oneOf`                                                                         |
+  | Whether the mark can be stated without SPEC-N-3           | Strict, section 12: no text assumes an answer to an open item. A reviewer of 20 November said it could not | It can, as a written form: data in the check's `params`, which a running module and source text both expose. What a reader does with it is left to the amendment that opens a Zod reader. Under attack now  |
+  | TypeScript for a constrained object that names a property | Strict against SPEC-G-4 as approved                                                                        | By companion, as the intersection type: it reads rightly and is mutually assignable with Zod's type; a literal may not fit it. Named in the draft as the row most in need of attack                         |
+  | Whether one column's rejection is another's               | The text: capability granularity is the directed pair                                                      | No, except where a column is carried by companion of the one that rejects. Today's code refuses both; that is code to change, not text                                                                      |
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
