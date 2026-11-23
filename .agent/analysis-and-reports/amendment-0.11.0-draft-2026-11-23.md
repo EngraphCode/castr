@@ -2,7 +2,7 @@
 
 A draft, written on 23 November 2026 by the seat Firefly mends Quench. Nothing here is in
 `docs/SPECIFICATION.md`, which stays at 0.10.1 until the owner approves text in their own
-words, naming the version (SPEC-CC-2). This draft goes through one round of hosted review
+words, naming the version (SPEC-CC-2). This draft goes through two rounds of hosted review
 before the owner is asked: revision 0.10.0 was approved before any review and needed
 0.10.1 the same day.
 
@@ -48,35 +48,79 @@ November:
 > These rows class the TypeScript column only. The module they describe exports the five
 > types SPEC-C-1 names: `paths`, `operations`, `components`, `webhooks` and `$defs`.
 > "The type of `S`" is the type Castr writes for the schema `S` by the rows for a schema;
-> every schema position below is written by those rows and by no second reading.
+> every schema position below is written by those rows and by no second reading. A
+> parameter, request body, response or header given by reference to a component is
+> classed as the object it refers to.
 >
-> | Row                                                                                                                                       | TypeScript                                                                                                                                                                                                                                                                                                                                                                                                        |
-> | ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-> | `paths`, an entry keyed by a path template                                                                                                | Carried as structure: a property of `paths`, keyed by the template's own text                                                                                                                                                                                                                                                                                                                                     |
-> | A path item's operation under `get`, `put`, `post`, `delete`, `options`, `head`, `patch` or `trace`                                       | Carried as structure: a property of the path's type under that method. Each of the eight that the path item does not hold is written as an optional property of type `never`                                                                                                                                                                                                                                      |
-> | `operationId`                                                                                                                             | Carried as structure: the operation's type is a property of `operations` keyed by the `operationId`, and the path's method property refers to it. An operation with no `operationId` is written in place                                                                                                                                                                                                          |
-> | `parameters` of an operation or of its path item, where the parameter holds `schema: S` and `in` is `query`, `header`, `path` or `cookie` | Carried as structure: a property of the operation's `parameters` under its location, keyed by its `name`, of the type of `S`; optional unless `required: true`. A location is optional unless it holds a required parameter, and a location with no parameter is an optional property of type `never`. A path item's parameters are written in each of its operations, and the path's own `parameters` holds none |
-> | `requestBody`                                                                                                                             | Carried as structure: the operation's `requestBody`, holding `content`; optional unless `required: true`. An operation with none has an optional `requestBody` of type `never`                                                                                                                                                                                                                                    |
-> | `content`, an entry keyed by a media type that holds `schema: S`                                                                          | Carried as structure: a property of `content`, keyed by the media type's own text, of the type of `S`                                                                                                                                                                                                                                                                                                             |
-> | `responses`, an entry keyed by an exact status code                                                                                       | Carried as structure: a property of the operation's `responses`, keyed by that number                                                                                                                                                                                                                                                                                                                             |
-> | `responses`, an entry keyed by one of `1XX` to `5XX`, or by `default`                                                                     | Carried as structure: a property of `responses`, keyed by that text. It is never written as a number (SPEC-C-1)                                                                                                                                                                                                                                                                                                   |
-> | A response's `content`                                                                                                                    | Carried as structure: the response's `content`. A response with none has an optional `content` of type `never`; no body is written for it                                                                                                                                                                                                                                                                         |
-> | A response's `headers`, an entry that holds `schema: S`                                                                                   | Carried as structure: a property of the response's `headers`, keyed by the header's name, of the type of `S`; optional unless `required: true`. A response with none has an optional `headers` of type `never`                                                                                                                                                                                                    |
-> | `components.schemas`, an entry keyed by a component name                                                                                  | Carried as structure: a property of `components["schemas"]`, keyed by the name, whose type is the type Castr exports for that component                                                                                                                                                                                                                                                                           |
+> | Row                                                                                                 | Class                | TypeScript                                                                                                                                                                                                                                 |
+> | --------------------------------------------------------------------------------------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+> | `paths`, an entry keyed by a path template                                                          | Carried as structure | A property of `paths`, keyed by the template's own text                                                                                                                                                                                    |
+> | A path item's operation under `get`, `put`, `post`, `delete`, `options`, `head`, `patch` or `trace` | Carried as structure | A property of the path's type under that method. Each of the eight that the path item does not hold is an optional property of type `never`                                                                                                |
+> | `operationId`                                                                                       | Carried as structure | The operation's type is a property of `operations` keyed by the `operationId`, and the path's method property refers to it. An operation with no `operationId` is written in place                                                         |
+> | A parameter's `name` and `in`, where `in` is `query`, `header`, `path` or `cookie`                  | Carried as structure | A property of the operation's `parameters` under its location, keyed by its `name`. A location with no parameter is an optional property of type `never`                                                                                   |
+> | A parameter's `required`                                                                            | Carried              | The parameter's property is optional unless `required: true`, and its location is optional unless it holds a required parameter                                                                                                            |
+> | A parameter's `schema: S`                                                                           | Carried              | The parameter's property has the type of `S`                                                                                                                                                                                               |
+> | `parameters` of a path item                                                                         | Carried as structure | Each is written in every operation of the path item that states no parameter of the same `name` and `in`; where an operation states one, the operation's stands and the path item's is not written. The path's own `parameters` holds none |
+> | `requestBody`, and its `required`                                                                   | Carried              | The operation's `requestBody`, holding `content`; optional unless `required: true`. An operation with none has an optional `requestBody` of type `never`                                                                                   |
+> | `content`, an entry keyed by a media type                                                           | Carried as structure | A property of `content`, keyed by the media type's own text                                                                                                                                                                                |
+> | A media type's `schema: S`                                                                          | Carried              | The media type's property has the type of `S`                                                                                                                                                                                              |
+> | `responses`, an entry keyed by an exact status code                                                 | Carried as structure | A property of the operation's `responses`, keyed by that number                                                                                                                                                                            |
+> | `responses`, an entry keyed by one of `1XX` to `5XX`, or by `default`                               | Carried as structure | A property of `responses`, keyed by that text. It is never written as a number (SPEC-C-1)                                                                                                                                                  |
+> | A response's `content`                                                                              | Carried as structure | The response's `content`. A response with none has an optional `content` of type `never`; no body is written for it                                                                                                                        |
+> | A response's `headers`, an entry keyed by a header's name                                           | Carried as structure | A property of the response's `headers`, keyed by the name. A response with none has an optional `headers` of type `never`                                                                                                                  |
+> | A response header's `schema: S`, and its `required`                                                 | Carried              | The header's property has the type of `S`, and is optional unless `required: true`                                                                                                                                                         |
+> | `components.schemas`, an entry keyed by a component name                                            | Carried as structure | A property of `components["schemas"]`, keyed by the name, whose type is the type Castr exports for that component                                                                                                                          |
+>
+> The definitions that OpenAPI says are ignored are written nowhere: a header parameter
+> named `Accept`, `Content-Type` or `Authorization`, and a response header named
+> `Content-Type`. Header names are compared without regard to case.
 >
 > A document that holds none of `webhooks` and `$defs` has each written as an empty
-> record. These rows say nothing of: a document that holds `webhooks` or `$defs`; a
-> parameter or a header that holds `content` in place of `schema`; a parameter whose `in`
-> is `querystring`; a media type that is a reference to a component, or that holds
-> `itemSchema`; a method outside the eight; and what a parameter's `style`, `explode` and
-> `allowReserved` do to a value on the wire, which a type does not hold.
+> record. These rows say nothing of, and section 12 holds for each:
 >
-> A component whose exported type would take one of the five names is a located
-> rejection: two declarations of one name would not compile.
+> - a document that holds `webhooks` or `$defs`;
+> - an operation under `query`, or in `additionalOperations`;
+> - a parameter or a header that holds `content` in place of `schema`, and a parameter
+>   whose `in` is `querystring`;
+> - a media type that holds no `schema`, that holds `itemSchema`, or that is a reference
+>   to a component;
+> - every map of `components` but `schemas`, as a member of the `components` type;
+> - a component whose exported type would take one of the five names;
+> - what a parameter's `style`, `explode` and `allowReserved` do to a value on the wire,
+>   which a type does not hold.
 
 ### 2. The front matter and the change log
 
 The version becomes 0.11.0 and the change log gains one line that names B.4.
+
+## What the first review round changed
+
+The first round drew twelve findings, and each changed the draft. The table gained a class column and
+its rows were split, because a parameter's type and whether it is required are enforced
+by the compiler (carried) while its name and place are structure. The rule for a
+parameter stated at both levels is now in a row. The definitions OpenAPI says are ignored
+are named. The list of what the rows say nothing of grew by five, and a clash of names
+moved into it from a rejection: the target could hold such a component, so refusing it
+for good was the wrong class.
+
+Three faults in Castr's model today came out of it, found by running the reviewers'
+cases through the prototype on 23 November. They are repaired with the writer, test
+first, since the rows above cannot be met without them:
+
+- A parameter stated on a path item and again on its operation is held twice. The
+  prototype wrote `query: { "q": string; "q"?: number }`.
+- A path item's parameter given by reference to a component is not among the
+  operation's parameters at all.
+- The ignored header definitions are held like any other, and were written.
+
+## What these rows do not make of SPEC-C-1
+
+They do not complete it. SPEC-C-1 names `webhooks` and `$defs`, and says every HTTP
+method; these rows leave a document that holds webhooks, a `query` operation or
+`additionalOperations` in no row. By SPEC-PR-6 a capability is advertised only when no
+valid document reaches something not built, so SPEC-C-1 stays unadvertised after this
+amendment as before it. What the amendment buys is Oak's document, which uses none of
+the constructs left out.
 
 ## Choices inside the rows, and what each was weighed against
 
@@ -97,12 +141,13 @@ The version becomes 0.11.0 and the change log gains one line that names B.4.
   empty object for one. Here `content` is `never`, and a call gives `data` of
   `undefined`.
 
-## A fact about the client, not about Castr
+## Observed of the client, and not a row
 
 `openapi-fetch` takes `data` from the statuses `200` to `207` and `2XX`, and `error` from
 a list of `4xx` and `5xx` codes, `4XX`, `5XX` and `default`. A response keyed by `1XX`,
 `3XX` or a code such as `302` is in the type and reaches neither. Oak's document has one
-`302`. The type is right, and the rows say nothing about what a client does with it.
+`302`. The rows write the response into the type under its key, as for any status; what
+a client then does with it is not Castr's to class.
 
 ## What the amendment leaves open, on purpose
 
