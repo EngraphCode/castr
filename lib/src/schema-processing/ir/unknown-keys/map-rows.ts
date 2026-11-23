@@ -32,6 +32,9 @@ const KEYWORDS_OUTSIDE_THE_ROWS = [
 /** The model keeps what it computed about a schema beside the schema's own keywords. */
 const MODEL_METADATA_KEY = 'metadata';
 
+/** The model writes the schemas `true` and `false` as a node that holds this key. */
+const BOOLEAN_SCHEMA_KEY = 'booleanSchema';
+
 const OBJECT_TYPE = 'object';
 const STRING_TYPE = 'string';
 const TYPE_KEYWORD = 'type';
@@ -63,19 +66,23 @@ function isInTheRows(schema: unknown): schema is UnknownRecord {
 /**
  * Whether a schema is a constrained map: `type` is `object`, it holds none of the keywords
  * outside the rows, and its `additionalProperties` is a schema other than `true`, `{}`
- * and `false`.
+ * and `false`, in the source's form or the model's.
  */
 export function isConstrainedMap(schema: unknown): boolean {
   if (!isInTheRows(schema)) {
     return false;
   }
   const additionalProperties = schema[ADDITIONAL_PROPERTIES_KEYWORD];
-  return isSchemaRecord(additionalProperties) && keywordsOf(additionalProperties).length > 0;
+  return (
+    isSchemaRecord(additionalProperties) &&
+    additionalProperties[BOOLEAN_SCHEMA_KEY] === undefined &&
+    keywordsOf(additionalProperties).length > 0
+  );
 }
 
 /**
- * Whether a value of `propertyNames` refuses no name: `true`, `{}`, or `{type: string}`
- * with no other keyword. A property name is always a string (JSON Schema Core 10.3.2.4).
+ * Whether a value of `propertyNames` refuses no name: `true` (in the source's form or the
+ * model's), `{}`, or `{type: string}` with no other keyword. A property name is always a string (JSON Schema Core 10.3.2.4).
  */
 export function refusesNoPropertyName(propertyNames: unknown): boolean {
   if (propertyNames === true) {
@@ -87,6 +94,9 @@ export function refusesNoPropertyName(propertyNames: unknown): boolean {
   const keywords = keywordsOf(propertyNames);
   if (keywords.length === 0) {
     return true;
+  }
+  if (propertyNames[BOOLEAN_SCHEMA_KEY] !== undefined) {
+    return keywords.length === 1 && propertyNames[BOOLEAN_SCHEMA_KEY] === true;
   }
   return (
     keywords.length === 1 &&

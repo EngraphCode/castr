@@ -64,6 +64,21 @@ describe('buildCastrSchemas object keyword preservation', () => {
     expect(schema.propertyNames).toMatchObject({ type: 'string' });
   });
 
+  it.each(['minProperties', 'maxProperties'] as const)(
+    'rejects a constrained map that also holds %s, which the model cannot carry',
+    (keyword) => {
+      const components: ComponentsObject = {
+        schemas: {
+          Counted: { type: 'object', additionalProperties: { type: 'string' }, [keyword]: 1 },
+        },
+      };
+
+      expect(() => buildCastrSchemas(components)).toThrow(
+        new RegExp(`constrained map.*${keyword}.*rejected`),
+      );
+    },
+  );
+
   it('rejects a schema-valued additionalProperties on an object that names a property', () => {
     const components: ComponentsObject = {
       schemas: {

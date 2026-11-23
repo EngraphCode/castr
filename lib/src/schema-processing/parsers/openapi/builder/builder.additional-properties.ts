@@ -15,6 +15,24 @@ function isObjectKeywordCandidate(schema: SchemaObject, irSchema: CastrSchema): 
   );
 }
 
+/** Keywords that count an object's properties. The model has no place for them. */
+const PROPERTY_COUNT_KEYWORDS = ['minProperties', 'maxProperties'] as const;
+
+/**
+ * A constrained map is read only whole. Before maps were read, a map with a property
+ * count was refused with every other schema-valued `additionalProperties`; reading the
+ * map and leaving the count behind would drop a constraint without a word.
+ */
+function rejectPropertyCountBesideMap(schema: SchemaObject): void {
+  const held = PROPERTY_COUNT_KEYWORDS.find((keyword) => schema[keyword] !== undefined);
+  if (held !== undefined) {
+    throw new Error(
+      `A constrained map that also holds ${held} is rejected: ` +
+        `Castr's model does not carry ${held}, so the constraint would be dropped.`,
+    );
+  }
+}
+
 type BuildSchema = (schema: SchemaObject | ReferenceObject, context: IRBuildContext) => CastrSchema;
 
 /**
@@ -41,6 +59,7 @@ export function addAdditionalProperties(
   }
 
   if (additionalProperties !== true && isConstrainedMap(schema)) {
+    rejectPropertyCountBesideMap(schema);
     irSchema.additionalProperties = buildSchema(additionalProperties, {
       ...context,
       path: [...context.path, 'additionalProperties'],

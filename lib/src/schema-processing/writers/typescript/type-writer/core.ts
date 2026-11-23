@@ -12,6 +12,7 @@ import {
 } from './fail-fast.js';
 import { writeDependentRequiredUnions, writeDependentSchemasUnions } from './dependent-keywords.js';
 import {
+  DEPENDENT_REQUIRED_BESIDE_A_TYPESCRIPT_MAP,
   SCHEMA_VALUED_ADDITIONAL_PROPERTIES_OUTSIDE_THE_ROW,
   writeTypeScriptConstrainedMap,
 } from '../../shared/map-nodes.js';
@@ -198,16 +199,25 @@ function getSortedPropertyEntries(schema: CastrSchema): [string, CastrSchema][] 
   return [...schema.properties.entries()].sort(([a], [b]) => a.localeCompare(b));
 }
 
+/**
+ * An object whose unknown keys must satisfy a schema: written as a constrained map
+ * (specification Appendix B.2) or refused, so no constraint is ever dropped.
+ */
+function writeMapType(schema: CastrSchema, values: CastrSchema, writer: CodeBlockWriter): void {
+  if (!isConstrainedMap(schema)) {
+    throw new Error(SCHEMA_VALUED_ADDITIONAL_PROPERTIES_OUTSIDE_THE_ROW);
+  }
+  if (schema.dependentRequired !== undefined) {
+    throw new Error(DEPENDENT_REQUIRED_BESIDE_A_TYPESCRIPT_MAP);
+  }
+  writer.write(writeTypeScriptConstrainedMap(writeTypeDefinition(values)));
+}
+
 function writeObjectType(schema: CastrSchema, writer: CodeBlockWriter): void {
   rejectUnsupportedObjectKeywords(schema);
   const values = schema.additionalProperties;
   if (values !== undefined && typeof values !== 'boolean') {
-    // An object whose unknown keys must satisfy a schema: written as a constrained map
-    // (specification Appendix B.2) or refused, so the constraint is never dropped.
-    if (!isConstrainedMap(schema)) {
-      throw new Error(SCHEMA_VALUED_ADDITIONAL_PROPERTIES_OUTSIDE_THE_ROW);
-    }
-    writer.write(writeTypeScriptConstrainedMap(writeTypeDefinition(values)));
+    writeMapType(schema, values, writer);
     return;
   }
   const hasDependentRequired = schema.dependentRequired !== undefined;

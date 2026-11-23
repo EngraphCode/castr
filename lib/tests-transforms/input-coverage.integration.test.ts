@@ -42,7 +42,7 @@ const SUPPORTED_FIXTURES: [string, string][] = [
   ['v3.0/petstore-expanded.yaml', `${EXAMPLES_DIR}/v3.0/petstore-expanded.yaml`],
   ['v3.0/petstore.yaml', `${EXAMPLES_DIR}/v3.0/petstore.yaml`],
   ['v3.0/uspto.yaml', `${EXAMPLES_DIR}/v3.0/uspto.yaml`],
-  // Refused until Castr read a constrained map (specification Appendix B.2).
+  // Read since Castr reads a constrained map (specification Appendix B.2); refused before.
   ['v3.0/uspto.json', `${EXAMPLES_DIR}/v3.0/uspto.json`],
 
   // OpenAPI 3.0.x fixtures (JSON)

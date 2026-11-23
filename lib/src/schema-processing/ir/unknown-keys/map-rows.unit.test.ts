@@ -24,6 +24,8 @@ describe('isConstrainedMap', () => {
     ['false', false],
     ['the empty schema', {}],
     ['an empty schema that holds only metadata', { metadata: { required: false } }],
+    ["the model's node for true", { booleanSchema: true, metadata: { required: false } }],
+    ["the model's node for false", { booleanSchema: false, metadata: { required: false } }],
   ])('does not hold when additionalProperties is %s', (_name, additionalProperties) => {
     expect(isConstrainedMap({ type: 'object', additionalProperties })).toBe(false);
   });
@@ -68,12 +70,14 @@ describe('refusesNoPropertyName', () => {
     ['an empty schema that holds only metadata', { metadata: { required: false } }],
     ['type string alone', { type: 'string' }],
     ['type string with metadata', { type: 'string', metadata: { required: false } }],
+    ["the model's node for true", { booleanSchema: true, metadata: { required: false } }],
   ])('holds for %s', (_name, propertyNames) => {
     expect(refusesNoPropertyName(propertyNames)).toBe(true);
   });
 
   it.each([
     ['false', false],
+    ["the model's node for false", { booleanSchema: false, metadata: { required: false } }],
     ['type string with a pattern', { type: 'string', pattern: '^a' }],
     ['type string with a description', { type: 'string', description: 'a slug' }],
     ['another type', { type: 'number' }],

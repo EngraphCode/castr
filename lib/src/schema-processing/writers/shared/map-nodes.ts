@@ -69,6 +69,16 @@ function zodCall(target: ts.Expression, method: string, argument: ts.Expression)
 }
 
 /**
+ * Why the TypeScript writer refuses a constrained map that also holds
+ * `dependentRequired`: the Zod writer checks the dependency, and an index signature
+ * cannot say that one key needs another.
+ */
+export const DEPENDENT_REQUIRED_BESIDE_A_TYPESCRIPT_MAP =
+  'dependentRequired beside a constrained map is not written in TypeScript: an index ' +
+  'signature cannot say that one key needs another. The schema is refused, so the ' +
+  'dependency is never dropped.';
+
+/**
  * `z.strictObject({}).catchall(S)`, where `S` is the Zod the writer gives the map's values.
  *
  * @param writeValue - writes the Zod expression for the values

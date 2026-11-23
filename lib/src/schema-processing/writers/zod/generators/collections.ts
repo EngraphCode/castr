@@ -133,7 +133,10 @@ function writeConstrainedMap(
     throw new Error(SCHEMA_VALUED_ADDITIONAL_PROPERTIES_OUTSIDE_THE_ROW);
   }
   const valuesContext: IRArrayItemsContext = { contextType: 'arrayItems', schema: values };
-  const deferred = values.$ref !== undefined && schema.metadata.circularReferences.length > 0;
+  // A map on a cycle resolves its values when they are first read, wherever in them the
+  // reference back sits: written eagerly, the validator would read its own name before
+  // it is assigned.
+  const deferred = schema.metadata.circularReferences.length > 0;
   writer.write(writeZodConstrainedMap(writeZodSchemaFn(valuesContext, options), deferred));
   writeObjectRefinements(schema, writer);
   return true;

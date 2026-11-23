@@ -696,6 +696,17 @@ describe('Dynamic Reference Keywords — TypeScript fail-fast', () => {
       expect(generate(schema)).toBe('{ [key: string]: number; }');
     });
 
+    it('refuses a constrained map that also holds dependentRequired', () => {
+      const schema: CastrSchema = {
+        type: 'object',
+        additionalProperties: { type: 'number', metadata },
+        dependentRequired: { a: ['b'] },
+        metadata,
+      };
+
+      expect(() => generate(schema)).toThrow(/dependentRequired beside a constrained map/);
+    });
+
     it('writes nothing for a propertyNames that refuses no name', () => {
       const schema: CastrSchema = {
         type: 'object',

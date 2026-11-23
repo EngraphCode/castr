@@ -244,6 +244,24 @@ describe('Zod Writer Fail-Fast Behavior', () => {
       expect(generate(context)).toBe('z.strictObject({}).catchall(z.lazy(() => TestSchema))');
     });
 
+    it('resolves the values lazily when the reference back sits below their root', () => {
+      const schema = createMockSchema('object');
+      schema.metadata.circularReferences = ['#/components/schemas/TestSchema'];
+      schema.additionalProperties = {
+        ...createMockSchema(),
+        type: undefined,
+        anyOf: [
+          { ...createMockSchema(), type: undefined, $ref: '#/components/schemas/TestSchema' },
+          createMockSchema('string'),
+        ],
+      };
+      const context = createComponentContext(schema);
+
+      expect(generate(context)).toBe(
+        'z.strictObject({}).catchall(z.lazy(() => z.union([TestSchema, z.string()])))',
+      );
+    });
+
     it('refuses a schema-valued additionalProperties on an object that names a property', () => {
       const schema = createMockSchema('object');
       schema.properties = new CastrSchemaProperties({ a: createMockSchema('string') });
