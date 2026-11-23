@@ -28,13 +28,10 @@ subagents: use the model that fits the task.
 - **Merged later on 23 November:** 180 (this record), 181 (a status range: its key
   quoted so the module loads, and a located refusal among the errors) and 182
   (`minProperties` and `maxProperties` refused where the reader reads a schema).
-- **The queue stands in unit 5.** Units 1 to 4 are done, and unit 3's leftovers are
-  settled in the plan. Left in unit 5, each its own pull request: a case for
-  `items: false`; `const` and `enum` beside a keyword that also decides, in the Zod
-  writer; the keywords beside a `$ref`, which the schema builder drops (a count of properties
-  apart: 182 refuses that there); and `not`, `if`, `then` and `else`, which the schema
-  builder drops too. The plan says where each refusal has to apply. Then unit 6, the amendment, which
-  ends in a question to the owner.
+- **The queue stands in unit 5.** Units 1 to 4 are done. The plan's "State of unit 5"
+  paragraph says which parts of unit 5 are merged and which are left; read it and
+  `gh pr list` before acting. After unit 5 comes unit 6, the amendment, which ends in a
+  question to the owner.
 - **The picture:** `pnpm picture` from `lib/` prints the counts. Oak's document uses 74
   of 318 rows and 26 are not right; it was 29 of 75 after 175. Units 4 and 5 touch no
   row Oak uses.
