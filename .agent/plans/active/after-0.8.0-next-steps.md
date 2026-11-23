@@ -89,12 +89,12 @@ and the other is corrected.
    sibling checkout is absent, stop and say so; do not fall back to the local copies.
 6. Before a step's first edit, do its step back and run the decision matrix on its
    unknowns, and write both under "Step log" in the thread record. N0's are there,
-   dated 22 November. N1 is done; N3 and N4 are withdrawn. The next step is N5, the
-   tables, reshaped on 23 November: read "The reframing of 23 November 2026" below
-   before anything else in this plan.
-   Its Cricket panel ran on 22 November; its first piece is the table vocabulary and
-   the tables for schema rows, with the design of SPEC-N-4 beside it. N2 has its
-   judge and two slices merged; its remaining slices are worked during those waits.
+   dated 22 November. N1 is done; N3 and N4 are withdrawn. **The next step is N0, the
+   fix.** The part of the tables it waited on is approved (revisions 0.9.0 and 0.9.1,
+   23 November). Read "The reframing of 23 November 2026" below before anything else
+   in this plan; its "What is next" gives the order from here. The rest of the tables
+   (N5) follows the fix. N2 has its judge and two slices merged; its remaining slices
+   are worked during waits.
 7. Read "Review dispositions" at the foot of this plan and give each row its
    disposition before starting the step it names.
 
@@ -285,6 +285,12 @@ lib/src` is empty). Every pull request since has been the picture, the specifica
 
 ## Order, and whose it is
 
+- **As of 23 November the order is N0, then the rest of N5.** The two rows the fix
+  touches are classed in approved text (revisions 0.9.0 and 0.9.1), which is what the
+  owner's "With the tables, in order" asked of them; the rest of the tables follows what
+  stops Oak's document next. The points below are the record of how the order was
+  reached, and where they say the fix waits on N5 they describe the state before that
+  approval.
 - **N4, N5, then N0 was the owner's**, 22 November, and is now N5, then N0 (the point
   after this one). After the trace of N0 the owner
   chose that the fix is built with its text ("Build with the text") and that the text
@@ -656,10 +662,10 @@ validate-specification-approval`), or by the record.
   how the Ecosystem repository uses the output, ask its seat for facts, write the
   design as a tracked draft, have it attacked, and bring it to the owner as an
   amendment. The tables for those 56 cells follow it.
-- **N0 still waits on the whole step.** Approval of the first piece does not start the
-  fix: numbers are a later part of this step, and starting N0 before them would change
-  code while the integer rows are open, which is the order the seat's reading of
-  decision eighteen ruled out.
+- **N0 does not wait on the whole step** (changed on 23 November). It waited on approved
+  text for the rows it touches, which revisions 0.9.0 and 0.9.1 gave. The sentence that
+  stood here said the fix waits on every part of this step; that was the seat's
+  stretching of decision eighteen and is withdrawn.
 - **Finished when.** As N3, for the version this part carries, with the tables in the
   specification and the picture's proposals computed from them and not kept beside them.
   Where N6 has already written legs, they are read again against the approved tables
