@@ -832,6 +832,76 @@ string; [key: string]: string | number }` accepts every valid value and also
   | Whether to ask the owner if a fix may be built before its text | The owner's decision seventeen and "asking me is the wrong move"                                                                                             | Not asked. The trial that sized the fix exists from N0's trace; an unmerged exploration beside the first draft is allowed and is not required                                                              |
   | Whether Castr needs a bot route for pull requests              | Not the seat's: it is the owner's account and their colleagues' reading of it                                                                                | Said to the owner in the session's report. No change is made here                                                                                                                                          |
 
+- 2026-11-23, N5, first piece. **Start: the two rows as one slice, taken all the way
+  down.** The seat resumed after a change of account; no heartbeat or watcher runs, and
+  the Ecosystem seat was told so. The
+  [draft](../../../analysis-and-reports/tables-first-slice-draft-2026-11-23.md) holds
+  the proposed text, every trial and the exit set for its one adversarial review.
+  - _Step back._ (1) Serves the measure that every row of the picture has a class in
+    approved text; for Oak's document it is the text the fix waits on. (2) Changed for
+    Oak's document: nothing, seven steps in a row; said in each report. (3) Size: one
+    pull request for the slice's draft. The piece widens to the other schema rows only
+    if the slice closes, because whether a first piece can be approved alone was never
+    tested. (4) Checking larger than the work: no; one review, its exit set first. (5)
+    Lost if it stopped here: nothing, the draft is tracked.
+  - _Run, with every expected outcome written by hand first_ (Zod 4.6.7, Ajv, the
+    compiler). Sixteen composition cases and 74 values: none differed between the
+    expectation, the reference and the hand-built Zod; removing one check made two
+    differ. A check written after an object does not see `__proto__`; one written
+    before it, as `z.custom<T>(f, {params}).pipe(S)`, does, and keeps the types. `params`
+    on a custom check is held in the check's definition and on its issue.
+
+  | Question                                                  | Lens that settles it                                                                                       | Disposition                                                                                                                                                                                                 |
+  | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | What the unit of a row is                                 | Strict: the trials show one keyword has several outcomes                                                   | A keyword, a value of a keyword, or keywords standing together, with cases stated so a schema falls in exactly one; a construct in no row is `NOT-YET-BUILT`                                                |
+  | Whether `propertyNames` in Zod needs the mark             | Could it be simpler                                                                                        | Yes, always. One check Castr writes for every `K` needs no list of annotation keywords and no definition of a map. A `K` that refuses nothing is excused by a third route in SPEC-G-5, not by a special row |
+  | Whether Oak's row needs the mark                          | Strict, with the disposition of 22 November to refuse `__proto__`                                          | Yes: the refusal is a check Castr writes                                                                                                                                                                    |
+  | Where the refusal of `__proto__` is stated                | Strict, and the lesson of the numbers drafts: a narrowing stated for one schema widens under `not`         | Of the whole validator: any value holding the name at any depth is refused, whatever the schema says. Run against `not` and `oneOf`                                                                         |
+  | Whether the mark can be stated without SPEC-N-3           | Strict, section 12: no text assumes an answer to an open item. A reviewer of 20 November said it could not | It can, as a written form: data in the check's `params`, which a running module and source text both expose. What a reader does with it is left to the amendment that opens a Zod reader. Under attack now  |
+  | TypeScript for a constrained object that names a property | Strict against SPEC-G-4 as approved                                                                        | By companion, as the intersection type: it reads rightly and is mutually assignable with Zod's type; a literal may not fit it. Named in the draft as the row most in need of attack                         |
+  | Whether one column's rejection is another's               | The text: capability granularity is the directed pair                                                      | No, except where a column is carried by companion of the one that rejects. Today's code refuses both; that is code to change, not text                                                                      |
+
+- 2026-11-23, N5, first piece. **The slice was attacked once and went on.** Twelve
+  findings, in the draft with what became of each. None changed the outcome for Oak's
+  shape and none showed the mark needs SPEC-N-3, so the exit's first branch did not
+  fire. Fixed and run: the rows' conditions now exclude the keywords that apply a
+  subschema in place; a shape held in a mark is a function that returns it; the clause
+  on `__proto__` says which values are refused and not where the check sits; Appendix A
+  is left as the reader's table. The Ecosystem seat answered the same day: its code
+  reads a Zod object's own fields only on closed objects, and it removes both
+  `check-restricted` paths before it generates, so it has no generated schema for
+  either today.
+  - _Step back at the slice's end._ (1) As at its start. (2) Nothing changed for Oak's
+    document; eight steps. (3) One pull request, as sized. (4) No. (5) Nothing.
+
+  | Question                                                             | Lens that settles it                                        | Disposition                                                                                                                                                                                |
+  | -------------------------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+  | Found: Zod reads an inherited member (`toString`) as a property      | Strict; proportionality: Oak's document names none          | Owed by the rows for `properties` and `required` in this piece. Not in the slice                                                                                                           |
+  | Found: the picture's reference validator reads inherited members too | Strict (SPEC-G-7): the judge must be right where Zod is not | Corrected in a pull request of its own, with a case for a property of an inherited name, before the piece widens                                                                           |
+  | Whether the piece widens now                                         | The slice's own condition: it closed under its one review   | Yes. Next: the reference fix, then the rows for `type`, `properties`, `required`, `enum` and `const`, with the six outcomes restated, each run against the composition cases before review |
+  | Found: a recursive value 2,000 deep makes Zod throw                  | Proportionality                                             | Owed by the row for a reference to an enclosing schema                                                                                                                                     |
+
+- 2026-11-23, N5, first piece. **The slice's pull request (#170) and the reference fix
+  (#171, merged `ad6bbaa3`).** Hosted reviews of #170 made seven further points over
+  four pushes. Adopted: a provisional identifier for the new profile clause; the cases
+  with no `type` lie outside the rows; row E gives a type for what goes in and one for
+  what comes out, where one intersection let no one write a valid value; and the script
+  behind the 74 comparisons is an appendix of the draft, where it was only in an
+  untracked directory. Declined with the text: that row F promises a check over a `K` no
+  row writes.
+  - _Two more conditions for N0's building,_ from the reviews: the check for
+    `__proto__` walks a value without recursion, because a throw is not a decision (the
+    trial script's walk overflows at about 5,000 levels); and a closed object needs the
+    check too, since Zod alone does not refuse the name inside an unconstrained property.
+  - _Told to the owner:_ the Ecosystem repository removes both `check-restricted` paths
+    before it generates, so the two schemas that stop Castr on Oak's document are ones
+    its consumer does not take from a generator today.
+  - _Next._ The piece widens: the rows for `type` (with a schema whose `type` is absent
+    or a list), `properties` and `required` (with a property of an inherited name, and
+    the one-way assignability of an optional property), `enum`, `const` and `example`,
+    and the six outcomes restated. Each sentence is run against the composition cases
+    with the reference reading own properties, before one review.
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
