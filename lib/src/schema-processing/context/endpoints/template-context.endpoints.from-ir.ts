@@ -123,6 +123,25 @@ function toParameterType(
   return mapping[location] || 'Query';
 }
 
+const STATUS_CODE_LENGTH = 3;
+
+/**
+ * An exact status code as a number. A range (`4XX`) is not one, and reading it as a
+ * number would collapse it to its first digit, so it is refused until an endpoint
+ * definition has a shape for it.
+ */
+function exactStatusOf(statusCode: string): number {
+  const status = Number(statusCode);
+  if (statusCode.length !== STATUS_CODE_LENGTH || String(status) !== statusCode) {
+    throw new Error(
+      `A response keyed by the status range ${statusCode} is rejected in the endpoint ` +
+        'definitions: an error there holds an exact status code or "default", and a ' +
+        'range would be collapsed to a number.',
+    );
+  }
+  return status;
+}
+
 function mapErrors(
   ir: Pick<CastrDocument, 'components'>,
   responses: CastrResponse[],
@@ -132,7 +151,7 @@ function mapErrors(
     .map((r) => {
       const schema = r.schema || getSchemaFromContent(ir, r.content, `responses/${r.statusCode}`);
       const error: EndpointError = {
-        status: r.statusCode === STATUS_DEFAULT ? STATUS_DEFAULT : parseInt(r.statusCode, 10),
+        status: r.statusCode === STATUS_DEFAULT ? STATUS_DEFAULT : exactStatusOf(r.statusCode),
         schema: schema || createEmptySchema(),
       };
       if (r.description) {

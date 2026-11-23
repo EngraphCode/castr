@@ -122,6 +122,21 @@ describe('template-context.endpoints.from-ir', () => {
     ]);
   });
 
+  it.each(['1XX', '3XX', '4XX', '5XX'])(
+    'refuses the status range %s among the errors, where a status is a number',
+    (range) => {
+      const doc = createDocument([
+        createOperation({
+          responses: [createResponse('200', createSchema()), createResponse(range, createSchema())],
+        }),
+      ]);
+
+      expect(() => getEndpointDefinitionsFromIR(doc)).toThrow(
+        new RegExp(`status range ${range}.*rejected`),
+      );
+    },
+  );
+
   it('treats 299 as error status and 2XX as success wildcard', () => {
     const wildcardSuccessSchema = createSchema('object');
     const custom2xxSchema = createSchema('string');
