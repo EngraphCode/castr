@@ -1057,6 +1057,31 @@ string; [key: string]: string | number }` accepts every valid value and also
     edge); the reading that the line on pull requests contradicts the owner (it states
     the owner's answer); full JSON Pointer resolution in a trial script (listed as not
     covered).
+  - _A second and a third round of that review._ Round two: the tables step now depends
+    on the fix in the todo graph (fixed); a cycle of references is not guarded in the
+    trial script (declined, listed as not covered). Round three gave the `not` fault one
+    keyword along: an object nested in a branch of `oneOf`, where closing it turns "two
+    branches match" into "one matches". Reproduced; branches of `oneOf` joined the
+    keywords under which nothing is closed; 22 schemas, 51 values, and the script fails
+    on the case without the change. What this teaches: two reviews in a row found a
+    position the seat had not thought of, so the reading is a candidate and not a
+    decision, the list of keywords is not known to be whole, and hand-written cases
+    will not make it so. The check over generated schemas (act 5) is the instrument and
+    runs before any words on composition go to the owner. Oak's 16 quiz schemas are not
+    touched by any of it: their branches state their own policy. The review loop on
+    this pull request ran three rounds, one past the seat's own limit, because rounds
+    one and three each found a real fault in a recorded decision.
+  - _The Ecosystem repository's excluded paths, measured._ Later the same day the seat
+    ran that repository's generator with its exclusions moved (its report
+    `excluded-paths-two-mechanisms-investigation-2026-11-23.md`, its pull request 1082,
+    now the Ecosystem seat's). With the two `check-restricted` paths in the pipeline
+    the generated workspace fails type-check: a map response written as `z.record` with
+    one argument, the document's only request body, the only path with no `get`. So for
+    those two paths the present generator cannot take them, which is what the seat had
+    inferred, then recorded as wrong on the owner's account of the reasons; both are
+    true, and the owner has since named three reasons (not surfaced over MCP, not yet
+    processable, no longer in the live API). The map response with `propertyNames` and
+    the request body are the same constructs as the two rows that stop Castr.
 
   | Question                                                      | Lens that settles it                                                                                                                                                 | Disposition                                                                                                                                                                                                                                                            |
   | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
