@@ -7,6 +7,18 @@ change was coming and asked that all reasoning be made local, then that the seat
 A successor has no memory of the session. Everything it needs is in this section or in a
 file it names. Verify each line against git and GitHub before acting.
 
+### Update of 23 November, after the account change
+
+The owner resumed the seat ("The account switch is complete and pauses are lifted") and
+lifted the Fable-only limit on subagents: use the model that fits the task.
+
+- Pull request 175 (the fix) is **merged**: `main` is at `bc0595d3`. Its one review round
+  found four faults that held when run; all are fixed with tests in `a397c574`. The
+  reader's document pass stays left out, with the reason answered on the thread.
+- The plan's act 2 is **done**: the sorted table and the queue of nine units are in the
+  plan under "The sort". Next act is unit 1 of that queue, `const`.
+- Where "Where things stand" and "What to do next" below differ from this, this is newer.
+
 ### Where things stand
 
 - **`main`** is at the merge of pull request 173 (`c276cb68`). The specification on it is
