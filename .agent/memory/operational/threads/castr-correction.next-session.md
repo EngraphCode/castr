@@ -25,16 +25,27 @@ subagents: use the model that fits the task.
   written) and 179 (the picture counts a closed object's `false` once). No pull request
   was open when this was written; `gh pr list` and `git log origin/main` give the
   present state.
-- **The queue stands at unit 3's remaining parts** (a way to judge a path parameter's
-  location; the case for a component's name), then unit 4.
-- **The picture:** `pnpm picture` from `lib/` prints the counts. After 178 and 179,
-  Oak's document uses 74 of 318 rows and 26 are not right; it was 29 of 75 after 175.
-- **What review taught on these four pull requests.** A snapshot change was accepted
+- **Merged later on 23 November:** 180 (this record), 181 (a status range: its key
+  quoted so the module loads, and a located refusal among the errors) and 182
+  (`minProperties` and `maxProperties` refused where the reader reads a schema).
+- **The queue stands in unit 5.** Units 1 to 4 are done, and unit 3's leftovers are
+  settled in the plan. Left in unit 5, each its own pull request: a case for
+  `items: false`; `const` and `enum` beside a keyword that also decides, in the Zod
+  writer; the keywords beside a `$ref`, which the reader does not read; and `not`, `if`,
+  `then` and `else`, which it does not read either. Then unit 6, the amendment, which
+  ends in a question to the owner.
+- **The picture:** `pnpm picture` from `lib/` prints the counts. Oak's document uses 74
+  of 318 rows and 26 are not right; it was 29 of 75 after 175. Units 4 and 5 touch no
+  row Oak uses.
+- **What review taught on these pull requests.** A snapshot change was accepted
   that had lost a branch of a union: read a changed snapshot for what is gone, not only
   for what is new. A list of keywords to refuse drew a finding for each one it left out
   until it was stated by a rule. Two refusals were tried and taken back because they
   stopped fixtures the Zod writer converts; where both writers share a fault, the
-  repair is one unit for both (unit 5).
+  repair is one unit for both (unit 5). A refusal that says "everywhere" draws a
+  finding for each place the reader does not look; say where it applies. Reviewers
+  ask for rejections that name where the schema stands, and the build context has the
+  path: use it from the first draft.
 - The commit helper this seat uses does not work in a second worktree, where `.git` is
   a file; there, commit by explicit paths.
 - No watcher, heartbeat, monitor or schedule runs under this seat. No claim is open. The
