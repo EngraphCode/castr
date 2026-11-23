@@ -1,9 +1,9 @@
 ---
 title: Castr destination specification
 id: castr-specification
-version: 0.8.0
+version: 0.9.1
 status: ratified
-date: 2026-11-22
+date: 2026-11-23
 owner: Jim Cresswell
 approvers:
   - Jim Cresswell
@@ -204,6 +204,14 @@ where a profile decision below declares a different reading.
   warning that names its location, its value and the property it would fill, so the
   consuming application can resolve it. A Zod `.default` inserts, and is carried with its
   two sides (SPEC-P-2).
+
+- **SPEC-P-7 A property named `__proto__`.** A Zod object that allows unknown keys
+  neither checks nor returns a property named `__proto__` that a value holds as its own.
+  Castr writes no check for it. For a value that holds one, the generated Zod validator
+  can accept what the source refuses, and it returns the value without that property.
+  This is a declared limit of the Zod that Castr writes, not fidelity to the source. The
+  samples of SPEC-G-4 hold no property of that name, and every run's report states the
+  limit once.
 
 ## 6. Formats and versions
 
@@ -423,7 +431,12 @@ come first; 22 November 2026: "Refuse it by version".
   The one exception is a constraint that the check shows, from the source itself, changes
   nothing when deleted: by naming the constraint that implies it (such as `minimum: 0` in
   one `allOf` branch and `minimum: 1` in another), or by showing that the shape stays
-  unsatisfiable without it (SPEC-PR-7). A failed search for a distinguishing value never
+  unsatisfiable without it (SPEC-PR-7), or by naming the rule of the source format's own
+  text under which the constraint refuses no value where it stands (JSON Schema Core
+  10.3.2.4 says of `propertyNames` that the name tested "will always be a string", so
+  `propertyNames: {type: string}` refuses none). The check holds each such rule with the
+  section that states it, and a constraint that no rule it holds names is not excused. A
+  failed search for a distinguishing value never
   establishes the exception.
 - **SPEC-G-6 Generated output is exercised.** It is compiled, loaded and executed, never
   only inspected as text.
@@ -546,7 +559,8 @@ decision never defers a requirement; §9 binds the present code today.
 - **SPEC-N-2** The workspace and package seams.
 - **SPEC-N-3** The technique by which Zod is read (SPEC-AR-6 states the requirement).
 - **SPEC-N-4** The public surface: the entry points and their input and output types.
-- **SPEC-N-5** The scope-and-fidelity tables for the pairs of SPEC-C-1.
+- **SPEC-N-5** The rows of the scope-and-fidelity tables for the pairs of SPEC-C-1 that
+  Appendix B does not hold. The tables are written row by row, each row by amendment.
 
 ## 13. Change control
 
@@ -597,6 +611,37 @@ Verified against Zod 4.5.4 on 21 September 2026 by executing each construct.
 | `.meta`, `.describe`                                                                           | no                                            | yes                         | yes                                    | accepted; annotations are meaning                                 |
 | `z.strictObject`, `z.looseObject`, `.catchall`, `z.object`                                     | no                                            | yes                         | `z.object` strips                      | accepted (SPEC-P-1)                                               |
 
+## Appendix B. Scope-and-fidelity tables
+
+### B.1 How a table is read
+
+1. **A row is one construct kind.** It is a keyword, one value of a keyword, or several
+   keywords standing together. Where the outcome of a keyword turns on its value or on
+   the keywords beside it, the table has a row for each case, and the cases are stated so
+   that a schema holding the keyword falls in at most one.
+2. **A row classes its own construct.** Its class is the outcome when every schema inside
+   the construct is written. A schema that holds, at any depth, a construct whose outcome
+   in a column is a located rejection receives that rejection in that column.
+3. **The columns are classed separately.** A located rejection in one column is a
+   rejection of that output. A construct carried by companion in one column names the
+   column that enforces it, and is a located rejection wherever that column rejects.
+
+### B.2 OpenAPI 3.1 and 3.2 to Zod, TypeScript and endpoint definitions: maps
+
+These rows are for a schema whose `type` is `object` and which holds none of
+`properties`, `required`, `patternProperties`, `unevaluatedProperties`, `$ref`,
+`$dynamicRef`, `allOf`, `anyOf`, `oneOf`, `not`, `if` and `dependentSchemas`. A schema
+that holds one of those beside the keywords below is in neither row, and this appendix
+says nothing of it. Each row classes its own keyword and no other: any other keyword the
+schema holds, such as `minProperties`, `maxProperties` or `dependentRequired`, is a
+construct of its own, and these rows say nothing of it. `S` is the value of
+`additionalProperties` and `K` the value of `propertyNames`.
+
+| Row                                                                                      | Zod                                                                             | TypeScript                                                   | Endpoint definitions        |
+| ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------ | --------------------------- |
+| `additionalProperties: S`, where `S` is a schema other than `true`, `{}` and `false`     | Carried: `.catchall(S)` on `z.strictObject` with no properties                  | Carried: an index signature over `string` of the type of `S` | By companion (Zod)          |
+| `propertyNames: K`, where `K` is `true`, `{}`, or `{type: string}` with no other keyword | Carried: nothing is written, because every property name is a string (SPEC-G-5) | Carried: nothing is written                                  | Carried: nothing is written |
+
 ## Change log
 
 | Version | Date       | Change                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Approval                                                                                                                                                                                                                                 |
@@ -613,3 +658,5 @@ Verified against Zod 4.5.4 on 21 September 2026 by executing each construct.
 | 0.6.0   | 2026-11-20 | SPEC-C-1's corpus becomes the Oak API specification's v1 document at its latest published version, and its first acceptance part reads "on that document": the owner ruled on 19 November 2026 "Drop v0, latest v1 only". SPEC-G-1 names no alert: GitHub closed the alert on GHSA-fc5q-39xc-vjpf on 19 November 2026 after the advisory was withdrawn, and the owner asked on 20 November that it no longer be tracked. Nothing else changes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Jim Cresswell, 2026-11-20, in a working session: "I approve 0.6.0". SHA-256 of the text above this log: `d76c683ff46753e31c975ee766a788eaacbee2c9ea70524c447b4efc5621f63a`                                                               |
 | 0.7.0   | 2026-11-20 | SPEC-PR-6 and the definition of an advertised capability measure against the source format, not the corpus: no `NOT-YET-BUILT` rejection is reachable from any valid document of the source format, and the required check also runs one case for every construct kind the scope-and-fidelity table lists. The owner, 20 November 2026: "What I want is to not have to rework Castr if Oak adds an additional, valid field type to their spec". An `UNEXPRESSIBLE` construct stays a located rejection and is listed in the table. SPEC-C-1's corpus is unchanged. Nothing else changes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Jim Cresswell, 2026-11-20, in a working session: "I approve 0.7.0". SHA-256 of the text above this log: `3ee31a0bce0cfd2d3bf205f9ba32633060c1542fa111d30460634448318acde2`                                                               |
 | 0.8.0   | 2026-11-22 | The reader of an OpenAPI document gains a third kind of located rejection, `NOT-READ`, given only in the five cases of the new SPEC-FV-1: text that is not well formed, a version not read, a dialect not read, an invalid document, and a reference with no target. SPEC-FV-2 lists the validity rules the OpenAPI text states in words and its published schema does not hold. OpenAPI 3.0.x leaves the Read column of §6 and becomes the later capability SPEC-C-3; nothing rewrites a document into another version before it is read. The definition of an advertised capability and SPEC-PR-6 measure against every document that none of the cases of SPEC-FV-1 describes, and the definition of `NOT-YET-BUILT` is limited to a document Castr reads. Owner decisions: 20 November 2026, a third kind of rejection, and 3.1 and 3.2 first; 22 November 2026, by question prompt, "Refuse it by version" (a 3.0 document), "Refuse until the second capability" (a Draft-07 schema inside an OpenAPI document), "Refuse it as invalid" (a rule stated only in words) and "Refused by design" (a reference with no target). One adversarial review and three rounds of hosted review preceded approval. Known at approval and left to later amendments: the named schema revisions are not the latest published; rules on security requirements, Link Objects and server variables are not yet listed; the refusals of a JSON Schema reader and of a Zod reader have no kind yet.                                    | Jim Cresswell, 2026-11-22, in a working session: "I approve revision 0.8.0". SHA-256 of the text above this log: `bf66f5e21e96d0a837c7e1ea3d7039f81a08a043d7dd0609f11b3bc5d81dc589`                                                      |
+| 0.9.0   | 2026-11-23 | The scope-and-fidelity tables begin. A new Appendix B holds three sentences on how a table is read and two rows for a map, an object schema that names no property: a schema-valued `additionalProperties` is carried in Zod by `.catchall` and in TypeScript by an index signature, and a `propertyNames` that refuses no name has nothing written for it. SPEC-N-5 now names only the rows Appendix B does not hold, and says the tables are written row by row, each row by amendment. SPEC-G-5 gains a third route to its one exception: naming the rule of the source format's own text under which a constraint refuses no value. A new SPEC-P-7 declares that the Zod Castr writes neither checks nor returns a property named `__proto__`. These are the constructs at which Castr refuses the Oak API specification's v1 document; the fix follows this amendment. Nothing else changes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Jim Cresswell, 2026-11-23, in a working session: "I approve revision 0.9.0 and minor adjustement to revision 0.9.1". SHA-256 of the text above this log: `217a4f0126c6e04e0011cac0f7ac222eaaebdb5143e708c821c7342dfba5c55d`              |
+| 0.9.1   | 2026-11-23 | Three minor adjustments to Appendix B.2, each from the hosted review of 0.9.0 and each narrowing or clarifying what a row classes. The `propertyNames` row covers `{type: string}` only with no other keyword, and the sentence that allowed annotations beside it is removed: an annotation is meaning (section 3), and writing nothing would drop it. The endpoint-definitions cell of that row names its class. A sentence says each row classes its own keyword and no other, so that a schema holding `minProperties`, `maxProperties` or `dependentRequired` beside a row's keyword is not read as classed whole. The approval was given in advance: the owner's words below named 0.9.1 for a minor adjustment before this text was written, and the three adjustments were reported to the owner in the same session. Nothing else changes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Jim Cresswell, 2026-11-23, in a working session: "I approve revision 0.9.0 and minor adjustement to revision 0.9.1". SHA-256 of the text above this log: `bceccc018bb7a9322b5cdbf4cbac9fa5a023d4ecb14f6052d9dc35bb395767b2`              |
