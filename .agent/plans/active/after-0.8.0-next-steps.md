@@ -343,7 +343,8 @@ specification are approved and on `main`.
       The exact status code's cell stays not judged, because the document it is set
       against is now refused where it crashed; it is judged once a range has a shape
       (unit 6).
-   5. A refusal for `minProperties` and `maxProperties`, merged as pull request 182; a case for `items: false`; and
+   5. A refusal for `minProperties` and `maxProperties`, merged as pull request 182; a boolean where a schema stands, read as the schema it is (its own pull request, after
+      182); and
       `const` and `enum` beside a keyword that also decides, in the Zod writer, which
       writes the literal and returns. Its case is `{type: string, enum: ['a', null]}`:
       both writers admit `null`, which the source's `type` refuses (found in the review
@@ -358,7 +359,10 @@ specification are approved and on `main`.
       applied there; it is the model that loses them. The repair is one refusal inside `buildCastrSchema`, the one function every
       position's schema goes through, so no position is left out by a list that is one
       short. Its cases are found, not listed here: one for each keyword at each caller of
-      that function, a response header's schema among them, written first (run in the review of pull
+      that function, a response header's schema among them, written first. Some schemas never reach that function: a component header or callback
+      that nothing refers to, and a callback inside an operation, are kept as they were
+      read (a late finding of the review of pull request 183). Those are the positions
+      of unit 9, and the refusal has to reach them there (run in the review of pull
       request 182).
    6. One amendment for what needs text, through one round of hosted review before the
       owner is asked (act 3): `format: uri`; `default` in Zod; the shape of an endpoint
@@ -369,6 +373,12 @@ specification are approved and on `main`.
    7. One code unit for each cause the amendment settles, the run report among them.
    8. The `paths` type: its rows, then the writer.
    9. The reader's document pass, position by position (left out of pull request 175).
+
+   **Found after the queue was written, and part of unit 5.** The OpenAPI writer refuses
+   a boolean schema and says OpenAPI has none. OpenAPI 3.1 and 3.2 take their Schema
+   Object from JSON Schema 2020-12, which has both, so a closed tuple (`prefixItems` with
+   `items: false`) cannot be written back to OpenAPI today. It is refused, which is
+   honest; writing it is the repair.
 
    What the sort says about the plan's own test: the first class is not empty, and not
    every row needs text, so the sorting bought an order. One of the five schema rows was
