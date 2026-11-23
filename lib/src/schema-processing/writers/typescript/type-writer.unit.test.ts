@@ -714,6 +714,16 @@ describe('Dynamic Reference Keywords — TypeScript fail-fast', () => {
       expect(() => generate(schema)).toThrow(/const beside minLength/);
     });
 
+    it('refuses a const in a schema the model marks as admitting null', () => {
+      const schema: CastrSchema = {
+        type: 'string',
+        const: 'a',
+        metadata: { ...metadata, nullable: true },
+      };
+
+      expect(() => generate(schema)).toThrow(/const in a schema that also admits null/);
+    });
+
     it('refuses a const whose value is an array', () => {
       expect(() => generate({ type: 'array', const: [1], metadata })).toThrow(
         /const whose value is an object or an array/,

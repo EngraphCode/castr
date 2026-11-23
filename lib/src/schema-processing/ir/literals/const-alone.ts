@@ -56,6 +56,15 @@ function typeAdmits(type: unknown, value: Primitive): boolean {
   }
 }
 
+/** Whether the model's metadata says the schema admits null beside its type. */
+function marksNullable(metadata: unknown): boolean {
+  return (
+    typeof metadata === 'object' &&
+    metadata !== null &&
+    new Map<string, unknown>(Object.entries(metadata)).get('nullable') === true
+  );
+}
+
 /**
  * Why the `const` of a schema does not decide alone, in words that follow "A const";
  * `undefined` when it does. The schema is one that holds a `const`.
@@ -69,6 +78,9 @@ export function whyConstDoesNotDecideAlone(schema: object): string | undefined {
   const type = keywords.get('type');
   if (type !== undefined && !typeAdmits(type, value)) {
     return `beside a type that is a list or does not admit its value (${JSON.stringify(type)})`;
+  }
+  if (value !== null && marksNullable(keywords.get('metadata'))) {
+    return 'in a schema that also admits null';
   }
   const beside = [...keywords.keys()].find(
     (keyword) =>
