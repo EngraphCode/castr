@@ -10,5 +10,4 @@ export {
   rejectDynamicReferenceKeywords,
   rejectUnsupportedObjectKeywords,
   rejectUnsupportedArrayKeywords,
-  resolveSchemaTypeString,
 } from './fail-fast.js';

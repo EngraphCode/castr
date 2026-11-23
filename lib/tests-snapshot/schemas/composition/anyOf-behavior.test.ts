@@ -346,7 +346,7 @@ describe('anyOf behavior', () => {
       };
       export type PetByType = {
         hunts?: boolean;
-        pet_type: string;
+        pet_type: "Cat" | "Dog";
       };
       // Zod Schemas
       export const PetByAge = z.strictObject({

@@ -59,7 +59,7 @@ test('allOf-single-ref', async () => {
   expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
     // Type Definitions
-    export type MyComponent = string;
+    export type MyComponent = "one" | "two" | "three";
     // Zod Schemas
     export const MyComponent = z
       .enum(["one", "two", "three"])

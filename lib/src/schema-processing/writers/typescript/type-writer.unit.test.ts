@@ -735,6 +735,181 @@ describe('Dynamic Reference Keywords — TypeScript fail-fast', () => {
     });
   });
 
+  describe('enum', () => {
+    const metadata: CastrSchema['metadata'] = {
+      required: true,
+      nullable: false,
+      circularReferences: [],
+      dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+      zodChain: { presence: '', validations: [], defaults: [] },
+    };
+
+    it('writes an enum of strings as the union of their literal types', () => {
+      expect(generate({ type: 'string', enum: ['a', 'b'], metadata })).toBe('"a" | "b"');
+    });
+
+    it('writes an enum of one member as its literal type', () => {
+      expect(generate({ type: 'string', enum: ['a'], metadata })).toBe('"a"');
+    });
+
+    it('writes an enum of mixed primitives as the union of their literal types', () => {
+      expect(generate({ enum: ['a', 1, null, true], metadata })).toBe('"a" | 1 | null | true');
+    });
+
+    it('keeps every member of a union whose members are each an enum of one type', () => {
+      const schema: CastrSchema = {
+        anyOf: [
+          { type: 'string', enum: ['a', 'b'], metadata },
+          { type: 'string', enum: ['c'], metadata },
+        ],
+        metadata,
+      };
+
+      expect(generate(schema)).toBe('"a" | "b" | "c"');
+    });
+
+    it.each(['allOf', 'anyOf', 'oneOf'] as const)(
+      'refuses an enum beside %s, which the union of literals would drop',
+      (keyword) => {
+        const schema: CastrSchema = {
+          enum: ['a', 'b'],
+          [keyword]: [{ type: 'string', const: 'a', metadata }],
+          metadata,
+        };
+
+        expect(() => generate(schema)).toThrow(new RegExp(`enum beside ${keyword}`));
+      },
+    );
+
+    it('refuses an enum beside a reference', () => {
+      const schema: CastrSchema = { $ref: '#/components/schemas/A', enum: ['a', 'b'], metadata };
+
+      expect(() => generate(schema)).toThrow(/enum beside \$ref/);
+    });
+
+    it('refuses an enum beside a const, which the union of literals would drop', () => {
+      const schema: CastrSchema = { const: 'a', enum: ['a', 'b'], metadata };
+
+      expect(() => generate(schema)).toThrow(/enum beside const/);
+    });
+
+    it('refuses an enum of 64-bit integers, which are written as bigint', () => {
+      const schema: CastrSchema = {
+        type: 'integer',
+        format: 'int64',
+        integerSemantics: 'int64',
+        enum: [1, 2],
+        metadata,
+      };
+
+      expect(() => generate(schema)).toThrow(/enum.*bigint/);
+    });
+
+    it('refuses an enum with a member that is an object or an array', () => {
+      expect(() => generate({ enum: [{ a: 1 }], metadata })).toThrow(/enum.*object or an array/);
+    });
+
+    it('keeps an enum whole as one member of an intersection', () => {
+      const schema: CastrSchema = {
+        allOf: [
+          { type: 'string', enum: ['a', 'b'], metadata },
+          { type: 'string', metadata },
+        ],
+        metadata,
+      };
+
+      expect(generate(schema)).toBe('("a" | "b") & string');
+    });
+  });
+
+  describe('an array whose items are a union', () => {
+    const metadata: CastrSchema['metadata'] = {
+      required: true,
+      nullable: false,
+      circularReferences: [],
+      dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+      zodChain: { presence: '', validations: [], defaults: [] },
+    };
+    const arrayOf = (items: CastrSchema): CastrSchema => ({ type: 'array', items, metadata });
+
+    it('keeps the union whole when the items are an anyOf', () => {
+      const items: CastrSchema = {
+        anyOf: [
+          { type: 'string', metadata },
+          { type: 'number', metadata },
+        ],
+        metadata,
+      };
+
+      expect(generate(arrayOf(items))).toBe('(string | number)[]');
+    });
+
+    it('keeps the union whole when the items may be null', () => {
+      const items: CastrSchema = { type: 'string', metadata: { ...metadata, nullable: true } };
+
+      expect(generate(arrayOf(items))).toBe('(string | null)[]');
+    });
+
+    it('keeps the union whole when the items are an enum', () => {
+      expect(generate(arrayOf({ type: 'string', enum: ['a', 'b'], metadata }))).toBe(
+        '("a" | "b")[]',
+      );
+    });
+
+    it('keeps an intersection whole when the items are an allOf', () => {
+      const items: CastrSchema = {
+        allOf: [
+          { $ref: '#/components/schemas/A', metadata },
+          { $ref: '#/components/schemas/B', metadata },
+        ],
+        metadata,
+      };
+
+      expect(generate(arrayOf(items))).toBe('(A & B)[]');
+    });
+
+    it('keeps both branches of a union whose objects differ only in a const', () => {
+      const branch = (kind: string): CastrSchema => ({
+        type: 'object',
+        properties: new CastrSchemaProperties({
+          kind: { type: 'string', const: kind, metadata },
+        }),
+        required: ['kind'],
+        additionalProperties: false,
+        metadata,
+      });
+
+      const written = generate({ oneOf: [branch('a'), branch('b')], metadata });
+
+      expect(written).toContain('kind: "a"');
+      expect(written).toContain('kind: "b"');
+    });
+
+    it('keeps an array of a union apart from the members it would read as unbracketed', () => {
+      const stringOrNumber: CastrSchema = {
+        anyOf: [
+          { type: 'string', metadata },
+          { type: 'number', metadata },
+        ],
+        metadata,
+      };
+      const schema: CastrSchema = {
+        anyOf: [
+          arrayOf(stringOrNumber),
+          { type: 'string', metadata },
+          arrayOf({ type: 'number', metadata }),
+        ],
+        metadata,
+      };
+
+      expect(generate(schema)).toBe('(string | number)[] | string | number[]');
+    });
+
+    it('writes no parentheses round items that are one type', () => {
+      expect(generate(arrayOf({ type: 'string', metadata }))).toBe('string[]');
+    });
+  });
+
   describe('a schema-valued additionalProperties', () => {
     const metadata: CastrSchema['metadata'] = {
       required: true,
