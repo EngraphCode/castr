@@ -1137,7 +1137,19 @@ string; [key: string]: string | number }` accepts every valid value and also
   - _Inference, not observation._ That the Ecosystem repository removes two paths
     because its generator cannot take them: the seat's reading of a peer's report, and
     the course says that repository generated from Oak's v0 document on 18 November, so
-    which document those paths belong to is not known here. That Oak's quiz schemas are
+    which document those paths belong to is not known here. **This inference was wrong;
+    corrected after the compaction, 23 November.** The seat read the file
+    (`packages/sdks/oak-sdk-codegen/code-generation/excluded-paths.ts` in the Ecosystem
+    repository): seven paths are excluded, four from the document the SDK is generated
+    from (the two `check-restricted` paths and the two `/changelog` paths) and three from
+    tool generation only (the two `/search` paths and `/lessons/{lesson}/assets/{type}`).
+    The owner then said each is excluded for Oak's content policy or because the endpoint
+    offers no value in the MCP, that the split over two mechanisms is architectural debt,
+    and that all belong in one tool filter, "because the SDK is a separate product from
+    the MCP server". None is excluded because a generator cannot take it. For Castr this
+    strengthens the target: the SDK is to carry the whole API, so the whole document
+    converts, the `check-restricted` paths included. The Ecosystem repository holds the
+    record (its plan node `single-canonical-tool-filter`). That Oak's quiz schemas are
     the next stop: nobody has run Castr past the first. That nothing cures Zod's refusal
     of `{}` for an optional property of an inherited name: not run. That the owner
     approves small amendments readily. The peer's list of call sites was read by the
