@@ -1,5 +1,12 @@
 # Amendment 0.10.0, proposed: the two schema rows Oak's document still waits on
 
+**Approved on 23 November 2026, in form A.** Asked by question, the owner chose form A
+for `format: uri` (`z.url()` with the limit declared) and approved the text ("I approve
+revision 0.10.0"). The approval was given before any hosted review of this draft; the
+review of the specification change is the first. The specification is the text of
+record; this file is the draft as it was brought, kept as the record of how it was
+reached.
+
 A draft for the owner's approval, written on 23 November 2026 by the seat Firefly mends
 Quench. Nothing here is in `docs/SPECIFICATION.md`, which stays at 0.9.1 until the owner
 approves this text in their own words, naming the version (SPEC-CC-2).
