@@ -1,37 +1,129 @@
 # Castr correction
 
-## Start here: after the second compaction of 23 November 2026
+## Start here: handover of 23 November 2026, before a change of account
 
-The seat (Firefly mends Quench, session prefix 4f7b54) continues after a second
-compaction the owner called that day; this is not a handover. Read in this order:
+Written by Firefly mends Quench (session prefix 4f7b54) when the owner said an account
+change was coming and asked that all reasoning be made local, then that the seat stop.
+A successor has no memory of the session. Everything it needs is in this section or in a
+file it names. Verify each line against git and GitHub before acting.
 
-1. The plan's ["What is next"](../../../plans/active/after-0.8.0-next-steps.md), under
-   "The reframing of 23 November 2026". It was rewritten before this compaction and is
-   the one statement of what is owed and in what order.
-2. The last step-log entries of 23 November below, from "N0, the fix: step back and
-   matrix" to "Before the second compaction". They hold the reasoning, each promise still
-   open, what is inference and not observation, and where everything lives.
-3. The live state, from git and GitHub, never from this record. The fix's first slice is
-   on the branch `fix/n0-constrained-map` and has no pull request yet; read that branch
-   against its remote before any new act, because a push made before a compaction reports
-   to nobody.
+### Where things stand
 
-Standing, from the owner on 23 November, verbatim in the plan: build for the Ecosystem
-repository as it should work; a wait on the owner exists only once they are asked by a
-blocking question; a question goes to them only after the decision lenses fail to settle
-it, or it is theirs by nature (approval of specification text is); pull requests in Castr
-go through the owner's sign-in. And, later that day, verbatim: "Please pass
-repsonsibility for all OCE PRs and work to Petrel mends Pinnacle (ea9cea). I would like
-to keep this session focussed on Castr now". This seat does no work in the Ecosystem
-repository; its pull request 1082 there is the Ecosystem seat's, which confirmed taking
-it. The owner asked at about 08:15 UTC that every subagent "for the next few hours" run
-on Fable, at medium effort where the seat would have used Opus and low where it would
-have used a smaller model; whether that window is still open at the resume is for the
-seat to judge or ask.
+- **`main`** is at the merge of pull request 173 (`c276cb68`). The specification on it is
+  0.9.1. Pull requests 172, 173 and 174 are merged. No pull request is open.
+- **The branch `fix/n0-constrained-map`** holds the fix (N0) and is pushed. It has **no
+  pull request**: the seat stopped at the owner's word before opening one, because an
+  open pull request needs a seat to read its reviews. Opening it is the next act. The
+  branch is not behind `main`.
+- **What the branch does.** The OpenAPI reader, the model's validator and the Zod and
+  TypeScript writers handle a constrained map (Appendix B.2, row 1); nothing is written
+  for a `propertyNames` that refuses no name (row 2); every writer refuses a
+  schema-valued `additionalProperties` outside the row. Oak's document converts in every
+  output. The picture has a row and a case for each of the two rows, both right in the
+  Zod and TypeScript columns, and a tracked case for SPEC-P-7.
+- **The picture today:** Oak's document uses 75 of 318 rows; 29 are not right, none is
+  refused. All six suites (`pnpm test`, `character`, `test:snapshot`, `test:gen`,
+  `test:transforms`, `test:picture`), type-check, lint and knip passed before the push.
+- Nothing runs under this seat: no watcher, heartbeat, monitor or schedule. No claim is
+  open. The Ecosystem repository's pull request 1082 belongs to its own seat (Petrel
+  mends Pinnacle), by the owner's word quoted below.
 
-Nothing runs under this seat: no watcher, no heartbeat, no monitor, no schedule, so
-nothing is re-armed. One subagent ran after the first compaction (a fetch of the JSON
-Schema text) and returned.
+### What to do next, in order
+
+The plan's ["What is next"](../../../plans/active/after-0.8.0-next-steps.md) is the one
+statement of order; its act 1 now carries a "State after the resume" paragraph.
+
+1. Open the pull request for `fix/n0-constrained-map`. Its body opens with the line that
+   an agent seat did the work and says plainly what is not done (the three items
+   below). Review exit, set at opening: two rounds, and a third only for a fault in what
+   the code does. Merge when clean and green; nobody is asked.
+2. Then the plan's act 2: sort the 29 rows of Oak's document that are not right into
+   three (breaks an approved clause, needs text, touches the model) and write the table
+   in the plan as the queue.
+3. Acts 3 to 5 of the plan as written.
+
+### Not done on the branch, each with its reason
+
+- **The reader's document pass** (`openapi-document.object-semantics.schemas.ts`) still
+  refuses a map in a webhook, a component header, a component path item and a component
+  media type. It is its own unit. The experiment that decided this: a map was put at
+  each position. Those four refuse. A header and a callback written inside an operation
+  convert with nothing written for their schema, because the pass never visits them. So
+  the pass guards positions whose schemas no Zod writer builds, and swapping in the map
+  predicate would turn a refusal into a silent pass. The unit is to say, position by
+  position, what Castr does with a schema there, test first. Oak's document has none of
+  these positions. The pre-existing hole (an open object inside an operation's header or
+  callback passes unbuilt) is part of that unit.
+- **The line SPEC-P-7 requires in every run's report.** Castr has no run report:
+  `GenerationResult` holds content and paths. SPEC-P-1's list of supplied policies and
+  section 5's reported defaults have nowhere to go either. One unit, a run report,
+  serves all three. Until then Castr writes a catchall without stating the limit, which
+  breaks SPEC-P-7's last sentence. Say so in the pull request.
+- **SPEC-G-5's third route.** No check of sample adequacy exists in code, so there was
+  nothing to change.
+
+### Why the picture was changed as it was (reasoning not in the code)
+
+- The picture holds one case for each row, and its rows for the two keywords are the
+  whole keyword. The approved rows are narrower: the keyword on a map. Replacing the
+  keywords' cases would have hidden that Castr still refuses the keyword outside the
+  row. So the two approved rows were added as rows of their own ("schema construct"
+  rows, written by hand in `rows/schema-proposals.ts`), and the keywords' cases stay
+  refused.
+- A third row was added that no amendment asked for: `additionalProperties: false`.
+  Reason: Oak's document writes the keyword 245 times, 243 of them `false` and two in
+  the map row. The keyword's own case is a schema-valued one beside `properties`, so
+  its refused cell was being counted against Oak for a use Oak does not make. Its
+  TypeScript proposal is "carried by companion", as the keyword's row already said:
+  TypeScript cannot close an object. This is a proposal of the picture, not
+  specification text; if a reviewer objects that it needs a row in Appendix B, that is
+  an amendment for the owner and the row can stay as a proposal meanwhile.
+- A document's walk names a schema in one of the three rows by that row and not by the
+  keyword (`documents/map-rows.ts`). The reading there is written from the
+  specification's words and does not import Castr's predicate, so the picture stays a
+  judge outside Castr. Two copies of one list is the price, taken knowingly.
+- The second row's endpoint cell is "carried" with nothing written, as Appendix B.2
+  says, so no case can show it; the coverage test names it as the one unexercised
+  endpoint row.
+- The SPEC-P-7 case is no cell: by the picture's verdicts it would read "wrong", and it
+  is a declared limit. It lives in `cases/declared-limits.gen.test.ts`. The value is
+  made with `JSON.parse`, because an object literal sets the prototype and makes no own
+  property, which would pass for nothing.
+- The first commit attempt failed on the unused-export check (three exported constants
+  nothing imported). The helper's last lines did not show it; the reason was in the
+  message file's `.log`. Read that file when a commit does not appear in `git log`.
+
+### The owner's standing words (also quoted in the plan)
+
+Build for the Ecosystem repository as it should work, not as it works now. A wait on the
+owner exists only once they are asked by a blocking question; a question goes to them
+only after the decision lenses fail, or it is theirs by nature (approval of
+specification text is). Pull requests in Castr go through the owner's sign-in with a
+line saying an agent did it. Verbatim, 23 November: "Please pass repsonsibility for all
+OCE PRs and work to Petrel mends Pinnacle (ea9cea). I would like to keep this session
+focussed on Castr now". The cognitive skills are read from the Ecosystem repository's
+copies. The two April branches named in the plan are never read or merged. At about
+08:15 UTC on 23 November the owner asked that subagents "for the next few hours" run on
+Fable (medium effort for what would have been Opus, low for a smaller model); that
+window has probably closed, and a successor may ask.
+
+### Open promises and inferences
+
+- To the reviewer of 173: a tracked case for SPEC-P-7. Kept on this branch.
+- To the reviewers of 172: whole JSON Pointer resolution and a reference-cycle guard
+  belong to the tested closing transformation. Open.
+- A retrospective on the arc from 18 November to the first conversion is on offer to
+  the owner and not started.
+- Inference, told to the owner in prose and not asked by prompt: their words "I approve
+  revision 0.9.0 and minor adjustement to revision 0.9.1" cover 0.9.1 as written.
+- "Converted" means not refused. Nobody has judged the output for Oak's document, nor
+  for the two other fixtures that stopped being refused (ePerusteet, USPTO).
+- The closed reading across composition is a candidate, not a decision (see the trial
+  report under `.agent/analysis-and-reports/`).
+
+The dated step log below, from "N0, the fix: step back and matrix" to "Before the second
+compaction", holds the earlier reasoning of 23 November. Two letters to a successor are
+under `.agent/experience/`, dated 23 November.
 
 ## Start here: handover of 21 November 2026
 
@@ -2563,4 +2655,4 @@ this discovery for the architectural repair; no implementation is claimed here.
 | Smith stirs Ashes      | claude-code | claude-opus-5-5  | 7bd175         | 02ed168a-55c7-5450-8fdb-b7fd399d9c86 | Sonar analysis (sub-agent)                     | 2026-11-01    | 2026-11-01   |
 | Bilby hunts Dreamscape | claude-code | claude-opus-5-5  | d71882         | 767b6de5-9347-5fdb-bbdf-eeb98791ec13 | review, ratification walk, draft 0.5.0         | 2026-11-01    | 2026-11-02   |
 | Ingot binds Patina     | claude-code | claude-fable-5-2 | 194219         | 8fde4762-1621-5ce7-b563-2d0f4f647804 | alerts, MEASURE, 0.5.2 to 0.7.0, PICTURE       | 2026-11-18    | 2026-11-21   |
-| Firefly mends Quench   | claude-code | claude-fable-5-2 | 4f7b54         | f424d6ac-9c42-55de-8327-a0fdf5c046ec | N0 trace and matrix                            | 2026-11-22    | 2026-11-22   |
+| Firefly mends Quench   | claude-code | claude-fable-5-2 | 4f7b54         | f424d6ac-9c42-55de-8327-a0fdf5c046ec | N0, specification 0.9.0 and 0.9.1, the fix     | 2026-11-22    | 2026-11-23   |
