@@ -278,9 +278,9 @@ export function rowsUsedBy(document: JsonObject, rows: ReadonlySet<string>): Row
         const narrower = narrowerRowOf(schema, name);
         const inNarrowerRow = narrower !== undefined && rows.has(narrower);
         used.add(inNarrowerRow ? narrower : `keyword:${name}`);
-        // A narrower row holds its keyword with the boolean it is written with, so that
-        // boolean is not counted again as a schema standing alone.
-        if (!(inNarrowerRow && typeof value === 'boolean')) {
+        // The row for a closed object is the keyword with its `false`, so that `false`
+        // is not counted again as a schema standing alone. Any other value is walked.
+        if (!(inNarrowerRow && value === false)) {
           walkSchemaKeyword(name, value);
         }
       } else if (rows.has(`schema.${name}`)) {

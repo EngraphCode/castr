@@ -95,8 +95,8 @@ Three rows are narrower than the row of their keyword, and a schema in one of th
 named by it and not by the keyword ([`documents/map-rows.ts`](documents/map-rows.ts)):
 `additionalProperties: false`, and the two rows of a map the specification's Appendix B.2
 holds. The keywords' own rows keep their cases, which are schemas none of the three
-covers, and Castr still refuses those. The boolean such a row is written with is part of
-the row and is not counted again as a schema: every `false` in Oak's document is the
+covers, and Castr still refuses those. The `false` of a closed object is part of its row
+and is not counted again as a schema: every `false` in Oak's document is the
 value of `additionalProperties`.
 
 How to read it:
