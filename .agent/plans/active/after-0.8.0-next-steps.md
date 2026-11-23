@@ -329,7 +329,7 @@ specification are approved and on `main`.
 
    1. `const`, reader and TypeScript writer. Merged as pull request 177.
    2. `enum` to TypeScript, with a union kept whole and its members told apart by what
-      is written. Open as pull request 178.
+      is written. Merged as pull request 178.
    3. Three of the picture's own causes (the fourth is in unit 4): the walk and
       `` `false` as a schema ``, merged as pull request 179; a kind of
       case that can judge `parameter: in: path`, or the cell stated as one the picture
