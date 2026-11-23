@@ -861,6 +861,26 @@ string; [key: string]: string | number }` accepts every valid value and also
   | TypeScript for a constrained object that names a property | Strict against SPEC-G-4 as approved                                                                        | By companion, as the intersection type: it reads rightly and is mutually assignable with Zod's type; a literal may not fit it. Named in the draft as the row most in need of attack                         |
   | Whether one column's rejection is another's               | The text: capability granularity is the directed pair                                                      | No, except where a column is carried by companion of the one that rejects. Today's code refuses both; that is code to change, not text                                                                      |
 
+- 2026-11-23, N5, first piece. **The slice was attacked once and went on.** Twelve
+  findings, in the draft with what became of each. None changed the outcome for Oak's
+  shape and none showed the mark needs SPEC-N-3, so the exit's first branch did not
+  fire. Fixed and run: the rows' conditions now exclude the keywords that apply a
+  subschema in place; a shape held in a mark is a function that returns it; the clause
+  on `__proto__` says which values are refused and not where the check sits; Appendix A
+  is left as the reader's table. The Ecosystem seat answered the same day: its code
+  reads a Zod object's own fields only on closed objects, and it removes both
+  `check-restricted` paths before it generates, so it has no generated schema for
+  either today.
+  - _Step back at the slice's end._ (1) As at its start. (2) Nothing changed for Oak's
+    document; eight steps. (3) One pull request, as sized. (4) No. (5) Nothing.
+
+  | Question                                                             | Lens that settles it                                        | Disposition                                                                                                                                                                                |
+  | -------------------------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+  | Found: Zod reads an inherited member (`toString`) as a property      | Strict; proportionality: Oak's document names none          | Owed by the rows for `properties` and `required` in this piece. Not in the slice                                                                                                           |
+  | Found: the picture's reference validator reads inherited members too | Strict (SPEC-G-7): the judge must be right where Zod is not | Corrected in a pull request of its own, with a case for a property of an inherited name, before the piece widens                                                                           |
+  | Whether the piece widens now                                         | The slice's own condition: it closed under its one review   | Yes. Next: the reference fix, then the rows for `type`, `properties`, `required`, `enum` and `const`, with the six outcomes restated, each run against the composition cases before review |
+  | Found: a recursive value 2,000 deep makes Zod throw                  | Proportionality                                             | Owed by the row for a reference to an enclosing schema                                                                                                                                     |
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
