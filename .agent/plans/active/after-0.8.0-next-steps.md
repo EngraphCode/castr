@@ -252,7 +252,8 @@ specification are approved and on `main`.
      the case for the second row says in a comment which rule makes its keyword decide
      nothing.
 
-2. **Sort the rows of Oak's document that are not right** (31 of 74 by the picture)
+2. **Sort the rows of Oak's document that are not right** (31 of 74 by the picture when
+   this was written, before pull request 175; 29 of 75 after it)
    into three: a row that breaks an approved clause, repaired now, because SPEC-G-4 and
    section 9 bind today's code; a row that needs text, for the smallest amendment; a row
    that touches the model, where the seat steps back (SPEC-N-1). Write the sorted table
@@ -302,31 +303,39 @@ specification are approved and on `main`.
    **Found beside the sort, in no row Oak uses. Each breaks an approved clause.**
 
    - A status range is written as an unquoted key (`4XX:`), so the module does not load,
-     and as the number `4` in `errors`. SPEC-C-1 forbids collapsing a range; the form is
-     forced; repair now. `default` sits in `errors` with `status: "default"`; whether
-     that is SPEC-C-1's "treats `default` as a status" is judged in the same unit.
+     and as the number `4` in `errors`, which SPEC-C-1 forbids. The public type of an
+     error's status is `number | 'default'`, so writing the range there changes a public
+     shape, and SPEC-N-4 leaves that open (a finding of the review of pull request 176,
+     checked against `definition.types.ts`). What is forced is that no module is written
+     that does not load or that collapses a range: a located refusal now, the shape by a
+     row. `default` sits in `errors` with `status: "default"`; whether that is SPEC-C-1's
+     "treats `default` as a status" goes to the same row.
    - `minProperties` and `maxProperties` are dropped from every object. Pull request 175
      refuses them beside a map; elsewhere they still go without a word. The model has no
      place for them, so the repair is a refusal until a row carries them.
    - `items: false` is written `z.array(z.unknown())`. The model's node for a boolean
      schema is never built by the OpenAPI reader.
 
-   **The run report now has four clients:** SPEC-P-1's list of supplied policies, section
-   5's reported defaults, SPEC-P-7's line, and SPEC-P-6's warning for each source
-   `default`.
+   **The run report, when it is built, will have four clients.** Castr has none today.
+   The four are SPEC-P-1's list of supplied policies, section 5's reported defaults,
+   SPEC-P-7's line, and SPEC-P-6's warning for each source `default`.
 
    **The queue, in order.** One unit is one cause: text if it needs any, code, and the
-   picture's cell, in one turn.
+   picture's cell, in one turn. The one exception is unit 7, where four causes share one
+   amendment because the owner is asked once; each then gets its own code unit.
 
-   1. `const`, reader and TypeScript writer.
+   1. `const`, reader and TypeScript writer. Open as pull request 177.
    2. `enum` to TypeScript.
    3. The picture's walk and `` `false` as a schema ``.
-   4. Status ranges and `default` in the endpoint definitions.
+   4. A located refusal for a status range in the endpoint definitions, in place of a
+      module that does not load.
    5. A refusal for `minProperties` and `maxProperties`; a case for `items: false`.
    6. The run report.
-   7. One amendment for the rows that need text: `format: uri`, `default` in Zod, the
-      shape of an endpoint definition with a response that has no body. Through one round
-      of hosted review before the owner is asked (act 3).
+   7. One amendment for the rows that need text, through one round of hosted review
+      before the owner is asked (act 3): `format: uri`; `default` in Zod; the shape of an
+      endpoint definition, which covers the 11 cells of the endpoint column, a response
+      with no body, and a status range and `default` among the errors. Then one code
+      unit for each of the four.
    8. The `paths` type: its rows, then the writer.
    9. The reader's document pass, position by position (left out of pull request 175).
 
