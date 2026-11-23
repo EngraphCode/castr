@@ -388,9 +388,10 @@ specification are approved and on `main`.
    1. **Unit 6, in two parts.** The first part is done as amendment 0.10.0, approved on
       23 November: rows for `default` and `format: uri` (Appendix B.3) and SPEC-P-8. The
       owner chose `z.url()` with a declared limit over a pattern of RFC 3986. The specification stands at 0.10.1 after two adjustments from its review. Its code
-      follows: the Zod writer writes a source `default` into `.meta(…)` (done); and
-      the picture's sample that SPEC-P-8 concerns becomes a tracked case of the declared
-      limit. The second part is held for its own amendment: the shape of an endpoint
+      follows: the Zod writer writes a source `default` into `.meta(…)` (merged as 187); and
+      the picture holds the limit of SPEC-P-8 as a case of its own and prints the declared
+      limits (merged as 188). Oak's document then has 24 of 74 rows not right, all of them
+      the document's structure. The second part is held for its own amendment: the shape of an endpoint
       definition and where a run's report is returned, both the public surface
       (SPEC-N-4).
    2. **Unit 8 beside it**, in the wait on the owner: the rows for the document's
@@ -430,6 +431,22 @@ specification are approved and on `main`.
    first form more common. It breaks SPEC-PR-2, and it is its own unit: first a refusal
    for any exported declaration the reader cannot read, then reading these two forms.
    It ranks above the leftovers of unit 5, because it loses whole schemas.
+   Part of the same unit: metadata chained onto a reference (`Other.meta({ … })`) is not
+   read, for any annotation, and a lazy reference drops it without a word (second
+   review round of 187).
+
+   **The picture's own, from the review of pull request 188.** The walk names a `format`
+   by its value and does not look at the type beside it, so a format in a schema whose
+   type is not `string` alone is counted under its format row, though a format constrains
+   only strings and Appendix B.3 excludes that schema from the `format: uri` row. It
+   holds for every format row. Oak's uses are all `type: string` alone. The repair is in
+   the walk: such a schema is named by no format row.
+
+   **Settled without the owner, at the owner's word of 23 November.** Their approval of
+   revision 0.10.1 did not say which of two variants it covered. Asked, they directed the
+   seat to resolve it by the principles, strictly. The strict reading is the one
+   recorded: a cell must not claim a class whose definition it does not meet, so the
+   class carried with a declared limit stands, with the narrowed row.
 
    **State of unit 5 after pull request 184.** Done: the count of properties (182) and
    boolean schemas (184). Merged as 185: the refusal of `not`, `if`, `then` and `else`. Left:
