@@ -375,7 +375,8 @@ specification are approved and on `main`.
    9. The reader's document pass, position by position (left out of pull request 175).
 
    **Step back before the third compaction of 23 November: the order changes.** The
-   picture's table for Oak's document holds 26 rows that are not right. Two are schema
+   picture's table for Oak's document held, at that step back, 26 rows that were not right
+   (24 since pull requests 187 and 188). Two are schema
    rows, `format: uri` and `default`, and both wait on the amendment (unit 6). Of the 24
    structure rows, 21 cells are the `paths` type that nothing writes (unit 8), and the
    rest are the endpoint definition's shape (unit 6 again). Units 4 and 5 moved none of
@@ -395,7 +396,7 @@ specification are approved and on `main`.
       definition and where a run's report is returned, both the public surface
       (SPEC-N-4).
    2. **Unit 8 beside it**, in the wait on the owner: the rows for the document's
-      structure to TypeScript, then the `paths` type. It is 21 of the 26.
+      structure to TypeScript, then the `paths` type. It is 21 of the 24 cells left.
    3. **The Zod reader and the declarations it passes over**, set out below. It comes
       before the leftovers of unit 5 because it loses whole schemas, and it depends on
       nothing above.
@@ -476,8 +477,10 @@ specification are approved and on `main`.
      Ecosystem repository's present file has more names only because it is rewritten
      after generation.
 
-   Next for unit 8: the rows, as an amendment the owner approves, then the writer in
-   `src` and a template that emits it.
+   Next for unit 8: the rows. They are drafted as amendment 0.11.0 on the branch
+   `docs/amendment-0.11.0-draft` (pull request 190), which is reviewed before the owner is
+   asked; the draft is not in this tree until that pull request merges. Then the owner's
+   approval, then the writer in `src` and a template that emits it.
 
    **The picture's own, from the review of pull request 188. Not repaired.** The walk
    names a `format` by its value and does not look at the type beside it, so a format in a
