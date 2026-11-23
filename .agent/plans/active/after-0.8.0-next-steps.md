@@ -436,8 +436,10 @@ specification are approved and on `main`.
    review round of 187).
 
    **Unit 8, the prototype of the `paths` module (23 November).** It is
-   `lib/tests-picture/prototypes/paths-type.ts`, written from the model alone, with its
-   tests beside it. No template writes it and nothing in `src` reads it, because its
+   `lib/tests-picture/prototypes/paths-type.ts` on the branch `feat/paths-type-prototype`,
+   written from the model alone, with its tests beside it. The branch is pushed and is
+   not merged: a test that holds the shape would assume rows that are not approved
+   (section 12). No template writes it and nothing in `src` reads it, because its
    rows are not approved. Every schema position is written by the type writer that
    writes the exported component types. Its tests are at type level, on a client of
    `openapi-fetch` built over the type: `data` is the success body and `error` each
