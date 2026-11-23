@@ -59,6 +59,9 @@ function writeSchemaBody(
     const schema = context.schema;
 
     if (writeBooleanSchema(schema, writer)) {
+      // A boolean schema holds no keyword, and where it is a property it is still
+      // optional or required like any other.
+      writeSchemaChain(context, writer);
       return;
     }
 

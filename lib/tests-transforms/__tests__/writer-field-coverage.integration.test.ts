@@ -31,6 +31,23 @@ function getSchema(context: OpenAPIObject, name: string): SchemaObject {
   return assertSchemaObject(context.components?.schemas?.[name], `components.schemas.${name}`);
 }
 
+describe('a closed tuple, read from OpenAPI and written back', () => {
+  it('is refused by the OpenAPI writer, and is not written as an open tuple', () => {
+    const document: object = {
+      openapi: '3.1.0',
+      info: { title: 'closed tuple', version: '1' },
+      paths: {},
+      components: {
+        schemas: {
+          Pair: { type: 'array', prefixItems: [{ type: 'number' }], items: false },
+        },
+      },
+    };
+
+    expect(() => writeOpenApi(buildIR(document))).toThrow(/boolean schema `false`/);
+  });
+});
+
 describe('Writer Field Coverage - OpenAPI 3.1.x', () => {
   let output: OpenAPIObject;
 

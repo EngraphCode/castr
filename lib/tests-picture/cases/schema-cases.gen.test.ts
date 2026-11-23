@@ -69,7 +69,6 @@ describe('the cases for the rows of a schema', () => {
       'keyword:prefixItems',
       'keyword:allOf',
       'text:format: int64',
-      'text:`false` as a schema',
     ]);
   }, 60_000);
 });

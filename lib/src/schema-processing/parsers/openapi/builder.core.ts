@@ -49,6 +49,11 @@ export function buildCastrSchema(
   context: IRBuildContext,
 ): CastrSchema {
   // Handle $ref - preserve reference, metadata is computed later
+  // A document read from a file can hold a boolean where a schema stands: `true` accepts
+  // every value and `false` none. The model has a node for each.
+  if (typeof schema === 'boolean') {
+    return { booleanSchema: schema, metadata: buildCastrSchemaNode({}, context) };
+  }
   rejectPropertyCount(schema, context.path);
   if (isReferenceObject(schema)) {
     // For references, create a minimal schema object for metadata building
@@ -262,7 +267,7 @@ function addObjectProperties(
  * @internal
  */
 function addArrayItems(schema: SchemaObject, context: IRBuildContext, irSchema: CastrSchema): void {
-  if (!schema.items) {
+  if (schema.items === undefined) {
     return;
   }
 
