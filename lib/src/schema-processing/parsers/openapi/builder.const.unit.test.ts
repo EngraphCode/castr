@@ -35,7 +35,13 @@ describe('the OpenAPI reader and const', () => {
   });
 
   it('reads a const beside words about the schema', () => {
-    const schema = read({ type: 'string', const: 'a', description: 'the kind', title: 'Kind' });
+    const schema = read({
+      type: 'string',
+      const: 'a',
+      description: 'the kind',
+      title: 'Kind',
+      xml: { name: 'kind' },
+    });
 
     expect(schema.const).toBe('a');
     expect(schema.description).toBe('the kind');
