@@ -35,8 +35,8 @@ subagents: use the model that fits the task.
   until it was stated by a rule. Two refusals were tried and taken back because they
   stopped fixtures the Zod writer converts; where both writers share a fault, the
   repair is one unit for both (unit 5).
-- A second worktree is at `../castr-const-read`, clean, made so two branches could be
-  worked at once. The commit helper does not work there; commit by explicit paths.
+- The commit helper this seat uses does not work in a second worktree, where `.git` is
+  a file; there, commit by explicit paths.
 - No watcher, heartbeat, monitor or schedule runs under this seat. No claim is open. The
   Ecosystem repository's pull request 1082 belongs to its own seat (Petrel mends
   Pinnacle), by the owner's word quoted below.
