@@ -339,11 +339,12 @@ specification are approved and on `main`.
       whose names Castr keeps. So the row is to be split by kind of component, and how a
       named parameter is written joins the endpoint definition's shape in unit 6.
    4. A status range in the endpoint definitions: the key quoted so the module loads,
-      and a located refusal for a range among the errors. Open as its own pull request.
+      and a located refusal for a range among the errors. Merged as pull request 181.
       The exact status code's cell stays not judged, because the document it is set
       against is now refused where it crashed; it is judged once a range has a shape
       (unit 6).
-   5. A refusal for `minProperties` and `maxProperties`; a case for `items: false`; and
+   5. A refusal for `minProperties` and `maxProperties` (its own pull request, after
+      181); a case for `items: false`; and
       `const` and `enum` beside a keyword that also decides, in the Zod writer, which
       writes the literal and returns. Its case is `{type: string, enum: ['a', null]}`:
       both writers admit `null`, which the source's `type` refuses (found in the review
