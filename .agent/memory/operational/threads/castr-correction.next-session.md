@@ -9,38 +9,35 @@ file it names. Verify each line against git and GitHub before acting.
 
 ### Where things stand
 
-- **`main`** is at the merge of pull request 173 (`c276cb68`). The specification on it is
-  0.9.1. Pull requests 172, 173 and 174 are merged. No pull request is open.
-- **The branch `fix/n0-constrained-map`** holds the fix (N0) and is pushed. It has **no
-  pull request**: the seat stopped at the owner's word before opening one, because an
-  open pull request needs a seat to read its reviews. Opening it is the next act. The
-  branch is not behind `main`.
-- **What the branch does.** The OpenAPI reader, the model's validator and the Zod and
-  TypeScript writers handle a constrained map (Appendix B.2, row 1); nothing is written
-  for a `propertyNames` that refuses no name (row 2); every writer refuses a
-  schema-valued `additionalProperties` outside the row. Oak's document converts in every
-  output. The picture has a row and a case for each of the two rows, both right in the
-  Zod and TypeScript columns, and a tracked case for SPEC-P-7.
-- **The picture today:** Oak's document uses 75 of 318 rows; 29 are not right, none is
-  refused. All six suites (`pnpm test`, `character`, `test:snapshot`, `test:gen`,
-  `test:transforms`, `test:picture`), type-check, lint and knip passed before the push.
-- Nothing runs under this seat: no watcher, heartbeat, monitor or schedule. No claim is
-  open. The Ecosystem repository's pull request 1082 belongs to its own seat (Petrel
-  mends Pinnacle), by the owner's word quoted below.
+Rewritten after the account change of 23 November. The owner resumed the seat ("The
+account switch is complete and pauses are lifted") and lifted the Fable-only limit on
+subagents: use the model that fits the task.
+
+- **Merged on 23 November:** pull request 175, the fix (N0), and pull request 177,
+  `const`. With 175 the OpenAPI reader, the model's validator and the Zod and TypeScript
+  writers handle a constrained map (Appendix B.2, row 1); nothing is written for a
+  `propertyNames` that refuses no name (row 2); every writer refuses a schema-valued
+  `additionalProperties` outside the row; and Oak's document converts in every output.
+  With 177 a `const` that decides alone is read and written as a literal. The
+  specification on `main` is 0.9.1.
+- **Open when this was written, all this seat's:** 176 (the sort and this record), 178
+  (`enum` and unions in TypeScript) and 179 (the picture's count of `false`). This line
+  goes stale as they merge: `gh pr list` and `git log origin/main` give the present
+  state, and the plan's queue says which unit is next.
+- **Known fault on `main` until 178 merges:** the TypeScript writer writes only the
+  first branch of a union whose branches differ only in a `const`, since 177. Pull
+  request 178 repairs it.
+- **The picture:** `pnpm picture` from `lib/` prints how many rows Oak's document uses
+  and how many are not right. It was 29 of 75 after pull request 175.
+- No watcher, heartbeat, monitor or schedule runs under this seat. No claim is open. The
+  Ecosystem repository's pull request 1082 belongs to its own seat (Petrel mends
+  Pinnacle), by the owner's word quoted below.
 
 ### What to do next, in order
 
 The plan's ["What is next"](../../../plans/active/after-0.8.0-next-steps.md) is the one
-statement of order; its act 1 now carries a "State after the resume" paragraph.
-
-1. Open the pull request for `fix/n0-constrained-map`. Its body opens with the line that
-   an agent seat did the work and says plainly what is not done (the three items
-   below). Review exit, set at opening: two rounds, and a third only for a fault in what
-   the code does. Merge when clean and green; nobody is asked.
-2. Then the plan's act 2: sort the 29 rows of Oak's document that are not right into
-   three (breaks an approved clause, needs text, touches the model) and write the table
-   in the plan as the queue.
-3. Acts 3 to 5 of the plan as written.
+statement of order. Its second act holds the sorted table and a queue of nine units
+under "The sort"; work the queue from the first unit not yet merged.
 
 ### Not done on the branch, each with its reason
 
