@@ -24,7 +24,7 @@ todos:
     depends_on: [N5A-ROWS-FOR-N0]
   - id: N5A-ROWS-FOR-N0
     content: 'The small amendment (0.9.0) that classes the rows the fix touches, approved by the owner in their own words. It is the first part of the tables step and the only part the fix waits on. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
-    status: pending
+    status: completed
     depends_on: []
   - id: N1-REPIN
     content: 'The picture pins the latest revisions of the publisher schemas for OpenAPI 3.1 and 3.2. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
@@ -89,12 +89,12 @@ and the other is corrected.
    sibling checkout is absent, stop and say so; do not fall back to the local copies.
 6. Before a step's first edit, do its step back and run the decision matrix on its
    unknowns, and write both under "Step log" in the thread record. N0's are there,
-   dated 22 November. N1 is done; N3 and N4 are withdrawn. The next step is N5, the
-   tables, reshaped on 23 November: read "The reframing of 23 November 2026" below
-   before anything else in this plan.
-   Its Cricket panel ran on 22 November; its first piece is the table vocabulary and
-   the tables for schema rows, with the design of SPEC-N-4 beside it. N2 has its
-   judge and two slices merged; its remaining slices are worked during those waits.
+   dated 22 November. N1 is done; N3 and N4 are withdrawn. **The next step is N0, the
+   fix.** The part of the tables it waited on is approved (revisions 0.9.0 and 0.9.1,
+   23 November). Read "The reframing of 23 November 2026" below before anything else
+   in this plan; its "What is next" gives the order from here. The rest of the tables
+   (N5) follows the fix. N2 has its judge and two slices merged; its remaining slices
+   are worked during waits.
 7. Read "Review dispositions" at the foot of this plan and give each row its
    disposition before starting the step it names.
 
@@ -209,19 +209,18 @@ before the first value step would be an instrument ahead of the work.
    its shape). Write one matrix row on whether N0, as a repair of today's code, stands.
    The seat's reading is that it does, by that card; the course was not re-read in full
    on 23 November.
-3. **A small amendment, 0.9.0,** holding text only where a choice exists or no approved
-   clause already says it: the five vocabulary sentences; the sentence on a check Castr
-   writes and its mark, with section 11's change; one sentence on the limits of
-   JavaScript targets (the name `__proto__`); SPEC-G-5's third route; and the rows for a
-   constrained map and for `propertyNames`, with their conditions. All of it is in the
-   first slice's draft as reviewed, less what was withdrawn. SPEC-N-5 stays open, with
-   words saying the table is written row by row. Before the owner is asked: run the
-   composition script again without the check in front and without the `__proto__`
-   samples; run whether `params` is reachable from source text through the compiler's
-   syntax tree, which has only been run on a loaded module; and read in the thread
-   record how 0.8.0's approval was recorded. Then one blocking question to the owner
-   carrying the exact text, for their words naming the version. Approval of
-   specification text is theirs by SPEC-CC-2 and is not a question the lenses settle.
+3. **Done: the small amendment.** The owner approved it on 23 November as revision 0.9.0,
+   with a minor adjustment as 0.9.1 ("I approve revision 0.9.0 and minor adjustement to
+   revision 0.9.1"), and it is on `main` (pull request 174). The specification now has a
+   clause declaring the limit for a property named `__proto__` (SPEC-P-7), a third route
+   in SPEC-G-5, SPEC-N-5 reworded so the tables arrive row by row, and Appendix B with
+   three sentences on how a table is read and two rows: a constrained map that names no
+   property, and a `propertyNames` of `true`, `{}` or `{type: string}` with no other
+   keyword. The draft as brought, with its cases, is
+   [amendment-0.9.0-draft-2026-11-23.md](../../analysis-and-reports/amendment-0.9.0-draft-2026-11-23.md).
+   No approval question is open. The check Castr writes and its mark, the sentence "no
+   row, no default" and the other rows of the first slice were left out, each for a
+   reason the draft gives, and each comes by its own amendment when a document needs it.
 4. **N0, the fix,** test first, under the conditions the reviews of 22 and 23 November
    set. The picture's cells for the two rows turn right, and Oak's whole-document line
    names what stops it next.
@@ -286,6 +285,12 @@ lib/src` is empty). Every pull request since has been the picture, the specifica
 
 ## Order, and whose it is
 
+- **As of 23 November the order is N0, then the rest of N5.** The two rows the fix
+  touches are classed in approved text (revisions 0.9.0 and 0.9.1), which is what the
+  owner's "With the tables, in order" asked of them; the rest of the tables follows what
+  stops Oak's document next. The points below are the record of how the order was
+  reached, and where they say the fix waits on N5 they describe the state before that
+  approval.
 - **N4, N5, then N0 was the owner's**, 22 November, and is now N5, then N0 (the point
   after this one). After the trace of N0 the owner
   chose that the fix is built with its text ("Build with the text") and that the text
@@ -657,10 +662,10 @@ validate-specification-approval`), or by the record.
   how the Ecosystem repository uses the output, ask its seat for facts, write the
   design as a tracked draft, have it attacked, and bring it to the owner as an
   amendment. The tables for those 56 cells follow it.
-- **N0 still waits on the whole step.** Approval of the first piece does not start the
-  fix: numbers are a later part of this step, and starting N0 before them would change
-  code while the integer rows are open, which is the order the seat's reading of
-  decision eighteen ruled out.
+- **N0 does not wait on the whole step** (changed on 23 November). It waited on approved
+  text for the rows it touches, which revisions 0.9.0 and 0.9.1 gave. The sentence that
+  stood here said the fix waits on every part of this step; that was the seat's
+  stretching of decision eighteen and is withdrawn.
 - **Finished when.** As N3, for the version this part carries, with the tables in the
   specification and the picture's proposals computed from them and not kept beside them.
   Where N6 has already written legs, they are read again against the approved tables

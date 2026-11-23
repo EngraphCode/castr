@@ -53,7 +53,8 @@ A cost of the rule for definitions: a definition used both under `not` and by it
 unclosed in both places, which narrows less than the reading asks where it stands by
 itself. Closing it exactly needs two copies of the definition. That is not tried here.
 
-Not covered: `patternProperties`, `dependentSchemas`, `$dynamicRef`, a reference to
+Not covered: an object under `prefixItems` (the script does not visit it, so it is left
+open, which narrows less than the reading asks and widens nothing), `patternProperties`, `dependentSchemas`, `$dynamicRef`, a reference to
 another document, a local reference that is not `#/$defs/<one name>` (a nested
 definition, or a name that holds `/`), a definition that refers to itself (the script
 does not guard a cycle of references), a list of types, and what the Zod writer must
