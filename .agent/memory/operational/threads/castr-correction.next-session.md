@@ -13,20 +13,22 @@ Rewritten after the account change of 23 November. The owner resumed the seat ("
 account switch is complete and pauses are lifted") and lifted the Fable-only limit on
 subagents: use the model that fits the task.
 
-- **`main`** is at the merge of pull request 175 (`bc0595d3`). The specification on it
-  is 0.9.1. Pull requests 172 to 175 are merged.
-- **Pull request 175, the fix (N0), is merged.** The OpenAPI reader, the model's
-  validator and the Zod and TypeScript writers handle a constrained map (Appendix B.2,
-  row 1); nothing is written for a `propertyNames` that refuses no name (row 2); every
-  writer refuses a schema-valued `additionalProperties` outside the row. Oak's document
-  converts in every output. Its one review round found four faults that held when run,
-  fixed with tests in `a397c574`.
-- **Two pull requests are open, both this seat's:** 176 (`docs/act2-sort`: the sort of
-  the plan's second act, and this record) and 177 (`fix/const-read`: the first repair of
-  the queue). Each merges when clean and green; nobody is asked. Verify their state on
-  GitHub before acting, since this line is true only until they merge.
-- **The picture on `main`:** Oak's document uses 75 of 318 rows; 29 are not right, none
-  is refused. With 177 it is 28.
+- **Merged on 23 November:** pull request 175, the fix (N0), and pull request 177,
+  `const`. With 175 the OpenAPI reader, the model's validator and the Zod and TypeScript
+  writers handle a constrained map (Appendix B.2, row 1); nothing is written for a
+  `propertyNames` that refuses no name (row 2); every writer refuses a schema-valued
+  `additionalProperties` outside the row; and Oak's document converts in every output.
+  With 177 a `const` that decides alone is read and written as a literal. The
+  specification on `main` is 0.9.1.
+- **Open when this was written, all this seat's:** 176 (the sort and this record), 178
+  (`enum` and unions in TypeScript) and 179 (the picture's count of `false`). This line
+  goes stale as they merge: `gh pr list` and `git log origin/main` give the present
+  state, and the plan's queue says which unit is next.
+- **Known fault on `main` until 178 merges:** the TypeScript writer writes only the
+  first branch of a union whose branches differ only in a `const`, since 177. Pull
+  request 178 repairs it.
+- **The picture:** `pnpm picture` from `lib/` prints how many rows Oak's document uses
+  and how many are not right. It was 29 of 75 after pull request 175.
 - No watcher, heartbeat, monitor or schedule runs under this seat. No claim is open. The
   Ecosystem repository's pull request 1082 belongs to its own seat (Petrel mends
   Pinnacle), by the owner's word quoted below.
