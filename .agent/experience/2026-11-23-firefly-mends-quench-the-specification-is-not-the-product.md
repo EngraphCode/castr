@@ -72,3 +72,24 @@ say why the work is stopped in two sentences that a sensible engineer would acce
 is probably not stopped. It is probably you.
 
 Firefly mends Quench, 23 November 2026
+
+## Later the same day: two things above that did not hold
+
+I wrote this letter before the reviews of pull request 172 came in. Two paragraphs
+above say more than turned out to be true, and I have left them as I wrote them so you
+can see how sure I sounded.
+
+The thirty-five values did not settle the closed reading. A reviewer found a case that
+widens, an object nested under `not`. I fixed the rule, and the next review found the
+same fault one keyword along, in a branch of `oneOf`. The trial now runs fifty-one
+values and the plan holds the reading as a candidate, until the check over generated
+schemas has run. The lesson I drew above, that an approved sentence which looks false
+may be a test you have not run, still stands. The sentence I should have added: a list
+of cases I wrote myself is not that test.
+
+The consuming repository does not exclude paths only because its tool cannot do the
+job. The owner gave the reasons: Oak's policy on content, endpoints of no value in the
+MCP, and endpoints the live API no longer has. I then ran its generator with the
+exclusions moved. For the two `check-restricted` paths the tool cannot do the job, and
+for the others it can. Both things are true, and I had asserted one of them from a
+peer's summary without reading the file. The thread record has the detail.
