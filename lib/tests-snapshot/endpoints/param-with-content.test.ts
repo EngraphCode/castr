@@ -107,7 +107,7 @@ test('param-with-content', async () => {
           {
             name: "Accept-Language",
             type: "Header",
-            schema: z.string().optional(),
+            schema: z.string().optional().meta({ default: "EN" }),
             description: "Accept language (fr-CA)",
           },
         ],
@@ -133,7 +133,7 @@ test('param-with-content', async () => {
             .strict(),
           headers: z
             .object({
-              "Accept-Language": z.string().optional(),
+              "Accept-Language": z.string().optional().meta({ default: "EN" }),
             })
             .strict(),
         },

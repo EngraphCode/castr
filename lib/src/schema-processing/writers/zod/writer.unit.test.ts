@@ -205,6 +205,49 @@ describe('ZodWriter', () => {
     },
   );
 
+  describe('a source default, which is an annotation (SPEC-P-6, Appendix B.3)', () => {
+    it('is written into .meta() and inserts nothing', () => {
+      const schema: CastrSchema = { ...createMockSchema('number'), default: 20 };
+
+      expect(generate(createPropertyContext(schema, true))).toBe(
+        'z.number().optional().meta({"default":20})',
+      );
+    });
+
+    it('is written beside the other annotations', () => {
+      const schema: CastrSchema = {
+        ...createMockSchema('number'),
+        description: 'how many',
+        default: 0,
+      };
+
+      expect(generate(createPropertyContext(schema, false))).toBe(
+        'z.number().meta({"description":"how many","default":0})',
+      );
+    });
+
+    it('is refused where it holds a property named __proto__, which a literal would lose', () => {
+      const held: unknown = JSON.parse('{"b": 2, "nested": [{"__proto__": {"a": 1}}]}');
+      const schema: CastrSchema = { ...createMockSchema('object'), default: held };
+
+      expect(() => generate(createPropertyContext(schema, false))).toThrow(/__proto__/);
+    });
+
+    it('is not written again beside a Zod default, which inserts', () => {
+      const base = createMockSchema('number');
+      const schema: CastrSchema = {
+        ...base,
+        default: 20,
+        metadata: {
+          ...base.metadata,
+          zodChain: { ...base.metadata.zodChain, defaults: ['.default(20)'] },
+        },
+      };
+
+      expect(generate(createPropertyContext(schema, false))).toBe('z.number().default(20)');
+    });
+  });
+
   // ========== Metadata via .meta() tests (Zod 4) ==========
 
   describe('metadata via .meta()', () => {

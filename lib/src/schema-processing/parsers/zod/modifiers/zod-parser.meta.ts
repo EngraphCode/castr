@@ -5,7 +5,7 @@
  */
 
 import type { CastrSchema } from '../../../ir/index.js';
-import { Node } from 'ts-morph';
+import { Node, SyntaxKind } from 'ts-morph';
 import { extractLiteralValue, type ZodMethodCall } from '../ast/zod-ast.js';
 import { ZOD_METHOD_META } from '../zod-constants.js';
 import type { UnknownRecord } from '../../../../shared/type-utils/types.js';
@@ -18,6 +18,8 @@ export interface ParsedZodMeta {
   examples?: unknown[];
   externalDocs?: { url: string; description?: string };
   xml?: UnknownRecord;
+  /** A default held as an annotation: it inserts nothing (SPEC-P-6). */
+  default?: unknown;
 }
 
 type JsonObject = UnknownRecord;
@@ -81,6 +83,17 @@ function applyExtendedMetaToSchema(schema: CastrSchema, meta: ParsedZodMeta): vo
 }
 
 /**
+ * A default in the metadata is an annotation. A Zod `.default` on the same schema
+ * inserts, is carried by the chain, and is the value the schema keeps.
+ * @internal
+ */
+function applyAnnotationDefault(schema: CastrSchema, meta: ParsedZodMeta): void {
+  if (meta.default !== undefined && schema.default === undefined) {
+    schema.default = meta.default;
+  }
+}
+
+/**
  * Apply parsed metadata fields to a schema.
  * @internal
  */
@@ -91,6 +104,7 @@ export function applyMetaToSchema(schema: CastrSchema, meta: ParsedZodMeta | und
 
   applyCoreMetaToSchema(schema, meta);
   applyExtendedMetaToSchema(schema, meta);
+  applyAnnotationDefault(schema, meta);
 }
 
 /**
@@ -154,6 +168,13 @@ function assignPrimitiveFields(meta: ParsedZodMeta, raw: JsonObject): void {
   }
   if (raw['example'] !== undefined) {
     meta.example = raw['example'];
+  }
+  assignAnnotationDefault(meta, raw);
+}
+
+function assignAnnotationDefault(meta: ParsedZodMeta, raw: JsonObject): void {
+  if (raw['default'] !== undefined) {
+    meta.default = raw['default'];
   }
 }
 
@@ -268,7 +289,16 @@ function parseMetaValue(node: Node): unknown | undefined {
     return parseGenericObject(node);
   }
 
-  return extractLiteralValue(node);
+  return negativeNumberOf(node) ?? extractLiteralValue(node);
+}
+
+/** A negative number is written as a minus sign before a numeric literal. */
+function negativeNumberOf(node: Node): number | undefined {
+  if (!Node.isPrefixUnaryExpression(node) || node.getOperatorToken() !== SyntaxKind.MinusToken) {
+    return undefined;
+  }
+  const operand = node.getOperand();
+  return Node.isNumericLiteral(operand) ? -operand.getLiteralValue() : undefined;
 }
 
 function isPlainObject(value: unknown): value is JsonObject {

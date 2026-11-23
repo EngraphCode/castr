@@ -22,6 +22,7 @@ interface ZodMetadata {
   examples?: unknown[];
   externalDocs?: { url: string; description?: string };
   xml?: unknown;
+  default?: unknown;
 }
 
 /**
@@ -49,9 +50,22 @@ export function writeMetadata(schema: CastrSchema, writer: CodeBlockWriter): voi
     return;
   }
 
+  rejectAPropertyNamedProto(meta);
   writer.write('.meta(');
   writer.write(JSON.stringify(meta));
   writer.write(')');
+}
+
+/**
+ * A source `default` is an annotation: it is written into the metadata and inserts
+ * nothing (SPEC-P-6, Appendix B.3). A Zod `.default`, which inserts, is carried by the
+ * chain and is not written a second time here.
+ * @internal
+ */
+function collectSourceDefault(schema: CastrSchema, meta: ZodMetadata): void {
+  if (schema.default !== undefined && schema.metadata.zodChain.defaults.length === 0) {
+    meta.default = schema.default;
+  }
 }
 
 /**
@@ -76,6 +90,7 @@ function collectCoreMetadata(schema: CastrSchema, meta: ZodMetadata): void {
   if (schema.examples !== undefined && schema.examples.length > 0) {
     meta.examples = schema.examples;
   }
+  collectSourceDefault(schema, meta);
 }
 
 /**
@@ -104,4 +119,25 @@ function collectMetadata(schema: CastrSchema): ZodMetadata {
   collectCoreMetadata(schema, meta);
   collectExtendedMetadata(schema, meta);
   return meta;
+}
+
+const PROTO = '__proto__';
+
+/**
+ * The metadata is written as an object literal, and in a literal a property named
+ * `__proto__` sets the prototype and makes no property. A value that holds one, at any
+ * depth, would be written as a different value, so it is refused.
+ * @internal
+ */
+function rejectAPropertyNamedProto(value: unknown): void {
+  if (typeof value !== 'object' || value === null) {
+    return;
+  }
+  if (Object.hasOwn(value, PROTO)) {
+    throw new Error(
+      `A schema annotation that holds a property named ${PROTO} is rejected: written as ` +
+        'an object literal in .meta(), it would set a prototype and the property would be lost.',
+    );
+  }
+  Object.values(value).forEach(rejectAPropertyNamedProto);
 }
