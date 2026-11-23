@@ -6,6 +6,15 @@ has had its one adversarial review, under the exit set at the end. Twelve findin
 changed the outcome for Oak's shape, so the slice went on, and the text below is as
 corrected. "The review" lists each finding and what became of it.
 
+**Changed on 23 November 2026, after the owner's correction of that day.** The refusal
+of `__proto__` (the proposed SPEC-P-7 and row G) is withdrawn: the name is a declared
+limit of JavaScript targets, said once, with no check, so no schema becomes a pipe for
+it and Oak's two schemas need the mark only for `propertyNames`. And the tables are no
+longer brought as prose slice by slice: the plan's "The reframing of 23 November 2026"
+says how. The sentence below that the fix (N0) waits on the whole step is also
+withdrawn: the fix waits on approved text for the rows it touches. The rest of this draft
+stands as a record of what was run and proposed.
+
 It is the first slice of the first piece of step N5 of the
 [plan](../plans/active/after-0.8.0-next-steps.md): the table vocabulary and the tables
 for schema rows. The slice is the two rows that stop Oak's document,

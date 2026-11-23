@@ -1,5 +1,30 @@
 # Castr correction
 
+## Start here: after the compaction of 23 November 2026
+
+The seat (Firefly mends Quench, session prefix 4f7b54) continues after a compaction the
+owner called; this is not a handover. Read in this order:
+
+1. The plan's ["The reframing of 23 November 2026"](../../../plans/active/after-0.8.0-next-steps.md),
+   which governs where older lines differ, and under it "What is next", six acts in order.
+2. The step-log entries of 23 November below, the last of them first ("Before the
+   compaction: six skills at the owner's word"). It holds the reasoning behind the next
+   acts, every promise still open, what is inference and not observation, and where
+   everything lives.
+3. The live state, from git and GitHub, never from this record.
+
+Standing, from the owner on 23 November, verbatim in the plan: build for the Ecosystem
+repository as it should work; a wait on the owner exists only once they are asked by a
+blocking question; a question goes to them only after the decision lenses fail to settle
+it, or it is theirs by nature (approval of specification text is); pull requests go
+through the owner's sign-in. The owner also asked that morning, at about 08:15 UTC, that
+every subagent "for the next few hours" run on Fable, at medium effort where the seat
+would have used Opus and low where it would have used a smaller model; whether that
+window is still open at the resume is for the seat to judge or ask.
+
+Nothing runs under this seat: no watcher, no heartbeat, no monitor, no schedule, so
+nothing is re-armed. Five subagents ran on 23 November and all returned.
+
 ## Start here: handover of 21 November 2026
 
 Written by Ingot binds Patina (194219) when the owner changed accounts, for a successor
@@ -901,6 +926,302 @@ string; [key: string]: string | number }` accepts every valid value and also
     the one-way assignability of an optional property), `enum`, `const` and `example`,
     and the six outcomes restated. Each sentence is run against the composition cases
     with the reference reading own properties, before one review.
+
+- 2026-11-23, N5, first piece, second slice. **Start, on branch
+  `docs/n5-schema-rows-two` (pushed; no pull request until its draft exists).** #170
+  merged (`d2bef4fd`).
+  - _Step back._ (1) Serves the same measure. (2) Nothing changed for Oak's document;
+    nine steps. (3) One pull request for this slice's draft. (4) No. (5) The two facts
+    below, which is why they are written here before any draft.
+  - _Run: a named property whose name every object inherits_ (Zod 4.6.7 against Ajv
+    reading own properties; the twelve own names of `Object.prototype` in Node 24).
+    For eleven of them, with a property of type string: where the property is optional
+    Zod refuses `{}`, which the source accepts, because it reads the inherited function
+    as the property's value; where it is required both refuse `{}`. With a property
+    whose shape admits anything and is required, Zod accepts `{}`, which the source
+    refuses (the review's finding 2). For `__proto__` Zod accepts everything tried and
+    drops the property. So a Zod object cannot hold a property of such a name exactly: a
+    check in front can cure the widening, and nothing cures the refusal of `{}`.
+  - _Found: SPEC-P-1's closed reading does not say which schemas are objects._ It reads
+    "an object that does not state its policy" as closed. A schema with no `type`, such
+    as `{}` or `{minLength: 2}`, accepts every object in JSON Schema; if it is an
+    object for SPEC-P-1 then `additionalProperties: {}` would refuse a non-empty object
+    as an unknown key's value. The reader today treats a schema as an object when its
+    type is object or it holds `properties`, a non-empty `required` or
+    `additionalProperties` (`builder.additional-properties.ts`); no approved text says
+    so. The picture's cases all state `additionalProperties: false`, so the picture
+    never exercises the reading, and no closing transformation for SPEC-G-4 exists.
+    The rows for `type` and row B cannot be written before this has words.
+
+  | Question                                                                                                     | Lens that settles it                                                                                              | Disposition                                                                                                                                                                                                                            |
+  | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | A named property whose name every object inherits, in Zod                                                    | Strict: a Zod object decides `{}` wrongly and no check cures it; simpler than an object written wholly as a check | Proposed for the draft: `UNEXPRESSIBLE` for the Zod output, for the names ECMA-262 gives `Object.prototype`. A located rejection, never a silent difference. Oak's document names none (computed)                                      |
+  | Which schemas the closed reading of SPEC-P-1 applies to                                                      | SPEC-I-1: two readings on something the work depends on. The amendment is the change control that answers it      | The second slice proposes the words and has them attacked: a schema is an object schema when its `type` admits `object` or it holds a keyword that applies only to objects. What it means across `allOf` and a `$ref` is the same text |
+  | A tighter TypeScript type where every named property is required and admitted by `S` (hosted review of #170) | Could it be simpler; no decision of the validator changes                                                         | A row of its own in this slice if the compiler shows it exact under the repository's settings; otherwise row E stands                                                                                                                  |
+  | Whether to fix the reader's heuristic now                                                                    | Section 12 and decision sixteen: built with the text                                                              | No. Code changes with N0                                                                                                                                                                                                               |
+
+- 2026-11-23, N5, second slice. **Narrowed to one question, and two findings about
+  approved text.** The slice is now only: which schemas the closed reading of SPEC-P-1
+  closes, and how. Inherited names go to the slice for `properties` and `required`; the
+  tighter row E, `enum`, `const` and `example` to later ones.
+  - _Run: the closed reading as a transformation_ (Ajv reading own properties; expected
+    outcomes by hand; one of fourteen was the seat's own error, on `maxContains` without
+    `minContains: 0`). Adding `additionalProperties: false` to each object that states
+    no policy narrows for a plain object, under `anyOf` and under `allOf`. It **widens**
+    under `not` (`not` of an object with property `a` then accepts `{a: 'x', z: 1}`),
+    under `oneOf` (two objects that each name one property: `{a: 'x'}` matched both and
+    was refused, and is accepted once each is closed) and under `if`.
+  - _Finding one: a sentence of SPEC-P-1 is false as approved._ "so this reading narrows
+    the source's accepted set" does not hold under `not`, `oneOf` or `if`. The reading
+    is a rewriting of the source, and the result is neither inside nor outside the
+    source's accepted set in general. The numbers drafts and the `__proto__` clause
+    broke on the same keywords.
+  - _Finding two: the reading is not defined across composition, and Oak's document
+    depends on it in 16 places._ Computed on Oak's document: 262 schemas of type
+    object; 245 state their policy; 17 do not. One of the 17 is a plain object (the
+    request body of `check-restricted`). The other 16 are quiz schemas of the form
+    `{type: object, oneOf: [...]}`: an object that names no property and holds a
+    `oneOf` of 48 branches in all, each branch closed by statement. Closed literally,
+    with `additionalProperties: false` on the wrapper, such a schema accepts nothing
+    (run: `{t: 'x'}` refused). Closed with `unevaluatedProperties: false` on the
+    wrapper it accepts exactly what one branch accepts (run). SPEC-P-1 names
+    `unevaluatedProperties` for writing closure across composition and says nothing of
+    reading. Oak's document has no `allOf`, no `not`, no `if`, no `$ref` beside other
+    keywords, no schema with a list of types, and no schema that holds an object
+    keyword without `type: object`; so the candidate definitions of "an object" do not
+    differ on it, and the composition question does.
+  - _Not known:_ what Castr does with the 16 today. The document is refused at its
+    first stop, which shows no later one.
+
+  | Question                                                       | Lens that settles it                                                                        | Disposition                                                                                                                                                                                                                                                |
+  | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | Whether to tell the owner of a false sentence in approved text | Not a lens: a defect in approved text is said plainly                                       | Told in the session's report of 23 November. The correction is proposed in this slice and needs the owner's words on a version                                                                                                                             |
+  | How the closed reading works across composition                | Strict, and SPEC-I-1; the amendment is the change control                                   | The slice writes each candidate as a transformation of the source, runs it on the composition cases and on Oak's 16 quiz schemas, and proposes one. First candidate: `unevaluatedProperties: false` at the outermost object, as SPEC-P-1 already writes it |
+  | Whether N0's finish condition is still right                   | The plan: "Oak's whole-document line says exactly what stops it next, or that nothing does" | It stands, and the 16 quiz schemas are the likeliest next stop. N0's size is re-read once this slice has words                                                                                                                                             |
+  | Re-sizing N5 from the first slice                              | Proportionality                                                                             | The first slice took seven rows, two pull requests and six pushes. At that rate the plan's "at least two pull requests" for 315 rows is wrong by an order of magnitude. Re-sized in the plan with this slice's pull request, and said to the owner         |
+
+- 2026-11-23. **The owner's correction, the step back it asked for, and what it
+  changed.** The plan's "The reframing of 23 November 2026" holds the owner's words
+  verbatim, with the four answers to the question prompt, and what changes. This entry
+  holds how it was reached.
+  - _The seat's own pass,_ with the Ecosystem repository's metacognition directive and
+    its reason and proportionality skills. Four framing errors: "strict" read as an
+    order of work, so nothing was built until prose was approved; prose attacked by
+    reviewers used for questions a run decides, when every attack that broke a draft
+    did so by running something; owner words stretched past their scope (decision
+    eighteen into "the fix waits on all 315 rows"; "asking me is the wrong move" into
+    never asking, with real decisions parked in report prose); and the Ecosystem
+    repository as it works now taken as the consumer. Under those: the specification
+    treated as the product, the seat's caution as the method, and each owner sentence
+    as a rule to maximise.
+  - _The conscience panel,_ four roles, normal stance, on that reading (all four on
+    Fable by the owner's instruction of the day, at low or medium effort, which is not
+    the panel's usual binding). Work: four ON-TRACK. Frame: four CONTRADICTED, on one
+    line: the seat had read section 12's "no code assumes an answer" as binding merged
+    code only, and section 12 does not say merged. Also from the returns: SPEC-G-4
+    carries less of "what right is" than the seat claimed (the accepted side, on the
+    corpus, with no judge where the profile's reading is undefined); the seat's
+    proposal to make Oak's whole document convert scored the work on Oak's document as
+    it is today, which is the corpus-fitting version 0.7.0 corrected; and the faults in
+    approved text were still parked in prose. The adversarial wave was not run: the
+    redirection was unanimous and could be acted on.
+  - _The questions, and what the owner sent back._ The seat then asked four blocking
+    questions. The owner answered one (pull requests) and sent three back to the
+    lenses. So the lesson has two halves: a wait on the owner exists only once they
+    are asked by a blocking question; and a question goes to them only after the
+    lenses fail to settle it, or it is theirs by nature.
+  - _Run for the closed reading_ (Ajv reading own properties; 15 schemas, 35 values,
+    expected by hand; one hand expectation was wrong and is corrected). Closing only
+    the outermost object, with `unevaluatedProperties: false`, and never a schema
+    applied in place: no value was accepted that the source refuses, under `not`,
+    `oneOf`, `if`, `anyOf`, `allOf`, a reference beside keywords, and the shape of
+    Oak's quiz schemas. One place still widened, a schema under `contains` beside
+    `maxContains`; with schemas under `contains` left unclosed, none did. An empty
+    schema as a property's shape is not closed, because it describes no object.
+  - _Corrected after the compaction, from the hosted review of pull request 172._ The
+    run above did not hold an object nested as a property or an item under `not`, `if`
+    or `contains`. A reviewer gave the case `{not: {properties: {p: A}}}`; the seat ran
+    it and four like it: 4 of 13 values widened under the rule as written, none once
+    nothing under those keywords is closed at any depth, nor inside a definition reached
+    from there. The trial record now holds 21 schemas and 48 values with that rule, and
+    its script fails on any widened or unexpected value. Two limits are stated there:
+    the result is about its cases, not every schema; and it runs one schema of the
+    shape of Oak's quiz schemas, while that all 16 have the shape was computed from the
+    document. The matrix row below reads with this correction. Of the twelve review
+    threads: fixed as fact, the nested widening, the todo graph (the fix now depends on
+    a new todo for the small amendment, not on the whole tables step), the wording of
+    the `__proto__` limit (JavaScript can hold the property; Zod drops it), the words on
+    which schemas describe objects, the script's exit status and how to run it, the
+    scope of the conclusion, and a stale sentence in the first slice's draft. Declined
+    with a reason: bringing back the refusal of `__proto__` (the owner's test for an
+    edge); the reading that the line on pull requests contradicts the owner (it states
+    the owner's answer); full JSON Pointer resolution in a trial script (listed as not
+    covered).
+  - _A second and a third round of that review._ Round two: the tables step now depends
+    on the fix in the todo graph (fixed); a cycle of references is not guarded in the
+    trial script (declined, listed as not covered). Round three gave the `not` fault one
+    keyword along: an object nested in a branch of `oneOf`, where closing it turns "two
+    branches match" into "one matches". Reproduced; branches of `oneOf` joined the
+    keywords under which nothing is closed; 22 schemas, 51 values, and the script fails
+    on the case without the change. What this teaches: two reviews in a row found a
+    position the seat had not thought of, so the reading is a candidate and not a
+    decision, the list of keywords is not known to be whole, and hand-written cases
+    will not make it so. The check over generated schemas (act 5) is the instrument and
+    runs before any words on composition go to the owner. Oak's 16 quiz schemas are not
+    touched by any of it: their branches state their own policy. The review loop on
+    this pull request ran three rounds, one past the seat's own limit, because rounds
+    one and three each found a real fault in a recorded decision.
+  - _The Ecosystem repository's excluded paths, measured._ Later the same day the seat
+    ran that repository's generator with its exclusions moved (its report
+    `excluded-paths-two-mechanisms-investigation-2026-11-23.md`, its pull request 1082,
+    now the Ecosystem seat's). With the two `check-restricted` paths in the pipeline
+    the generated workspace fails type-check: a map response written as `z.record` with
+    one argument, the document's only request body, the only path with no `get`. So for
+    those two paths the present generator cannot take them, which is what the seat had
+    inferred, then recorded as wrong on the owner's account of the reasons; both are
+    true, and the owner has since named three reasons (not surfaced over MCP, not yet
+    processable, no longer in the live API). The map response with `propertyNames` and
+    the request body are the same constructs as the two rows that stop Castr.
+
+  | Question                                                      | Lens that settles it                                                                                                                                                 | Disposition                                                                                                                                                                                                                                                            |
+  | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | May product code explore ahead of approved text               | Strict: section 12 and SPEC-I-1 as written. Then "would it be simpler if the system changed"                                                                         | No, and it is not needed. The either/or of text first or code first was a false frame: the proposals become runnable (the right output written by hand, judged by the picture's outside judges), which is test code that assumes nothing in Castr                      |
+  | What the fix waits on                                         | Strict, with the scope of decision eighteen read as given                                                                                                            | Approved text for the rows it touches. The seat's "the whole step" is withdrawn                                                                                                                                                                                        |
+  | How the closed reading works across composition               | Strict: of the readings, one makes the approved sentence "narrows the source's accepted set" true, and it was run. Excellence: it is a construct JSON Schema defines | Close the outermost object over what its branches evaluate; never a schema applied in place or under `contains`. Oak's 16 quiz schemas then accept what one branch accepts. The literal reading, which accepts nothing for them and widens under `not`, was the seat's |
+  | The name `__proto__`: a real case or hand wringing            | User value, with proportionality; strict asks only that nothing is silent; the owner's decision seven is the precedent for a limit of JavaScript targets             | Hand wringing in its remedy. Declared once in the specification and in each run's report; no check. The first slice's refusal, clause and row G are withdrawn: they cost every consumer a Zod object's own methods and a walk of every value                           |
+  | Whether the tables restate how keywords compose               | Could it be simpler; section 5 says meaning is the source format's                                                                                                   | No. A row gives its construct's class and written form; composition is the format's, judged by the reference                                                                                                                                                           |
+  | Whether the present model is designed before rows are classed | Proportionality: a runnable proposal is outside Castr and fits nothing into the model                                                                                | Not a precondition for classing rows. It stays a precondition for changing the model (SPEC-N-1), and the fix leaves the model's files unchanged                                                                                                                        |
+  | How pull requests in Castr are made                           | The owner's, answered                                                                                                                                                | Through the owner's sign-in, with the line that an agent did it                                                                                                                                                                                                        |
+  - _Next._ The mechanism for runnable proposals in the picture, first for the rows
+    Oak's two schemas use, then the closed reading's transformation as the picture's
+    second reference (SPEC-G-4 asks for one and none exists).
+
+- 2026-11-23. **Before the compaction: six skills at the owner's word.** The owner asked
+  for metacognition, free play, concept exploration, reason, Parallax and the wrap
+  before a compaction, with the work to continue after it. All six were run by the seat
+  in its own context; no subagent was started, because a freeze before a compaction
+  gates starting anything. Parallax ran at its core depth in the reduced, emulated mode
+  its skill names, so its challenge is the seat's own review and is not independent.
+  - _Metacognition._ Three things changed. (1) The second lens, strict, is a constraint
+    (nothing silent, no escape hatch) and the seat had used it as a maximiser, so each
+    edge it found grew a mechanism: a refusal of `__proto__` with a check in front of
+    every schema; "the fix waits on all 315 rows". The owner's test for an edge is
+    plainer: is it a real case, and what is of value to the user. (2) Straight after
+    the correction the seat swung the other way and asked four questions, three of
+    which the owner sent back. A panel's unanimous redirection ("ask the owner") was
+    taken as the answer; it was information. (3) The owner's words put one test above
+    the five lenses, "above all, what makes sense": a decision should survive being
+    said in two sentences to a sensible engineer. "Castr cannot convert Oak's document
+    because 315 table rows are not approved" does not.
+  - _Free play,_ on the two days' events. Each line is an association, not a finding.
+    Kept: (a) the reviews that broke seven drafts reminded the seat of a test corpus in
+    disguise, since each finding is a case the picture could hold and almost none has
+    been made one; (b) "narrows the source's accepted set" looked shaped like a
+    property to check over generated schemas, which would have found the `contains`
+    case that 35 hand values found by luck; (c) the cases written by hand per keyword
+    looked shaped like the JSON Schema Test Suite, which SPEC-C-2 already names and
+    which has cases for properties named as JavaScript's own members, by the seat's
+    memory and not checked; (d) approving a judged run where sentences are approved
+    now: a rule that admits a row classed as carried when its runnable proposal passes
+    the outside judges, and keeps the owner's approval for every weaker class; (e) the
+    owner's word "enables": the lenses read as what makes good work possible, not as
+    gates. Discarded as forced: "Castr is a compiler and the specification a language
+    standard", which says nothing (c) does not; and a likeness to the Director and
+    Implementer flow, already written elsewhere. (a), (b) and (c) are in the plan's
+    act 5; (d) is a seed for the owner only once it has a shape.
+  - _Concept exploration._ The problem, stated without a solution: there is no cheap
+    loop that converges, from "a construct Castr gets wrong" to "Castr gets it right
+    under an approved destination". It harms the owner, whose attention is spent and
+    who sees no progress, and the Ecosystem repository, still on three generators. The
+    cause, as a hypothesis: the defining step was prose generalised over every
+    composition, which has no end; approval was batched into parts too large to reach
+    the owner; and code waited on both. Inherited shapes that changed: that the
+    amendment comes in three parts; that the fix is one change; that a mechanism must
+    exist before the first row; that text is needed for every row, where it is needed
+    only where a choice exists or no approved clause already says it (SPEC-PR-1
+    already requires a meaning to be expressed wherever the target can say it, and
+    SPEC-P-1 already names `.catchall`). The proposals are the plan's six acts; their
+    warrants and what would show them wrong are in the plan.
+  - _Reason._ The decision: the next act is a small amendment, then the fix. Its
+    warrant is two assumptions. One, that the owner approves a small, clear amendment
+    readily: five past approvals of that kind (0.5.1 to 0.8.0), which is a count of
+    observations and no promise. Two, that the first slice's text, less what was
+    withdrawn, is sound: one adversarial review and four hosted rounds, with its rows'
+    conditions and three of its vocabulary sentences not tested beyond that slice. The
+    strongest alternative, building only what SPEC-P-1 already states and separating
+    the outputs so the Zod one turns right alone, is larger and leaves the types
+    refused.
+  - _Parallax, core depth._ Four frames: legislate first (the plan before today);
+    small amendments in the order of what stops Oak, each with a run behind it
+    (today's); conformance first (right is already SPEC-G-4 with section 5, and the
+    table is a report); and the consumer's pull. The third and fourth reduce to the
+    second for anything that touches the types, and the third is why amendments can be
+    small. Three inferences across scales, each to be watched: that rows right for
+    each construct make a document right (it fails where constructs interact, so the
+    whole-document judge stays the test); that Oak's document converting means any
+    valid document does (it does not; the count over every row is the measure); and
+    that agreement with Ajv on samples is agreement on the accepted set (Ajv was wrong
+    on inherited members until 23 November, and on three number cases before). Status:
+    provisional. It permits the six acts; it does not make them validated. What is
+    watched after acting: the picture's line and count for Oak's document, the count
+    over every row, pushes for each pull request, and whether the approval question is
+    answered or sent back.
+  - _Promises, each discharged, superseded or carried._ To the owner, "propose one
+    reading of the closed reading": decided, and its words are carried by act 5. "Re-size
+    the step in the plan": done in the reframing. In #170's replies: the walk without
+    recursion is superseded, because the check it concerned is withdrawn; a tighter type
+    for row E where every named property is required and admitted is carried by the
+    matrix row of the second slice's start. In #171's description: a case for a
+    property of an inherited name, carried by act 5. From the advisor's notes: run
+    `params` through the syntax tree (act 3); a rule that tells `UNEXPRESSIBLE` from
+    "carried by a check Castr writes" (owed with the first row that needs either); the
+    review's finding on a value 2,000 levels deep (owed with the sentence on limits, or
+    declined there as no real case). The Ecosystem seat was asked one fact and answered;
+    it was not told of the compaction, which the freeze covers.
+  - _Inference, not observation._ That the Ecosystem repository removes two paths
+    because its generator cannot take them: the seat's reading of a peer's report, and
+    the course says that repository generated from Oak's v0 document on 18 November, so
+    which document those paths belong to is not known here. **This inference was wrong;
+    corrected after the compaction, 23 November.** The seat read the file
+    (`packages/sdks/oak-sdk-codegen/code-generation/excluded-paths.ts` in the Ecosystem
+    repository): seven paths are excluded, four from the document the SDK is generated
+    from (the two `check-restricted` paths and the two `/changelog` paths) and three from
+    tool generation only (the two `/search` paths and `/lessons/{lesson}/assets/{type}`).
+    The owner then said each is excluded for Oak's content policy or because the endpoint
+    offers no value in the MCP, that the split over two mechanisms is architectural debt,
+    and that all belong in one tool filter, "because the SDK is a separate product from
+    the MCP server". None is excluded because a generator cannot take it. For Castr this
+    strengthens the target: the SDK is to carry the whole API, so the whole document
+    converts, the `check-restricted` paths included. The Ecosystem repository holds the
+    record (its plan node `single-canonical-tool-filter`). That Oak's quiz schemas are
+    the next stop: nobody has run Castr past the first. That nothing cures Zod's refusal
+    of `{}` for an optional property of an inherited name: not run. That the owner
+    approves small amendments readily. The peer's list of call sites was read by the
+    peer, not by this seat. The reviewer's finding that a schema held in a mark makes an
+    error unprintable was not reproduced.
+  - _What this scan cannot see._ The seat's own summary after the compaction. The dead
+    contexts of five subagents. The course, not re-read in full. The lower sections of
+    the plan, which may still say what the reframing withdrew. Every pass over this
+    record was made by the mind that wrote it, and the panel judged a frame the seat
+    wrote, on one model. Where outside eyes caught what the seat missed this session:
+    the unit of a claim (a class per keyword), anything stated of one schema that must
+    hold of the whole validator, a reference validator's own defaults, the reach of a
+    clause's plain words, and a sentence of the owner's stretched past its question.
+  - _Where everything lives._ The plan: the reframing and the next acts. This record:
+    the resume block at its head and the entries of 23 November. The first slice's
+    draft, with the script and values behind it as an appendix. The closed reading's
+    trial, as a tracked file beside it. A letter to the next seat under
+    `.agent/experience/`, dated 23 November. The owner's standing words are also in the
+    seat's memory outside this repository, which a successor on another machine does
+    not have; the plan quotes each. Scratch under `lib/tests-picture/.tmp` is not
+    tracked, and what mattered from it is in the two tracked files.
+  - _The review loops, as the seat reads them._ #170: four hosted rounds over six
+    pushes. It should have stopped after the second, which gave the two findings that
+    changed the draft (the cases kept as a tracked appendix; two types for row E); the
+    third and fourth were answered without change. #171: one round, clean. #172: not
+    read before the compaction.
+  - _The fixed point._ A further pass over this record would only find again what is
+    named above. The recursion closes here.
 
 ### The matrix pass of 22 November 2026
 
