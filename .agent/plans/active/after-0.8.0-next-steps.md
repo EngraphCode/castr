@@ -220,6 +220,33 @@ specification are approved and on `main`.
    no cell that read right reads otherwise, and the thread record says what is fixed and
    what is not.
 
+   **State after the resume of 23 November.** Done on the branch: the picture has a row
+   and a case for each of the two approved rows, and both read right in the Zod and
+   TypeScript columns; `additionalProperties: false` has a row of its own, because the
+   keyword's own case is a schema-valued one and Oak's 243 other uses of the keyword are
+   all `false`; a document's walk names a schema in one of the three rows by that row;
+   SPEC-P-7 has a tracked case; the stale comments are corrected. Oak's document: 29 of
+   75 rows not right, none refused. Not done, each with its reason:
+   - **The reader's document pass is its own unit, after this pull request.** An
+     experiment put a map at each position. A webhook, a component header, a component
+     path item and a component media type refuse it. A header and a callback written
+     inside an operation convert, and nothing is written for their schema: the pass never
+     visits them, so an open object there is already let through unbuilt. So the pass is
+     not a second copy of the builder's rule: it guards positions whose schemas no writer
+     of Zod builds. Admitting a map there by swapping the predicate would turn a refusal
+     into a silent pass. The unit is to say, position by position, what Castr does with
+     a schema there, test first. Oak's document has none of these positions.
+   - **The line SPEC-P-7 requires in every run's report waits on a run report.** Castr
+     has none: `GenerationResult` holds content and paths only, and SPEC-P-1's list of
+     supplied policies and section 5's reported defaults have nowhere to go either. A
+     run report is one unit that serves all three clauses. Until it exists Castr writes a
+     catchall and does not state the limit, which breaks SPEC-P-7's last sentence; the
+     pull request says so.
+   - **SPEC-G-5's third route has nothing to change.** No check of sample adequacy
+     exists in code. The picture's control check names keywords of keyword rows only, and
+     the case for the second row says in a comment which rule makes its keyword decide
+     nothing.
+
 2. **Sort the rows of Oak's document that are not right** (31 of 74 by the picture)
    into three: a row that breaks an approved clause, repaired now, because SPEC-G-4 and
    section 9 bind today's code; a row that needs text, for the smallest amendment; a row
