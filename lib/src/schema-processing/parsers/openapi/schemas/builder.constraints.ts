@@ -10,6 +10,8 @@ import type { SchemaObject } from '../../../../shared/openapi-types.js';
 import type { CastrSchema } from '../../../ir/index.js';
 import { applyInferredUuidVersionFromPattern } from '../../../ir/index.js';
 
+import { addConst } from '../builder/builder.const.js';
+
 /** @internal */
 export function addConstraints(schema: SchemaObject, irSchema: CastrSchema): void {
   addNumericConstraints(schema, irSchema);
@@ -20,6 +22,7 @@ export function addConstraints(schema: SchemaObject, irSchema: CastrSchema): voi
   if (schema.enum !== undefined && Array.isArray(schema.enum)) {
     irSchema.enum = Array.from(schema.enum);
   }
+  addConst(schema, irSchema);
 }
 
 /** @internal */
