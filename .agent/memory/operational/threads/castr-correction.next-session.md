@@ -902,6 +902,39 @@ string; [key: string]: string | number }` accepts every valid value and also
     and the six outcomes restated. Each sentence is run against the composition cases
     with the reference reading own properties, before one review.
 
+- 2026-11-23, N5, first piece, second slice. **Start, on branch
+  `docs/n5-schema-rows-two` (pushed; no pull request until its draft exists).** #170
+  merged (`d2bef4fd`).
+  - _Step back._ (1) Serves the same measure. (2) Nothing changed for Oak's document;
+    nine steps. (3) One pull request for this slice's draft. (4) No. (5) The two facts
+    below, which is why they are written here before any draft.
+  - _Run: a named property whose name every object inherits_ (Zod 4.6.7 against Ajv
+    reading own properties; the twelve own names of `Object.prototype` in Node 24).
+    For eleven of them, with a property of type string: where the property is optional
+    Zod refuses `{}`, which the source accepts, because it reads the inherited function
+    as the property's value; where it is required both refuse `{}`. With a property
+    whose shape admits anything and is required, Zod accepts `{}`, which the source
+    refuses (the review's finding 2). For `__proto__` Zod accepts everything tried and
+    drops the property. So a Zod object cannot hold a property of such a name exactly: a
+    check in front can cure the widening, and nothing cures the refusal of `{}`.
+  - _Found: SPEC-P-1's closed reading does not say which schemas are objects._ It reads
+    "an object that does not state its policy" as closed. A schema with no `type`, such
+    as `{}` or `{minLength: 2}`, accepts every object in JSON Schema; if it is an
+    object for SPEC-P-1 then `additionalProperties: {}` would refuse a non-empty object
+    as an unknown key's value. The reader today treats a schema as an object when its
+    type is object or it holds `properties`, a non-empty `required` or
+    `additionalProperties` (`builder.additional-properties.ts`); no approved text says
+    so. The picture's cases all state `additionalProperties: false`, so the picture
+    never exercises the reading, and no closing transformation for SPEC-G-4 exists.
+    The rows for `type` and row B cannot be written before this has words.
+
+  | Question                                                                                                     | Lens that settles it                                                                                              | Disposition                                                                                                                                                                                                                            |
+  | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | A named property whose name every object inherits, in Zod                                                    | Strict: a Zod object decides `{}` wrongly and no check cures it; simpler than an object written wholly as a check | Proposed for the draft: `UNEXPRESSIBLE` for the Zod output, for the names ECMA-262 gives `Object.prototype`. A located rejection, never a silent difference. Oak's document names none (computed)                                      |
+  | Which schemas the closed reading of SPEC-P-1 applies to                                                      | SPEC-I-1: two readings on something the work depends on. The amendment is the change control that answers it      | The second slice proposes the words and has them attacked: a schema is an object schema when its `type` admits `object` or it holds a keyword that applies only to objects. What it means across `allOf` and a `$ref` is the same text |
+  | A tighter TypeScript type where every named property is required and admitted by `S` (hosted review of #170) | Could it be simpler; no decision of the validator changes                                                         | A row of its own in this slice if the compiler shows it exact under the repository's settings; otherwise row E stands                                                                                                                  |
+  | Whether to fix the reader's heuristic now                                                                    | Section 12 and decision sixteen: built with the text                                                              | No. Code changes with N0                                                                                                                                                                                                               |
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
