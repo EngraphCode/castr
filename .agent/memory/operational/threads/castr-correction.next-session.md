@@ -881,6 +881,27 @@ string; [key: string]: string | number }` accepts every valid value and also
   | Whether the piece widens now                                         | The slice's own condition: it closed under its one review   | Yes. Next: the reference fix, then the rows for `type`, `properties`, `required`, `enum` and `const`, with the six outcomes restated, each run against the composition cases before review |
   | Found: a recursive value 2,000 deep makes Zod throw                  | Proportionality                                             | Owed by the row for a reference to an enclosing schema                                                                                                                                     |
 
+- 2026-11-23, N5, first piece. **The slice's pull request (#170) and the reference fix
+  (#171, merged `ad6bbaa3`).** Hosted reviews of #170 made seven further points over
+  four pushes. Adopted: a provisional identifier for the new profile clause; the cases
+  with no `type` lie outside the rows; row E gives a type for what goes in and one for
+  what comes out, where one intersection let no one write a valid value; and the script
+  behind the 74 comparisons is an appendix of the draft, where it was only in an
+  untracked directory. Declined with the text: that row F promises a check over a `K` no
+  row writes.
+  - _Two more conditions for N0's building,_ from the reviews: the check for
+    `__proto__` walks a value without recursion, because a throw is not a decision (the
+    trial script's walk overflows at about 5,000 levels); and a closed object needs the
+    check too, since Zod alone does not refuse the name inside an unconstrained property.
+  - _Told to the owner:_ the Ecosystem repository removes both `check-restricted` paths
+    before it generates, so the two schemas that stop Castr on Oak's document are ones
+    its consumer does not take from a generator today.
+  - _Next._ The piece widens: the rows for `type` (with a schema whose `type` is absent
+    or a list), `properties` and `required` (with a property of an inherited name, and
+    the one-way assignability of an optional property), `enum`, `const` and `example`,
+    and the six outcomes restated. Each sentence is run against the composition cases
+    with the reference reading own properties, before one review.
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
