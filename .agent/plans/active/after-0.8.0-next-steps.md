@@ -20,7 +20,7 @@ owner_directive: >-
 todos:
   - id: N0-FIX
     content: 'The fix of what stops Oak''s document, built once approved text classes the rows it touches (not every row of the tables), proved by the picture. Its trace is done. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
-    status: pending
+    status: completed
     depends_on: [N5A-ROWS-FOR-N0]
   - id: N5A-ROWS-FOR-N0
     content: 'The small amendment (0.9.0) that classes the rows the fix touches, approved by the owner in their own words. It is the first part of the tables step and the only part the fix waits on. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
@@ -89,9 +89,10 @@ and the other is corrected.
    sibling checkout is absent, stop and say so; do not fall back to the local copies.
 6. Before a step's first edit, do its step back and run the decision matrix on its
    unknowns, and write both under "Step log" in the thread record. N0's are there,
-   dated 22 November. N1 is done; N3 and N4 are withdrawn. **The next step is N0, the
-   fix.** The part of the tables it waited on is approved (revisions 0.9.0 and 0.9.1,
-   23 November). Read "The reframing of 23 November 2026" below before anything else
+   dated 22 November. N1 is done; N3 and N4 are withdrawn. **N0 is done: it merged as
+   pull request 175 on 23 November. The next step is the first unit not yet merged of
+   the queue under "The sort" in "What is next".** The part of the tables it waited on
+   is approved (revisions 0.9.0 and 0.9.1, 23 November). Read "The reframing of 23 November 2026" below before anything else
    in this plan; its "What is next" gives the order from here. The rest of the tables
    (N5) follows the fix. N2 has its judge and two slices merged; its remaining slices
    are worked during waits.
@@ -220,6 +221,11 @@ specification are approved and on `main`.
    no cell that read right reads otherwise, and the thread record says what is fixed and
    what is not.
 
+   **Merged on 23 November as pull request 175** (`bc0595d3`), after one round of
+   review that found four faults, each run before it was believed and each fixed with a
+   test: a property count dropped beside a map, `dependentRequired` dropped in
+   TypeScript, a recursive map written eagerly, and the model's boolean nodes misread.
+
    **State after the resume of 23 November.** Done on the branch: the picture has a row
    and a case for each of the two approved rows, and both read right in the Zod and
    TypeScript columns; `additionalProperties: false` has a row of its own, because the
@@ -247,12 +253,110 @@ specification are approved and on `main`.
      the case for the second row says in a comment which rule makes its keyword decide
      nothing.
 
-2. **Sort the rows of Oak's document that are not right** (31 of 74 by the picture)
+2. **Sort the rows of Oak's document that are not right** (31 of 74 by the picture when
+   this was written, before pull request 175; 29 of 75 after it)
    into three: a row that breaks an approved clause, repaired now, because SPEC-G-4 and
    section 9 bind today's code; a row that needs text, for the smallest amendment; a row
    that touches the model, where the seat steps back (SPEC-N-1). Write the sorted table
    here as the queue. The unit of work from then on is one row or one stop of Oak's
    document: text if needed, code, and the picture's cell, in one turn.
+
+   **The sort, made on 23 November after pull request 175.** By the picture, 29 of the 75
+   rows Oak's document uses are not right. They were sorted by cause, not by row: each
+   cause was found by converting a small document that holds Oak's exact form of the
+   construct and reading the output, and by printing the model for one operation.
+
+   The test that separates the first class from the second, applied to every cause alike:
+   a cause is repaired now only where an approved clause leaves no choice about the form
+   of the output. Where a clause says what must hold and more than one form would satisfy
+   it, a row comes first (SPEC-PR-2, SPEC-N-5).
+
+   **Repair now: an approved clause is broken and the form is forced.**
+
+   | Cause                                                                                                                                                                                                             | Rows                                 | Oak's use                                                                                                       | Clause                                                   | Where the repair is                                                                                                                           |
+   | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ | --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+   | `const` is gone from every output: `{type: string, const: 'a'}` is written `z.string()`, `string`, and a JSON Schema with no `const`. The model has a place for it and the Zod writer writes it when it is there. | `const`: Zod wrong, TypeScript wrong | 81 uses, all a string beside `type: string`; among them the property that tells the branches of a `oneOf` apart | SPEC-PR-2, SPEC-G-4                                      | The first failing test locates it; the OpenAPI reader's builders never name the keyword. The TypeScript writer writes no literal type either. |
+   | The TypeScript writer writes `string` for an `enum`; the Zod writer writes `z.enum`.                                                                                                                              | `enum`: TypeScript wrong             | 44 uses, all strings beside `type: string`                                                                      | SPEC-G-4: the type and `z.input` are mutually assignable | TypeScript writer                                                                                                                             |
+
+   **A row first: an approved clause covers it, and the form is a choice.**
+
+   | Cause                                                                                                                                                                                  | Rows                                                                                                                                                                                                                                  | Oak's use                                                                           | What the text has to settle                                                                                                                                                                                                   |
+   | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | `format: uri` is written `z.url()`, which follows WHATWG; the source's format is RFC 3986. `https://example.com/%ZZ` is accepted where the reference refuses.                          | `format: uri`: Zod wrong                                                                                                                                                                                                              | 5 uses                                                                              | Which check asserts the format (SPEC-P-3), given that Appendix A classes `.refine` as outside the declarative subset                                                                                                          |
+   | A source `default` reaches the JSON Schema Castr writes and not the Zod. No warning is reported.                                                                                       | `default`: Zod missing                                                                                                                                                                                                                | 18 uses on parameters: `0` nine times, `20` nine times                              | How Zod carries an annotation `default` without inserting (SPEC-P-6); the warning waits on the run report                                                                                                                     |
+   | The endpoint definitions hold no summary, no request body `required`, no media type on either side, no response header. The model holds every one of them (printed for one operation). | 11 cells in the endpoint column: `operation: summary`, `request-body: content` and `required`, `content: an entry keyed by a media type`, `response: content` and `headers`, `header: description` and `schema`, and three more below | 32 summaries, one request body, one response with a header, `application/json` only | The shape of an endpoint definition (SPEC-N-4 is open). SPEC-C-1's first acceptance part names request media types and response status keys and media types; it does not name summary, headers or `required`                  |
+   | A response with no `content` is written with the schema `z.strictObject({})`, which the source does not state. The picture has no case for it.                                         | none yet                                                                                                                                                                                                                              | Oak's one `302`                                                                     | What an endpoint definition holds for a response with no body. It breaks SPEC-PR-2 today; it gets a case of its own                                                                                                           |
+   | Neither template writes a `paths` type. SPEC-C-1 names it and its contents.                                                                                                            | 21 cells in the TypeScript column, from `openapi: paths` to `header: schema`                                                                                                                                                          | every operation                                                                     | Rows for the document's structure to TypeScript. The consumer that fixes most of the shape is `openapi-fetch`, which the owner said stays. This is an unbuilt part of the capability, not a repair, and the largest unit here |
+
+   **Touches the model: none found.** The model was printed for an operation with a
+   summary, a required request body, media types on both sides and a response header with
+   a description and a schema. It holds each. This covers the fields probed, no others.
+
+   **The picture's own, not Castr's.**
+
+   | Cause                                                                                                                                                                                                         | Rows                                                                            | What to do                                                                                                            |
+   | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+   | The walk names `` `false` as a schema `` for every boolean schema it meets, the value of `additionalProperties` among them. Oak's 243 uses of `false` are all that value, which the closed row already holds. | `` `false` as a schema ``: Zod wrong, TypeScript wrong                          | The walk does not name the value of a keyword whose narrower row holds it; a test first. Oak's count becomes 28 of 74 |
+   | No valid document differs only in a path parameter's location.                                                                                                                                                | `parameter: in: path`: not judged, twice                                        | Another kind of case, or the cell is stated as one the picture cannot judge                                           |
+   | The document the case compares with holds a status range, and Castr's output for it does not load.                                                                                                            | `responses: an entry keyed by an exact status code`: endpoint column not judged | Judged once the range repair below lands                                                                              |
+   | The case declares a `parameters` component with an awkward name. Why the outputs are the same without it is not established.                                                                                  | `components: an entry keyed by a component name`: two cells                     | Read the case and the output before classing it                                                                       |
+
+   **Found beside the sort, in no row Oak uses. Each breaks an approved clause.**
+
+   - A status range is written as an unquoted key (`4XX:`), so the module does not load,
+     and as the number `4` in `errors`, which SPEC-C-1 forbids. The public type of an
+     error's status is `number | 'default'`, so writing the range there changes a public
+     shape, and SPEC-N-4 leaves that open (a finding of the review of pull request 176,
+     checked against `definition.types.ts`). What is forced is that no module is written
+     that does not load or that collapses a range: a located refusal now, the shape by a
+     row. `default` sits in `errors` with `status: "default"`; whether that is SPEC-C-1's
+     "treats `default` as a status" goes to the same row.
+   - `minProperties` and `maxProperties` are dropped from every object. Pull request 175
+     refuses them beside a map; elsewhere they still go without a word. The model has no
+     place for them, so the repair is a refusal until a row carries them.
+   - `items: false` is written `z.array(z.unknown())`. The model's node for a boolean
+     schema is never built by the OpenAPI reader.
+
+   **The run report, when it is built, will have four clients.** Castr has none today.
+   The four are SPEC-P-1's list of supplied policies, section 5's reported defaults,
+   SPEC-P-7's line, and SPEC-P-6's warning for each source `default`.
+
+   **The queue, in order.** One unit is one cause: text if it needs any, code, and the
+   picture's cell, in one turn. Three units hold more than one cause and say so: unit 6, where several
+   causes share one amendment because the owner is asked once and each then gets its own
+   code unit; and units 3 and 5, each a list of small causes of one kind, finished when
+   every part it lists is done, in one pull request or several.
+
+   1. `const`, reader and TypeScript writer. Merged as pull request 177.
+   2. `enum` to TypeScript, with a union kept whole and its members told apart by what
+      is written. Open as pull request 178.
+   3. Three of the picture's own causes (the fourth is in unit 4): the walk and
+      `` `false` as a schema ``, merged as pull request 179; a kind of
+      case that can judge `parameter: in: path`, or the cell stated as one the picture
+      cannot judge; and the case for a component's name read and its two cells classed.
+   4. A located refusal for a status range in the endpoint definitions, in place of a
+      module that does not load; with it, the exact status code's cell judged.
+   5. A refusal for `minProperties` and `maxProperties`; a case for `items: false`; and
+      `const` and `enum` beside a keyword that also decides, in the Zod writer, which
+      writes the literal and returns. Its case is `{type: string, enum: ['a', null]}`:
+      both writers admit `null`, which the source's `type` refuses (found in the review
+      of pull request 178). SPEC-PR-7 has a shape no value satisfies carried and
+      reported, not narrowed.
+   6. One amendment for what needs text, through one round of hosted review before the
+      owner is asked (act 3): `format: uri`; `default` in Zod; the shape of an endpoint
+      definition, which covers the 11 cells of the endpoint column, a response with no
+      body, and a status range and `default` among the errors; and where a run's report
+      is returned, since `GenerationResult` is a public type and SPEC-N-4 leaves it open
+      (a finding of the review of pull request 176).
+   7. One code unit for each cause the amendment settles, the run report among them.
+   8. The `paths` type: its rows, then the writer.
+   9. The reader's document pass, position by position (left out of pull request 175).
+
+   What the sort says about the plan's own test: the first class is not empty, and not
+   every row needs text, so the sorting bought an order. One of the five schema rows was
+   the picture counting a use Oak does not make, the second time today; a cell that reads wrong for a document is checked against the document's own
+   form before it is believed.
+
 3. **Text for the owner goes through one round of hosted review first.** The draft's
    pull request is opened and its first review read before the owner is asked. Then one
    blocking question, short, asking for typed words that name the version.
