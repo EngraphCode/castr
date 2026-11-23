@@ -20,15 +20,23 @@ subagents: use the model that fits the task.
   `additionalProperties` outside the row; and Oak's document converts in every output.
   With 177 a `const` that decides alone is read and written as a literal. The
   specification on `main` is 0.9.1.
-- **Open when this was written, all this seat's:** 176 (the sort and this record), 178
-  (`enum` and unions in TypeScript) and 179 (the picture's count of `false`). This line
-  goes stale as they merge: `gh pr list` and `git log origin/main` give the present
-  state, and the plan's queue says which unit is next.
-- **Known fault on `main` until 178 merges:** the TypeScript writer writes only the
-  first branch of a union whose branches differ only in a `const`, since 177. Pull
-  request 178 repairs it.
-- **The picture:** `pnpm picture` from `lib/` prints how many rows Oak's document uses
-  and how many are not right. It was 29 of 75 after pull request 175.
+- **Also merged on 23 November:** 176 (the sort and its queue, in the plan), 178 (`enum`
+  as literals in TypeScript, a union kept whole, and its members told apart by what is
+  written) and 179 (the picture counts a closed object's `false` once). No pull request
+  was open when this was written; `gh pr list` and `git log origin/main` give the
+  present state.
+- **The queue stands at unit 3's remaining parts** (a way to judge a path parameter's
+  location; the case for a component's name), then unit 4.
+- **The picture:** `pnpm picture` from `lib/` prints the counts. After 178 and 179,
+  Oak's document uses 74 of 318 rows and 26 are not right; it was 29 of 75 after 175.
+- **What review taught on these four pull requests.** A snapshot change was accepted
+  that had lost a branch of a union: read a changed snapshot for what is gone, not only
+  for what is new. A list of keywords to refuse drew a finding for each one it left out
+  until it was stated by a rule. Two refusals were tried and taken back because they
+  stopped fixtures the Zod writer converts; where both writers share a fault, the
+  repair is one unit for both (unit 5).
+- A second worktree is at `../castr-const-read`, clean, made so two branches could be
+  worked at once. The commit helper does not work there; commit by explicit paths.
 - No watcher, heartbeat, monitor or schedule runs under this seat. No claim is open. The
   Ecosystem repository's pull request 1082 belongs to its own seat (Petrel mends
   Pinnacle), by the owner's word quoted below.
