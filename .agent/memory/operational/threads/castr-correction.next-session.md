@@ -1115,6 +1115,20 @@ string; [key: string]: string | number }` accepts every valid value and also
     `propertyNames` is still refused, as today). The draft is
     `.agent/analysis-and-reports/amendment-0.9.0-draft-2026-11-23.md`; seven schemas and
     26 values were run for its two rows.
+  - _The owner's approval, 23 November 2026, and revision 0.9.1._ Asked by question
+    prompt, the owner chose to clarify, then typed "I approve". The seat asked for words
+    naming the version, as SPEC-CC-2 requires, and the owner typed, verbatim: "I approve
+    revision 0.9.0 and minor adjustement to revision 0.9.1". The specification change is
+    pull request 174. Its hosted review found three things in the approved rows: a
+    `propertyNames` row that allowed annotations and wrote nothing would drop them; one
+    cell named no class; the precondition could be read as classing a whole schema, so a
+    `minProperties` beside a row's keyword looked carried. Each was adjusted as revision
+    0.9.1 in a second commit on that pull request, and the change log says the approval
+    of 0.9.1 was given in advance for a minor adjustment. _The seat's reading, which the
+    owner can strike:_ the owner's words cover a minor adjustment made after them; these
+    three narrow or clarify and add nothing, so they are within it; the owner was told
+    what they are in the same session. An adjustment that added a row or changed a class
+    would not be within it and would be brought as its own text.
 
   | Question                                                      | Lens that settles it                                                                                                                                                 | Disposition                                                                                                                                                                                                                                                                                                                                                                                                                                   |
   | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
