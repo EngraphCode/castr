@@ -343,16 +343,23 @@ specification are approved and on `main`.
       The exact status code's cell stays not judged, because the document it is set
       against is now refused where it crashed; it is judged once a range has a shape
       (unit 6).
-   5. A refusal for `minProperties` and `maxProperties` (its own pull request, after
-      181); a case for `items: false`; and
+   5. A refusal for `minProperties` and `maxProperties`, merged as pull request 182; a case for `items: false`; and
       `const` and `enum` beside a keyword that also decides, in the Zod writer, which
       writes the literal and returns. Its case is `{type: string, enum: ['a', null]}`:
       both writers admit `null`, which the source's `type` refuses (found in the review
       of pull request 178). SPEC-PR-7 has a shape no value satisfies carried and
-      reported, not narrowed. Also here: the OpenAPI reader keeps a `$ref` and reads none
-      of the keywords beside it, which OpenAPI 3.1 allows and which then decide nothing
+      reported, not narrowed. Also here: the schema builder keeps a `$ref` and reads none of the
+      keywords beside it, `minProperties` and `maxProperties` apart, which it refuses, which OpenAPI 3.1 allows and which then decide nothing
       in Castr's output (found in the review of pull request 182, which refuses only a
-      count of properties there).
+      count of properties there). And the schema builder (`builder.core.ts`), which makes the model, keeps none of
+      `not`, `if`, `then` and `else`: `{type: string, not: {const: 'a'}}` is written
+      `z.string()`, and the picture reads the four rows wrong in the Zod column. The
+      document pass before it does walk under those four keywords, so a rule it holds is
+      applied there; it is the model that loses them. The repair is one refusal inside `buildCastrSchema`, the one function every
+      position's schema goes through, so no position is left out by a list that is one
+      short. Its cases are found, not listed here: one for each keyword at each caller of
+      that function, a response header's schema among them, written first (run in the review of pull
+      request 182).
    6. One amendment for what needs text, through one round of hosted review before the
       owner is asked (act 3): `format: uri`; `default` in Zod; the shape of an endpoint
       definition, which covers the 11 cells of the endpoint column, a response with no
