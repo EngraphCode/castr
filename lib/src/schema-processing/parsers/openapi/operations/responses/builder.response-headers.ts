@@ -134,7 +134,7 @@ function buildHeaderSchema(
   header: HeaderObject,
   context: IRBuildContext,
 ): ReturnType<typeof buildCastrSchema> | undefined {
-  if (header.schema) {
+  if (header.schema !== undefined) {
     return buildCastrSchema(header.schema, context);
   }
 

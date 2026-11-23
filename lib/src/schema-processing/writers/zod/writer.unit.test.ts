@@ -191,6 +191,20 @@ describe('ZodWriter', () => {
     expect(generate(context)).toBe('z.string().min(1).optional()');
   });
 
+  it.each([
+    { booleanSchema: false, optional: true, expected: 'z.never().optional()' },
+    { booleanSchema: false, optional: false, expected: 'z.never()' },
+    { booleanSchema: true, optional: true, expected: 'z.any().optional()' },
+    { booleanSchema: true, optional: false, expected: 'z.any()' },
+  ])(
+    'writes a property whose schema is $booleanSchema as $expected (optional: $optional)',
+    ({ booleanSchema, optional, expected }) => {
+      const schema: CastrSchema = { ...createMockSchema(), type: undefined, booleanSchema };
+
+      expect(generate(createPropertyContext(schema, optional))).toBe(expected);
+    },
+  );
+
   // ========== Metadata via .meta() tests (Zod 4) ==========
 
   describe('metadata via .meta()', () => {

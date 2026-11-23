@@ -222,7 +222,7 @@ function buildConcreteParameter(param: ParameterObject, context: IRBuildContext)
  * @internal
  */
 function buildParameterSchema(param: ParameterObject, context: IRBuildContext): CastrSchema {
-  if (param.schema) {
+  if (param.schema !== undefined) {
     return buildCastrSchema(param.schema, context);
   }
 
