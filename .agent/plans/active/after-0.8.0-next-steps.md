@@ -24,7 +24,7 @@ todos:
     depends_on: [N5A-ROWS-FOR-N0]
   - id: N5A-ROWS-FOR-N0
     content: 'The small amendment (0.9.0) that classes the rows the fix touches, approved by the owner in their own words. It is the first part of the tables step and the only part the fix waits on. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
-    status: pending
+    status: completed
     depends_on: []
   - id: N1-REPIN
     content: 'The picture pins the latest revisions of the publisher schemas for OpenAPI 3.1 and 3.2. Finished only when the thread record holds its step-back answers and matrix rows under "Step log".'
@@ -209,17 +209,18 @@ before the first value step would be an instrument ahead of the work.
    its shape). Write one matrix row on whether N0, as a repair of today's code, stands.
    The seat's reading is that it does, by that card; the course was not re-read in full
    on 23 November.
-3. **A small amendment, 0.9.0,** drafted on 23 November in
-   [amendment-0.9.0-draft-2026-11-23.md](../../analysis-and-reports/amendment-0.9.0-draft-2026-11-23.md)
-   and smaller than first planned: a clause declaring the limit for a property named
-   `__proto__`; SPEC-G-5's third route; SPEC-N-5 reworded so the tables arrive row by
-   row; and a new Appendix B with three sentences on how a table is read and two rows,
-   a constrained map that names no property and a `propertyNames` that refuses no name.
-   The check Castr writes and its mark, the sentence "no row, no default" and the other
-   rows of the first slice are left out, each for a reason the draft gives. The three
-   things to run before asking are run (the thread record's step log). One blocking
-   question to the owner carries the text, for their words naming the version. Approval
-   of specification text is theirs by SPEC-CC-2 and is not a question the lenses settle.
+3. **Done: the small amendment.** The owner approved it on 23 November as revision 0.9.0,
+   with a minor adjustment as 0.9.1 ("I approve revision 0.9.0 and minor adjustement to
+   revision 0.9.1"), and it is on `main` (pull request 174). The specification now has a
+   clause declaring the limit for a property named `__proto__` (SPEC-P-7), a third route
+   in SPEC-G-5, SPEC-N-5 reworded so the tables arrive row by row, and Appendix B with
+   three sentences on how a table is read and two rows: a constrained map that names no
+   property, and a `propertyNames` of `true`, `{}` or `{type: string}` with no other
+   keyword. The draft as brought, with its cases, is
+   [amendment-0.9.0-draft-2026-11-23.md](../../analysis-and-reports/amendment-0.9.0-draft-2026-11-23.md).
+   No approval question is open. The check Castr writes and its mark, the sentence "no
+   row, no default" and the other rows of the first slice were left out, each for a
+   reason the draft gives, and each comes by its own amendment when a document needs it.
 4. **N0, the fix,** test first, under the conditions the reviews of 22 and 23 November
    set. The picture's cells for the two rows turn right, and Oak's whole-document line
    names what stops it next.

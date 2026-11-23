@@ -170,7 +170,8 @@ the change log. Then the fix (N0), test first, under the conditions the plan rec
 
 Save the block as a `.mts` file in `lib/tests-picture/.tmp` and run
 `npx tsx tests-picture/.tmp/<name>.mts` from `lib`. It exits with a failure if any value
-differs or the returned value is not the input. The four assignments near its end are the
+differs, or if the value the Zod returns for any accepted value is not the input (twelve of
+the 26 are accepted). The four assignments near its end are the
 TypeScript check, read by the compiler (`npx tsc --ignoreConfig --noEmit --strict
 --exactOptionalPropertyTypes --noUncheckedIndexedAccess
 --noPropertyAccessFromIndexSignature --module nodenext --moduleResolution nodenext
@@ -288,23 +289,30 @@ const cases: { name: string; schema: object; zod: z.ZodType; values: [string, bo
 ];
 const ajv = new Ajv2020({ strict: false, ownProperties: true });
 let wrong = 0,
-  n = 0;
+  n = 0,
+  produced = 0;
 for (const c of cases) {
   const v = ajv.compile(c.schema);
   for (const [text, expected] of c.values) {
     n++;
     const value = P(text);
     const r = v(value),
-      zz = c.zod.safeParse(value).success;
+      parsed = c.zod.safeParse(value),
+      zz = parsed.success;
     if (r !== expected || zz !== expected) {
       wrong++;
       console.log('DIFFERS', c.name, text, { expected, reference: r, zod: zz });
     }
+    if (parsed.success) {
+      produced++;
+      if (JSON.stringify(parsed.data) !== JSON.stringify(value)) {
+        wrong++;
+        console.log('PRODUCED DIFFERS', c.name, text, JSON.stringify(parsed.data));
+      }
+    }
   }
 }
-// The produced value equals the input (SPEC-G-4, produced side).
-const out = map.parse(P('{"x":"restricted","y":"ogl-compatible"}'));
-const same = JSON.stringify(out) === '{"x":"restricted","y":"ogl-compatible"}';
+// Every accepted value is also compared with what the Zod returns (SPEC-G-4, produced side).
 // The declared limit: an own property named __proto__ is dropped, so a value the source refuses is accepted.
 const proto = P('{"__proto__":"zzz"}');
 console.log(
@@ -314,8 +322,8 @@ console.log(
   n,
   'differ',
   wrong,
-  '| produced equals input',
-  same,
+  '| accepted values whose returned value was compared',
+  produced,
   '| limit: reference',
   ajv.compile(cases[0]!.schema)(proto),
   'zod',
@@ -328,5 +336,5 @@ const a2: z.input<typeof map> = {} as T;
 const a3: T = {} as z.output<typeof map>;
 const a4: z.output<typeof map> = {} as T;
 void [a1, a2, a3, a4];
-if (wrong > 0 || !same) process.exit(1);
+if (wrong > 0) process.exit(1);
 ```
