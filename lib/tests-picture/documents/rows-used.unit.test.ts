@@ -50,6 +50,9 @@ const ROWS = new Set([
   'keyword:items',
   'keyword:enum',
   'keyword:const',
+  'keyword:additionalProperties',
+  'keyword:propertyNames',
+  'keyword:minProperties',
   'type:string',
   'type:null',
   'type:object',
@@ -61,6 +64,9 @@ const ROWS = new Set([
   'text:`const` or an `enum` member that is an object or array',
   'text:a keyword no vocabulary defines',
   'text:`x-` extension on a schema',
+  'text:`additionalProperties: false`',
+  'text:a map: `additionalProperties` with a schema',
+  'text:a map: a `propertyNames` that refuses no name',
   'schema.xml',
   'xml.name',
   'xml.nodeType=attribute',
@@ -274,5 +280,72 @@ describe('rowsUsedBy', () => {
 
     expect([...found.used]).toEqual([]);
     expect(found.unrecognised).toEqual(['openapi.host', 'openapi.swagger']);
+  });
+
+  it('names a map by its own rows, and not by the keywords the rows narrow', () => {
+    const map = {
+      type: 'object',
+      additionalProperties: { type: 'string' },
+      propertyNames: { type: 'string' },
+      minProperties: 1,
+    };
+    const found = used(withSchema(map));
+
+    expect(found).toEqual(
+      expect.arrayContaining([
+        'text:a map: `additionalProperties` with a schema',
+        'text:a map: a `propertyNames` that refuses no name',
+        'keyword:minProperties',
+        'type:string',
+      ]),
+    );
+    expect(found).not.toContain('keyword:additionalProperties');
+    expect(found).not.toContain('keyword:propertyNames');
+  });
+
+  it.each([
+    ['names a property', { properties: { a: {} } }],
+    ['is composed', { allOf: [{}] }],
+    ['states no type', { type: undefined }],
+  ])('names the keywords themselves where the schema %s', (_, beside) => {
+    const schema = {
+      type: 'object',
+      additionalProperties: { type: 'string' },
+      propertyNames: { type: 'string' },
+      ...beside,
+    };
+    const found = used(withSchema(JSON.parse(JSON.stringify(schema))));
+
+    expect(found).toEqual(
+      expect.arrayContaining(['keyword:additionalProperties', 'keyword:propertyNames']),
+    );
+    expect(found).not.toContain('text:a map: `additionalProperties` with a schema');
+    expect(found).not.toContain('text:a map: a `propertyNames` that refuses no name');
+  });
+
+  it('names `additionalProperties: false` by its own row, wherever it stands', () => {
+    const schema = { type: 'object', properties: { a: {} }, additionalProperties: false };
+    const found = used(withSchema(schema));
+
+    expect(found).toContain('text:`additionalProperties: false`');
+    expect(found).not.toContain('keyword:additionalProperties');
+  });
+
+  it.each([
+    ['`true`', true],
+    ['the empty schema', {}],
+  ])('names the keyword where `additionalProperties` is %s', (_, additionalProperties) => {
+    const found = used(withSchema({ type: 'object', additionalProperties }));
+
+    expect(found).toContain('keyword:additionalProperties');
+    expect(found).not.toContain('text:a map: `additionalProperties` with a schema');
+  });
+
+  it('names the keyword where `propertyNames` can refuse a name', () => {
+    const schema = { type: 'object', propertyNames: { type: 'string', pattern: '^a' } };
+    const found = used(withSchema(schema));
+
+    expect(found).toContain('keyword:propertyNames');
+    expect(found).not.toContain('text:a map: a `propertyNames` that refuses no name');
   });
 });

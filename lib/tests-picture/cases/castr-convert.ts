@@ -65,7 +65,11 @@ function validatorIn(moduleExports: unknown): Converted {
   if (!(exported instanceof z.ZodType)) {
     return { kind: 'nothing emitted' };
   }
-  return { kind: 'decides', accepts: (value) => exported.safeParse(value).success };
+  return {
+    kind: 'decides',
+    accepts: (value) => exported.safeParse(value).success,
+    returns: (value) => exported.parse(value),
+  };
 }
 
 type Unusable = Extract<Converted, { kind: 'output unusable' }>;

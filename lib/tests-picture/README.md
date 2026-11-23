@@ -74,9 +74,8 @@ A document has no proposal: what is proposed is said row by row. And converted i
 right. A document converts when none of its constructs is refused or crashes, and the
 rows say which of the constructs it uses are then held wrongly or dropped.
 
-Today Castr refuses Oak's document, in every output, at a schema-valued
-`additionalProperties`. No example is refused or crashes: ten convert in every output,
-and four have an output the module holds none of.
+Today Castr converts Oak's document in every output, and no example is refused or
+crashes: ten convert in every output, and four have an output the module holds none of.
 [`documents/documents.gen.test.ts`](documents/documents.gen.test.ts) holds that.
 
 ### The rows a document uses
@@ -88,11 +87,16 @@ construct of, then sets those rows against today's cells
 ([`documents/usage.ts`](documents/usage.ts)). It prints a count for each document and
 each output, and for Oak's document the rows that are not right.
 
-Oak's document uses 74 of the 315 rows. In the Zod output two of them are refused
-(`additionalProperties` and `propertyNames`, each enough alone to stop the document),
-three are wrong (`const`, `format: uri` and `false` as a schema) and one is missing
+Oak's document uses 75 of the 318 rows. In the Zod output none of them is refused, three
+are wrong (`const`, `format: uri` and `false` as a schema) and one is missing
 (`default`). [`documents/documents.gen.test.ts`](documents/documents.gen.test.ts) holds
-the two that stop it.
+that no row it uses stops it.
+
+Three rows are narrower than the row of their keyword, and a schema in one of them is
+named by it and not by the keyword ([`documents/map-rows.ts`](documents/map-rows.ts)):
+`additionalProperties: false`, and the two rows of a map the specification's Appendix B.2
+holds. The keywords' own rows keep their cases, which are schemas none of the three
+covers, and Castr still refuses those.
 
 How to read it:
 
@@ -105,7 +109,7 @@ How to read it:
   document holds, and the count says nothing of a combination.
 - **The walk is checked against every case**
   ([`documents/rows-used.e2e.test.ts`](documents/rows-used.e2e.test.ts)): each of the
-  208 cases' documents must name the row it was written for, and no whole document may
+  211 cases' documents must name the row it was written for, and no whole document may
   state a field that is no row.
 - **Where each object of a document is found is a table written by hand** in the walk,
   not computed from the definitions. That check is what holds it.
@@ -292,6 +296,11 @@ document, read by a reference and by Castr:
 - **Castr:** its public generation function, and the one module it generates
   ([`cases/castr-convert.ts`](cases/castr-convert.ts)). That module holds a Zod validator
   and a TypeScript type for the shape, and each has a column.
+
+One limit the specification declares is held as a case of its own and is no cell
+([`cases/declared-limits.gen.test.ts`](cases/declared-limits.gen.test.ts)): for a value
+with an own property named `__proto__`, the reference refuses, Castr's Zod accepts, and
+the value it returns lacks the property (SPEC-P-7). No sample of a case holds one.
 
 ### The Zod column
 

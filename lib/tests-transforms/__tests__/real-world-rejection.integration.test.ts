@@ -11,12 +11,12 @@ const EPERUSTEET_EXT_FIXTURE = resolve(
   '../../tests-fixtures/openapi-samples/real-world/eperusteet-ext.json',
 );
 
-describe('Real-World Fixture Rejection', () => {
-  it('rejects the ePerusteet fixture when OpenAPI content is projected into strict IR semantics', async () => {
+describe('A real-world fixture once refused for its constrained maps', () => {
+  it('is read into the model, which holds the schema its maps constrain their values by', async () => {
     const loaded = await loadOpenApiDocument(EPERUSTEET_EXT_FIXTURE);
 
-    expect(() => buildIR(loaded.document)).toThrow(
-      /schema-valued additionalProperties|closed-world object semantics/i,
-    );
+    const ir = buildIR(loaded.document);
+
+    expect(JSON.stringify(ir)).toContain('"additionalProperties":{');
   });
 });

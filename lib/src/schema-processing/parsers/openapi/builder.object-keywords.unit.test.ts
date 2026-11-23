@@ -42,11 +42,49 @@ describe('buildCastrSchemas object keyword preservation', () => {
     expect(() => buildCastrSchemas(components)).toThrow(/additionalProperties: true.*rejected/);
   });
 
-  it('rejects schema-valued additionalProperties', () => {
+  it('reads a constrained map: an object that names no property and constrains every key', () => {
+    const components: ComponentsObject = {
+      schemas: {
+        Verdicts: {
+          type: 'object',
+          propertyNames: { type: 'string' },
+          additionalProperties: { type: 'string', enum: ['ogl-compatible', 'restricted'] },
+        },
+      },
+    };
+
+    const result = buildCastrSchemas(components);
+    const schema = assertSchemaComponent(result[0]).schema;
+
+    expect(schema.type).toBe('object');
+    expect(schema.additionalProperties).toMatchObject({
+      type: 'string',
+      enum: ['ogl-compatible', 'restricted'],
+    });
+    expect(schema.propertyNames).toMatchObject({ type: 'string' });
+  });
+
+  it.each(['minProperties', 'maxProperties'] as const)(
+    'rejects a constrained map that also holds %s, which the model cannot carry',
+    (keyword) => {
+      const components: ComponentsObject = {
+        schemas: {
+          Counted: { type: 'object', additionalProperties: { type: 'string' }, [keyword]: 1 },
+        },
+      };
+
+      expect(() => buildCastrSchemas(components)).toThrow(
+        new RegExp(`constrained map.*${keyword}.*rejected`),
+      );
+    },
+  );
+
+  it('rejects a schema-valued additionalProperties on an object that names a property', () => {
     const components: ComponentsObject = {
       schemas: {
         CatchallObject: {
           type: 'object',
+          properties: { name: { type: 'string' } },
           additionalProperties: { type: 'string' },
         },
       },
@@ -56,6 +94,33 @@ describe('buildCastrSchemas object keyword preservation', () => {
       /schema-valued additionalProperties.*rejected/,
     );
   });
+
+  const OUTSIDE_THE_ROW: readonly (readonly [string, SchemaObject])[] = [
+    ['no type', { additionalProperties: { type: 'string' } }],
+    ['a list of types', { type: ['object', 'null'], additionalProperties: { type: 'string' } }],
+    ['the empty schema', { type: 'object', additionalProperties: {} }],
+    [
+      'allOf beside it',
+      { type: 'object', additionalProperties: { type: 'string' }, allOf: [{ type: 'object' }] },
+    ],
+    [
+      'patternProperties beside it',
+      {
+        type: 'object',
+        additionalProperties: { type: 'string' },
+        patternProperties: { '^n_': { type: 'number' } },
+      },
+    ],
+  ];
+
+  it.each(OUTSIDE_THE_ROW)(
+    'rejects a schema-valued additionalProperties with %s',
+    (_name, schema) => {
+      const components: ComponentsObject = { schemas: { Outside: schema } };
+
+      expect(() => buildCastrSchemas(components)).toThrow(/rejected/);
+    },
+  );
 
   it('sets additionalProperties: false when omitted on object schemas', () => {
     const components: ComponentsObject = {

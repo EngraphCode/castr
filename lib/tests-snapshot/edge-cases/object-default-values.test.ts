@@ -54,12 +54,12 @@ describe('object-default-values', () => {
     expect(output.content).toContain('foo: z.string().optional()');
   });
 
-  test('schema-valued additionalProperties is rejected', async () => {
+  test('a constrained map is written as a catchall on a strict object', async () => {
     const openApiDoc: OpenAPIObject = {
       openapi: '3.0.0',
       info: {
         version: '1.0.0',
-        title: 'rejected non-strict',
+        title: 'a constrained map',
       },
       paths: {
         '/sample': {
@@ -96,8 +96,9 @@ describe('object-default-values', () => {
       },
     };
 
-    await expect(
-      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
-    ).rejects.toThrow(/non-strict object input/i);
+    const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
+    assertSingleFileResult(output);
+
+    expect(output.content).toContain('z.strictObject({}).catchall(MyComponent)');
   });
 });

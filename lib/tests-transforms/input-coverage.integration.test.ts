@@ -42,6 +42,8 @@ const SUPPORTED_FIXTURES: [string, string][] = [
   ['v3.0/petstore-expanded.yaml', `${EXAMPLES_DIR}/v3.0/petstore-expanded.yaml`],
   ['v3.0/petstore.yaml', `${EXAMPLES_DIR}/v3.0/petstore.yaml`],
   ['v3.0/uspto.yaml', `${EXAMPLES_DIR}/v3.0/uspto.yaml`],
+  // Read since Castr reads a constrained map (specification Appendix B.2); refused before.
+  ['v3.0/uspto.json', `${EXAMPLES_DIR}/v3.0/uspto.json`],
 
   // OpenAPI 3.0.x fixtures (JSON)
   ['v3.0/api-with-examples.json', `${EXAMPLES_DIR}/v3.0/api-with-examples.json`],
@@ -67,10 +69,6 @@ const SUPPORTED_FIXTURES: [string, string][] = [
 
   // Multi-file fixture
   ['multi-file/main.yaml', `${EXAMPLES_DIR}/multi-file/main.yaml`],
-];
-
-const REJECTED_NON_STRICT_FIXTURES: [string, string][] = [
-  ['v3.0/uspto.json', `${EXAMPLES_DIR}/v3.0/uspto.json`],
 ];
 
 // All 21 fixtures now supported including webhook-example (Session 2.6 complete)
@@ -102,15 +100,6 @@ describe('Input Coverage: OpenAPI → IR', () => {
       expect(ir.info).toBeDefined();
       expect(ir.info.title).toBeTruthy();
     });
-  });
-
-  describe('Rejected non-strict fixtures', () => {
-    it.each(REJECTED_NON_STRICT_FIXTURES)(
-      'rejects %s with a strict object error',
-      async (_name, path) => {
-        await expect(loadAndBuildIR(path)).rejects.toThrow(/Non-strict object input/);
-      },
-    );
   });
 
   // ==========================================================================

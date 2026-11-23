@@ -30,7 +30,11 @@ describe('the proposed cells no kind of case exercises', () => {
     expect(unexercised(rows, 'typescript')).toEqual([]);
   });
 
-  it('are none for the endpoint definitions', () => {
-    expect(unexercised(rows, 'endpoints')).toEqual([]);
+  it('are, for the endpoint definitions, the one row for which nothing is written', () => {
+    // The specification's Appendix B.2 classes this row as carried with nothing written.
+    // No case can show a definition holding nothing, so the cell stays empty.
+    expect(unexercised(rows, 'endpoints')).toEqual([
+      'text:a map: a `propertyNames` that refuses no name',
+    ]);
   });
 });

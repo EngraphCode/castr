@@ -171,4 +171,23 @@ export const OTHER_SCHEMA_ROWS: readonly TextRow[] = [
     definedIn: 'OpenAPI 3.1, 4.9',
     proposal: ['S', 'K', 'K', ''],
   },
+  // Three rows narrower than the row of their keyword, whose own case is a schema none of
+  // them covers. The first is a closed object. The other two are the rows the
+  // specification's Appendix B.2 holds: the keyword on a map, an object schema that names
+  // no property.
+  {
+    label: '`additionalProperties: false`',
+    definedIn: 'JSON Schema Core 10.3.2.3',
+    proposal: ['C', 'K', 'K', '`z.strictObject`. TypeScript cannot close an object.'],
+  },
+  {
+    label: 'a map: `additionalProperties` with a schema',
+    definedIn: 'JSON Schema Core 10.3.2.3',
+    proposal: ['C', 'C', 'K', '`.catchall` on a strict object; an index signature.'],
+  },
+  {
+    label: 'a map: a `propertyNames` that refuses no name',
+    definedIn: 'JSON Schema Core 10.3.2.4',
+    proposal: ['C', 'C', 'C', 'Nothing is written: every property name is a string.'],
+  },
 ];

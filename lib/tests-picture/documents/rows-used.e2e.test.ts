@@ -35,7 +35,7 @@ describe('the rows a document uses', () => {
       .filter(({ rowId, document }) => !rowsUsedBy(document, rowIds).used.has(rowId))
       .map(({ rowId }) => rowId);
 
-    expect(cases).toHaveLength(208);
+    expect(cases).toHaveLength(211);
     expect(notNamed).toEqual([]);
   });
 
@@ -47,12 +47,12 @@ describe('the rows a document uses', () => {
     expect(unrecognised.flat()).toEqual([]);
   });
 
-  it("are 74 for Oak's document", () => {
+  it("are 75 for Oak's document", () => {
     const [oak] = DOCUMENTS;
     if (oak === undefined) {
       throw new Error('no document');
     }
 
-    expect(rowsUsedBy(readDocument(oak), rowIds).used.size).toBe(74);
+    expect(rowsUsedBy(readDocument(oak), rowIds).used.size).toBe(75);
   });
 });

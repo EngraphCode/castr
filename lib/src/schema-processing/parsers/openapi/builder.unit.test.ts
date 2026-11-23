@@ -888,7 +888,7 @@ describe('buildIR - IR-1 enhancements', () => {
       expect(result.dependencyGraph.circularReferences.length).toBeGreaterThan(0);
     });
 
-    it('rejects circular additionalProperties references under strict doctrine', () => {
+    it('reads a constrained map whose values refer to the map itself', () => {
       const doc: OpenAPIDocument = {
         openapi: '3.1.0',
         info: { title: 'Test API', version: '1.0.0' },
@@ -903,7 +903,9 @@ describe('buildIR - IR-1 enhancements', () => {
         },
       };
 
-      expect(() => buildIR(doc)).toThrow(/schema-valued additionalProperties.*rejected/);
+      const result = buildIR(doc);
+
+      expect(result.dependencyGraph.circularReferences.length).toBeGreaterThan(0);
     });
 
     it('should throw on malformed schema refs during circular reference extraction', () => {

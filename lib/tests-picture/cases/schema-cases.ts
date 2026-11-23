@@ -258,4 +258,27 @@ export const SCHEMA_CASES: readonly SchemaCase[] = [
     schema: { enum: [{ a: 1 }, [1, 2]] },
     samples: [{ a: 1 }, [1, 2], { a: 2 }, { a: 1, b: 2 }, [2, 1]],
   },
+  // A closed object: the keyword's commonest use, which the case for the keyword's own
+  // row does not exercise.
+  {
+    rowId: 'text:`additionalProperties: false`',
+    schema: { type: 'object', properties: { a: STRING }, additionalProperties: false },
+    samples: [{}, { a: 'x' }, { a: 'x', b: 1 }, { b: 1 }],
+  },
+  // The two rows of the specification's Appendix B.2: a map, an object that names no
+  // property. The cases above for `additionalProperties` and `propertyNames` are outside
+  // these rows, and stay.
+  {
+    rowId: 'text:a map: `additionalProperties` with a schema',
+    schema: { type: 'object', additionalProperties: NUMBER },
+    samples: [{}, { a: 1 }, { a: 1, b: 2 }, { a: 1, b: 'x' }, { a: 'x' }, [], 'a'],
+  },
+  // `propertyNames: {type: string}` refuses no name, since every property name is a
+  // string (JSON Schema Core 10.3.2.4): the samples are decided by the rest of the
+  // schema, and the case shows that Castr decides them the same with the keyword there.
+  {
+    rowId: 'text:a map: a `propertyNames` that refuses no name',
+    schema: { type: 'object', additionalProperties: NUMBER, propertyNames: STRING },
+    samples: [{}, { a: 1 }, { a: 1, b: 'x' }, { '': 1 }, { '1': 1 }, []],
+  },
 ];

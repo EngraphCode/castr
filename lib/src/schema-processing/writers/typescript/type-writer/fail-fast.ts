@@ -12,7 +12,7 @@
  */
 
 import type { CastrSchema } from '../../../ir/index.js';
-import { getIntegerSemantics } from '../../../ir/index.js';
+import { getIntegerSemantics, holdsPropertyNamesThatRefuseNoName } from '../../../ir/index.js';
 import { parseComponentRef } from '../../../../shared/ref-resolution.js';
 import { safeSchemaName } from '../../../../shared/utils/identifier-utils.js';
 
@@ -33,7 +33,7 @@ export function rejectUnsupportedObjectKeywords(schema: CastrSchema): void {
         'statically declared, not dynamically matched by pattern.',
     );
   }
-  if (schema.propertyNames !== undefined) {
+  if (schema.propertyNames !== undefined && !holdsPropertyNamesThatRefuseNoName(schema)) {
     throw new Error(
       'Genuinely impossible: propertyNames cannot be represented in TypeScript. ' +
         'TypeScript has no mechanism for constraining property name values ' +

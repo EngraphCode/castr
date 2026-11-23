@@ -1,9 +1,9 @@
 /**
  * Additional Properties Handling
  *
- * Under IDENTITY doctrine, all objects are closed-world. The Zod writer
- * always uses `z.strictObject({...})` for object construction.
- * No passthrough, catchall, or strip modifiers are emitted.
+ * The Zod writer builds an object with `z.strictObject({...})`. A constrained map, the
+ * first row of the specification's Appendix B.2, adds `.catchall(S)` to one with no
+ * properties (see `collections.ts`). No passthrough or strip modifier is emitted.
  */
 
 import type { CastrSchema } from '../../ir/index.js';
@@ -12,7 +12,7 @@ import { isObjectSchemaType } from '../../ir/index.js';
 /**
  * Check if a schema should use the `z.strictObject()` constructor.
  *
- * Under IDENTITY doctrine, all objects use strict construction.
+ * Every object the writer builds starts from the strict constructor.
  *
  * @internal
  */
