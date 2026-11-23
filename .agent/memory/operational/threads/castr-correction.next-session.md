@@ -23,9 +23,12 @@ subagents: use the model that fits the task.
   November by question ("I approve revision 0.10.0", then "I approve revision 0.10.1" for two
   adjustments from the first hosted review: the `format: uri` row covers `type: string`
   alone, and a new class, carried with a declared limit), choosing `z.url()` with a declared
-  limit (SPEC-P-8) for `format: uri`. Its code is next: a source `default` written into
-  `.meta(…)` in Zod, and the picture's sample for the limit made a tracked case. Then
-  unit 8, the `paths` type.
+  limit (SPEC-P-8) for `format: uri`. Its code is merged (187, 188), and Oak's document has 24 of 74
+  rows not right, all of them the document's structure. Next is unit 8, the `paths` type:
+  a prototype on the branch `feat/paths-type-prototype`, checked at type level against a
+  client of `openapi-fetch`, then its rows by amendment, then the writer. No template
+  emits it before the rows are approved. The plan also holds a newer unit that ranks
+  above the leftovers of unit 5: the Zod reader passes over declarations it cannot read.
 - **Also merged on 23 November:** 176 (the sort and its queue, in the plan), 178 (`enum`
   as literals in TypeScript, a union kept whole, and its members told apart by what is
   written) and 179 (the picture counts a closed object's `false` once). No pull request
