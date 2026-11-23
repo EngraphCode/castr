@@ -31,6 +31,7 @@ import {
 import { runReaderCases } from './refusals/run-reader-cases.js';
 import { loadDefinition } from './rows/definitions.js';
 import { pictureRows } from './rows/picture-rows.js';
+import { renderDeclaredLimits } from './cases/declared-limits.js';
 import { renderRows, renderToday, renderUnexercised } from './rows/render.js';
 
 const { rows, problems } = pictureRows(loadDefinition);
@@ -56,6 +57,7 @@ if (problems.length > 0) {
   // sets of cells together.
   const zod = new Map([...decided, ...held]);
   const typescript = new Map([...typed, ...typesHeld]);
+  console.log(renderDeclaredLimits());
   console.log(renderToday(rows, decided, "Castr's Zod output does"));
   console.log(renderToday(rows, held, "Castr's Zod output holds"));
   console.log(renderToday(rows, typed, "Castr's TypeScript output does"));
