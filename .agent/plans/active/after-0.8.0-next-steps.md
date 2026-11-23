@@ -189,57 +189,60 @@ false`, where it stands by itself. It is never read so at a schema applied in pl
 Size, re-read: the first slice took seven rows, two pull requests and six pushes as
 prose. The step is not worked that way again.
 
-### What is next, written before the owner's compaction of 23 November
+### What is next, written before the owner's second compaction of 23 November
 
-Decided the same day by the seat with the Ecosystem repository's metacognition,
-concept-exploration, reason and parallax skills; the thread record's last entry of
-23 November has the reasoning, each proposal's warrant and what would show it wrong.
-An hour earlier this section said the next piece was the mechanism for runnable
-proposals. The exploration changed that: the proof for Oak's two rows has already been
-run and is tracked (the appendix of the first slice's draft), so a mechanism placed
-before the first value step would be an instrument ahead of the work.
+The one statement of what is owed and in what order. The thread record's last entries of
+23 November hold the reasoning. Acts 1 to 3 of the earlier list are done: pull request
+172 merged; the course on the model was read; revisions 0.9.0 and 0.9.1 of the
+specification are approved and on `main`.
 
-1. **Pull request #172** holds this reframing. Its hosted reviews were not answered
-   before the compaction. Read every thread, change only what is a factual error,
-   reply, resolve, and merge when clean and green.
-2. **Read the course on the model before building** ([castr-course.md](castr-course.md),
-   the owner's cards of 18 November: "A repair that adds no text-building goes into
-   today's code ... the model is redesigned by an approved amendment (SPEC-N-1) before
-   it changes"; about 26,500 of 35,655 product lines are the model or written against
-   its shape). Write one matrix row on whether N0, as a repair of today's code, stands.
-   The seat's reading is that it does, by that card; the course was not re-read in full
-   on 23 November.
-3. **Done: the small amendment.** The owner approved it on 23 November as revision 0.9.0,
-   with a minor adjustment as 0.9.1 ("I approve revision 0.9.0 and minor adjustement to
-   revision 0.9.1"), and it is on `main` (pull request 174). The specification now has a
-   clause declaring the limit for a property named `__proto__` (SPEC-P-7), a third route
-   in SPEC-G-5, SPEC-N-5 reworded so the tables arrive row by row, and Appendix B with
-   three sentences on how a table is read and two rows: a constrained map that names no
-   property, and a `propertyNames` of `true`, `{}` or `{type: string}` with no other
-   keyword. The draft as brought, with its cases, is
-   [amendment-0.9.0-draft-2026-11-23.md](../../analysis-and-reports/amendment-0.9.0-draft-2026-11-23.md).
-   No approval question is open. The check Castr writes and its mark, the sentence "no
-   row, no default" and the other rows of the first slice were left out, each for a
-   reason the draft gives, and each comes by its own amendment when a document needs it.
-4. **N0, the fix,** test first, under the conditions the reviews of 22 and 23 November
-   set. The picture's cells for the two rows turn right, and Oak's whole-document line
-   names what stops it next.
-5. **Beside those, in their waits,** each replacing hand-written prose with a judge
-   outside Castr: the closed reading's transformation as the picture's second reference
-   (SPEC-G-4 asks for one and none exists), with a check over generated schemas that it
-   never accepts what the source refuses; the JSON Schema Test Suite, which SPEC-C-2
-   already names, pinned as the source of composition cases for each keyword; the
-   findings of the reviews of 22 and 23 November turned into cases; a case for a
-   property whose name every object inherits; and the words that say which schemas
-   describe objects, as the next small amendment if Oak's next stop is its quiz schemas.
-6. **Rows follow what stops Oak's document next, and each is classed for any valid
-   schema.** The order follows value; the measure stays every row. A schema outside a
-   row's stated conditions is `NOT-YET-BUILT`, never a default.
+1. **Finish the fix (N0) on the branch `fix/n0-constrained-map`.** Its first slice is
+   built: the OpenAPI reader, the model's validator and the Zod and TypeScript writers
+   handle a constrained map, every writer refuses a schema-valued `additionalProperties`
+   outside the row, and Oak's document is no longer refused. Owed before its pull
+   request, each test first:
+   - the picture's cases for the two approved rows (a map that names no property; a
+     `propertyNames` of `{type: string}`), beside its present cases, which are outside
+     the rows and stay refused;
+   - a tracked case for SPEC-P-7: for a value with a property named `__proto__`, the
+     reference refuses, the Zod accepts, and the returned value lacks the property;
+   - the line SPEC-P-7 requires in every run's report, now that Castr writes a catchall;
+   - the reader's pass over headers, callbacks, path items, media types and webhooks
+     (`openapi-document.object-semantics.schemas.ts`), which still refuses a constrained
+     map there;
+   - SPEC-G-5's third route, if a check of sample adequacy exists in code;
+   - the comments and READMEs that still state one closed object model, or that no
+     catchall is written;
+   - the pull request, with its review exit set when it opens: two rounds, and a third
+     only for a fault in what the code does.
 
-What would show this wrong: the approval question comes back as one the owner should
-not have been asked; or the amendment draws a finding that changes the outcome for Oak's
-shape; or N0 passes three pull requests; or two turns of this loop leave the picture's
-count for Oak's document where it was. Any of them is a step back before more work.
+   Finished when the picture's cells for the two rows read right and are held by tests,
+   no cell that read right reads otherwise, and the thread record says what is fixed and
+   what is not.
+
+2. **Sort the rows of Oak's document that are not right** (31 of 74 by the picture)
+   into three: a row that breaks an approved clause, repaired now, because SPEC-G-4 and
+   section 9 bind today's code; a row that needs text, for the smallest amendment; a row
+   that touches the model, where the seat steps back (SPEC-N-1). Write the sorted table
+   here as the queue. The unit of work from then on is one row or one stop of Oak's
+   document: text if needed, code, and the picture's cell, in one turn.
+3. **Text for the owner goes through one round of hosted review first.** The draft's
+   pull request is opened and its first review read before the owner is asked. Then one
+   blocking question, short, asking for typed words that name the version.
+4. **Beside those, in their waits:** the closed reading stated as the positions through
+   which closing may descend, closing nowhere else, with the check over generated
+   schemas that it never accepts what the source refuses, before any words on it; the
+   JSON Schema Test Suite pinned as the source of composition cases; the review findings
+   of 22 and 23 November turned into cases; a case for a property whose name every
+   object inherits.
+5. **Cut this plan to one statement of order.** Its history and its superseded orders
+   move to a record, so that a change of order is made in one place.
+
+What would show this wrong: a "repair now" draws a finding that it assumed a class no
+row gives; or every row that is not right turns out to need text, so the sorting bought
+nothing; or the round of review before the owner finds nothing on two amendments
+running; or a cell that read right reads otherwise after a fix. Any of them is a step
+back before more work.
 
 ## What this serves
 
