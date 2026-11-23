@@ -975,6 +975,58 @@ string; [key: string]: string | number }` accepts every valid value and also
   | Whether N0's finish condition is still right                   | The plan: "Oak's whole-document line says exactly what stops it next, or that nothing does" | It stands, and the 16 quiz schemas are the likeliest next stop. N0's size is re-read once this slice has words                                                                                                                                             |
   | Re-sizing N5 from the first slice                              | Proportionality                                                                             | The first slice took seven rows, two pull requests and six pushes. At that rate the plan's "at least two pull requests" for 315 rows is wrong by an order of magnitude. Re-sized in the plan with this slice's pull request, and said to the owner         |
 
+- 2026-11-23. **The owner's correction, the step back it asked for, and what it
+  changed.** The plan's "The reframing of 23 November 2026" holds the owner's words
+  verbatim, with the four answers to the question prompt, and what changes. This entry
+  holds how it was reached.
+  - _The seat's own pass,_ with the Ecosystem repository's metacognition directive and
+    its reason and proportionality skills. Four framing errors: "strict" read as an
+    order of work, so nothing was built until prose was approved; prose attacked by
+    reviewers used for questions a run decides, when every attack that broke a draft
+    did so by running something; owner words stretched past their scope (decision
+    eighteen into "the fix waits on all 315 rows"; "asking me is the wrong move" into
+    never asking, with real decisions parked in report prose); and the Ecosystem
+    repository as it works now taken as the consumer. Under those: the specification
+    treated as the product, the seat's caution as the method, and each owner sentence
+    as a rule to maximise.
+  - _The conscience panel,_ four roles, normal stance, on that reading (all four on
+    Fable by the owner's instruction of the day, at low or medium effort, which is not
+    the panel's usual binding). Work: four ON-TRACK. Frame: four CONTRADICTED, on one
+    line: the seat had read section 12's "no code assumes an answer" as binding merged
+    code only, and section 12 does not say merged. Also from the returns: SPEC-G-4
+    carries less of "what right is" than the seat claimed (the accepted side, on the
+    corpus, with no judge where the profile's reading is undefined); the seat's
+    proposal to make Oak's whole document convert scored the work on Oak's document as
+    it is today, which is the corpus-fitting version 0.7.0 corrected; and the faults in
+    approved text were still parked in prose. The adversarial wave was not run: the
+    redirection was unanimous and could be acted on.
+  - _The questions, and what the owner sent back._ The seat then asked four blocking
+    questions. The owner answered one (pull requests) and sent three back to the
+    lenses. So the lesson has two halves: a wait on the owner exists only once they
+    are asked by a blocking question; and a question goes to them only after the
+    lenses fail to settle it, or it is theirs by nature.
+  - _Run for the closed reading_ (Ajv reading own properties; 15 schemas, 35 values,
+    expected by hand; one hand expectation was wrong and is corrected). Closing only
+    the outermost object, with `unevaluatedProperties: false`, and never a schema
+    applied in place: no value was accepted that the source refuses, under `not`,
+    `oneOf`, `if`, `anyOf`, `allOf`, a reference beside keywords, and the shape of
+    Oak's quiz schemas. One place still widened, a schema under `contains` beside
+    `maxContains`; with schemas under `contains` left unclosed, none did. An empty
+    schema as a property's shape is not closed, because it describes no object.
+
+  | Question                                                      | Lens that settles it                                                                                                                                                 | Disposition                                                                                                                                                                                                                                                            |
+  | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | May product code explore ahead of approved text               | Strict: section 12 and SPEC-I-1 as written. Then "would it be simpler if the system changed"                                                                         | No, and it is not needed. The either/or of text first or code first was a false frame: the proposals become runnable (the right output written by hand, judged by the picture's outside judges), which is test code that assumes nothing in Castr                      |
+  | What the fix waits on                                         | Strict, with the scope of decision eighteen read as given                                                                                                            | Approved text for the rows it touches. The seat's "the whole step" is withdrawn                                                                                                                                                                                        |
+  | How the closed reading works across composition               | Strict: of the readings, one makes the approved sentence "narrows the source's accepted set" true, and it was run. Excellence: it is a construct JSON Schema defines | Close the outermost object over what its branches evaluate; never a schema applied in place or under `contains`. Oak's 16 quiz schemas then accept what one branch accepts. The literal reading, which accepts nothing for them and widens under `not`, was the seat's |
+  | The name `__proto__`: a real case or hand wringing            | User value, with proportionality; strict asks only that nothing is silent; the owner's decision seven is the precedent for a limit of JavaScript targets             | Hand wringing in its remedy. Declared once in the specification and in each run's report; no check. The first slice's refusal, clause and row G are withdrawn: they cost every consumer a Zod object's own methods and a walk of every value                           |
+  | Whether the tables restate how keywords compose               | Could it be simpler; section 5 says meaning is the source format's                                                                                                   | No. A row gives its construct's class and written form; composition is the format's, judged by the reference                                                                                                                                                           |
+  | Whether the present model is designed before rows are classed | Proportionality: a runnable proposal is outside Castr and fits nothing into the model                                                                                | Not a precondition for classing rows. It stays a precondition for changing the model (SPEC-N-1), and the fix leaves the model's files unchanged                                                                                                                        |
+  | How pull requests in Castr are made                           | The owner's, answered                                                                                                                                                | Through the owner's sign-in, with the line that an agent did it                                                                                                                                                                                                        |
+  - _Next._ The mechanism for runnable proposals in the picture, first for the rows
+    Oak's two schemas use, then the closed reading's transformation as the picture's
+    second reference (SPEC-G-4 asks for one and none exists).
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
