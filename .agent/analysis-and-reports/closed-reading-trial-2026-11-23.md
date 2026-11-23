@@ -9,21 +9,21 @@ The reading tried: an object that states no unknown-key policy is read as if it 
 `unevaluatedProperties: false`, at each outermost schema that describes objects. It is
 never applied at a schema that is applied in place (a branch of `allOf`, `anyOf` or
 `oneOf`, a `then` or `else`, a reference's target reached in place). It is never applied
-at any depth under `not`, `if` or `contains`, the schema itself or anything nested in
-it, nor inside a definition reached from there: under those keywords a narrower child
-makes the parent accept more. A schema describes objects when its `type` admits
+at any depth under `not`, `if`, `contains` or a branch of `oneOf`, the schema itself or
+anything nested in it, nor inside a definition reached from there: under those keywords
+a narrower child can make the parent accept more. A schema describes objects when its `type` admits
 `object`, or it holds a keyword that applies only to objects, or a schema it applies in
 place by `allOf`, `anyOf`, `oneOf`, `then`, `else` or a reference does. A `not` or an
 `if` does not make the schema that holds it describe objects.
 
 The judge is Ajv for JSON Schema 2020-12, reading own properties only. Each value has
 the outcome expected by hand for the source and for the closed reading. Result on the
-cases run: 21 schemas, 48 values, none unexpected, and none accepted by the closed
+cases run: 22 schemas, 51 values, none unexpected, and none accepted by the closed
 reading that the source refuses. That is a result about these cases. It is not a proof
 that the reading narrows for every schema; the plan's act for a generated-schema check
 is where that is tested more widely.
 
-Three things were learned on the way and are in the script as it stands:
+Four things were learned on the way and are in the script as it stands:
 
 - A schema under `contains` beside `maxContains` widens if it is closed, so it is left
   unclosed.
@@ -37,7 +37,19 @@ Three things were learned on the way and are in the script as it stands:
   above (0 of 13). The same holds through a reference, so a definition reached from
   under those keywords is left unclosed throughout.
 
-A cost of the last rule: a definition used both under `not` and by itself is left
+- A second review of pull request 172 found the same fault one keyword along: an object
+  nested in a branch of `oneOf`. `{oneOf: [{properties: {p: {}}}, {properties: {p: A}}]}`
+  refuses `{p: {a: "x", z: 1}}` in the source, because both branches match, and accepted
+  it once `A` was closed, because then one does. The seat reproduced it and added
+  branches of `oneOf` to the keywords under which nothing is closed. Run without that
+  change, the script fails on the case.
+
+Two reviews in a row each found a position this record had not thought of. So the list
+of keywords above is what has been found, not a list known to be whole, and cases
+written by hand are not the instrument that will show it whole. The plan's check over
+generated schemas is, and the reading is a candidate until that check has run.
+
+A cost of the rule for definitions: a definition used both under `not` and by itself is left
 unclosed in both places, which narrows less than the reading asks where it stands by
 itself. Closing it exactly needs two copies of the definition. That is not tried here.
 
@@ -56,7 +68,8 @@ import { Ajv2020 } from 'ajv/dist/2020.js';
 // The closed reading as: unevaluatedProperties: false at each outermost schema that
 // describes objects and states no policy. Never at a schema applied in place (a branch
 // of allOf/anyOf/oneOf, then/else, a $ref target reached in place). Never at any depth
-// under not, if or contains: there a narrower child makes the parent accept more.
+// under not, if, contains or a branch of oneOf: there a narrower child can make the
+// parent accept more.
 // Expected by hand, [value, source, closed]. Claim under test: closed never accepts
 // what the source refuses.
 type S = Record<string, unknown>;
@@ -71,7 +84,7 @@ const OBJ = [
   'minProperties',
   'maxProperties',
 ];
-const NEG = ['not', 'if', 'contains'];
+const NEG = ['not', 'if', 'contains', 'oneOf'];
 const isObj = (s: unknown): s is S => typeof s === 'object' && s !== null && !Array.isArray(s);
 const run = (root: S) => {
   const defs = (root['$defs'] ?? {}) as Record<string, S>;
@@ -107,10 +120,12 @@ const run = (root: S) => {
   const walk = (s: unknown, inPlace: boolean, neg: boolean): unknown => {
     if (!isObj(s)) return s;
     const o: S = { ...s };
-    for (const k of ['allOf', 'anyOf', 'oneOf'])
+    for (const k of ['allOf', 'anyOf'])
       if (Array.isArray(o[k])) o[k] = (o[k] as unknown[]).map((x) => walk(x, true, neg));
+    if (Array.isArray(o['oneOf']))
+      o['oneOf'] = (o['oneOf'] as unknown[]).map((x) => walk(x, true, true));
     for (const k of ['then', 'else']) if (k in o) o[k] = walk(o[k], true, neg);
-    for (const k of NEG) if (k in o) o[k] = walk(o[k], true, true);
+    for (const k of ['not', 'if', 'contains']) if (k in o) o[k] = walk(o[k], true, true);
     for (const k of ['items', 'additionalProperties', 'propertyNames'])
       if (isObj(o[k])) o[k] = walk(o[k], false, neg);
     if (isObj(o['properties']))
@@ -301,6 +316,15 @@ const cases: [string, S, [unknown, boolean, boolean][]][] = [
     [
       [{ p: { a: 'x', z: 1 } }, false, false],
       [{ p: { a: 1 } }, true, true],
+    ],
+  ],
+  [
+    'oneOf > property',
+    { oneOf: [{ properties: { p: {} } }, { properties: { p: A } }] },
+    [
+      [{ p: { a: 'x', z: 1 } }, false, false],
+      [{ p: { a: 1 } }, true, true],
+      [{ p: { a: 1 }, z: 1 }, true, false],
     ],
   ],
   [

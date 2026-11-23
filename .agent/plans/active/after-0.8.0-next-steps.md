@@ -151,16 +151,21 @@ What changes, each decided by the lenses and recorded with its row in the step l
   An object that states no policy is read as if it stated `unevaluatedProperties:
 false`, where it stands by itself. It is never read so at a schema applied in place (a
   branch of `allOf`, `anyOf` or `oneOf`, a `then` or `else`, a reference's target reached
-  in place), and never at any depth under `not`, `if` or `contains`, nor inside a
-  definition reached from there. The last part was added on 23 November after a review
-  of pull request 172 showed, and the seat reproduced, that closing an object nested
-  under `not` widens. On the 48 values of the
-  [trial](../../analysis-and-reports/closed-reading-trial-2026-11-23.md) the reading
+  in place), and never at any depth under `not`, `if`, `contains` or a branch of
+  `oneOf`, nor inside a definition reached from there. Those last parts were added on
+  23 November, after two reviews of pull request 172 each gave a case, which the seat
+  reproduced, where closing a nested object makes the whole schema accept more. **The
+  reading is therefore a candidate, not a decision:** two reviews in a row found a
+  position the seat had not thought of, so the list of keywords is what has been
+  found, not a list known to be whole. Cases written by hand will not show it whole;
+  act 5's check over generated schemas is the instrument, and it runs before any words
+  on composition are brought to the owner. On the 51 values of the
+  [trial](../../analysis-and-reports/closed-reading-trial-2026-11-23.md) the candidate
   never accepts what the source refuses, and a schema of the shape of Oak's quiz
   schemas accepts what one branch accepts. That all 16 of Oak's quiz schemas have that
-  shape was computed from the document; the trial runs one schema of the shape, not the 16. The trial is a result about its cases, not a proof that SPEC-P-1's sentence
-  ("narrows the source's accepted set") holds of every schema: act 5's generated-schema
-  check tests that more widely. The seat's literal reading widens in cases the trial
+  shape was computed from the document; the trial runs one schema of the shape, not
+  the 16, and their branches state their own policy, so none of the keywords above
+  bears on them. The seat's literal reading widens in cases the trial
   shows, so the fault found on 23 November was in that reading. The words that say
   which schemas describe objects are still owed as text.
 - **The name `__proto__` is a declared limit of the Zod target, not a check.**
