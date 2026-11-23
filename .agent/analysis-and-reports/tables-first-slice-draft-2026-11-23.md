@@ -191,6 +191,11 @@ reader of Zod is in SPEC-C-1.
 
 ### A new SPEC-P-7, the name `__proto__`
 
+The identifier is provisional. The withdrawn draft of the numbers amendment used
+SPEC-P-7 for its own clause, and numbers are a later part of this same step; each new
+clause takes its identifier when its text is brought for approval, so the two cannot
+share one.
+
 > - **SPEC-P-7 A property named `__proto__`.** Every validator Castr writes for a
 >   JavaScript target refuses a value that holds, at any depth, an object with a
 >   property named `__proto__`, whatever the schema says. This narrows the source's
