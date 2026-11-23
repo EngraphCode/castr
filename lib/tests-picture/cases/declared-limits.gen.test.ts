@@ -12,6 +12,12 @@
 import { describe, it, expect } from 'vitest';
 
 import { createCastrConvert } from './castr-convert.js';
+import {
+  DECLARED_LIMITS,
+  renderDeclaredLimits,
+  URI_ACCEPTED_BY_ZOD_ALONE,
+  URI_REFUSED_BY_ZOD_ALONE,
+} from './declared-limits.js';
 import { referenceFor } from './reference.js';
 import { documentFor } from './schema-case.js';
 import { SCHEMA_CASES } from './schema-cases.js';
@@ -57,21 +63,9 @@ describe('a property named `__proto__` (SPEC-P-7)', () => {
   });
 });
 
-/** Strings `z.url()` accepts and RFC 3986 refuses. */
-const ACCEPTED_BY_ZOD_ALONE = [
-  'https://example.com/%ZZ',
-  'https://example.com/a b',
-  'https://example.com/\u00e9',
-  'https://example.com/a\\b',
-  'https://example.com/a[1]',
-];
-
-/** Strings RFC 3986 accepts and `z.url()` refuses. */
-const REFUSED_BY_ZOD_ALONE = ['http://'];
-
 describe('`format: uri`, written `z.url()` (SPEC-P-8)', () => {
   const document = documentFor({ schema: { type: 'string', format: 'uri' } });
-  const differing = [...ACCEPTED_BY_ZOD_ALONE, ...REFUSED_BY_ZOD_ALONE];
+  const differing = [...URI_ACCEPTED_BY_ZOD_ALONE, ...URI_REFUSED_BY_ZOD_ALONE];
 
   it('differs from the source in both directions, on the strings the clause names', async () => {
     const reference = referenceFor(document);
@@ -84,10 +78,10 @@ describe('`format: uri`, written `z.url()` (SPEC-P-8)', () => {
         reference.readable && reference.accepts(value);
 
       expect(converted.kind).toBe('decides');
-      expect(ACCEPTED_BY_ZOD_ALONE.filter(zodAccepts)).toEqual(ACCEPTED_BY_ZOD_ALONE);
-      expect(ACCEPTED_BY_ZOD_ALONE.filter(sourceAccepts)).toEqual([]);
-      expect(REFUSED_BY_ZOD_ALONE.filter(zodAccepts)).toEqual([]);
-      expect(REFUSED_BY_ZOD_ALONE.filter(sourceAccepts)).toEqual(REFUSED_BY_ZOD_ALONE);
+      expect(URI_ACCEPTED_BY_ZOD_ALONE.filter(zodAccepts)).toEqual(URI_ACCEPTED_BY_ZOD_ALONE);
+      expect(URI_ACCEPTED_BY_ZOD_ALONE.filter(sourceAccepts)).toEqual([]);
+      expect(URI_REFUSED_BY_ZOD_ALONE.filter(zodAccepts)).toEqual([]);
+      expect(URI_REFUSED_BY_ZOD_ALONE.filter(sourceAccepts)).toEqual(URI_REFUSED_BY_ZOD_ALONE);
     } finally {
       await castr.dispose();
     }
@@ -99,5 +93,15 @@ describe('`format: uri`, written `z.url()` (SPEC-P-8)', () => {
     expect(row?.samples.filter((sample) => differing.some((value) => value === sample))).toEqual(
       [],
     );
+  });
+});
+
+describe('the declared limits, as the picture prints them', () => {
+  it('names each clause that declares one', () => {
+    const printed = renderDeclaredLimits();
+
+    expect(DECLARED_LIMITS.map((limit) => limit.clause)).toEqual(['SPEC-P-7', 'SPEC-P-8']);
+    expect(printed).toContain('| SPEC-P-7 |');
+    expect(printed).toContain('| SPEC-P-8 | `format: uri` |');
   });
 });

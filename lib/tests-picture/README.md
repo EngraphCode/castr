@@ -305,7 +305,8 @@ with an own property named `__proto__`, the reference refuses, Castr's Zod accep
 the value it returns lacks the property (SPEC-P-7). No sample of a case holds one.
 A second is held beside it: `format: uri` is written `z.url()`, which accepts some strings
 RFC 3986 refuses and refuses `http://`, which it accepts (SPEC-P-8). The row's samples
-hold none of those strings, so its cell reads right on the strings the two agree on.
+hold none of those strings, so its cell reads right on the strings the two agree on. `pnpm picture`
+prints both limits above the cells, so a right cell is not read as free of them.
 
 ### The Zod column
 
