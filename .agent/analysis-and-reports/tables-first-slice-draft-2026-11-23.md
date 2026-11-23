@@ -46,10 +46,10 @@ correction of 22 November ("strict, everywhere, all the time").
    reader of a running module and a reader of source text can both reach (run, below).
    What a reader does with a marked check is left to the amendment that opens a Zod
    reader.
-5. **One row has no good answer in TypeScript.** A constrained object that names a
-   property its `additionalProperties` does not admit has a type that reads rightly and
-   cannot be written as a literal. It is classed by companion and is the row most in need
-   of attack.
+5. **One row needs two types in TypeScript.** A constrained object that names a
+   property its `additionalProperties` does not admit has no single type that both
+   accepts every valid value and reads each property rightly. It is classed by companion,
+   with a type for each side.
 
 ## What the two rows lean on, and where each goes
 
@@ -237,21 +237,25 @@ until those rows are written such a schema is in no row. An object names a prope
 `required` holds at least one name; a name that only `required` holds is written as a
 property whose shape is what the row gives an unknown key.
 
-| Row                                                   | Zod                                                                | TypeScript                                                                                                                       | Endpoint definitions |
-| ----------------------------------------------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| A. `additionalProperties: false` (closed)             | Carried: `z.strictObject`                                          | By companion (Zod): the type holds the named properties and cannot refuse another                                                | By companion (Zod)   |
-| B. `additionalProperties` absent (closed by SPEC-P-1) | As A, and listed in the run's report                               | As A                                                                                                                             | As A                 |
-| C. `true` or `{}` (open)                              | Carried: `z.looseObject`                                           | Carried: an index signature over `string` of `unknown`, beside the named properties                                              | By companion (Zod)   |
-| D. Any other `S`, and the object names no property    | Carried: `.catchall(S)` on a strict object with no properties      | Carried: an index signature over `string` of the type of `S`                                                                     | By companion (Zod)   |
-| E. Any other `S`, and the object names a property     | Carried: `.catchall(S)` on a strict object of the named properties | By companion (Zod): the intersection of the named properties' type and the index signature. It reads rightly; see the note below | By companion (Zod)   |
-| F. `propertyNames: K`                                 | Carried, by a check Castr writes: every name passes the Zod of `K` | By companion (Zod)                                                                                                               | By companion (Zod)   |
-| G. The refusal of SPEC-P-7                            | Carried, by a check Castr writes                                   | By companion (Zod)                                                                                                               | By companion (Zod)   |
+| Row                                                   | Zod                                                                | TypeScript                                                                                   | Endpoint definitions |
+| ----------------------------------------------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- | -------------------- |
+| A. `additionalProperties: false` (closed)             | Carried: `z.strictObject`                                          | By companion (Zod): the type holds the named properties and cannot refuse another            | By companion (Zod)   |
+| B. `additionalProperties` absent (closed by SPEC-P-1) | As A, and listed in the run's report                               | As A                                                                                         | As A                 |
+| C. `true` or `{}` (open)                              | Carried: `z.looseObject`                                           | Carried: an index signature over `string` of `unknown`, beside the named properties          | By companion (Zod)   |
+| D. Any other `S`, and the object names no property    | Carried: `.catchall(S)` on a strict object with no properties      | Carried: an index signature over `string` of the type of `S`                                 | By companion (Zod)   |
+| E. Any other `S`, and the object names a property     | Carried: `.catchall(S)` on a strict object of the named properties | By companion (Zod): one type for what goes in and one for what comes out; see the note below | By companion (Zod)   |
+| F. `propertyNames: K`                                 | Carried, by a check Castr writes: every name passes the Zod of `K` | By companion (Zod)                                                                           | By companion (Zod)   |
+| G. The refusal of SPEC-P-7                            | Carried, by a check Castr writes                                   | By companion (Zod)                                                                           | By companion (Zod)   |
 
 The keyword row for `additionalProperties` says "one row per case: A to E".
 
-Row E's type: where a named property's type is not admitted by `S`, no literal that
-holds that property fits the type, and neither does a spread or `Object.assign`. A
-value read through the type is right.
+Row E's two types, run under the repository's compiler settings. For what goes in: the
+named properties beside an index signature of `unknown`. Every value the source accepts
+fits it, and it does not hold other names to `S`, which is why the class is by
+companion. For what comes out: the intersection of the named properties' type and an
+index signature of the type of `S`, through which a named property reads as its own type
+and any other name as the type of `S`. The Zod writer gives its schema the first as its
+input type, so each is mutually assignable with Zod's type for its side (SPEC-G-4).
 
 Rows A, C and E say "carried" for the unknown-key policy. They lean on the rows for
 `properties` and `required`, which the piece owes and which must settle two things the
@@ -281,10 +285,10 @@ document refused at its first stop shows no later one.
 - **The narrowing of SPEC-P-7 is the owner's text.** It refuses values the source
   accepts. The alternative that keeps them is to let Zod accept and drop the property,
   which widens and which the seat ruled out on 22 November by the strict lens.
-- **Row E in TypeScript.** By companion with a type no valid literal with both kinds of
-  property fits. The other candidates: `UNEXPRESSIBLE` for TypeScript, which refuses a
-  shape Zod carries exactly; or a weaker type with a comment, which fails SPEC-G-4's
-  mutual assignability as approved.
+- **Row E in TypeScript.** Settled after the hosted review, which was right that one
+  intersection type for both sides lets no one write a valid value. The row now gives a
+  type for each side. The other candidates were `UNEXPRESSIBLE` for TypeScript, which
+  refuses a shape Zod carries exactly, and the single intersection type.
 - **A schema that names `__proto__`.** Under SPEC-P-7 no accepted value has the
   property, so a schema that requires it accepts nothing and one that allows it loses
   nothing. The first draft gave a list of the places a schema can name it and called
@@ -339,5 +343,371 @@ SPEC-N-3.
 | `z.toJSONSchema` on the written form loses `propertyNames`                                                                                             | No change: Castr writes JSON Schema from the model, never from the Zod it wrote                                                                                                        |
 | A `pattern` of one character against an astral character                                                                                               | The `pattern` row's                                                                                                                                                                    |
 
+Two hosted reviews of the pull request followed. Adopted: the identifier SPEC-P-7 is
+provisional; cases 2, 3 and 17 lie outside the rows; the example of a closed object is
+Zod with no check in front; row E gives a type for each side, where it gave one
+intersection that no valid literal fits; and the cases are kept below, where they were
+only in an untracked directory. Declined: that row F promises a check over a `K` no row
+writes, because vocabulary 2 and 3 already give that object `NOT-YET-BUILT`.
+
 Not run by the reviewer or the seat: reaching `params` from source text through a
 syntax tree; the endpoint-definitions column; Oak's real document through any of this.
+
+## Appendix: the composition cases, as run
+
+This is the script that produced the 74 comparisons, with the reference reading own
+properties only. It is kept here because the directory it ran in is not tracked. Run it
+from `lib/tests-picture/.tmp` with `npx tsx`. Each `values` entry is a value as JSON
+text and the outcome expected by hand.
+
+```ts
+import { z } from 'zod';
+import { Ajv2020 } from 'ajv/dist/2020.js';
+// Every expectation below was written by hand before the first run.
+// Profile under test: a value that holds, at any depth, an object with an own property
+// named __proto__ is refused by every validator, whatever the schema says.
+const deepProto = (v: unknown): boolean =>
+  Array.isArray(v)
+    ? v.some(deepProto)
+    : typeof v === 'object' && v !== null
+      ? Object.hasOwn(v, '__proto__') || Object.values(v).some(deepProto)
+      : false;
+const MARK = (check: string, args: unknown = {}) => ({
+  params: { castr: { check, ...(args as object) } },
+});
+const root = <T extends z.ZodType>(s: T) =>
+  z
+    .custom<z.input<T>>((v) => !deepProto(v), MARK('no-property-named', { name: '__proto__' }))
+    .pipe(s);
+const names = (K: z.ZodType) =>
+  [
+    (v: object) => Object.keys(v).every((k) => K.safeParse(k).success),
+    MARK('propertyNames', { names: K }),
+  ] as const;
+const notObject = z.union([z.string(), z.number(), z.boolean(), z.null(), z.array(z.unknown())]);
+const P = (j: string) => JSON.parse(j) as unknown;
+const ab = z.enum(['a', 'b']);
+interface Case {
+  name: string;
+  schema: object;
+  zod: z.ZodType;
+  values: [string, boolean][];
+}
+const Tree: z.ZodType = z.strictObject({}).catchall(z.lazy(() => Tree));
+const cases: Case[] = [
+  {
+    name: '1 Oak',
+    schema: {
+      type: 'object',
+      propertyNames: { type: 'string' },
+      additionalProperties: { type: 'string', enum: ['a', 'b'] },
+    },
+    zod: root(
+      z
+        .strictObject({})
+        .catchall(ab)
+        .refine(...names(z.string())),
+    ),
+    values: [
+      ['{}', true],
+      ['{"x":"a"}', true],
+      ['{"x":"zzz"}', false],
+      ['{"x":1}', false],
+      ['{"__proto__":"a"}', false],
+      ['{"__proto__":"zzz"}', false],
+      ['3', false],
+      ['null', false],
+      ['[]', false],
+    ],
+  },
+  {
+    name: '2 no type',
+    schema: { additionalProperties: { type: 'string' } },
+    zod: root(z.union([notObject, z.strictObject({}).catchall(z.string())])),
+    values: [
+      ['3', true],
+      ['"q"', true],
+      ['null', true],
+      ['[]', true],
+      ['{"x":"a"}', true],
+      ['{"x":1}', false],
+      ['[{"__proto__":1}]', false],
+    ],
+  },
+  {
+    name: '3 object or null',
+    schema: { type: ['object', 'null'], additionalProperties: { type: 'string' } },
+    zod: root(z.union([z.null(), z.strictObject({}).catchall(z.string())])),
+    values: [
+      ['null', true],
+      ['{"x":"a"}', true],
+      ['{"x":1}', false],
+      ['3', false],
+    ],
+  },
+  {
+    name: '4 names a required property',
+    schema: {
+      type: 'object',
+      properties: { a: { type: 'string' } },
+      required: ['a'],
+      additionalProperties: { type: 'number' },
+    },
+    zod: root(z.strictObject({ a: z.string() }).catchall(z.number())),
+    values: [
+      ['{"a":"x"}', true],
+      ['{"a":"x","b":1}', true],
+      ['{"a":"x","b":"y"}', false],
+      ['{"b":1}', false],
+      ['{"a":1}', false],
+    ],
+  },
+  {
+    name: '5 names an optional property',
+    schema: {
+      type: 'object',
+      properties: { a: { type: 'string' } },
+      additionalProperties: { type: 'number' },
+    },
+    zod: root(z.strictObject({ a: z.string().optional() }).catchall(z.number())),
+    values: [
+      ['{}', true],
+      ['{"b":1}', true],
+      ['{"a":1}', false],
+      ['{"a":"x","b":"y"}', false],
+    ],
+  },
+  {
+    name: '6 open, true',
+    schema: { type: 'object', properties: { a: { type: 'string' } }, additionalProperties: true },
+    zod: root(z.looseObject({ a: z.string().optional() })),
+    values: [
+      ['{"a":"x","z":[1]}', true],
+      ['{"a":1}', false],
+      ['{"__proto__":"a"}', false],
+      ['{"z":{"__proto__":1}}', false],
+    ],
+  },
+  {
+    name: '7 open, {}',
+    schema: { type: 'object', properties: { a: { type: 'string' } }, additionalProperties: {} },
+    zod: root(z.looseObject({ a: z.string().optional() })),
+    values: [
+      ['{"a":"x","z":[1]}', true],
+      ['{"a":1}', false],
+    ],
+  },
+  {
+    name: '8 closed',
+    schema: { type: 'object', properties: { a: { type: 'string' } }, additionalProperties: false },
+    zod: z.strictObject({ a: z.string().optional() }),
+    values: [
+      ['{"a":"x"}', true],
+      ['{"a":"x","b":1}', false],
+      ['{"__proto__":"a"}', false],
+    ],
+  },
+  {
+    name: '10 refers to itself',
+    schema: {
+      $defs: { Tree: { type: 'object', additionalProperties: { $ref: '#/$defs/Tree' } } },
+      $ref: '#/$defs/Tree',
+    },
+    zod: root(Tree),
+    values: [
+      ['{}', true],
+      ['{"a":{}}', true],
+      ['{"a":{"b":{}}}', true],
+      ['{"a":1}', false],
+      ['{"a":{"b":1}}', false],
+      ['{"a":{"__proto__":{}}}', false],
+    ],
+  },
+  {
+    name: '11 a branch of allOf',
+    schema: {
+      allOf: [
+        {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          required: ['a'],
+          additionalProperties: true,
+        },
+        { type: 'object', additionalProperties: { type: 'string' } },
+      ],
+    },
+    zod: root(
+      z.intersection(z.looseObject({ a: z.string() }), z.strictObject({}).catchall(z.string())),
+    ),
+    values: [
+      ['{"a":"x"}', true],
+      ['{"a":"x","b":"y"}', true],
+      ['{"a":1}', false],
+      ['{"a":"x","b":1}', false],
+      ['{}', false],
+    ],
+  },
+  {
+    name: '12 oneOf of two maps',
+    schema: {
+      oneOf: [
+        { type: 'object', additionalProperties: { type: 'string' } },
+        { type: 'object', additionalProperties: { type: 'number' } },
+      ],
+    },
+    zod: root(
+      z.xor([z.strictObject({}).catchall(z.string()), z.strictObject({}).catchall(z.number())]),
+    ),
+    values: [
+      ['{}', false],
+      ['{"x":"a"}', true],
+      ['{"x":1}', true],
+      ['{"x":"a","y":1}', false],
+      ['{"__proto__":"a"}', false],
+    ],
+  },
+  {
+    name: '13 not a map',
+    schema: { not: { type: 'object', additionalProperties: { type: 'string' } } },
+    zod: root(
+      z.custom<unknown>(
+        (v) => !z.strictObject({}).catchall(z.string()).safeParse(v).success,
+        MARK('not'),
+      ),
+    ),
+    values: [
+      ['3', true],
+      ['{"x":1}', true],
+      ['{"x":"a"}', false],
+      ['{}', false],
+      ['{"__proto__":"a"}', false],
+      ['{"__proto__":1}', false],
+    ],
+  },
+  {
+    name: '14 property names, with named properties',
+    schema: {
+      type: 'object',
+      properties: { ab: { type: 'number' }, A1: { type: 'number' } },
+      additionalProperties: false,
+      propertyNames: { pattern: '^[a-z]+$' },
+    },
+    zod: z
+      .strictObject({ ab: z.number().optional(), A1: z.number().optional() })
+      .refine(...names(z.string().regex(/^[a-z]+$/))),
+    values: [
+      ['{}', true],
+      ['{"ab":1}', true],
+      ['{"A1":1}', false],
+      ['{"zz":1}', false],
+    ],
+  },
+  {
+    name: '15 property names, enum, map',
+    schema: {
+      type: 'object',
+      propertyNames: { enum: ['ab', 'cd'] },
+      additionalProperties: { type: 'number' },
+    },
+    zod: root(
+      z
+        .strictObject({})
+        .catchall(z.number())
+        .refine(...names(z.enum(['ab', 'cd']))),
+    ),
+    values: [
+      ['{}', true],
+      ['{"ab":1}', true],
+      ['{"ab":1,"cd":2}', true],
+      ['{"zz":1}', false],
+      ['{"ab":"q"}', false],
+    ],
+  },
+  {
+    name: '16 property names false',
+    schema: { type: 'object', propertyNames: false, additionalProperties: true },
+    zod: root(z.looseObject({}).refine(...names(z.never()))),
+    values: [
+      ['{}', true],
+      ['{"a":1}', false],
+    ],
+  },
+  {
+    name: '17 property names, no type',
+    schema: { propertyNames: { maxLength: 1 } },
+    zod: root(z.union([notObject, z.looseObject({}).refine(...names(z.string().max(1)))])),
+    values: [
+      ['3', true],
+      ['{"a":1}', true],
+      ['{"ab":1}', false],
+    ],
+  },
+];
+const ajv = new Ajv2020({ strict: false, allErrors: true, ownProperties: true });
+let wrong = 0;
+for (const c of cases) {
+  const validate = ajv.compile(c.schema);
+  for (const [text, expected] of c.values) {
+    const value = P(text);
+    const reference = validate(value) && !deepProto(value);
+    const zod = c.zod.safeParse(value).success;
+    if (reference !== expected || zod !== expected) {
+      wrong++;
+      console.log('DIFFERS', c.name, text, { expected, reference, zod });
+    }
+  }
+}
+console.log(
+  'cases',
+  cases.length,
+  'values',
+  cases.reduce((n, c) => n + c.values.length, 0),
+  'differ',
+  wrong,
+);
+// What the returned value is, and what the marks hold.
+console.log(
+  'returned',
+  JSON.stringify(cases[3]!.zod.parse(P('{"a":"x","b":1}'))),
+  JSON.stringify(cases[5]!.zod.parse(P('{"a":"x","z":[1]}'))),
+);
+const d = (s: unknown) => (s as { _zod: { def: any } })._zod.def;
+const oak = cases[0]!.zod;
+console.log(
+  'mark at root',
+  JSON.stringify(d(d(oak).in).params),
+  '| mark on names',
+  Object.keys(d(d(oak).out).checks[0]._zod.def.params.castr),
+  d(d(oak).out).checks[0]._zod.def.params.castr.names instanceof z.ZodType,
+);
+```
+
+Row E's two types, as the compiler judged them (`--strict --exactOptionalPropertyTypes
+--noUncheckedIndexedAccess --noPropertyAccessFromIndexSignature`):
+
+```ts
+import { z } from 'zod';
+// expected by hand: all five 'mutual'/assignable lines compile; the last literal is refused.
+type Mutual<X, Y> = [X] extends [Y]
+  ? [Y] extends [X]
+    ? 'mutual'
+    : 'X to Y only'
+  : [Y] extends [X]
+    ? 'Y to X only'
+    : 'neither';
+type In = { a: string; [key: string]: unknown };
+type Out = { a: string } & { [key: string]: number };
+const E = z
+  .custom<In>((v) => typeof v === 'object' && v !== null)
+  .pipe(z.strictObject({ a: z.string() }).catchall(z.number()));
+const i: Mutual<In, z.input<typeof E>> = 'mutual';
+const o: Mutual<Out, z.output<typeof E>> = 'mutual';
+const lit: z.input<typeof E> = { a: 'x', b: 1 };
+const lit2: In = { a: 'x' };
+const got = E.parse(lit);
+const a: string = got.a;
+const b: number | undefined = got['b'];
+// @ts-expect-error the named property keeps its type on the input side
+const bad: In = { a: 1 };
+console.log(i, o, lit2.a, a, b, E.safeParse({ a: 'x', b: 'y' }).success, bad);
+```
