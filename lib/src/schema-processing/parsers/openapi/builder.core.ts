@@ -49,8 +49,8 @@ export function buildCastrSchema(
   context: IRBuildContext,
 ): CastrSchema {
   // Handle $ref - preserve reference, metadata is computed later
+  rejectPropertyCount(schema, context.path);
   if (isReferenceObject(schema)) {
-    rejectPropertyCount(schema);
     // For references, create a minimal schema object for metadata building
     const emptySchema: SchemaObject = {};
     const metadata = buildCastrSchemaNode(emptySchema, context);

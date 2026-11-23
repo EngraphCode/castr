@@ -11,7 +11,6 @@ import type { CastrSchema } from '../../../ir/index.js';
 import { applyInferredUuidVersionFromPattern } from '../../../ir/index.js';
 
 import { addConst } from '../builder/builder.const.js';
-import { rejectPropertyCount } from '../builder/builder.property-count.js';
 
 /** @internal */
 export function addConstraints(schema: SchemaObject, irSchema: CastrSchema): void {
@@ -24,7 +23,6 @@ export function addConstraints(schema: SchemaObject, irSchema: CastrSchema): voi
     irSchema.enum = Array.from(schema.enum);
   }
   addConst(schema, irSchema);
-  rejectPropertyCount(schema);
 }
 
 /** @internal */

@@ -14,12 +14,16 @@ import type { ReferenceObject, SchemaObject } from '../../../../shared/openapi-t
 const PROPERTY_COUNT_KEYWORDS = ['minProperties', 'maxProperties'] as const;
 
 /**
- * Refuse a schema that holds a count of properties. It is given a reference too: the
- * reader keeps a reference's `$ref` and none of the keywords beside it.
+ * Refuse a schema that holds a count of properties, naming where it stands. It is given
+ * a reference too: the reader keeps a reference's `$ref` and none of the keywords beside
+ * it.
  *
  * @internal
  */
-export function rejectPropertyCount(schema: SchemaObject | ReferenceObject): void {
+export function rejectPropertyCount(
+  schema: SchemaObject | ReferenceObject,
+  path: readonly string[],
+): void {
   // A boolean schema reaches here too, and holds no keyword.
   if (typeof schema !== 'object') {
     return;
@@ -29,7 +33,8 @@ export function rejectPropertyCount(schema: SchemaObject | ReferenceObject): voi
   );
   if (held !== undefined) {
     throw new Error(
-      `A schema that holds ${held} is rejected: Castr's model does not carry ${held}, ` +
+      `A schema that holds ${held} is rejected, at ${path.join('/')}: ` +
+        `Castr's model does not carry ${held}, ` +
         'so the constraint would be dropped.',
     );
   }

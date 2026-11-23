@@ -80,6 +80,7 @@ describe('buildCastrSchemas object keyword preservation', () => {
       };
 
       expect(() => buildCastrSchemas(components)).toThrow(rejected);
+      expect(() => buildCastrSchemas(components)).toThrow(/at .*Counted/);
     });
 
     it('is rejected beside a constrained map', () => {
@@ -123,6 +124,7 @@ describe('buildCastrSchemas object keyword preservation', () => {
       };
 
       expect(() => buildCastrSchemas(components)).toThrow(rejected);
+      expect(() => buildCastrSchemas(components)).toThrow(/at .*Holder.*inner/);
     });
   });
 
