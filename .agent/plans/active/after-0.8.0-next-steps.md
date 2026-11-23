@@ -326,7 +326,10 @@ specification are approved and on `main`.
 
    1. `const`, reader and TypeScript writer. Open as pull request 177.
    2. `enum` to TypeScript.
-   3. The picture's walk and `` `false` as a schema ``.
+   3. The picture's own four causes: the walk and `` `false` as a schema ``; a kind of
+      case that can judge `parameter: in: path`, or the cell stated as one the picture
+      cannot judge; the case for a component's name read and its two cells classed; and,
+      once unit 4 lands, the exact status code's cell judged.
    4. A located refusal for a status range in the endpoint definitions, in place of a
       module that does not load.
    5. A refusal for `minProperties` and `maxProperties`; a case for `items: false`.
