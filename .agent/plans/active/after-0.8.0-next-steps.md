@@ -385,9 +385,14 @@ specification are approved and on `main`.
 
    So, from here:
 
-   1. **Unit 6 next**: draft the amendment, put it through one round of hosted review,
-      then one blocking question to the owner (act 3). It is the only door to Oak's two
-      schema rows and to the endpoint rows.
+   1. **Unit 6, in two parts.** The first part is done as amendment 0.10.0, approved on
+      23 November: rows for `default` and `format: uri` (Appendix B.3) and SPEC-P-8. The
+      owner chose `z.url()` with a declared limit over a pattern of RFC 3986. Its code
+      follows, test first: the Zod writer writes a source `default` into `.meta(…)`; and
+      the picture's sample that SPEC-P-8 concerns becomes a tracked case of the declared
+      limit. The second part is held for its own amendment: the shape of an endpoint
+      definition and where a run's report is returned, both the public surface
+      (SPEC-N-4).
    2. **Unit 8 beside it**, in the wait on the owner: the rows for the document's
       structure to TypeScript, then the `paths` type. It is 21 of the 26.
    3. **The leftovers of unit 5 become one unit, after those.** Every one of them was
@@ -404,8 +409,13 @@ specification are approved and on `main`.
       not of reading: `const` and `enum` beside a keyword that also decides, and the
       OpenAPI writer's refusal of a boolean schema.
 
+   Found in the review of pull request 185: the place a refusal names is not uniform. A
+   parameter's schema is named `/things/post/q` and a response header's
+   `/things/post/headers/X-Thing`, with no status. Its tests hold the places as they
+   are; making them uniform is its own change, with unit 9.
+
    **State of unit 5 after pull request 184.** Done: the count of properties (182) and
-   boolean schemas (184). In review: the refusal of `not`, `if`, `then` and `else`. Left:
+   boolean schemas (184). Merged as 185: the refusal of `not`, `if`, `then` and `else`. Left:
    `const` and `enum` beside a keyword that also decides, in the Zod writer, with an enum
    member its type refuses; the keywords beside a `$ref`; and the OpenAPI writer's refusal
    of a boolean schema, below.
