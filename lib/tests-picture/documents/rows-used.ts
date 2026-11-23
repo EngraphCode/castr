@@ -1,5 +1,7 @@
 import { isJsonObject, type JsonObject } from '../rows/json.js';
 
+import { narrowerRowOf } from './map-rows.js';
+
 /**
  * The rows of the picture a document states a construct of, and whatever it states that
  * is no row.
@@ -273,7 +275,8 @@ export function rowsUsedBy(document: JsonObject, rows: ReadonlySet<string>): Row
       if (name.startsWith('x-')) {
         useExtension(SCHEMA);
       } else if (rows.has(`keyword:${name}`)) {
-        used.add(`keyword:${name}`);
+        const narrower = narrowerRowOf(schema, name);
+        used.add(narrower !== undefined && rows.has(narrower) ? narrower : `keyword:${name}`);
         walkSchemaKeyword(name, value);
       } else if (rows.has(`schema.${name}`)) {
         used.add(`schema.${name}`);

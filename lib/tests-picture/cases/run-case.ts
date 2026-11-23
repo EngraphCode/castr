@@ -11,7 +11,12 @@ import { cellForThrown, judge, onOneLine, type Cell, type Decision } from './ver
  * reason in words that follow "Castr's output".
  */
 export type Converted =
-  | { readonly kind: 'decides'; readonly accepts: (value: unknown) => boolean }
+  | {
+      readonly kind: 'decides';
+      readonly accepts: (value: unknown) => boolean;
+      /** For a validator: the value it returns for a value it accepts. */
+      readonly returns?: (value: unknown) => unknown;
+    }
   | { readonly kind: 'threw'; readonly thrown: unknown }
   | { readonly kind: 'nothing emitted' }
   | { readonly kind: 'output unusable'; readonly reason: string };

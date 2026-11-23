@@ -48,7 +48,7 @@ describe('the whole documents', () => {
     expect(lines.map((line) => line.openapi)).not.toContain('not stated');
   }, 120_000);
 
-  it("has, for Oak's document, a refused row for each construct that stops it", async () => {
+  it("has, for Oak's document, no row that stops it", async () => {
     const { rows } = pictureRows(loadDefinition);
     const [oak] = DOCUMENTS;
     if (oak === undefined) {
@@ -61,10 +61,8 @@ describe('the whole documents', () => {
     const { used } = rowsUsedBy(readDocument(oak), new Set(rows.map((row) => row.id)));
     const usage = usageOf(used, rows, { zod, typescript: new Map(), endpoints: new Map() });
 
-    // The document is refused at the first of these. The second would stop it next.
-    expect(stops(usage).map((usedRow) => usedRow.row.id)).toEqual([
-      'keyword:additionalProperties',
-      'keyword:propertyNames',
-    ]);
+    // The document's uses of `additionalProperties` and `propertyNames` are a closed
+    // object and the two rows of a map, each a row of its own and none refused.
+    expect(stops(usage).map((usedRow) => usedRow.row.id)).toEqual([]);
   }, 120_000);
 });

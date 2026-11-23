@@ -40,6 +40,9 @@ export const RIGHT_TODAY: readonly string[] = [
   'text:format: double',
   'text:`true` as a schema',
   'text:a list of types (`type: [..]`)',
+  'text:`additionalProperties: false`',
+  'text:a map: `additionalProperties` with a schema',
+  'text:a map: a `propertyNames` that refuses no name',
 ];
 
 /**
@@ -99,6 +102,9 @@ export const RIGHT_TODAY_TYPESCRIPT: readonly string[] = [
   'text:format: double',
   'text:`true` as a schema',
   'text:a list of types (`type: [..]`)',
+  'text:`additionalProperties: false`',
+  'text:a map: `additionalProperties` with a schema',
+  'text:a map: a `propertyNames` that refuses no name',
 ];
 
 /**

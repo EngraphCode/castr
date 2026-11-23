@@ -33,7 +33,7 @@ describe('the picture rows', () => {
     expect(count('schema keyword')).toBe(57);
     expect(count('type value')).toBe(7);
     expect(count('format value')).toBe(25);
-    expect(count('schema construct')).toBe(6);
+    expect(count('schema construct')).toBe(9);
     expect(count('schema vocabulary')).toBe(20);
     expect(count('document')).toBe(200);
   });
