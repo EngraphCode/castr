@@ -1,29 +1,37 @@
 # Castr correction
 
-## Start here: after the compaction of 23 November 2026
+## Start here: after the second compaction of 23 November 2026
 
-The seat (Firefly mends Quench, session prefix 4f7b54) continues after a compaction the
-owner called; this is not a handover. Read in this order:
+The seat (Firefly mends Quench, session prefix 4f7b54) continues after a second
+compaction the owner called that day; this is not a handover. Read in this order:
 
-1. The plan's ["The reframing of 23 November 2026"](../../../plans/active/after-0.8.0-next-steps.md),
-   which governs where older lines differ, and under it "What is next", six acts in order.
-2. The step-log entries of 23 November below, the last of them first ("Before the
-   compaction: six skills at the owner's word"). It holds the reasoning behind the next
-   acts, every promise still open, what is inference and not observation, and where
-   everything lives.
-3. The live state, from git and GitHub, never from this record.
+1. The plan's ["What is next"](../../../plans/active/after-0.8.0-next-steps.md), under
+   "The reframing of 23 November 2026". It was rewritten before this compaction and is
+   the one statement of what is owed and in what order.
+2. The last step-log entries of 23 November below, from "N0, the fix: step back and
+   matrix" to "Before the second compaction". They hold the reasoning, each promise still
+   open, what is inference and not observation, and where everything lives.
+3. The live state, from git and GitHub, never from this record. The fix's first slice is
+   on the branch `fix/n0-constrained-map` and has no pull request yet; read that branch
+   against its remote before any new act, because a push made before a compaction reports
+   to nobody.
 
 Standing, from the owner on 23 November, verbatim in the plan: build for the Ecosystem
 repository as it should work; a wait on the owner exists only once they are asked by a
 blocking question; a question goes to them only after the decision lenses fail to settle
-it, or it is theirs by nature (approval of specification text is); pull requests go
-through the owner's sign-in. The owner also asked that morning, at about 08:15 UTC, that
-every subagent "for the next few hours" run on Fable, at medium effort where the seat
-would have used Opus and low where it would have used a smaller model; whether that
-window is still open at the resume is for the seat to judge or ask.
+it, or it is theirs by nature (approval of specification text is); pull requests in Castr
+go through the owner's sign-in. And, later that day, verbatim: "Please pass
+repsonsibility for all OCE PRs and work to Petrel mends Pinnacle (ea9cea). I would like
+to keep this session focussed on Castr now". This seat does no work in the Ecosystem
+repository; its pull request 1082 there is the Ecosystem seat's, which confirmed taking
+it. The owner asked at about 08:15 UTC that every subagent "for the next few hours" run
+on Fable, at medium effort where the seat would have used Opus and low where it would
+have used a smaller model; whether that window is still open at the resume is for the
+seat to judge or ask.
 
 Nothing runs under this seat: no watcher, no heartbeat, no monitor, no schedule, so
-nothing is re-armed. Five subagents ran on 23 November and all returned.
+nothing is re-armed. One subagent ran after the first compaction (a fetch of the JSON
+Schema text) and returned.
 
 ## Start here: handover of 21 November 2026
 
@@ -1129,6 +1137,131 @@ string; [key: string]: string | number }` accepts every valid value and also
     three narrow or clarify and add nothing, so they are within it; the owner was told
     what they are in the same session. An adjustment that added a row or changed a class
     would not be within it and would be brought as its own text.
+  - _N0, the fix: step back and matrix, written late._ The plan asks for these before a
+    step's first edit. The seat wrote them after the first slice was built, which is the
+    wrong order and is said here so the entry is not read as foresight. What the step
+    serves has not changed: "explored if we can reach that state in isolation". What was
+    unknown at its start, and how each was settled:
+
+  | Question                                                                       | Lens that settles it                             | Disposition                                                                                                                                                                                                                                            |
+  | ------------------------------------------------------------------------------ | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+  | Which readers change                                                           | Strict: Appendix B.2 names the pair from OpenAPI | The OpenAPI schema builder only. The JSON Schema reader and the Zod reader share the refusal's helper and go on refusing; no approved text covers them, so the shared helper is not changed                                                            |
+  | What a writer does with a schema-valued `additionalProperties` outside the row | Strict: SPEC-PR-2, nothing is dropped            | Each writer refuses it: Zod, TypeScript, and the shared JSON Schema writer, which before this change narrowed it to `false` without a word. A model can hold such a schema with no reader involved, so the writers cannot lean on the reader           |
+  | Where the row's test lives                                                     | Could it be simpler                              | One predicate over keyword names, read by the reader and by every writer (`lib/src/schema-processing/ir/unknown-keys/map-rows.ts`). A source schema and a model schema use the same names                                                              |
+  | What the model's validator checks                                              | The model's declared type                        | A boolean or a schema, as the type says. Which schemas are in a row is not the validator's question                                                                                                                                                    |
+  | A map whose values refer to the map                                            | Run                                              | Resolved when first used (`z.lazy`), which SPEC-P-2 admits. The reader, the validator and the Zod writer each have a test for it                                                                                                                       |
+  | How the new output is built                                                    | The owner's card of 18 November                  | As syntax-tree nodes from the compiler's factory, printed by its printer; a child the text writers produce is read back by the compiler's parser (`lib/src/schema-processing/writers/shared/map-nodes.ts`). The rest of both writers still builds text |
+  | The plan's finish condition, written against "part three"                      | Read against 0.9.1                               | Restated as the first act of the plan's "What is next"; the old wording under N0 is history                                                                                                                                                            |
+  - _The first slice of the fix, built and measured on 23 November._ One commit on the
+    branch `fix/n0-constrained-map`. Measured, each by a run: the unit and integration
+    suite passes; the picture's output differs from its output on `main` in one line
+    only, the line for Oak's document, which read "refused" in all three columns and now
+    reads converted, with 4 validators, 4 types and 32 endpoint definitions. So no cell
+    that read right reads otherwise. **"Converted" is a reading of no refusal. It is not
+    a reading of right:** the picture's count for Oak's document (31 of 74 rows not right)
+    is unchanged, because its two cases for these keywords are outside the approved rows
+    (one names a property, one has a pattern) and are still refused, correctly. The
+    cases for the approved rows are owed.
+  - _Found while building._ With the reader letting a map through, both writers wrote an
+    empty object and dropped the constraint without a word; the reader's refusal had been
+    hiding that. Others of the kind may sit behind each refusal the reader still makes.
+    Comments in the code still state the old doctrine of one closed object model, and one
+    says no catchall is written, which is now false
+    (`lib/src/schema-processing/object-semantics.ts`,
+    `lib/src/schema-processing/writers/zod/additional-properties.ts`, the Zod parser's
+    README). And a schema of the shape of Oak's 16 quiz schemas (an object that states no
+    policy and holds `oneOf` over closed branches) is already written in Zod as the
+    exclusive union of its branches, so the closed reading across composition does not
+    stand between Oak's document and its Zod. Its TypeScript is wrong: the branches'
+    literals are written as `string`.
+  - _Before the second compaction: six skills at the owner's word_ (the Ecosystem
+    repository's metacognition, free play, concept exploration, reason, Parallax and
+    wrap, run in the seat's own context).
+    - _Metacognition, four things that change the work._ (1) The fix took an hour after
+      five days of text. The amendment that worked was written by asking what the next
+      change to code needs, so the unit of work from here is one stop or one wrong row of
+      Oak's document, not a piece of the tables. (2) The hosted review found three
+      defects in approved text within minutes of the specification change, and two
+      widening cases in a reading recorded as decided; the seat's own cases found none of
+      them. Draft text therefore gets one hosted review round before the owner is asked.
+      (3) The seat recorded the owner's statement of why the Ecosystem repository
+      excludes paths as fact, and a run then showed it was partly otherwise. A statement
+      of fact about code is run before it is recorded, whoever makes it; a decision is
+      the owner's. (4) About half of the review rounds of the day were findings of stale
+      copies: the plan holds its history and its order in one file, and each fact lives
+      in several records. The plan is to be cut to one statement of order.
+    - _Free play, the harvest_ (associations, not findings). Kept: an exclusion list
+      fails open and an inclusion list fails safe, and both reviews that found a widening
+      found a missing member of an exclusion list ("never under `not`, `if`,
+      `contains`..."), which looks shaped like the remedy: say through which positions
+      closing may descend, and close nowhere else. Kept: the fix moves the risk from a
+      refusal nobody can consume to output somebody can, some of it wrong. Kept: an
+      approval that must be typed does not fit a prompt of options; the owner left the
+      prompt and typed in the conversation. Kept: sitting with the owner's "maybe it is
+      not debt" brought to mind the comments in Castr that still state the old doctrine,
+      which is how the stale comments above were found. Discarded as forced: a likeness
+      between a search for the empty string, which matched everywhere and ruined a file,
+      and a constraint that refuses nothing; and anything from the Ecosystem seat's note
+      on a pull-request label, which has no bearing here.
+    - _Concept exploration._ The frame that changed: not every row of Oak's document that
+      is not right needs new text. SPEC-G-4 and section 9 bind today's code, so a cell
+      that breaks an approved clause (a TypeScript type that is not assignable with its
+      Zod) is repaired without an amendment. The rows are therefore sorted first, into
+      three: breaks an approved clause; needs a row; touches the model. Proposals, each
+      with its warrant and what would show it wrong, are the acts of the plan's "What is
+      next".
+    - _Reason._ The warrant under "Oak's document converts" is one run that did not
+      refuse, read again through the picture. It licenses "no longer refused" and nothing
+      about right. The next probe is the picture's cases for the two rows.
+    - _Parallax, at screening depth, emulated in the seat's own context, so its challenge
+      is self-review._ The main uncertainty is empirical: what is wrong in the converted
+      output. One counterframe: the first stop was the cheapest, the rest are the
+      model's, and an hour says nothing of them. "An hour for this fix, so hours for the
+      rest" is an inference across scales with nothing under it. Status: provisional. It
+      permits finishing the fix and sorting the rows; it forbids telling anyone Oak's
+      document works, or sizing what remains from today.
+    - _Promises still open._ What the fix owes is the plan's first act and is not
+      repeated here. To a reviewer of pull request 173: a tracked case for SPEC-P-7. To
+      reviewers of pull request 172: resolution of whole JSON Pointers and a guard on
+      cycles of references belong to the tested closing transformation, when it is built.
+      To the owner: a retrospective is on offer and not started. Discharged: the two
+      findings carried out of pull request 172; the correction of the excluded-paths
+      inference; the handover of the Ecosystem pull request, which its seat confirmed.
+    - _Inference, not observation._ That the owner's approval covers revision 0.9.1 (the
+      seat's reading of words typed before that text existed; the owner was told in the
+      conversation and has not been asked by a prompt, because the lenses settle it: the
+      words name the version, as SPEC-CC-2 asks, and the three changes only narrow). That
+      the owner read that message. That the changelog endpoints are gone from the live
+      API (taken from a file's comment; the Ecosystem seat is checking). The section
+      numbers of the JSON Schema text in SPEC-G-5 were read by a subagent's fetch and
+      quoted back, not read by the seat. That the output for Oak's document loads and
+      runs: the picture loads it, the seat did not look further.
+    - _What this scan cannot see._ The seat's own summary after the first compaction.
+      Why the reviewers judged as they did. What became of the Ecosystem pull request
+      after the handover. Anything in the converted output beyond what the picture
+      judges.
+    - _Where outside eyes caught what the seat missed, so a successor knows where to
+      point them._ Every list of exceptions the seat wrote was one short (the keywords
+      under which nothing is closed, twice; the reasons a path is excluded; what may
+      stand beside `type: string`). Text the seat had called decided or approved. A
+      script that printed a result and did not fail on it. The scope of a change: the
+      advisor, not the seat, saw that the readers share one helper and that only one of
+      them has approved text.
+    - _Review loops, the seat's reading._ Pull request 172 ran five rounds and should
+      have stopped at three: rounds one and three each found a real fault, four and five
+      found stale copies. Pull request 173 ran four and should have stopped at two. Pull
+      request 174 ran two, which was right. The Ecosystem pull request was handed over at
+      its first.
+    - _Where everything lives._ What is next, and what the fix owes: the plan. The
+      reasoning and the open promises: this entry. The approved text: the specification
+      at 0.9.1. The draft as brought, with its cases: the amendment draft. The closed
+      reading's trial, a candidate: its record. The excluded-paths investigation: the
+      Ecosystem repository. The picture's output before the fix is reproduced by running
+      `pnpm picture` on the merge commit of pull request 173. Two letters to the next
+      seat are in `.agent/experience/`, both dated 23 November.
+    - _The fixed point._ A second pass over this scan found one thing the first had not
+      named, the late step back above. A third would only find again what is listed. The
+      recursion closes here.
 
   | Question                                                      | Lens that settles it                                                                                                                                                 | Disposition                                                                                                                                                                                                                                                                                                                                                                                                                                   |
   | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1371,6 +1504,11 @@ address.
   `lib/` it prints "no claim opened" and commits nothing. A failed commit leaves the
   files staged: list them with `git diff --cached --name-only` and run it again. Two
   further tricks: set `diff.renames` for a move, and stage a removal by name first.
+  In zsh a list of files held in a variable is one word: pass `${=FILES}`, or the helper
+  refuses it as "not a plain path". And a scripted edit of `docs/SPECIFICATION.md`
+  asserts that each text it replaces occurs once and that the file's length changed by
+  about what was meant: a replacement of the empty string once put a line break between
+  every character of the working copy.
 - **`git push` runs the whole `pnpm check:ci` first,** four to ten minutes. Run it in the
   background, print its exit code, stop if it is not zero, and write nothing in the tree
   while it runs. A task shown as running may have failed at its first step: read its
