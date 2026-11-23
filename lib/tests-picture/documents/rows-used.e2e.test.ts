@@ -47,12 +47,12 @@ describe('the rows a document uses', () => {
     expect(unrecognised.flat()).toEqual([]);
   });
 
-  it("are 75 for Oak's document", () => {
+  it("are 74 for Oak's document", () => {
     const [oak] = DOCUMENTS;
     if (oak === undefined) {
       throw new Error('no document');
     }
 
-    expect(rowsUsedBy(readDocument(oak), rowIds).used.size).toBe(75);
+    expect(rowsUsedBy(readDocument(oak), rowIds).used.size).toBe(74);
   });
 });

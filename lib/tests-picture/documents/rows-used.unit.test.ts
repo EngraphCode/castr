@@ -60,6 +60,7 @@ const ROWS = new Set([
   'text:a list of types (`type: [..]`)',
   'text:format: uuid',
   'text:format: a value no specification defines',
+  'text:`true` as a schema',
   'text:`false` as a schema',
   'text:`const` or an `enum` member that is an object or array',
   'text:a keyword no vocabulary defines',
@@ -329,6 +330,32 @@ describe('rowsUsedBy', () => {
 
     expect(found).toContain('text:`additionalProperties: false`');
     expect(found).not.toContain('keyword:additionalProperties');
+  });
+
+  it('does not also count the `false` of `additionalProperties: false` as a schema', () => {
+    const schema = { type: 'object', properties: { a: {} }, additionalProperties: false };
+    const found = used(withSchema(schema));
+
+    expect(found).not.toContain('text:`false` as a schema');
+  });
+
+  it('still counts the `true` of a `propertyNames` that refuses no name as a schema', () => {
+    const schema = {
+      type: 'object',
+      additionalProperties: { type: 'string' },
+      propertyNames: true,
+    };
+    const found = used(withSchema(schema));
+
+    expect(found).toContain('text:a map: a `propertyNames` that refuses no name');
+    expect(found).toContain('text:`true` as a schema');
+  });
+
+  it('still counts a `false` that stands as a schema elsewhere', () => {
+    const schema = { type: 'object', properties: { never: false }, additionalProperties: false };
+    const found = used(withSchema(schema));
+
+    expect(found).toContain('text:`false` as a schema');
   });
 
   it.each([
