@@ -348,13 +348,18 @@ specification are approved and on `main`.
       writes the literal and returns. Its case is `{type: string, enum: ['a', null]}`:
       both writers admit `null`, which the source's `type` refuses (found in the review
       of pull request 178). SPEC-PR-7 has a shape no value satisfies carried and
-      reported, not narrowed. Also here: the OpenAPI reader keeps a `$ref` and reads none
-      of the keywords beside it, which OpenAPI 3.1 allows and which then decide nothing
+      reported, not narrowed. Also here: the schema builder keeps a `$ref` and reads none of the
+      keywords beside it, `minProperties` and `maxProperties` apart, which it refuses, which OpenAPI 3.1 allows and which then decide nothing
       in Castr's output (found in the review of pull request 182, which refuses only a
-      count of properties there). And the OpenAPI reader reads none of `not`, `if`,
-      `then` and `else`: `{type: string, not: {const: 'a'}}` is written `z.string()`,
-      and the picture reads the four rows wrong in the Zod column. Each is refused until
-      it has a row (run in the review of pull request 182).
+      count of properties there). And the schema builder (`builder.core.ts`), which makes the model, keeps none of
+      `not`, `if`, `then` and `else`: `{type: string, not: {const: 'a'}}` is written
+      `z.string()`, and the picture reads the four rows wrong in the Zod column. The
+      document pass before it does walk under those four keywords, so a rule it holds is
+      applied there; it is the model that loses them. The repair is a refusal in the
+      builder wherever it builds a schema (a component, a property, items, a member of a
+      composition, a map's values, a parameter, a body, a response), with a case for each
+      keyword at each of those positions written first (run in the review of pull
+      request 182).
    6. One amendment for what needs text, through one round of hosted review before the
       owner is asked (act 3): `format: uri`; `default` in Zod; the shape of an endpoint
       definition, which covers the 11 cells of the endpoint column, a response with no
