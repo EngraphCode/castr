@@ -43,7 +43,8 @@ itself. Closing it exactly needs two copies of the definition. That is not tried
 
 Not covered: `patternProperties`, `dependentSchemas`, `$dynamicRef`, a reference to
 another document, a local reference that is not `#/$defs/<one name>` (a nested
-definition, or a name that holds `/`), a list of types, and what the Zod writer must
+definition, or a name that holds `/`), a definition that refers to itself (the script
+does not guard a cycle of references), a list of types, and what the Zod writer must
 write for a named schema that is used both by itself and inside `allOf`.
 
 To run it: save the block below as a `.mts` file in `lib/tests-picture/.tmp` and run
