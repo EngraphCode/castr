@@ -209,10 +209,11 @@ share one.
 >   report states the refusal once.
 
 The clause says which values are refused, not where the check sits. Placement is the
-writer's, and is proved by the samples: a closed object does not refuse the name inside
-an unconstrained property (`z.strictObject({a: z.unknown().optional()})` accepts
-`{"a": {"__proto__": 1}}`), and a check at the top of every named schema walks a deep
-recursive value once for each level.
+writer's, and is proved by the samples. Two facts for the writer. With no
+check of Castr's in front of it, a closed object does not refuse the name inside an
+unconstrained property (`z.strictObject({a: z.unknown().optional()})` alone accepts
+`{"a": {"__proto__": 1}}`), so closed objects need the check too. And a check at the
+top of every named schema walks a deep recursive value once for each level.
 
 ### SPEC-G-5, the sample is adequate
 
@@ -230,7 +231,9 @@ no `unevaluatedProperties`, and none of the keywords that apply a subschema in p
 refer to one (`$ref`, `$dynamicRef`, `allOf`, `anyOf`, `oneOf`, `not`, `if`,
 `dependentSchemas`; JSON Schema Core 8.2.3 and 10.2). A schema that holds one of those
 beside these keywords is in no row of this slice. `S` is the value of
-`additionalProperties`. An object names a property when its `properties` or its
+`additionalProperties`. Cases 2, 3 and 17 above, whose `type` is absent or a list, are
+outside these rows: they were run to show the form the rows for `type` will need, and
+until those rows are written such a schema is in no row. An object names a property when its `properties` or its
 `required` holds at least one name; a name that only `required` holds is written as a
 property whose shape is what the row gives an unknown key.
 
