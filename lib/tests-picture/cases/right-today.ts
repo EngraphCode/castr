@@ -62,6 +62,7 @@ export const RIGHT_TODAY_TYPESCRIPT: readonly string[] = [
   'type:object',
   'keyword:type',
   'keyword:const',
+  'keyword:enum',
   'keyword:multipleOf',
   'keyword:maximum',
   'keyword:exclusiveMaximum',

@@ -66,7 +66,6 @@ describe('the cases for the rows of a schema', () => {
     expect(cells.size).toBe(SCHEMA_CASES.length);
     expect(rowsWith(cells, 'right')).toEqual(RIGHT_TODAY_TYPESCRIPT);
     expect(rowsWith(cells, 'wrong')).toEqual([
-      'keyword:enum',
       'keyword:prefixItems',
       'keyword:allOf',
       'text:format: int64',

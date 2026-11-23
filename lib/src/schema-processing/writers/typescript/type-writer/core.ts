@@ -9,7 +9,13 @@ import {
   rejectUnsupportedArrayKeywords,
   resolveSchemaTypeString,
 } from './fail-fast.js';
-import { writeConstType, writeRefType } from './leaf-types.js';
+import {
+  isUnion,
+  writeBooleanSchemaType,
+  writeConstType,
+  writeEnumType,
+  writeRefType,
+} from './leaf-types.js';
 import { writeDependentRequiredUnions, writeDependentSchemasUnions } from './dependent-keywords.js';
 import {
   DEPENDENT_REQUIRED_BESIDE_A_TYPESCRIPT_MAP,
@@ -84,7 +90,11 @@ function writeTypeBody(schema: CastrSchema): WriterFunction {
       return;
     }
     rejectDynamicReferenceKeywords(schema);
-    if (writeRefType(schema, writer) || writeConstType(schema, writer)) {
+    if (
+      writeEnumType(schema, writer) ||
+      writeRefType(schema, writer) ||
+      writeConstType(schema, writer)
+    ) {
       return;
     }
     if (writeCompositionType(schema, writer)) {
@@ -92,29 +102,6 @@ function writeTypeBody(schema: CastrSchema): WriterFunction {
     }
     writePrimitiveType(schema, writer);
   };
-}
-
-/**
- * Handle boolean schemas in TypeScript output.
- * Returns `true` if the schema was written.
- *
- * - `false` schema → `never` (nothing validates)
- * - `true` schema → `unknown` (accept everything)
- *
- * @internal
- */
-function writeBooleanSchemaType(schema: CastrSchema, writer: CodeBlockWriter): boolean {
-  if (schema.booleanSchema === undefined) {
-    return false;
-  }
-  if (schema.booleanSchema === false) {
-    writer.write('never');
-    return true;
-  }
-  // booleanSchema: true — accept any value.
-  // `unknown` is the TypeScript type that accepts all values while remaining type-safe.
-  writer.write('unknown');
-  return true;
 }
 
 /** Write intersection type. allOf: [A, B] → A & B */
@@ -127,7 +114,7 @@ function writeIntersection(schemas: CastrSchema[], writer: CodeBlockWriter): voi
     if (i > 0) {
       writer.write(' & ');
     }
-    const needsParens = Boolean(s.oneOf ?? s.anyOf);
+    const needsParens = isUnion(s);
     if (needsParens) {
       writer.write('(');
     }
@@ -175,8 +162,11 @@ function writeArrayType(schema: CastrSchema, writer: CodeBlockWriter): void {
     return;
   }
   if (schema.items && !Array.isArray(schema.items)) {
+    // `A | B[]` is A or an array of B, so a union is kept whole.
+    const [open, close] = isUnion(schema.items) ? ['(', ')[]'] : ['', '[]'];
+    writer.write(open);
     writeTypeDefinition(schema.items)(writer);
-    writer.write('[]');
+    writer.write(close);
   } else {
     writer.write('unknown[]');
   }

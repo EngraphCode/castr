@@ -199,17 +199,17 @@ test('getSchemaAsTsString', () => {
   ).toMatchInlineSnapshot(
     `
     "export type ObjectWithEnum = {
-      enumprop?: string;
+      enumprop?: "aaa" | "bbb" | "ccc";
     };"
   `,
   );
 
   expect(
     getSchemaAsTsString({ type: 'string', enum: ['aaa', 'bbb', 'ccc'] }),
-  ).toMatchInlineSnapshot(`"string"`);
+  ).toMatchInlineSnapshot(`""aaa" | "bbb" | "ccc""`);
   expect(
     getSchemaAsTsString({ type: 'string', enum: ['aaa', 'bbb', 'ccc'] }, { name: 'StringENum' }),
-  ).toMatchInlineSnapshot(`"export type StringENum = string;"`);
+  ).toMatchInlineSnapshot(`"export type StringENum = "aaa" | "bbb" | "ccc";"`);
 
   expect(
     getSchemaAsTsString(
@@ -316,9 +316,9 @@ test('getSchemaAsTsString', () => {
 
   expect(
     getSchemaAsTsString({ type: 'string', enum: ['aaa', 'bbb', 'ccc'] }),
-  ).toMatchInlineSnapshot(`"string"`);
+  ).toMatchInlineSnapshot(`""aaa" | "bbb" | "ccc""`);
   expect(getSchemaAsTsString({ type: 'number', enum: [1, 2, 3] })).toMatchInlineSnapshot(
-    `"number"`,
+    `"1 | 2 | 3"`,
   );
 
   expect(
@@ -614,7 +614,7 @@ describe('getSchemaAsTsString with context', () => {
       "export type Root = {
         basic?: number;
         user?: User | Member;
-        users?: User | Member[];
+        users?: (User | Member)[];
       };"
     `,
     );

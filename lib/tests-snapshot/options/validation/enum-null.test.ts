@@ -114,10 +114,10 @@ test('enum-null', async () => {
   expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
     // Type Definitions
-    export type Null1 = string;
-    export type Null2 = string;
-    export type Null3 = string;
-    export type Null4 = string;
+    export type Null1 = null;
+    export type Null2 = "a" | null;
+    export type Null3 = "a" | null;
+    export type Null4 = null;
     export type Compound = {
       field?: Null1 | Null2 | Null3 | Null4 | string;
     };

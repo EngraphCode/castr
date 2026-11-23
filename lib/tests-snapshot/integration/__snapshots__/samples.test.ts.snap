@@ -2358,9 +2358,9 @@ export const mcpTools = [
 // Type Definitions
 export type errorMessage = string;
 export type coordinate = number;
-export type mark = string;
+export type mark = "." | "X" | "O";
 export type board = mark[][];
-export type winner = string;
+export type winner = "." | "X" | "O";
 export type status = {
   board?: board;
   winner?: winner;
@@ -2746,9 +2746,9 @@ export const mcpTools = [
 // Type Definitions
 export type errorMessage = string;
 export type coordinate = number;
-export type mark = string;
+export type mark = "." | "X" | "O";
 export type board = mark[][];
-export type winner = string;
+export type winner = "." | "X" | "O";
 export type status = {
   board?: board;
   winner?: winner;

@@ -142,7 +142,9 @@ export function rejectDynamicReferenceKeywords(schema: CastrSchema): void {
  */
 export function resolveSchemaTypeString(schema: CastrSchema): string {
   return (
+    resolveEnumTypeString(schema) ??
     resolveRefTypeString(schema) ??
+    resolveConstTypeString(schema) ??
     resolveCompositionTypeString(schema) ??
     resolvePrimitiveTypeString(schema)
   );
@@ -156,6 +158,19 @@ function resolveRefTypeString(schema: CastrSchema): string | undefined {
   // The emitted symbol, never the wire name: a component named `string` emits
   // `stringSchema` and must not deduplicate against the primitive `string`.
   return safeSchemaName(componentName);
+}
+
+// A const is written as its literal, so two members that differ only in their const are
+// two types and neither is a duplicate of the other.
+function resolveConstTypeString(schema: CastrSchema): string | undefined {
+  return schema.const === undefined ? undefined : JSON.stringify(schema.const);
+}
+
+// An enum is written as its members' literals, so the same holds of two enums.
+function resolveEnumTypeString(schema: CastrSchema): string | undefined {
+  return schema.enum === undefined || schema.enum.length === 0
+    ? undefined
+    : schema.enum.map((member) => JSON.stringify(member)).join(' | ');
 }
 
 function resolveCompositionTypeString(schema: CastrSchema): string | undefined {
