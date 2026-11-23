@@ -1038,6 +1038,25 @@ string; [key: string]: string | number }` accepts every valid value and also
     Oak's quiz schemas. One place still widened, a schema under `contains` beside
     `maxContains`; with schemas under `contains` left unclosed, none did. An empty
     schema as a property's shape is not closed, because it describes no object.
+  - _Corrected after the compaction, from the hosted review of pull request 172._ The
+    run above did not hold an object nested as a property or an item under `not`, `if`
+    or `contains`. A reviewer gave the case `{not: {properties: {p: A}}}`; the seat ran
+    it and four like it: 4 of 13 values widened under the rule as written, none once
+    nothing under those keywords is closed at any depth, nor inside a definition reached
+    from there. The trial record now holds 21 schemas and 48 values with that rule, and
+    its script fails on any widened or unexpected value. Two limits are stated there:
+    the result is about its cases, not every schema; and it runs one schema of the
+    shape of Oak's quiz schemas, while that all 16 have the shape was computed from the
+    document. The matrix row below reads with this correction. Of the twelve review
+    threads: fixed as fact, the nested widening, the todo graph (the fix now depends on
+    a new todo for the small amendment, not on the whole tables step), the wording of
+    the `__proto__` limit (JavaScript can hold the property; Zod drops it), the words on
+    which schemas describe objects, the script's exit status and how to run it, the
+    scope of the conclusion, and a stale sentence in the first slice's draft. Declined
+    with a reason: bringing back the refusal of `__proto__` (the owner's test for an
+    edge); the reading that the line on pull requests contradicts the owner (it states
+    the owner's answer); full JSON Pointer resolution in a trial script (listed as not
+    covered).
 
   | Question                                                      | Lens that settles it                                                                                                                                                 | Disposition                                                                                                                                                                                                                                                            |
   | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
