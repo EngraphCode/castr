@@ -455,9 +455,11 @@ specification are approved and on `main`.
 
    What it found, each a choice the rows for the document's structure have to state:
 
-   - **A status the client's types do not key.** `openapi-fetch` takes `data` from
-     `200` to `207` and `2XX`, and `error` from a list of `4xx` and `5xx` codes, `4XX`,
-     `5XX` and `default`. A `302`, `1XX` or `3XX` is in the type and reaches neither.
+   - **A status the client's types do not key.** `openapi-fetch` 0.15.2, by the types of
+     `openapi-typescript-helpers` 0.0.15 it is installed with (`OkStatus` and
+     `ErrorStatus`), takes `data` from `200` to `204`, `206`, `207` and `2XX`, and `error` from a list of `4xx` and `5xx` codes, `4XX`,
+     `5XX` and `default`. A `205`, a `302`, `1XX` or `3XX` is in the type and reaches neither. The declared
+     range is `^0.15.0`, so a later version may differ; the observation is of these two.
      Oak's one `302` is such a response. That is what was observed of the client; how
      the row words it is for the amendment, and is not settled here.
    - **A response with no body** is `content?: never`, and a call to it gives `data` of
