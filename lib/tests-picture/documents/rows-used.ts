@@ -276,8 +276,13 @@ export function rowsUsedBy(document: JsonObject, rows: ReadonlySet<string>): Row
         useExtension(SCHEMA);
       } else if (rows.has(`keyword:${name}`)) {
         const narrower = narrowerRowOf(schema, name);
-        used.add(narrower !== undefined && rows.has(narrower) ? narrower : `keyword:${name}`);
-        walkSchemaKeyword(name, value);
+        const inNarrowerRow = narrower !== undefined && rows.has(narrower);
+        used.add(inNarrowerRow ? narrower : `keyword:${name}`);
+        // The row for a closed object is the keyword with its `false`, so that `false`
+        // is not counted again as a schema standing alone. Any other value is walked.
+        if (!(inNarrowerRow && value === false)) {
+          walkSchemaKeyword(name, value);
+        }
       } else if (rows.has(`schema.${name}`)) {
         used.add(`schema.${name}`);
         const kind = SCHEMA_VOCABULARY[name];
