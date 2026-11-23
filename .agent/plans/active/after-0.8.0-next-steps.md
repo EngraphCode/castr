@@ -375,7 +375,8 @@ specification are approved and on `main`.
    9. The reader's document pass, position by position (left out of pull request 175).
 
    **Step back before the third compaction of 23 November: the order changes.** The
-   picture's table for Oak's document holds 26 rows that are not right. Two are schema
+   picture's table for Oak's document held, at that step back, 26 rows that were not right
+   (24 since pull requests 187 and 188). Two are schema
    rows, `format: uri` and `default`, and both wait on the amendment (unit 6). Of the 24
    structure rows, 21 cells are the `paths` type that nothing writes (unit 8), and the
    rest are the endpoint definition's shape (unit 6 again). Units 4 and 5 moved none of
@@ -388,14 +389,18 @@ specification are approved and on `main`.
    1. **Unit 6, in two parts.** The first part is done as amendment 0.10.0, approved on
       23 November: rows for `default` and `format: uri` (Appendix B.3) and SPEC-P-8. The
       owner chose `z.url()` with a declared limit over a pattern of RFC 3986. The specification stands at 0.10.1 after two adjustments from its review. Its code
-      follows: the Zod writer writes a source `default` into `.meta(…)` (done); and
-      the picture's sample that SPEC-P-8 concerns becomes a tracked case of the declared
-      limit. The second part is held for its own amendment: the shape of an endpoint
+      follows: the Zod writer writes a source `default` into `.meta(…)` (merged as 187); and
+      the picture holds the limit of SPEC-P-8 as a case of its own and prints the declared
+      limits (merged as 188). Oak's document then has 24 of 74 rows not right, all of them
+      the document's structure. The second part is held for its own amendment: the shape of an endpoint
       definition and where a run's report is returned, both the public surface
       (SPEC-N-4).
    2. **Unit 8 beside it**, in the wait on the owner: the rows for the document's
-      structure to TypeScript, then the `paths` type. It is 21 of the 26.
-   3. **The leftovers of unit 5 become one unit, after those.** Every one of them was
+      structure to TypeScript, then the `paths` type. It is 21 of the 24 cells left.
+   3. **The Zod reader and the declarations it passes over**, set out below. It comes
+      before the leftovers of unit 5 because it loses whole schemas, and it depends on
+      nothing above.
+   4. **The leftovers of unit 5 become one unit, after those.** Every one of them was
       the same finding: a keyword the reader did not look at. The reader copies the
       keywords it knows and lets the others fall. The cure proposed is the other kind of
       list: the keywords the reader reads, with any other keyword of a schema refused by
@@ -430,6 +435,68 @@ specification are approved and on `main`.
    first form more common. It breaks SPEC-PR-2, and it is its own unit: first a refusal
    for any exported declaration the reader cannot read, then reading these two forms.
    It ranks above the leftovers of unit 5, because it loses whole schemas.
+   Part of the same unit: metadata chained onto a reference (`Other.meta({ … })`) is not
+   read, for any annotation, and a lazy reference drops it without a word (second
+   review round of 187).
+
+   **Unit 8, the prototype of the `paths` module (23 November).** It is
+   `lib/tests-picture/prototypes/paths-type.ts` on the branch `feat/paths-type-prototype`,
+   written from the model alone, with its tests beside it. The branch is pushed and is
+   not merged: a test that holds the shape would assume rows that are not approved
+   (section 12). No template writes it and nothing in `src` reads it, because its
+   rows are not approved. Every schema position is written by the type writer that
+   writes the exported component types. Its tests are at type level, on a client of
+   `openapi-fetch` built over the type: `data` is the success body and `error` each
+   error body; `components["schemas"]["X"]` is the type `X`, and `X` is `z.output` of
+   the Zod schema; a missing path parameter, an undeclared method, a missing required
+   body and a body of the wrong type each fail to compile; and it is written for the
+   whole of Oak's document, where a client reads a lesson. The tests were checked to
+   have teeth by compiling wrong client code and reading the compiler's messages.
+
+   What it found, each a choice the rows for the document's structure have to state:
+
+   - **A status the client's types do not key.** `openapi-fetch` 0.15.2, by the types of
+     `openapi-typescript-helpers` 0.0.15 it is installed with (`OkStatus` and
+     `ErrorStatus`), takes `data` from `200` to `204`, `206`, `207` and `2XX`, and `error` from a list of `4xx` and `5xx` codes, `4XX`,
+     `5XX` and `default`. A `205`, a `302`, `1XX` or `3XX` is in the type and reaches neither. The declared
+     range is `^0.15.0`, so a later version may differ; the observation is of these two.
+     Oak's one `302` is such a response. That is what was observed of the client; how
+     the row words it is for the amendment, and is not settled here.
+   - **A response with no body** is `content?: never`, and a call to it gives `data` of
+     `undefined`. Nothing is invented for it.
+   - **An operation with no `operationId`** has no key in `operations`, so it is written
+     in place in `paths`.
+   - **Parameters stated on a path item** are folded into each operation by the model,
+     so a path item's own `parameters` is always empty in the type.
+   - **A response header** is a property of `headers`, optional unless `required`.
+   - **Not supplied by the model or not written yet:** a media type component that is
+     referred to; a parameter that holds `content` in place of a schema; the
+     `querystring` location; `webhooks` and `$defs`, written empty; a method outside the
+     eight; and the names `paths`, `operations` and `components` clashing with a
+     component of the same name.
+   - **Oak's document names only three schemas** (its three error bodies); every other
+     body is written in place. So `components["schemas"]` is small for Oak, and the
+     Ecosystem repository's present file has more names only because it is rewritten
+     after generation.
+
+   Next for unit 8: the rows. They are drafted as amendment 0.11.0 on the branch
+   `docs/amendment-0.11.0-draft` (pull request 190), which is reviewed before the owner is
+   asked; the draft is not in this tree until that pull request merges. Then the owner's
+   approval, then the writer in `src` and a template that emits it.
+
+   **The picture's own, from the review of pull request 188. Not repaired.** The walk
+   names a `format` by its value and does not look at the type beside it, so a format in a
+   schema whose type it does not apply to (`format: uri` beside `type: number`, or with
+   no `type`) is counted under its format row, though Appendix B.3 excludes that schema
+   from the `format: uri` row. It holds for every format row, the number formats among
+   them. Oak's uses of `format: uri` are all `type: string` alone. The repair, still to
+   do, is in the walk: a format is named by its row only beside the type it applies to.
+
+   **Settled without the owner, at the owner's word of 23 November.** Their approval of
+   revision 0.10.1 did not say which of two variants it covered. Asked, they directed the
+   seat to resolve it by the principles, strictly. The strict reading is the one
+   recorded: a cell must not claim a class whose definition it does not meet, so the
+   class carried with a declared limit stands, with the narrowed row.
 
    **State of unit 5 after pull request 184.** Done: the count of properties (182) and
    boolean schemas (184). Merged as 185: the refusal of `not`, `if`, `then` and `else`. Left:
