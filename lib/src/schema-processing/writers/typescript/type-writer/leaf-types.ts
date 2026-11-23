@@ -66,6 +66,9 @@ export function writeBooleanSchemaType(schema: CastrSchema, writer: CodeBlockWri
   return true;
 }
 
+/** Keywords the writer reaches only after an enum, so an enum beside one would drop it. */
+const KEYWORDS_AN_ENUM_WOULD_DROP = ['const', 'allOf', 'anyOf', 'oneOf'] as const;
+
 /**
  * Write an `enum` as the union of its members' literal types: what the Zod writer's
  * `z.enum` or union of `z.literal` accepts. Returns `true` if the schema was written.
@@ -77,10 +80,11 @@ export function writeEnumType(schema: CastrSchema, writer: CodeBlockWriter): boo
     return false;
   }
   // A model another reader built can hold an enum beside a keyword that also decides.
-  if (schema.const !== undefined) {
+  const beside = KEYWORDS_AN_ENUM_WOULD_DROP.find((keyword) => schema[keyword] !== undefined);
+  if (beside !== undefined) {
     throw new Error(
-      'An enum beside a const is not written in TypeScript: the union of the ' +
-        "enum's literals would drop the const.",
+      `An enum beside ${beside} is not written in TypeScript: the union of the ` +
+        `enum's literals would drop the ${beside}.`,
     );
   }
   if (getIntegerSemantics(schema) !== undefined) {

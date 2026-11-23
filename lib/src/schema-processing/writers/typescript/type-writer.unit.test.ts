@@ -768,10 +768,23 @@ describe('Dynamic Reference Keywords — TypeScript fail-fast', () => {
       expect(generate(schema)).toBe('"a" | "b" | "c"');
     });
 
+    it.each(['allOf', 'anyOf', 'oneOf'] as const)(
+      'refuses an enum beside %s, which the union of literals would drop',
+      (keyword) => {
+        const schema: CastrSchema = {
+          enum: ['a', 'b'],
+          [keyword]: [{ type: 'string', const: 'a', metadata }],
+          metadata,
+        };
+
+        expect(() => generate(schema)).toThrow(new RegExp(`enum beside ${keyword}`));
+      },
+    );
+
     it('refuses an enum beside a const, which the union of literals would drop', () => {
       const schema: CastrSchema = { const: 'a', enum: ['a', 'b'], metadata };
 
-      expect(() => generate(schema)).toThrow(/enum beside a const/);
+      expect(() => generate(schema)).toThrow(/enum beside const/);
     });
 
     it('refuses an enum of 64-bit integers, which are written as bigint', () => {
