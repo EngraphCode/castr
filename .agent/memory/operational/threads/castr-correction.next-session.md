@@ -935,6 +935,46 @@ string; [key: string]: string | number }` accepts every valid value and also
   | A tighter TypeScript type where every named property is required and admitted by `S` (hosted review of #170) | Could it be simpler; no decision of the validator changes                                                         | A row of its own in this slice if the compiler shows it exact under the repository's settings; otherwise row E stands                                                                                                                  |
   | Whether to fix the reader's heuristic now                                                                    | Section 12 and decision sixteen: built with the text                                                              | No. Code changes with N0                                                                                                                                                                                                               |
 
+- 2026-11-23, N5, second slice. **Narrowed to one question, and two findings about
+  approved text.** The slice is now only: which schemas the closed reading of SPEC-P-1
+  closes, and how. Inherited names go to the slice for `properties` and `required`; the
+  tighter row E, `enum`, `const` and `example` to later ones.
+  - _Run: the closed reading as a transformation_ (Ajv reading own properties; expected
+    outcomes by hand; one of fourteen was the seat's own error, on `maxContains` without
+    `minContains: 0`). Adding `additionalProperties: false` to each object that states
+    no policy narrows for a plain object, under `anyOf` and under `allOf`. It **widens**
+    under `not` (`not` of an object with property `a` then accepts `{a: 'x', z: 1}`),
+    under `oneOf` (two objects that each name one property: `{a: 'x'}` matched both and
+    was refused, and is accepted once each is closed) and under `if`.
+  - _Finding one: a sentence of SPEC-P-1 is false as approved._ "so this reading narrows
+    the source's accepted set" does not hold under `not`, `oneOf` or `if`. The reading
+    is a rewriting of the source, and the result is neither inside nor outside the
+    source's accepted set in general. The numbers drafts and the `__proto__` clause
+    broke on the same keywords.
+  - _Finding two: the reading is not defined across composition, and Oak's document
+    depends on it in 16 places._ Computed on Oak's document: 262 schemas of type
+    object; 245 state their policy; 17 do not. One of the 17 is a plain object (the
+    request body of `check-restricted`). The other 16 are quiz schemas of the form
+    `{type: object, oneOf: [...]}`: an object that names no property and holds a
+    `oneOf` of 48 branches in all, each branch closed by statement. Closed literally,
+    with `additionalProperties: false` on the wrapper, such a schema accepts nothing
+    (run: `{t: 'x'}` refused). Closed with `unevaluatedProperties: false` on the
+    wrapper it accepts exactly what one branch accepts (run). SPEC-P-1 names
+    `unevaluatedProperties` for writing closure across composition and says nothing of
+    reading. Oak's document has no `allOf`, no `not`, no `if`, no `$ref` beside other
+    keywords, no schema with a list of types, and no schema that holds an object
+    keyword without `type: object`; so the candidate definitions of "an object" do not
+    differ on it, and the composition question does.
+  - _Not known:_ what Castr does with the 16 today. The document is refused at its
+    first stop, which shows no later one.
+
+  | Question                                                       | Lens that settles it                                                                        | Disposition                                                                                                                                                                                                                                                |
+  | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | Whether to tell the owner of a false sentence in approved text | Not a lens: a defect in approved text is said plainly                                       | Told in the session's report of 23 November. The correction is proposed in this slice and needs the owner's words on a version                                                                                                                             |
+  | How the closed reading works across composition                | Strict, and SPEC-I-1; the amendment is the change control                                   | The slice writes each candidate as a transformation of the source, runs it on the composition cases and on Oak's 16 quiz schemas, and proposes one. First candidate: `unevaluatedProperties: false` at the outermost object, as SPEC-P-1 already writes it |
+  | Whether N0's finish condition is still right                   | The plan: "Oak's whole-document line says exactly what stops it next, or that nothing does" | It stands, and the 16 quiz schemas are the likeliest next stop. N0's size is re-read once this slice has words                                                                                                                                             |
+  | Re-sizing N5 from the first slice                              | Proportionality                                                                             | The first slice took seven rows, two pull requests and six pushes. At that rate the plan's "at least two pull requests" for 315 rows is wrong by an order of magnitude. Re-sized in the plan with this slice's pull request, and said to the owner         |
+
 ### The matrix pass of 22 November 2026
 
 The owner asked for the open questions to be run through the decision lenses of the
