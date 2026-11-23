@@ -276,8 +276,13 @@ export function rowsUsedBy(document: JsonObject, rows: ReadonlySet<string>): Row
         useExtension(SCHEMA);
       } else if (rows.has(`keyword:${name}`)) {
         const narrower = narrowerRowOf(schema, name);
-        used.add(narrower !== undefined && rows.has(narrower) ? narrower : `keyword:${name}`);
-        walkSchemaKeyword(name, value);
+        const inNarrowerRow = narrower !== undefined && rows.has(narrower);
+        used.add(inNarrowerRow ? narrower : `keyword:${name}`);
+        // A narrower row holds its keyword with the boolean it is written with, so that
+        // boolean is not counted again as a schema standing alone.
+        if (!(inNarrowerRow && typeof value === 'boolean')) {
+          walkSchemaKeyword(name, value);
+        }
       } else if (rows.has(`schema.${name}`)) {
         used.add(`schema.${name}`);
         const kind = SCHEMA_VOCABULARY[name];

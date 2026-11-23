@@ -331,6 +331,20 @@ describe('rowsUsedBy', () => {
     expect(found).not.toContain('keyword:additionalProperties');
   });
 
+  it('does not also count the `false` of `additionalProperties: false` as a schema', () => {
+    const schema = { type: 'object', properties: { a: {} }, additionalProperties: false };
+    const found = used(withSchema(schema));
+
+    expect(found).not.toContain('text:`false` as a schema');
+  });
+
+  it('still counts a `false` that stands as a schema elsewhere', () => {
+    const schema = { type: 'object', properties: { never: false }, additionalProperties: false };
+    const found = used(withSchema(schema));
+
+    expect(found).toContain('text:`false` as a schema');
+  });
+
   it.each([
     ['`true`', true],
     ['the empty schema', {}],
