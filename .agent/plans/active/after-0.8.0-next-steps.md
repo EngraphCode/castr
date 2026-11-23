@@ -420,6 +420,17 @@ specification are approved and on `main`.
    settled for all the annotation rows together (`title`, `description`, `examples`,
    `default`), with the owner.
 
+   **The Zod reader passes over a declaration it cannot read, without a word** (found in
+   the review of pull request 187, run on 23 November). Castr writes
+   `A.and(B).meta({ description: "both" })` for a described `allOf`, and
+   `z.strictObject({}).catchall(z.number()).meta(…)` for a map with an annotation. Read
+   back by the Zod reader, neither component is in the model at all, and nothing is
+   reported. So Zod that Castr writes does not survive Castr reading it, and the loss is
+   a whole component. It is older than the `default` annotation, which only makes the
+   first form more common. It breaks SPEC-PR-2, and it is its own unit: first a refusal
+   for any exported declaration the reader cannot read, then reading these two forms.
+   It ranks above the leftovers of unit 5, because it loses whole schemas.
+
    **State of unit 5 after pull request 184.** Done: the count of properties (182) and
    boolean schemas (184). Merged as 185: the refusal of `not`, `if`, `then` and `else`. Left:
    `const` and `enum` beside a keyword that also decides, in the Zod writer, with an enum
