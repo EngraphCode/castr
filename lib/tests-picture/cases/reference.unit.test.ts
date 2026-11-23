@@ -36,6 +36,18 @@ describe('referenceFor', () => {
     expect(result.readable && result.accepts('a')).toBe(false);
   });
 
+  it('reads only the properties a value has itself, not those every object inherits', () => {
+    const named = reference({
+      type: 'object',
+      properties: { toString: { type: 'string' } },
+      additionalProperties: false,
+    });
+    const required = reference({ type: 'object', required: ['constructor'] });
+
+    expect(named.readable && named.accepts({})).toBe(true);
+    expect(required.readable && required.accepts({})).toBe(false);
+  });
+
   it('does not refuse a keyword OpenAPI adds to a schema', () => {
     const result = reference({ type: 'string', xml: { name: 'x' } });
 
