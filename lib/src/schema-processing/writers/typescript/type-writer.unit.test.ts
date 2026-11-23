@@ -677,6 +677,30 @@ describe('Dynamic Reference Keywords — TypeScript fail-fast', () => {
     expect(generate(schema)).toBe('string');
   });
 
+  describe('const', () => {
+    const metadata: CastrSchema['metadata'] = {
+      required: true,
+      nullable: false,
+      circularReferences: [],
+      dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+      zodChain: { presence: '', validations: [], defaults: [] },
+    };
+
+    it.each([
+      ['a string', 'all-years', '"all-years"'],
+      ['a string that holds a quote', 'a"b', '"a\\"b"'],
+      ['a number', 1.5, '1.5'],
+      ['a boolean', false, 'false'],
+      ['null', null, 'null'],
+    ])('writes a const that is %s as a literal type', (_name, value, written) => {
+      expect(generate({ type: undefined, const: value, metadata })).toBe(written);
+    });
+
+    it('writes the literal for a const beside its type', () => {
+      expect(generate({ type: 'string', const: 'a', metadata })).toBe('"a"');
+    });
+  });
+
   describe('a schema-valued additionalProperties', () => {
     const metadata: CastrSchema['metadata'] = {
       required: true,

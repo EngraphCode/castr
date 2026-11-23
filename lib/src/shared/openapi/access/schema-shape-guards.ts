@@ -67,15 +67,18 @@ const SCHEMA_OBJECT_KEYS = new Set([
   'xml',
 ]);
 
+/** Whether a key is one a vendor adds: `x-` and a name. */
+export function isOpenApiExtensionKey(key: string): boolean {
+  return key[0] === OPENAPI_EXTENSION_KEY_LEADER && key[1] === OPENAPI_EXTENSION_KEY_SEPARATOR;
+}
+
 export function isSchemaLikeRecord(value: unknown): value is SchemaObject {
   if (!isRecord(value)) {
     return false;
   }
 
   return Object.keys(value).every(
-    (key) =>
-      (key[0] === OPENAPI_EXTENSION_KEY_LEADER && key[1] === OPENAPI_EXTENSION_KEY_SEPARATOR) ||
-      SCHEMA_OBJECT_KEYS.has(key),
+    (key) => isOpenApiExtensionKey(key) || SCHEMA_OBJECT_KEYS.has(key),
   );
 }
 
