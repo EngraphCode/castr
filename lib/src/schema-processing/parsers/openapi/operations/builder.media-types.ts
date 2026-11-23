@@ -163,14 +163,14 @@ export function resolveMediaTypeComponentRef(
 export function buildIRMediaType(mediaType: MediaTypeObject, context: IRBuildContext): IRMediaType {
   const result: IRMediaType = {};
 
-  if (mediaType.schema) {
+  if (mediaType.schema !== undefined) {
     result.schema = buildCastrSchema(
       mediaType.schema,
       createMediaTypeContext(context, [...context.path, 'schema']),
     );
   }
 
-  if (mediaType.itemSchema) {
+  if (mediaType.itemSchema !== undefined) {
     result.itemSchema = buildCastrSchema(
       mediaType.itemSchema,
       createMediaTypeContext(context, [...context.path, 'itemSchema']),

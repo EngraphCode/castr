@@ -37,4 +37,50 @@ describe('the OpenAPI reader and a boolean where a schema stands', () => {
 
     expect(schema.anyOf?.[1]).toMatchObject({ booleanSchema: member });
   });
+
+  describe.each([true, false])('%s where an operation holds a schema', (schema) => {
+    const document: object = {
+      openapi: '3.1.0',
+      info: { title: 'boolean schemas', version: '1' },
+      paths: {
+        '/things': {
+          post: {
+            operationId: 'postThing',
+            parameters: [{ name: 'q', in: 'query', schema }],
+            requestBody: { content: { 'application/json': { schema } } },
+            responses: {
+              '200': {
+                description: 'ok',
+                headers: { 'X-Thing': { schema } },
+                content: { 'application/json': { schema } },
+              },
+            },
+          },
+        },
+      },
+    };
+    const [operation] = buildIR(document).operations;
+
+    it("is read as a parameter's schema", () => {
+      expect(operation?.parameters[0]?.schema).toMatchObject({ booleanSchema: schema });
+    });
+
+    it("is read as a request body's schema", () => {
+      expect(operation?.requestBody?.content['application/json']).toMatchObject({
+        schema: { booleanSchema: schema },
+      });
+    });
+
+    it("is read as a response's schema", () => {
+      expect(operation?.responses[0]?.content?.['application/json']).toMatchObject({
+        schema: { booleanSchema: schema },
+      });
+    });
+
+    it("is read as a response header's schema", () => {
+      expect(operation?.responses[0]?.headers?.['X-Thing']?.schema).toMatchObject({
+        booleanSchema: schema,
+      });
+    });
+  });
 });

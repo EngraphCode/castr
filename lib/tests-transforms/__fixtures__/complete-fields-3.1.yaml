@@ -242,9 +242,9 @@ components:
           description: Y coordinate
         - type: number
           description: Z coordinate
-      # No `items: false` here: the OpenAPI writer refuses a boolean schema, which
-      # writer-field-coverage holds in a case of its own, so this fixture stays one
-      # the writer can write whole.
+      # No `items: false` here. The OpenAPI writer refuses a boolean schema, and
+      # writer-field-coverage holds that in a case of its own. Without the line, the
+      # writer can write this whole fixture.
 
     # Schema with unevaluatedProperties
     StrictConfig:

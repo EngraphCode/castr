@@ -49,8 +49,9 @@ export function buildCastrSchema(
   context: IRBuildContext,
 ): CastrSchema {
   // Handle $ref - preserve reference, metadata is computed later
-  // A document read from a file can hold a boolean where a schema stands: `true` accepts
-  // every value and `false` none. The model has a node for each.
+  // The types say a schema is an object, and a document read from a file is not checked
+  // against them: it can hold a boolean where a schema stands. `true` accepts every value
+  // and `false` none, and the model has a node for each.
   if (typeof schema === 'boolean') {
     return { booleanSchema: schema, metadata: buildCastrSchemaNode({}, context) };
   }
