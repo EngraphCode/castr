@@ -87,19 +87,17 @@ What they mean for the work in hand:
 
 - `main` holds specification **0.11.1** (Appendix B.4, the rows for the `paths` module;
   owner, 24 November, by name: "I approve 0.11.1"; there is no 0.11.0), and pull requests
-  175 to 192 except 193.
+  175 to 194.
 - Oak's v1 document: 24 of 74 rows not right, all of them the document's structure.
   `pnpm picture` from `lib/` prints them.
-- **One pull request is open: 193**, `fix/keep-operation-references`. Its checks pass.
-  It has had one review round, with three findings unanswered. All three hold:
-  1. `ref` is checked as text at the model's boundary for a parameter only. Add the same
-     check for a request body, a response and a response header
-     (`ir/validation/validators.document.ts`), with a case for each, test first.
-  2. and 3. The stored model's version (`IR_SCHEMA_VERSION`) is to move, because a model
-     stored before this change cannot hold `ref` and would be read as one with nothing
-     given by reference. Find the constant, move it, and read what its tests and
-     fixtures then require.
-     Then reply on each thread, resolve, and merge on green. Its exit is two rounds.
+- **No pull request is open.** 193 (the model keeps the reference an operation is given a
+  parameter, body, response or header by) and 194 (the frame of the work, in AGENT.md)
+  were merged on 24 November at the owner's instruction to merge every open pull
+  request without waiting for checks; `main` was then checked on this machine
+  (type-check, `pnpm test` and the specification's approval check pass). The stored
+  model's version is 2.1.0. One review point on 193 was answered and not done: the
+  boundary accepts any text as a kept reference, which is the fault the plan records
+  against those marks.
 - **One branch is pushed and deliberately unmerged:** `feat/paths-type-prototype`, the
   prototype of the `paths` module (`lib/tests-picture/prototypes/`). It is level with
   `main` but for the prototype. It becomes the writer in `src`; it is not merged as a
@@ -113,7 +111,8 @@ The plan (`.agent/plans/active/after-0.8.0-next-steps.md`) is the authority; its
 paragraph headed "Where the model is wrong, as the `paths` module showed on 24 November"
 gives the steps. In short:
 
-1. Finish pull request 193 as above.
+1. Read "The frame of this work" in AGENT.md, then the plan's paragraph named above,
+   which opens with a fault to repair before any writer: the type writer assembles text.
 2. The model keeps what it still loses, each its own pull request, test first: a path
    item under `paths` with no operation; the reference a path item is given by; a
    document's `$defs`.
