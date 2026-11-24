@@ -2,6 +2,32 @@
 
 **@engraph/castr** transforms data definitions between supported formats via a canonical Intermediate Representation (IR).
 
+## The frame of this work
+
+Read this before anything else. It was lost once, and the work drifted.
+
+- **Castr was built incorrectly, and the present work is the remediation.** That is the
+  owner's statement of 24 November 2026. So a pre-existing approach is always
+  questioned: that the code does a thing a certain way is evidence of how it was built,
+  never a reason to keep it, extend it or copy it. Ask of each one whether it is right
+  by the [specification](../../docs/SPECIFICATION.md) and the principles before
+  building on it.
+- **Correcting the model is the work.** The model (the IR) is the one statement of what
+  a document means; every output is written from it and can be no truer than it. A
+  place where the model loses or misstates what a document says is the unit of work in
+  its own right. An output is a consumer that shows where the model is wrong; it is
+  not a goal the model stands in the way of. Owner, 24 November 2026: "The model needing
+  to change is the whole point of the current effort, this is not a surprise."
+- **No string manipulation in the IR or the writers.** Code is generated from an AST
+  (`ts-morph` structures), and the model holds meaning as typed data, never as text to
+  be cut, joined or pattern-matched. Where that cannot be done, stop and flag it to the
+  owner for discussion; do not work round it. Owner, 24 November 2026: "The IR and the
+  writers must not use string manipulation. Where that constraint is impossible to
+  fulfil flag it to me and we will discuss it".
+- **Many formats in, many out.** The present focus is OpenAPI in, and the architecture
+  is designed for any supported format on either side. A change to the model is a
+  change to the format-independent model, never a convenience for one reader.
+
 ## Grounding
 
 - Use British/UK English spelling in prose unless an external interface requires otherwise.
