@@ -235,14 +235,17 @@ specification names (SPEC-AR-2), and the tests state how the two drafts differ: 
 keywords of Draft-07 that no vocabulary of Draft 2020-12 holds (`additionalItems`,
 `definitions` and `dependencies`), and fourteen that only Draft 2020-12 has.
 
-The vocabularies are not the whole of Draft 2020-12. Its dialect meta-schema, pinned
-beside them, declares four more keywords itself and marks each deprecated: `definitions`,
-`dependencies`, `$recursiveAnchor` and `$recursiveRef`. So two of Draft-07's three are
-still declared by the 2020-12 dialect, and only `additionalItems` is gone from it. The
+The vocabularies are not the whole of what a Draft 2020-12 document may hold. The
+dialect's meta-schema, pinned beside them, names the seven vocabularies and also
+constrains four names that are in none of them, marking each deprecated: `definitions`,
+`dependencies`, `$recursiveAnchor` and `$recursiveRef`. They are not keywords of a
+vocabulary, and the picture lists them apart from the keywords. So two of Draft-07's
+three still have a place in a 2020-12 document, and only `additionalItems` has none. The
 2020-12 validation text (Appendix A) says implementations should assume `definitions`
 behaves as `$defs` under that meta-schema, and says what `dependencies` was replaced by
 without saying what it now does; what a document that uses the four means is for the
 list made by hand.
+
 Zod's constructs are read from the installed package's own types, through the compiler
 ([`rows/zod-constructs.ts`](rows/zod-constructs.ts)). Every schema and every check of
 Zod holds a definition, and Zod's core module exports an interface for each. The reading

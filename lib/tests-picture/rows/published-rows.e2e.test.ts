@@ -15,8 +15,7 @@ import { describe, it, expect } from 'vitest';
 import { loadDefinition, readPins } from './definitions.js';
 import type { Inventory, ObjectKind } from './inventory.js';
 import {
-  dialect2020DeprecatedKeywords,
-  dialect2020Keywords,
+  dialect2020OwnNames,
   draft07Keywords,
   draft07TypeValues,
   openApi31Objects,
@@ -97,32 +96,33 @@ describe('JSON Schema 2020-12 keywords', () => {
   });
 });
 
-describe('the keywords the Draft 2020-12 dialect declares itself', () => {
-  const declared = dialect2020Keywords(loadDefinition).map((entry) => entry.keyword);
+describe('the names the Draft 2020-12 dialect constrains itself', () => {
+  const own = dialect2020OwnNames(loadDefinition);
+  const names = own.map((entry) => entry.name);
   const inAVocabulary = new Set(schemaKeywords(loadDefinition).map((entry) => entry.keyword));
 
-  it('declares four keywords that none of its vocabularies holds', () => {
-    expect([...declared].sort()).toEqual([
+  it('constrains four names that are in none of its vocabularies', () => {
+    expect([...names].sort()).toEqual([
       '$recursiveAnchor',
       '$recursiveRef',
       'definitions',
       'dependencies',
     ]);
-    expect(declared.filter((keyword) => inAVocabulary.has(keyword))).toEqual([]);
+    expect(names.filter((name) => inAVocabulary.has(name))).toEqual([]);
   });
 
   it('marks every one of the four deprecated', () => {
-    expect([...dialect2020DeprecatedKeywords(loadDefinition)].sort()).toEqual([...declared].sort());
+    expect(own.filter((entry) => !entry.deprecated)).toEqual([]);
   });
 
-  it('declares two of the three keywords of Draft-07 that no vocabulary holds', () => {
+  it('constrains two of the three keywords of Draft-07 that no vocabulary holds', () => {
     const draft07 = new Set(draft07Keywords(loadDefinition).map((entry) => entry.keyword));
 
-    expect(declared.filter((keyword) => draft07.has(keyword)).sort()).toEqual([
+    expect(names.filter((name) => draft07.has(name)).sort()).toEqual([
       'definitions',
       'dependencies',
     ]);
-    expect(declared).not.toContain('additionalItems');
+    expect(names).not.toContain('additionalItems');
   });
 });
 

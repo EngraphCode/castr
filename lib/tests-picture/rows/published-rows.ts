@@ -43,24 +43,28 @@ export function schemaTypeValues(read: DefinitionReader): readonly string[] {
 }
 
 /**
- * The keywords the Draft 2020-12 dialect's own meta-schema declares, beyond those of the
- * vocabularies it names. They are keywords of earlier drafts, kept and marked deprecated.
+ * One name the Draft 2020-12 dialect's own meta-schema constrains that is in none of
+ * the vocabularies it names. It is not a keyword of a vocabulary: the meta-schema states
+ * its syntax and, by `deprecated`, that it is kept from an earlier draft.
  */
-export function dialect2020Keywords(read: DefinitionReader): readonly KeywordKind[] {
-  return readKeywords('dialect', read('jsonschema-2020-12-schema.json').schema);
+export interface DialectOwnName {
+  readonly name: string;
+  readonly deprecated: boolean;
 }
 
 /**
- * Those of the dialect's own keywords that its meta-schema marks `deprecated`.
+ * The names the Draft 2020-12 dialect's own meta-schema constrains itself, beyond the
+ * keywords of its vocabularies.
  */
-export function dialect2020DeprecatedKeywords(read: DefinitionReader): readonly string[] {
+export function dialect2020OwnNames(read: DefinitionReader): readonly DialectOwnName[] {
   const properties = read('jsonschema-2020-12-schema.json').schema['properties'];
   if (!isJsonObject(properties)) {
     return [];
   }
-  return Object.entries(properties)
-    .filter(([, declared]) => isJsonObject(declared) && declared['deprecated'] === true)
-    .map(([keyword]) => keyword);
+  return Object.entries(properties).map(([name, declared]) => ({
+    name,
+    deprecated: isJsonObject(declared) && declared['deprecated'] === true,
+  }));
 }
 
 /**
