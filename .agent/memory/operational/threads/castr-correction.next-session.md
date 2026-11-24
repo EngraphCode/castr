@@ -1,6 +1,92 @@
 # Castr correction
 
-## Start here: handover of 23 November 2026, before a change of account
+## Start here: handover of 24 November 2026, to a cloud session
+
+Written by Firefly mends Quench (session prefix 4f7b54) when the owner asked that the
+work be made safe, stopped on this machine and carried on in a Claude Code cloud session
+("All relevant state must be stored in the repo"). A successor has no memory of the
+session and none of this machine's files. Verify each line against git and GitHub before
+acting. The section below this one is the earlier handover and is still true where this
+one is silent.
+
+### State at the stop
+
+- `main` holds specification **0.11.1** (Appendix B.4, the rows for the `paths` module;
+  owner, 24 November, by name: "I approve 0.11.1"; there is no 0.11.0), and pull requests
+  175 to 192 except 193.
+- Oak's v1 document: 24 of 74 rows not right, all of them the document's structure.
+  `pnpm picture` from `lib/` prints them.
+- **One pull request is open: 193**, `fix/keep-operation-references`. Its checks pass.
+  It has had one review round, with three findings unanswered. All three hold:
+  1. `ref` is checked as text at the model's boundary for a parameter only. Add the same
+     check for a request body, a response and a response header
+     (`ir/validation/validators.document.ts`), with a case for each, test first.
+  2. and 3. The stored model's version (`IR_SCHEMA_VERSION`) is to move, because a model
+     stored before this change cannot hold `ref` and would be read as one with nothing
+     given by reference. Find the constant, move it, and read what its tests and
+     fixtures then require.
+     Then reply on each thread, resolve, and merge on green. Its exit is two rounds.
+- **One branch is pushed and deliberately unmerged:** `feat/paths-type-prototype`, the
+  prototype of the `paths` module (`lib/tests-picture/prototypes/`). It is level with
+  `main` but for the prototype. It becomes the writer in `src`; it is not merged as a
+  prototype.
+- Nothing else is unpushed. A second worktree on this machine was used for one branch
+  that is merged; a cloud session needs neither it nor the machine.
+
+### What to do next, in order
+
+The plan (`.agent/plans/active/after-0.8.0-next-steps.md`) is the authority; its
+paragraph "Before the writer" gives the steps for the `paths` module. In short:
+
+1. Finish pull request 193 as above.
+2. The model keeps what it still loses, each its own pull request, test first: a path
+   item under `paths` with no operation; the reference a path item is given by; a
+   document's `$defs`.
+3. The refusals for what Appendix B.4 leaves in no row, each with a failing case first.
+4. Count how many documents the existing suites convert that the writer would then
+   refuse. That count decides whether the module shares a file with the Zod or is a
+   separate output. If the strict reading leaves two forms, that is one question to the
+   owner.
+5. The writer in `src`, with the prototype's type-level tests and the two gaps the plan
+   names.
+
+After unit 8: the Zod reader, which passes over declarations it cannot read (it loses
+whole schemas); then the leftovers of unit 5; and the second part of unit 6 (the endpoint
+definition's shape and the run report), which needs its own amendment.
+
+### What a successor must know that no other file says
+
+- **The owner's direction on asking, 23 November, verbatim:** "You shouldn't be asking
+  me, use the full set of OCE cognitive skills and the principles and decision matrix.
+  Strict, everywhere, all the time. If that does not resolve the question then you can
+  ask me again". So an ambiguity is first settled by the strict reading (nothing silent,
+  no claim wider than the truth). This seat's reading of it: the owner's typed words are
+  still needed for a specification approval, and they must name the exact version.
+- **An approval must name the exact version in the owner's own words.** "I approve
+  0.11.x" was not one. The approval check reads the whole cell, so it once passed a row
+  on words the seat wrote beside the owner's; never put a version number in the seat's
+  framing words of an approval cell.
+- **Review before approval.** Revision 0.10.0 was approved before any review and needed
+  0.10.1 the same day. The draft of 0.11 went through two rounds first and still drew
+  three more findings as a change. Put a draft amendment up as a pull request, answer two
+  rounds, then ask the owner.
+- **Reviewers find real faults and also never stop.** Run every finding before accepting
+  or declining it. A finding on a documents-only pull request past its exit is answered
+  on the thread and taken into the next change. A finding about a stored model that
+  contradicts itself, which the reader cannot build, was declined with its reason.
+- **How this seat commits.** The helper script it used is on the old machine and is not
+  needed: stage by explicit path and `git commit -F <message file>`, which runs the same
+  hooks. Never `git add -A`, never a rename in one commit (commit the removal, then the
+  addition: the staged-files check and a path scan disagree about a rename), no
+  apostrophe in a commit subject, and the words "git" and "restore" must not both appear
+  in one shell command, even in text, or a hook blocks it.
+- **Pull requests on this repository** go through the owner's `gh` sign-in, and each
+  body opens by saying an agent seat wrote, opened and will merge it. Replies on review
+  threads open the same way. A clean green pull request is merged without asking.
+- **Work in this repository only.** The Ecosystem repository's pull requests belong to
+  another seat.
+
+## Earlier: handover of 23 November 2026, before a change of account
 
 Written by Firefly mends Quench (session prefix 4f7b54) when the owner said an account
 change was coming and asked that all reasoning be made local, then that the seat stop.
