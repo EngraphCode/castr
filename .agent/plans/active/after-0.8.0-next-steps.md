@@ -503,16 +503,24 @@ specification are approved and on `main`.
      output, the OpenAPI it writes back among them, which SPEC-PR-3 forbids ("Castr never
      inlines a reference"); and a writer of the `paths` module could not refuse them, as
      0.11.1 requires, because it could not tell.
-   - **A path item that holds no operation is not in the model at all**, so the first row
-     of B.4 (a property of `paths` for each path template) cannot be met for it.
+   - **A path item under `paths` that holds no operation is not in the model**: the
+     model holds operations, and such a path gives it none, so neither the path template
+     nor its parameters are kept. The first row of B.4 (a property of `paths` for each
+     path template) cannot be met for it, and a refusal of its parameters could never
+     fire. (A path item under `webhooks` or `components` is kept as it was read; this is
+     about `paths` only.)
+   - **A path item given by reference carries no mark** of it either.
    - **`$defs` is not in the model.** `webhooks` is.
 
    So the order for unit 8 is:
 
-   1. **The model keeps the reference** by which an operation's parameter, request body,
-      response or response header was given, and the OpenAPI writer writes it back as a
-      reference. Its own pull request, test first. It repairs a breach of SPEC-PR-3 that
-      stands today whether or not the `paths` module is ever written.
+   1. **The model keeps what it loses today**, each its own pull request, test first:
+      the reference by which an operation's parameter, request body, response or
+      response header was given, with the OpenAPI writer writing it back as a reference
+      (pull request 193; a breach of SPEC-PR-3 that stands whether or not the `paths`
+      module is ever written); then a path item under `paths` that holds no operation;
+      then the reference by which a path item was given. The refusals of step 2 for a
+      path item cannot fire until the last two are in the model.
    2. **The refusals, each with a failing case first**, for what B.4 leaves in no row:
       anything given by reference other than a schema; additional operations and the
       `query` method; a document that holds `webhooks` or `$defs`; a `querystring`
