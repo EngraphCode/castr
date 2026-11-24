@@ -56,6 +56,14 @@ todos:
     depends_on: [N2-REFUSALS, N3-CORRECTIONS]
 ---
 
+> **The frame, restated by the owner on 24 November 2026. Read it first.** Castr was
+> built incorrectly and this work is the remediation, so a pre-existing approach is
+> always questioned and never a reason. Correcting the model is the work; an output is
+> a consumer that shows where the model is wrong. The IR and the writers use no string
+> manipulation (an AST, typed data); where that is impossible it is flagged to the owner
+> and discussed. The authority is "The frame of this work" in
+> [AGENT.md](../../directives/AGENT.md).
+
 # After specification 0.8.0: the next steps
 
 This plan is a companion to [the course](castr-course.md). It holds the next steps in
