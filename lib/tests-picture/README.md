@@ -233,6 +233,22 @@ meta-schema. No row of the picture uses them: Draft-07 is not a schema dialect o
 3.1 or 3.2. They are listed because the model's design is made against every format the
 specification names (SPEC-AR-2), and the tests state how the two drafts differ: three
 keywords only Draft-07 has, fourteen only Draft 2020-12 has.
+Zod's constructs are read from the installed package's own types, through the compiler
+([`rows/zod-constructs.ts`](rows/zod-constructs.ts)). Zod states what a schema can be in
+closed unions of its core types: 40 values of a definition's `type`, 39 schemas each
+with the fields its definition holds, 15 checks, and its string, number and bigint
+formats. No row of the picture uses them; they are listed for the same reason as
+Draft-07's keywords. The list is read at one pinned version, and the test that compares
+the installed version with the pin fails on any other, so the list is read again when
+Zod moves. Two things this reading does not see, which a list made by hand has to hold:
+
+- a schema Zod leaves out of its own union. `$ZodExactOptional` is one: its definition
+  has the `type` of an optional and no field of its own, and only its class tells it
+  apart;
+- a method or a factory that builds a kind with particular fields, such as
+  `z.strictObject` and `z.looseObject` (an object with a `catchall`), or `z.stringbool`
+  and `z.codec` (a pipe).
+
 Constructs that only the specifications' text
 defines (the values of `format`, boolean schemas, a keyword no vocabulary defines) cannot
 be computed. They are listed by hand in [`rows/schema-proposals.ts`](rows/schema-proposals.ts),
