@@ -31,9 +31,17 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
 
 ### What a successor must know that no other file says
 
-- **Skills are read from the Ecosystem repository's checkout, every one of them.** The
-  owner, 24 November: "Use the OCE skills rather than the Castr ones". A skill's own
-  relative paths resolve against that checkout, not this one.
+- **Skills are read from the Ecosystem repository's checkout, where it is present.** The
+  owner, 24 November, verbatim: "Use the OCE skills rather than the Castr ones. No need
+  to re-read on this ocassion, but in future use OCE please". It was said in a session
+  on the owner's machine, after the seat had run a start-right skill from this
+  repository's copy, so it reaches further than the cognitive skills the order plan
+  already names. The seat's reading, which the owner has not confirmed: the text of a
+  skill comes from that checkout, and the directives, rules and plans a skill then
+  sends its reader to are this repository's own. The owner's words do not say what a
+  session with no Ecosystem checkout does, such as a cloud session, which AGENT.md
+  grounds with this repository's `engraph-start-right-thorough`. For the cognitive
+  skills the order plan's rule is to stop and say so. For the rest, ask the owner.
 - **A branch deletion on GitHub does not go through `git push`.** The pre-push hook runs
   the full check for about ten minutes on any push, a deletion among them, and a command
   that is cut off leaves `dist` half built. A deletion goes through the API
