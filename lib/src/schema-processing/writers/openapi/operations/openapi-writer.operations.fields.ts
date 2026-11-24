@@ -1,12 +1,19 @@
-import type { OperationObject, PathItemObject } from '../../../../shared/openapi-types.js';
+import type {
+  OperationObject,
+  PathItemObject,
+  ReferenceObject,
+} from '../../../../shared/openapi-types.js';
 import { writeRequestBody, writeResponses } from './openapi-writer.bodies.js';
 import { writeParameterObject } from '../openapi-writer.parameters.js';
 import { writeSecurityRequirements } from '../openapi-writer.security.js';
 import type { CastrParameter } from '../../../ir/index.js';
 import type { CastrOperationLike } from './openapi-writer.operations.entries.js';
 
-function writeParameter(param: CastrParameter): ReturnType<typeof writeParameterObject> {
-  return writeParameterObject(param);
+/** A parameter given by reference is written as that reference (SPEC-PR-3). */
+function writeParameter(
+  param: CastrParameter,
+): ReturnType<typeof writeParameterObject> | ReferenceObject {
+  return param.ref === undefined ? writeParameterObject(param) : { $ref: param.ref };
 }
 
 function writeCoreMetadata(operation: CastrOperationLike, result: OperationObject): void {
@@ -63,7 +70,10 @@ export function writeOperation(operation: CastrOperationLike): OperationObject {
   }
 
   if (operation.requestBody !== undefined) {
-    result.requestBody = writeRequestBody(operation.requestBody);
+    result.requestBody =
+      operation.requestBody.ref === undefined
+        ? writeRequestBody(operation.requestBody)
+        : { $ref: operation.requestBody.ref };
   }
 
   // An explicit empty array removes inherited document security.

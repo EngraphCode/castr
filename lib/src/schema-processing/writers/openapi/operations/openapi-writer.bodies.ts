@@ -135,6 +135,17 @@ export function writeResponseHeader(header: IRResponseHeader): HeaderObject {
   return headerObj;
 }
 
+/** A header given by reference is written as that reference (SPEC-PR-3). */
+function writeResponseHeaders(
+  headers: NonNullable<CastrResponse['headers']>,
+): NonNullable<ResponseObject['headers']> {
+  const written: NonNullable<ResponseObject['headers']> = {};
+  for (const [name, header] of getSortedRecordEntries(headers)) {
+    written[name] = header.ref === undefined ? writeResponseHeader(header) : { $ref: header.ref };
+  }
+  return written;
+}
+
 /**
  * Converts a single CastrResponse to OpenAPI ResponseObject.
  * @internal
@@ -157,10 +168,7 @@ export function writeResponseObject(response: CastrResponse): ResponseObject {
   }
 
   if (response.headers !== undefined) {
-    responseObj.headers = {};
-    for (const [name, header] of getSortedRecordEntries(response.headers)) {
-      responseObj.headers[name] = writeResponseHeader(header);
-    }
+    responseObj.headers = writeResponseHeaders(response.headers);
   }
 
   if (response.links !== undefined) {
@@ -180,7 +188,9 @@ export function writeResponses(responses: CastrResponse[]): ResponsesObject {
     compareResponseStatusCodes(left.statusCode, right.statusCode),
   );
   for (const response of sortedResponses) {
-    result[response.statusCode] = writeResponseObject(response);
+    // A response given by reference is written as that reference (SPEC-PR-3).
+    result[response.statusCode] =
+      response.ref === undefined ? writeResponseObject(response) : { $ref: response.ref };
   }
   return result;
 }

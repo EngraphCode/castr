@@ -81,11 +81,14 @@ export function buildSingleResponse(
 ): CastrResponse {
   // Handle $ref responses - attempt to resolve
   if (isReferenceObject(responseObj)) {
-    return buildConcreteResponse(
-      statusCode,
-      resolveResponse(responseObj, context, statusCode),
-      context,
-    );
+    return {
+      ...buildConcreteResponse(
+        statusCode,
+        resolveResponse(responseObj, context, statusCode),
+        context,
+      ),
+      ref: responseObj.$ref,
+    };
   }
 
   return buildConcreteResponse(statusCode, responseObj, context);

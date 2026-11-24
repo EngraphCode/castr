@@ -111,7 +111,10 @@ export function buildSingleParameter(
 ): CastrParameter {
   // Handle $ref parameters
   if (isReferenceObject(param)) {
-    return buildConcreteParameter(resolveParameter(param, context), context);
+    return {
+      ...buildConcreteParameter(resolveParameter(param, context), context),
+      ref: param.$ref,
+    };
   }
 
   return buildConcreteParameter(param, context);

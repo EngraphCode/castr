@@ -167,7 +167,8 @@ function hasValidParameterOptionalFields(value: UnknownRecord): boolean {
   return (
     (value['content'] === undefined || isValidContentMap(value['content'])) &&
     (value['metadata'] === undefined || isCastrSchemaNode(value['metadata'])) &&
-    (value['pathItemRef'] === undefined || typeof value['pathItemRef'] === 'string')
+    (value['pathItemRef'] === undefined || typeof value['pathItemRef'] === 'string') &&
+    (value['ref'] === undefined || typeof value['ref'] === 'string')
   );
 }
 

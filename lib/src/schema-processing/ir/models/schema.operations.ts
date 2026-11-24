@@ -303,6 +303,14 @@ export interface CastrParameter {
    * document written from the model states it on the path item, by this reference.
    */
   pathItemRef?: string;
+
+  /**
+   * The reference by which the operation was given this, where it was given by one. The
+   * model holds what the reference points to as well, so that every output can read it; a
+   * named definition stays named (SPEC-PR-3), and a writer that can write a reference
+   * writes this one.
+   */
+  ref?: string;
 }
 
 /**
@@ -330,6 +338,14 @@ export interface IRRequestBody {
    * Key is media type (e.g., 'application/json').
    */
   content: Record<string, IRMediaTypeEntry>;
+
+  /**
+   * The reference by which the operation was given this, where it was given by one. The
+   * model holds what the reference points to as well, so that every output can read it; a
+   * named definition stays named (SPEC-PR-3), and a writer that can write a reference
+   * writes this one.
+   */
+  ref?: string;
 }
 
 /**
@@ -443,6 +459,14 @@ export interface CastrResponse {
    * @see {@link https://spec.openapis.org/oas/v3.1.0#link-object}
    */
   links?: Record<string, LinkObject | ReferenceObject>;
+
+  /**
+   * The reference by which the operation was given this, where it was given by one. The
+   * model holds what the reference points to as well, so that every output can read it; a
+   * named definition stays named (SPEC-PR-3), and a writer that can write a reference
+   * writes this one.
+   */
+  ref?: string;
 }
 
 /**
@@ -493,6 +517,14 @@ export interface IRResponseHeader {
    * Multiple named examples.
    */
   examples?: Record<string, ReferenceObject | ExampleObject>;
+
+  /**
+   * The reference by which the operation was given this, where it was given by one. The
+   * model holds what the reference points to as well, so that every output can read it; a
+   * named definition stays named (SPEC-PR-3), and a writer that can write a reference
+   * writes this one.
+   */
+  ref?: string;
 }
 
 /**

@@ -114,6 +114,7 @@ describe('the parameters of a path item and of its operation', () => {
       '$ref' in parameter ? parameter.$ref : `${parameter.in} ${parameter.name}`,
     );
 
-    expect(names).toEqual(['path id', 'query page', 'query q']);
+    // Its own reference is still known, so it is written as that reference, here.
+    expect(names).toEqual(['path id', '#/components/parameters/Page', 'query q']);
   });
 });
