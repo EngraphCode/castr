@@ -2,6 +2,33 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-11-24, later (the surface of the formats — Firefly binds Tallow / 5196d5, claude-code)
+
+- **I briefed a reader with OpenAPI 3.2.0 when the specification names 3.2.1.** The plan
+  I had written an hour earlier says 3.2.1, and an earlier seat had recorded the same
+  error on 22 November. A hosted reviewer found it. What works: before a brief names a
+  version, read the version out of section 6 of the specification and paste it.
+- **I passed a reader's finding to the owner as mine to route, unchecked.** It was false
+  of the version that matters and already settled in a record I had not searched. What
+  works: a reader's finding is told to the owner as "the reader says", and anything
+  about the specification is searched for in `.agent/analysis-and-reports/` first.
+- **I took a publisher's summary as its whole.** Zod's own unions of its schemas and
+  checks, and its list of format names, each leave things out; so does reading the
+  seven 2020-12 vocabularies as the dialect. Three review rounds found four gaps. What
+  works: read every definition a package exports and compare it with the publisher's
+  own list, and record the difference as a fact.
+- **I wrote a format's limit one notch too strong, twice,** each time towards refusing
+  input the format allows ("only Draft-07 has", "has no place in"). What works: before
+  a sentence says a format excludes something, find the sentence of its text that says
+  so.
+- **A third and fourth review comment were worth taking** where they showed a false
+  statement in a record or a README; the exit of two rounds governs points of taste,
+  not errors of fact.
+- **Tooling.** The pre-push check reads the working tree for ten minutes, so no branch
+  switch and no edit during a push; a reader that may write one scratch file can save
+  its own report whole, which is safer than the seat retyping it. `git branch -f main
+origin/main` moves local main without leaving the branch in hand.
+
 ## 2026-11-24 (the plan for the model's design — Firefly binds Tallow / 5196d5, claude-code)
 
 - **I bundled the continuity file and the thread record into the plan's commit.** The
