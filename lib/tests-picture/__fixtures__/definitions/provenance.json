@@ -105,6 +105,19 @@
       "licence": "BSD-3-Clause"
     },
     {
+      "file": "jsonschema-draft-07-schema.json",
+      "id": "http://json-schema.org/draft-07/schema#",
+      "bytes": 4979,
+      "sha256": "692e1d165e47afcb5f11b2ce1c639635ffa834035d6ecb6bcf3087481dae8404",
+      "source": {
+        "kind": "served",
+        "url": "https://json-schema.org/draft-07/schema",
+        "fetchedAt": "2026-11-24T18:18:40Z"
+      },
+      "publisher": "JSON Schema Specification Authors",
+      "licence": "BSD-3-Clause"
+    },
+    {
       "file": "oas-3.1-dialect-2024-11-10.json",
       "id": "https://spec.openapis.org/oas/3.1/dialect/2024-11-10",
       "bytes": 1027,

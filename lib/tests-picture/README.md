@@ -228,6 +228,11 @@ and a Header Object an `allowReserved` that the specification's text does not; t
 revisions read now agree with the text in all three. Where a definition and the text
 differ, [`rows/published-rows.ts`](rows/published-rows.ts) corrects the field by name, and
 the reading reports a correction that stops applying. No correction is needed today.
+The keywords of JSON Schema Draft-07 are computed the same way, from its one pinned
+meta-schema. No row of the picture uses them: Draft-07 is not a schema dialect of OpenAPI
+3.1 or 3.2. They are listed because the model's design is made against every format the
+specification names (SPEC-AR-2), and the tests state how the two drafts differ: three
+keywords only Draft-07 has, fourteen only Draft 2020-12 has.
 Constructs that only the specifications' text
 defines (the values of `format`, boolean schemas, a keyword no vocabulary defines) cannot
 be computed. They are listed by hand in [`rows/schema-proposals.ts`](rows/schema-proposals.ts),

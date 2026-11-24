@@ -38,7 +38,22 @@ export function schemaKeywords(read: DefinitionReader): readonly KeywordKind[] {
  * The seven values `type` may take. Each is a construct of its own.
  */
 export function schemaTypeValues(read: DefinitionReader): readonly string[] {
-  return readTypeValues(read('jsonschema-2020-12-validation.json').schema);
+  return readTypeValues(read('jsonschema-2020-12-validation.json').schema, '$defs');
+}
+
+/**
+ * The keywords of JSON Schema Draft-07. Its one meta-schema defines them all; the draft
+ * has no vocabularies.
+ */
+export function draft07Keywords(read: DefinitionReader): readonly KeywordKind[] {
+  return readKeywords('draft-07', read('jsonschema-draft-07-schema.json').schema);
+}
+
+/**
+ * The values `type` may take in JSON Schema Draft-07.
+ */
+export function draft07TypeValues(read: DefinitionReader): readonly string[] {
+  return readTypeValues(read('jsonschema-draft-07-schema.json').schema, 'definitions');
 }
 
 /**
