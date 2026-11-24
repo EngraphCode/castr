@@ -9,6 +9,30 @@ session and none of this machine's files. Verify each line against git and GitHu
 acting. The section below this one is the earlier handover and is still true where this
 one is silent.
 
+### The frame is in AGENT.md now
+
+The owner, 24 November, after the corrections recorded below: "Castr was built
+incorrectly, this work is the remediation, pre-existing approaches must always be
+questioned", and "I am not sure when that frame was lost, but I would like it to not be
+lost again." It is written as the first section of
+[AGENT.md](../../../directives/AGENT.md), "The frame of this work", which every session
+reads at its start, and at the head of the plan. This record repeats it only so that a
+successor sees how it was lost: the seat worked a queue of small faults and then a
+writer, each found by the review of the one before, and came to treat the code as it
+stood as the thing to extend.
+
+Things this seat built or extended that the frame says to question, not to trust:
+
+- the prototype of the `paths` module, which joins strings;
+- the Zod writer's metadata, written by `JSON.stringify` into `.meta(`, which the seat
+  extended for `default`;
+- the marks `ref` and `pathItemRef`, which hold an OpenAPI reference as text in a model
+  that is meant to be independent of format;
+- the reader's fold of a path item's parameters into each operation, kept from the old
+  code and repaired in place (pull request 191) without asking whether the model should
+  hold a path item as a thing of its own, which Appendix B.4's first row and a path with
+  no operation both suggest it should.
+
 ### The frame, corrected by the owner on 24 November
 
 The seat reported that it had "found, by measuring before building, that the writer
@@ -42,8 +66,9 @@ What they mean for the work in hand:
   added for a kept reference (`ref`, `pathItemRef`) holds an OpenAPI reference string;
   when another reader has to fill it, ask whether the model should hold the name of the
   thing referred to and not the source format's way of writing the reference.
-- **AST, not strings.** The directive already says TypeScript and Zod are generated with
-  `ts-morph`. **The prototype of the `paths` module breaks this**: it assembles the
+- **AST, not strings**, in the IR and the writers alike; where it cannot be done it is
+  flagged to the owner and discussed (the owner's later words, in AGENT.md). The
+  directive already said TypeScript and Zod are generated with `ts-morph`. **The prototype of the `paths` module breaks this**: it assembles the
   module by joining template strings (`block`, `key`, `` `${…}: ${…}` ``). That was
   acceptable for finding the rows and is not the form of the writer. The writer in `src`
   builds the five exported types as `ts-morph` structures (interfaces, properties, type
