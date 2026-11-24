@@ -101,9 +101,9 @@ recorded for them.
 
 ## Published definitions of the formats
 
-- **Files:** the eighteen files pinned in `lib/tests-picture/__fixtures__/definitions/`,
-  unchanged from the bytes their publishers served on the day each was fetched (20 or 22
-  November 2026). That directory's `provenance.json` records each file's identifier, URL,
+- **Files:** the nineteen files pinned in `lib/tests-picture/__fixtures__/definitions/`,
+  unchanged from the bytes their publishers served on the day each was fetched (20, 22
+  or 24 November 2026). That directory's `provenance.json` records each file's identifier, URL,
   fetch time and SHA-256, and [the picture's README](../lib/tests-picture/README.md) says
   what reads them.
 
