@@ -14,7 +14,7 @@
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 
-import { Project, ts, type Node, type Type } from 'ts-morph';
+import { Project, ts, type Node, type Type, type TypeAliasDeclaration } from 'ts-morph';
 
 /**
  * The version of Zod the lists were read at. A different installed version fails the
@@ -41,6 +41,15 @@ interface ZodCheckKind {
 }
 
 /**
+ * One string format, with the fields its definition holds beyond those every string
+ * format holds. A format with no fields takes no parameter.
+ */
+interface ZodStringFormatKind {
+  readonly format: string;
+  readonly fields: readonly string[];
+}
+
+/**
  * What the installed Zod can hold, as its core types state it.
  */
 export interface ZodConstructs {
@@ -48,19 +57,30 @@ export interface ZodConstructs {
   readonly kindValues: readonly string[];
   readonly schemaKinds: readonly ZodSchemaKind[];
   readonly checks: readonly ZodCheckKind[];
-  readonly stringFormats: readonly string[];
+  /** The names in Zod's own list of string formats. */
+  readonly stringFormatNames: readonly string[];
+  /** The string formats Zod defines a schema or a check for, each with its fields. */
+  readonly stringFormats: readonly ZodStringFormatKind[];
   readonly numberFormats: readonly string[];
   readonly bigintFormats: readonly string[];
 }
 
 const SHARED_SCHEMA_FIELDS = new Set(['type', 'error', 'checks']);
 const SHARED_CHECK_FIELDS = new Set(['check', 'error', 'abort', 'when']);
+const SHARED_STRING_FORMAT_FIELDS = new Set([
+  ...SHARED_SCHEMA_FIELDS,
+  ...SHARED_CHECK_FIELDS,
+  'coerce',
+  'format',
+  'pattern',
+]);
 
 const PROBE_SOURCE = `import type * as core from 'zod/v4/core';
 export type Definition = core.$ZodTypeDef;
 export type Schemas = core.$ZodTypes;
 export type Checks = core.$ZodChecks;
 export type StringFormats = core.$ZodStringFormats;
+export type StringFormatConstructs = core.$ZodStringFormatChecks;
 export type NumberFormats = core.$ZodNumberFormats;
 export type BigIntFormats = core.$ZodBigIntFormats;
 `;
@@ -103,6 +123,27 @@ function oneLiteral(type: Type, what: string): string {
     throw new Error(`${what} does not name exactly one kind: ${values.join(', ')}`);
   }
   return value;
+}
+
+/**
+ * Reads the string formats from the union of every schema and check that states one.
+ * One member may state several formats, as the hash formats do; each is listed.
+ */
+function readStringFormats(constructs: TypeAliasDeclaration): readonly ZodStringFormatKind[] {
+  return membersOf(constructs.getType())
+    .flatMap((construct) => {
+      const definition = propertyType(
+        propertyType(construct, '_zod', constructs),
+        'def',
+        constructs,
+      );
+      const fields = fieldNames(definition, SHARED_STRING_FORMAT_FIELDS);
+      return literalValues(propertyType(definition, 'format', constructs)).map((format) => ({
+        format,
+        fields,
+      }));
+    })
+    .sort((left, right) => byName(left.format, right.format));
 }
 
 function readInstalledVersion(): string {
@@ -171,7 +212,8 @@ export function readZodConstructs(): ZodConstructs {
     kindValues: literalValues(propertyType(definition.getType(), 'type', definition)),
     schemaKinds,
     checks: checkKinds,
-    stringFormats: literalValues(probe.getTypeAliasOrThrow('StringFormats').getType()),
+    stringFormatNames: literalValues(probe.getTypeAliasOrThrow('StringFormats').getType()),
+    stringFormats: readStringFormats(probe.getTypeAliasOrThrow('StringFormatConstructs')),
     numberFormats: literalValues(probe.getTypeAliasOrThrow('NumberFormats').getType()),
     bigintFormats: literalValues(probe.getTypeAliasOrThrow('BigIntFormats').getType()),
   };

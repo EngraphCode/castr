@@ -236,8 +236,11 @@ keywords only Draft-07 has, fourteen only Draft 2020-12 has.
 Zod's constructs are read from the installed package's own types, through the compiler
 ([`rows/zod-constructs.ts`](rows/zod-constructs.ts)). Zod states what a schema can be in
 closed unions of its core types: 40 values of a definition's `type`, 39 schemas each
-with the fields its definition holds, 15 checks, and its string, number and bigint
-formats. No row of the picture uses them; they are listed for the same reason as
+with the fields its definition holds, 15 checks each with its fields, the 50 string
+formats it defines a schema or a check for, each with its own fields, and its number and
+bigint formats. Zod's own list of string format names holds 32: it leaves out 19 that
+Zod defines (`mac`, `hex`, `hostname`, `currency_code` and the fifteen hash formats)
+and names one, `json_string`, that has no definition of its own. No row of the picture uses them; they are listed for the same reason as
 Draft-07's keywords. The list is read at one pinned version, and the test that compares
 the installed version with the pin fails on any other, so the list is read again when
 Zod moves. Two things this reading does not see, which a list made by hand has to hold:

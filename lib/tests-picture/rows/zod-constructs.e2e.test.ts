@@ -12,13 +12,159 @@ import { readZodConstructs, ZOD_PINNED_VERSION } from './zod-constructs.js';
 
 const constructs = readZodConstructs();
 
-function kindNamed(name: string) {
-  const found = constructs.schemaKinds.find((candidate) => candidate.kind === name);
-  if (found === undefined) {
-    throw new Error(`no schema kind named ${name}`);
-  }
-  return found;
-}
+type Row = readonly [string, readonly string[]];
+
+/** Every schema kind, with the fields its definition holds beyond `type`, `error` and `checks`. */
+const SCHEMA_KINDS: readonly Row[] = [
+  ['any', []],
+  ['array', ['element']],
+  ['bigint', ['coerce']],
+  ['boolean', ['coerce']],
+  ['catch', ['catchValue', 'innerType']],
+  ['custom', ['abort', 'check', 'fn', 'params', 'path', 'when']],
+  ['date', ['coerce']],
+  ['default', ['defaultValue', 'innerType']],
+  ['enum', ['entries']],
+  ['file', []],
+  ['function', ['input', 'output']],
+  ['intersection', ['left', 'right']],
+  ['lazy', ['getter']],
+  ['literal', ['values']],
+  ['map', ['keyType', 'valueType']],
+  ['nan', []],
+  ['never', []],
+  ['nonoptional', ['innerType']],
+  ['null', []],
+  ['nullable', ['innerType']],
+  ['number', ['coerce']],
+  ['object', ['catchall', 'shape']],
+  ['optional', ['innerType']],
+  ['pipe', ['in', 'out', 'reverseTransform', 'transform']],
+  ['prefault', ['defaultValue', 'innerType']],
+  ['promise', ['innerType']],
+  ['readonly', ['innerType']],
+  ['record', ['keyType', 'mode', 'partial', 'valueType']],
+  ['set', ['valueType']],
+  ['string', ['coerce']],
+  ['success', ['innerType']],
+  ['symbol', []],
+  ['template_literal', ['format', 'parts']],
+  ['transform', ['transform']],
+  ['tuple', ['items', 'rest']],
+  ['undefined', []],
+  ['union', ['inclusive', 'options']],
+  ['unknown', []],
+  ['void', []],
+];
+
+/** Every check, with the fields its definition holds beyond `check`, `error`, `abort` and `when`. */
+const CHECKS: readonly Row[] = [
+  ['bigint_format', ['format']],
+  ['greater_than', ['inclusive', 'value']],
+  ['length_equals', ['length']],
+  ['less_than', ['inclusive', 'value']],
+  ['max_length', ['maximum']],
+  ['max_size', ['maximum']],
+  ['mime_type', ['mime']],
+  ['min_length', ['minimum']],
+  ['min_size', ['minimum']],
+  ['multiple_of', ['value']],
+  ['number_format', ['format']],
+  ['overwrite', ['tx']],
+  ['property', ['property', 'schema']],
+  ['size_equals', ['size']],
+  ['string_format', ['format', 'pattern']],
+];
+
+/** Every string format Zod defines a schema or a check for, with its own fields. */
+const STRING_FORMATS: readonly Row[] = [
+  ['base64', []],
+  ['base64url', []],
+  ['cidrv4', ['version']],
+  ['cidrv6', ['version']],
+  ['credit_card', []],
+  ['cuid', []],
+  ['cuid2', []],
+  ['currency_code', ['fn']],
+  ['date', []],
+  ['datetime', ['local', 'offset', 'precision']],
+  ['duration', []],
+  ['e164', []],
+  ['email', []],
+  ['emoji', []],
+  ['ends_with', ['suffix']],
+  ['guid', []],
+  ['hex', ['fn']],
+  ['hostname', ['fn']],
+  ['iban', []],
+  ['includes', ['includes', 'position']],
+  ['ipv4', ['version']],
+  ['ipv6', ['version']],
+  ['jwt', ['alg']],
+  ['ksuid', []],
+  ['lowercase', []],
+  ['mac', ['delimiter']],
+  ['md5_base64', ['fn']],
+  ['md5_base64url', ['fn']],
+  ['md5_hex', ['fn']],
+  ['nanoid', ['length']],
+  ['regex', []],
+  ['sha1_base64', ['fn']],
+  ['sha1_base64url', ['fn']],
+  ['sha1_hex', ['fn']],
+  ['sha256_base64', ['fn']],
+  ['sha256_base64url', ['fn']],
+  ['sha256_hex', ['fn']],
+  ['sha384_base64', ['fn']],
+  ['sha384_base64url', ['fn']],
+  ['sha384_hex', ['fn']],
+  ['sha512_base64', ['fn']],
+  ['sha512_base64url', ['fn']],
+  ['sha512_hex', ['fn']],
+  ['starts_with', ['prefix']],
+  ['time', ['precision']],
+  ['ulid', []],
+  ['uppercase', []],
+  ['url', ['hostname', 'normalize', 'protocol']],
+  ['uuid', ['version']],
+  ['xid', []],
+];
+
+/** The names in Zod's own list of string formats. */
+const STRING_FORMAT_NAMES: readonly string[] = [
+  'base64',
+  'base64url',
+  'cidrv4',
+  'cidrv6',
+  'credit_card',
+  'cuid',
+  'cuid2',
+  'date',
+  'datetime',
+  'duration',
+  'e164',
+  'email',
+  'emoji',
+  'ends_with',
+  'guid',
+  'iban',
+  'includes',
+  'ipv4',
+  'ipv6',
+  'json_string',
+  'jwt',
+  'ksuid',
+  'lowercase',
+  'nanoid',
+  'regex',
+  'starts_with',
+  'time',
+  'ulid',
+  'uppercase',
+  'url',
+  'uuid',
+  'xid',
+];
 
 describe('the pinned version of Zod', () => {
   it('is the version the lists were read at', () => {
@@ -76,67 +222,60 @@ describe('the schema kinds of Zod', () => {
     const read = constructs.schemaKinds.map((entry) => entry.kind);
 
     expect(read).toHaveLength(39);
-    expect(new Set(read).size).toBe(39);
     expect(constructs.kindValues.filter((kind) => !read.includes(kind))).toEqual(['int']);
   });
 
-  it('lists the fields of a definition, without the three every definition holds', () => {
-    expect(kindNamed('object').fields).toEqual(['catchall', 'shape']);
-    expect(kindNamed('default').fields).toEqual(['defaultValue', 'innerType']);
-    expect(kindNamed('prefault').fields).toEqual(['defaultValue', 'innerType']);
-    expect(kindNamed('tuple').fields).toEqual(['items', 'rest']);
-    expect(kindNamed('record').fields).toEqual(['keyType', 'mode', 'partial', 'valueType']);
-    expect(kindNamed('lazy').fields).toEqual(['getter']);
-    expect(kindNamed('template_literal').fields).toEqual(['format', 'parts']);
-    expect(kindNamed('union').fields).toEqual(['inclusive', 'options']);
-    expect(kindNamed('never').fields).toEqual([]);
-  });
-
-  it('holds a function of the author where a definition says so', () => {
-    expect(kindNamed('custom').fields).toContain('fn');
-    expect(kindNamed('transform').fields).toContain('transform');
-    expect(kindNamed('pipe').fields).toContain('transform');
-    expect(kindNamed('lazy').fields).toContain('getter');
+  it('lists every kind with the fields of its definition', () => {
+    expect(constructs.schemaKinds.map((entry) => [entry.kind, entry.fields])).toEqual(SCHEMA_KINDS);
   });
 });
 
 describe('the checks of Zod', () => {
-  it('lists the 15 kinds of check', () => {
-    expect(constructs.checks.map((entry) => entry.check)).toEqual([
-      'bigint_format',
-      'greater_than',
-      'length_equals',
-      'less_than',
-      'max_length',
-      'max_size',
-      'mime_type',
-      'min_length',
-      'min_size',
-      'multiple_of',
-      'number_format',
-      'overwrite',
-      'property',
-      'size_equals',
-      'string_format',
-    ]);
-  });
-
-  it('lists the fields of a check, without the four every check holds', () => {
-    const fieldsOf = new Map(constructs.checks.map((entry) => [entry.check, entry.fields]));
-
-    expect(fieldsOf.get('less_than')).toEqual(['inclusive', 'value']);
-    expect(fieldsOf.get('multiple_of')).toEqual(['value']);
-    expect(fieldsOf.get('string_format')).toEqual(['format', 'pattern']);
-    expect(fieldsOf.get('overwrite')).toEqual(['tx']);
+  it('lists all 15 checks with the fields of each definition', () => {
+    expect(constructs.checks).toHaveLength(15);
+    expect(constructs.checks.map((entry) => [entry.check, entry.fields])).toEqual(CHECKS);
   });
 });
 
 describe('the formats of Zod', () => {
-  it('lists the 32 string formats', () => {
-    expect(constructs.stringFormats).toHaveLength(32);
-    expect(constructs.stringFormats).toContain('url');
-    expect(constructs.stringFormats).toContain('json_string');
-    expect(constructs.stringFormats).toContain('regex');
+  it('lists the 32 names in its own list of string formats', () => {
+    expect(constructs.stringFormatNames).toHaveLength(32);
+    expect(constructs.stringFormatNames).toEqual(STRING_FORMAT_NAMES);
+  });
+
+  it('lists the 50 string formats it defines, each with its own fields', () => {
+    expect(constructs.stringFormats).toHaveLength(50);
+    expect(constructs.stringFormats.map((entry) => [entry.format, entry.fields])).toEqual(
+      STRING_FORMATS,
+    );
+  });
+
+  it('defines 19 formats its own list of names leaves out, and names one it does not define', () => {
+    const defined = constructs.stringFormats.map((entry) => entry.format);
+    const named = constructs.stringFormatNames;
+
+    expect(defined.filter((format) => !named.includes(format))).toEqual([
+      'currency_code',
+      'hex',
+      'hostname',
+      'mac',
+      'md5_base64',
+      'md5_base64url',
+      'md5_hex',
+      'sha1_base64',
+      'sha1_base64url',
+      'sha1_hex',
+      'sha256_base64',
+      'sha256_base64url',
+      'sha256_hex',
+      'sha384_base64',
+      'sha384_base64url',
+      'sha384_hex',
+      'sha512_base64',
+      'sha512_base64url',
+      'sha512_hex',
+    ]);
+    expect(named.filter((format) => !defined.includes(format))).toEqual(['json_string']);
   });
 
   it('lists the five number formats and the two bigint formats', () => {
