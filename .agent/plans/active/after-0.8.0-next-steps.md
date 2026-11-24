@@ -493,6 +493,48 @@ specification are approved and on `main`.
    operation's parameters. One is left for the writer: the header definitions OpenAPI
    says are ignored are held like any other, and Appendix B.4 writes them nowhere.
 
+   **Before the writer: what was measured on 24 November, and the order it sets.** The
+   writer cannot meet Appendix B.4 from today's model. Run through `buildIR`:
+
+   - **The model records no reference** for a parameter, a request body, a response or a
+     response header that an operation gives by `$ref`. Each is held as the object it
+     points to, with nothing to say it was named. Only a path item's parameter carries a
+     mark (`pathItemRef`, from pull request 191). So Castr inlines these today in every
+     output, the OpenAPI it writes back among them, which SPEC-PR-3 forbids ("Castr never
+     inlines a reference"); and a writer of the `paths` module could not refuse them, as
+     0.11.1 requires, because it could not tell.
+   - **A path item that holds no operation is not in the model at all**, so the first row
+     of B.4 (a property of `paths` for each path template) cannot be met for it.
+   - **`$defs` is not in the model.** `webhooks` is.
+
+   So the order for unit 8 is:
+
+   1. **The model keeps the reference** by which an operation's parameter, request body,
+      response or response header was given, and the OpenAPI writer writes it back as a
+      reference. Its own pull request, test first. It repairs a breach of SPEC-PR-3 that
+      stands today whether or not the `paths` module is ever written.
+   2. **The refusals, each with a failing case first**, for what B.4 leaves in no row:
+      anything given by reference other than a schema; additional operations and the
+      `query` method; a document that holds `webhooks` or `$defs`; a `querystring`
+      parameter; a parameter or header with `content`; a media type with `itemSchema`,
+      with no schema, or given by reference; an operation with no `responses`; a path
+      item with parameters and no operation; a clash with the five names. And the
+      ignored header definitions written nowhere, compared without regard to case. The
+      prototype drops every one of these in silence today.
+   3. **Count, before choosing how the module is emitted.** Run the writer with its
+      refusals over every document the snapshot, characterisation and generated suites
+      convert today, and count how many it refuses. Appendix B.1 says a rejection in one
+      column is a rejection of that output only. If the module went into the one shared
+      file by default, each refusal would take the Zod and the endpoint definitions down
+      with it. The count decides between a shared file and a separate output; a new
+      option, template or file is the public surface (SPEC-N-4). If the strict reading
+      leaves two forms standing, that is one question to the owner.
+   4. **Two gaps in the prototype's tests to close with the writer.** A body written in
+      place is unproved: assert that a response body in `paths` and `z.output` of the Zod
+      schema for the same operation, status and media type are mutually assignable, for
+      an inline body and for Oak's lesson. And every test ran with `schemas-only` and all
+      types exported; the default options are untested.
+
    Recorded from the reviews of pull requests 190 and 191, each with its decision:
 
    - **For the next amendment:** Appendix B.4 names "given by reference to a component";
