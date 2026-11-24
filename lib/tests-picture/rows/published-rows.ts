@@ -42,6 +42,14 @@ export function schemaTypeValues(read: DefinitionReader): readonly string[] {
 }
 
 /**
+ * The keywords the Draft 2020-12 dialect's own meta-schema declares, beyond those of the
+ * vocabularies it names. They are keywords of earlier drafts, kept and marked deprecated.
+ */
+export function dialect2020Keywords(read: DefinitionReader): readonly KeywordKind[] {
+  return readKeywords('dialect', read('jsonschema-2020-12-schema.json').schema);
+}
+
+/**
  * The keywords of JSON Schema Draft-07. Its one meta-schema defines them all; the draft
  * has no vocabularies.
  */

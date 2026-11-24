@@ -232,7 +232,17 @@ The keywords of JSON Schema Draft-07 are computed the same way, from its one pin
 meta-schema. No row of the picture uses them: Draft-07 is not a schema dialect of OpenAPI
 3.1 or 3.2. They are listed because the model's design is made against every format the
 specification names (SPEC-AR-2), and the tests state how the two drafts differ: three
-keywords only Draft-07 has, fourteen only Draft 2020-12 has.
+keywords of Draft-07 that no vocabulary of Draft 2020-12 holds (`additionalItems`,
+`definitions` and `dependencies`), and fourteen that only Draft 2020-12 has.
+
+The vocabularies are not the whole of Draft 2020-12. Its dialect meta-schema, pinned
+beside them, declares four more keywords itself and marks each deprecated: `definitions`,
+`dependencies`, `$recursiveAnchor` and `$recursiveRef`. So two of Draft-07's three are
+still declared by the 2020-12 dialect, and only `additionalItems` is gone from it. The
+2020-12 validation text (Appendix A) says implementations should assume `definitions`
+behaves as `$defs` under that meta-schema, and says what `dependencies` was replaced by
+without saying what it now does; what a document that uses the four means is for the
+list made by hand.
 Zod's constructs are read from the installed package's own types, through the compiler
 ([`rows/zod-constructs.ts`](rows/zod-constructs.ts)). Every schema and every check of
 Zod holds a definition, and Zod's core module exports an interface for each. The reading
@@ -253,9 +263,12 @@ list of format names holds 32, leaving out 19 formats Zod defines (`mac`, `hex`,
 The list is read at one pinned version, and the test that compares the installed version
 with the pin fails on any other, so the list is read again when Zod moves. What this
 reading does not see, which a list made by hand has to hold, is a method or a factory
-that builds a kind with particular fields and no interface of its own: `z.strictObject`
-and `z.looseObject` build an object with a `catchall`, and `z.stringbool` builds a
-codec.
+that builds a construct with particular fields and no interface of its own:
+
+- `z.strictObject` and `z.looseObject` build an object with a `catchall`, and
+  `z.stringbool` builds a codec;
+- `z.check` and `z.superRefine`, `z.describe` and `z.meta` build the base check with the
+  `check` values `custom`, `describe` and `meta`, which no type states.
 
 Constructs that only the specifications' text
 defines (the values of `format`, boolean schemas, a keyword no vocabulary defines) cannot
