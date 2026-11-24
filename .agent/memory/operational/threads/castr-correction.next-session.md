@@ -31,7 +31,10 @@ subagents: use the model that fits the task.
   2. Unit 8, beside it: the `paths` module. A prototype is on the branch
      `feat/paths-type-prototype`, checked at type level against a client of
      `openapi-fetch`. Its rows are approved: Appendix B.4, revision 0.11.1 (owner,
-     24 November, by name: "I approve 0.11.1"). There is no 0.11.0. The approval check needs the owner's words to name the exact version; a
+     24 November, by name: "I approve 0.11.1"). There is no 0.11.0. The writer does not come next: measured on 24 November,
+     the model records no reference for a parameter, body, response or header given by
+     `$ref`, so the first step is the model keeping it (the plan's paragraph "Before the
+     writer" gives the four steps in order). The approval check needs the owner's words to name the exact version; a
      family such as 0.11.x does not pass it, and must not be made to pass by the seat's
      own framing words in the cell. Next is the writer in `src`, test first, with three faults of the model the
      plan lists. No template emits it before the rows are approved.
