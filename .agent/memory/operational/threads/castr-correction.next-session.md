@@ -9,6 +9,21 @@ session and none of this machine's files. Verify each line against git and GitHu
 acting. The section below this one is the earlier handover and is still true where this
 one is silent.
 
+### The frame, corrected by the owner on 24 November
+
+The seat reported that it had "found, by measuring before building, that the writer
+cannot be built on today's model". The owner, verbatim: "The model needing to change is
+the whole point of the current effort, this is not a surprise."
+
+So read everything below, and the plan's paragraph headed "Before the writer", in this
+frame and not the seat's: **correcting the model is the work.** An output such as the
+`paths` module is a consumer that shows where the model is wrong; it is not the goal
+that the model stands in the way of. A place where the model loses or misstates what a
+document says (a reference followed and forgotten, a path with no operation dropped, a
+parameter held twice) is the unit of work in its own right, valued by what the model
+then holds truly, whether or not any writer is waiting for it. Do not present such a
+finding as a blocker, a detour or a discovery.
+
 ### State at the stop
 
 - `main` holds specification **0.11.1** (Appendix B.4, the rows for the `paths` module;
