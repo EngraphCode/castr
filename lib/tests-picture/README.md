@@ -233,6 +233,30 @@ meta-schema. No row of the picture uses them: Draft-07 is not a schema dialect o
 3.1 or 3.2. They are listed because the model's design is made against every format the
 specification names (SPEC-AR-2), and the tests state how the two drafts differ: three
 keywords only Draft-07 has, fourteen only Draft 2020-12 has.
+Zod's constructs are read from the installed package's own types, through the compiler
+([`rows/zod-constructs.ts`](rows/zod-constructs.ts)). Every schema and every check of
+Zod holds a definition, and Zod's core module exports an interface for each. The reading
+takes every exported interface that holds a definition: 48 schemas across 39 kinds, each
+with the fields its definition holds, and 16 checks each with its fields. It also lists
+the 50 string formats Zod defines a schema or a check for, each with its own fields, and
+the number and bigint formats. No row of the picture uses them; they are listed for the
+same reason as Draft-07's keywords.
+
+Zod states unions of its own for its schemas, its checks and the names of its string
+formats, and none of the three is complete. Each entry says whether Zod's union lists
+it. Nine schemas are left out, among them `$ZodDiscriminatedUnion`, `$ZodXor`,
+`$ZodExactOptional` and `$ZodCodec`; so is one check, `$ZodCheckProperties`; and the
+list of format names holds 32, leaving out 19 formats Zod defines (`mac`, `hex`,
+`hostname`, the currency code and the fifteen hash formats) and naming one,
+`json_string`, with no definition of its own.
+
+The list is read at one pinned version, and the test that compares the installed version
+with the pin fails on any other, so the list is read again when Zod moves. What this
+reading does not see, which a list made by hand has to hold, is a method or a factory
+that builds a kind with particular fields and no interface of its own: `z.strictObject`
+and `z.looseObject` build an object with a `catchall`, and `z.stringbool` builds a
+codec.
+
 Constructs that only the specifications' text
 defines (the values of `format`, boolean schemas, a keyword no vocabulary defines) cannot
 be computed. They are listed by hand in [`rows/schema-proposals.ts`](rows/schema-proposals.ts),

@@ -77,6 +77,26 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
   `definitions`, `dependencies`); fourteen of Draft 2020-12's 57 are not in Draft-07.
   The two drafts list the same seven values of `type`. Next: the texts, read section by
   section for what no machine-readable file holds; then Zod.
+- 2026-11-24, M1, the part for Zod, worked ahead of the reading of the texts, which
+  four readers are doing in the background. Pull request 197 (Draft-07) merged as
+  `ec9a6753`. **Step back.** The step is the size given. Nothing changes for Oak's
+  document: the third step of which that is so, and the owner was told at the close of
+  M0 that none of the design's steps would. **Found by doing, not decided:** every
+  schema and check of Zod holds a definition and the core module exports an interface
+  for each, so the list is computed through the compiler from resolved types and no
+  declaration's text is read. At 4.6.7: 40 values of a definition's `type`; 48 schemas
+  across 39 kinds (`int` is a format of a number and has no schema of its own); 16
+  checks; 50 string formats, each with its own fields; five number formats, two bigint
+  formats. **Corrected by review, twice.** The first reading took Zod's own unions as
+  complete. They are not: nine schemas are outside `$ZodTypes` (among them the
+  discriminated union, the exclusive union, the exact optional and the codec), one check
+  is outside `$ZodChecks` (`properties`), and Zod's list of string format names holds 32
+  of the 50. The lesson for the design: a publisher's own summary of its constructs is
+  a claim to test, not a list to take. **What the reading does not see,** for the hand
+  list and for M2: a factory such as `z.strictObject` or `z.stringbool` builds a kind
+  with particular fields and has no interface of its own. Appendix A names constructs by
+  method; the structure will be set against definitions, so M4 needs the map between
+  the two.
 
 - 2026-11-24, M0, the reviews. The assumptions reviewer and the four seats of the
   conscience panel read the first draft. All four seats judged the work on track; three
