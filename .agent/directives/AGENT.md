@@ -18,8 +18,8 @@ Read this before anything else. It was lost once, and the work drifted.
   its own right. An output is a consumer that shows where the model is wrong; it is
   not a goal the model stands in the way of. Owner, 24 November 2026: "The model needing
   to change is the whole point of the current effort, this is not a surprise."
-- **No string manipulation in the IR or the writers.** Code is generated from an AST
-  (`ts-morph` structures), and the model holds meaning as typed data, never as text to
+- **No string manipulation in the IR or the writers** (SPEC-AR-3 of the specification
+  says it in full). Code is generated from an AST, and the model holds meaning as typed data, never as text to
   be cut, joined or pattern-matched. Where that cannot be done, stop and flag it to the
   owner for discussion; do not work round it. Owner, 24 November 2026: "The IR and the
   writers must not use string manipulation. Where that constraint is impossible to
