@@ -487,11 +487,28 @@ specification are approved and on `main`.
    schema: 0.11.1 leaves it in no row, because a named definition stays named. Next
    is the writer, test first: the prototype moves into `src` with its type-level tests,
    a template emits the module, and the picture's 21 cells in the TypeScript column are
-   judged against it. Three faults in the model are repaired with it, each found by
-   running a reviewer's case through the prototype: a parameter stated on a path item
-   and again on its operation is held twice; a path item's parameter given by reference
-   to a component is not among the operation's parameters; and the header definitions
-   OpenAPI says are ignored are held like any other.
+   judged against it. Two faults in the model that the prototype exposed are repaired
+   (pull request 191): a parameter stated on a path item and again on its operation was
+   held twice, and a path item's parameter given by reference was not among the
+   operation's parameters. One is left for the writer: the header definitions OpenAPI
+   says are ignored are held like any other, and Appendix B.4 writes them nowhere.
+
+   Recorded from the reviews of pull requests 190 and 191, each with its decision:
+
+   - **For the next amendment:** Appendix B.4 names "given by reference to a component";
+     a reference may point elsewhere. No row covers that form and SPEC-I-1 stops it, so
+     the writer refuses every such reference; the wording is broadened when the text is
+     next amended.
+   - **The approval check reads the whole cell.** It passed a row on words the seat
+     wrote beside the owner's. It is to look for the version inside the quoted words
+     only (`agent-tools`, the specification approval validator). Its own change.
+   - **The commit tooling cannot take a rename in one commit.** The staged-files check
+     wants the new path only, and the machine-local-path scan then tries to read the old
+     one. A rename lands as a removal and an addition until that is repaired.
+   - **Won't fix in 191:** a stored model whose marker of a path item's reference sits on
+     a parameter the reference does not resolve to. The reader cannot build one. It is
+     a question of whether the stored model's boundary checks coherence across fields
+     at all, which it does nowhere today.
 
    **The picture's own, from the review of pull request 188. Not repaired.** The walk
    names a `format` by its value and does not look at the type beside it, so a format in a
