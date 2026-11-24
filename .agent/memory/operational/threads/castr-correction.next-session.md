@@ -24,6 +24,8 @@ stood as the thing to extend.
 Things this seat built or extended that the frame says to question, not to trust:
 
 - the prototype of the `paths` module, which joins strings;
+- the TypeScript type writer's `const` and `enum` literals (pull requests 177 and 178),
+  written as text, against SPEC-AR-3;
 - the Zod writer's metadata, written by `JSON.stringify` into `.meta(`, which the seat
   extended for `default`;
 - the marks `ref` and `pathItemRef`, which hold an OpenAPI reference as text in a model
@@ -39,7 +41,8 @@ The seat reported that it had "found, by measuring before building, that the wri
 cannot be built on today's model". The owner, verbatim: "The model needing to change is
 the whole point of the current effort, this is not a surprise."
 
-So read everything below, and the plan's paragraph headed "Before the writer", in this
+So read everything below, and the plan's paragraph headed
+"Where the model is wrong, as the `paths` module showed on 24 November", in this
 frame and not the seat's: **correcting the model is the work.** An output such as the
 `paths` module is a consumer that shows where the model is wrong; it is not the goal
 that the model stands in the way of. A place where the model loses or misstates what a
@@ -70,10 +73,13 @@ What they mean for the work in hand:
   flagged to the owner and discussed (the owner's later words, in AGENT.md). The
   directive already said TypeScript and Zod are generated with `ts-morph`. **The prototype of the `paths` module breaks this**: it assembles the
   module by joining template strings (`block`, `key`, `` `${…}: ${…}` ``). That was
-  acceptable for finding the rows and is not the form of the writer. The writer in `src`
-  builds the five exported types as `ts-morph` structures (interfaces, properties, type
-  aliases) and takes each schema position from the type writer; none of the prototype's
-  string assembly is carried over. Also on `main` from this seat and to be looked at in
+  acceptable for finding the rows and is not the form of the writer. The specification already says this in SPEC-AR-3:
+  generated code is syntax-tree nodes printed by the compiler's printer, and no writer
+  assembles target syntax as text. The type writer itself breaks it (this seat wrote
+  `const` and `enum` literals with `JSON.stringify` and a join of `" | "` in pull requests
+  177 and 178), so a module of types is not made compliant by taking each schema's type
+  from it. The type writer is repaired first, or the two are built together on syntax
+  trees; the plan says so. None of the prototype's string assembly is carried over. Also on `main` from this seat and to be looked at in
   the same light: the Zod writer's metadata is written by `JSON.stringify` into `.meta(`
   (it was so before the `default` annotation was added to it).
 
@@ -104,7 +110,8 @@ What they mean for the work in hand:
 ### What to do next, in order
 
 The plan (`.agent/plans/active/after-0.8.0-next-steps.md`) is the authority; its
-paragraph "Before the writer" gives the steps for the `paths` module. In short:
+paragraph headed "Where the model is wrong, as the `paths` module showed on 24 November"
+gives the steps. In short:
 
 1. Finish pull request 193 as above.
 2. The model keeps what it still loses, each its own pull request, test first: a path
