@@ -86,18 +86,16 @@ describe('the parameters of a path item and of its operation', () => {
 
   it('is a model the boundary accepts, and one it refuses where the reference is no text', () => {
     const model = buildIR(DOCUMENT);
+    const [operation] = model.operations;
+    const page = operation?.parameters[1];
+    // One operation holding the one parameter that came by reference, with that reference
+    // set to the value under test.
     const withReference = (reference: unknown): unknown => ({
       ...model,
-      operations: model.operations.map((operation) => ({
-        ...operation,
-        parameters: operation.parameters.map((parameter) =>
-          parameter.pathItemRef === undefined
-            ? parameter
-            : { ...parameter, pathItemRef: reference },
-        ),
-      })),
+      operations: [{ ...operation, parameters: [{ ...page, pathItemRef: reference }] }],
     });
 
+    expect(page?.name).toBe('page');
     expect(isCastrDocument(withReference('#/components/parameters/Page'))).toBe(true);
     expect(isCastrDocument(withReference(7))).toBe(false);
   });
