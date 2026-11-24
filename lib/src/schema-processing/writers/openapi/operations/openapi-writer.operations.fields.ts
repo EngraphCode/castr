@@ -51,8 +51,10 @@ export function writeOperation(operation: CastrOperationLike): OperationObject {
 
   writeOperationMetadata(operation, result);
 
-  if (operation.parameters.length > 0) {
-    result.parameters = operation.parameters.map(writeParameter);
+  // A parameter the path item gave by reference is written there, by its reference.
+  const own = operation.parameters.filter((parameter) => parameter.pathItemRef === undefined);
+  if (own.length > 0) {
+    result.parameters = own.map(writeParameter);
   }
 
   if (operation.requestBody !== undefined) {
