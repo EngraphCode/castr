@@ -8,29 +8,41 @@ import {
 import type {
   CastrAdditionalOperation,
   CastrOperation,
+  CastrParameter,
   IRSecurityRequirement,
   IRSecuritySchemeRequirement,
 } from '../../../../ir/index.js';
 import type { IRBuildContext } from '../../builder.types.js';
+import { buildCastrParameters, buildSingleParameter } from '../builder.parameters.js';
 import { buildIRRequestBody } from '../builder.request-body.js';
 
 type CastrOperationLike = CastrOperation | CastrAdditionalOperation;
 
-export function mergePathAndOperationParameters(
+function placeOf(parameter: CastrParameter): string {
+  return `${parameter.in} ${parameter.name}`;
+}
+
+/**
+ * The parameters an operation has: its own, and each of its path item's that it does not
+ * state itself. A parameter is one name in one place, and where both levels state it the
+ * operation's stands. A path item's parameter given by reference is followed like any
+ * other, and keeps the reference it came by, so that it is written back to OpenAPI on
+ * the path item and not a second time in the operation.
+ */
+export function buildOperationParameters(
   pathItem: PathItemObject,
   operation: OperationObject,
-): OperationObject {
-  const pathLevelParams = pathItem.parameters || [];
-  const nonRefPathParams = pathLevelParams.filter((parameter) => !isReferenceObject(parameter));
-  const mergedParameters = [...nonRefPathParams, ...(operation.parameters || [])];
-
-  const operationWithoutParams = { ...operation };
-  delete operationWithoutParams.parameters;
-
-  return {
-    ...operationWithoutParams,
-    ...(mergedParameters.length > 0 ? { parameters: mergedParameters } : {}),
-  };
+  context: IRBuildContext,
+): CastrParameter[] {
+  const own = buildCastrParameters(operation.parameters, context);
+  const stated = new Set(own.map(placeOf));
+  const inherited = (pathItem.parameters ?? [])
+    .map((parameter): CastrParameter => {
+      const built = buildSingleParameter(parameter, context);
+      return isReferenceObject(parameter) ? { ...built, pathItemRef: parameter.$ref } : built;
+    })
+    .filter((parameter) => !stated.has(placeOf(parameter)));
+  return [...inherited, ...own];
 }
 
 export function addOptionalOperationFields(

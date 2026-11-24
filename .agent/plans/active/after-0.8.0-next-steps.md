@@ -375,7 +375,8 @@ specification are approved and on `main`.
    9. The reader's document pass, position by position (left out of pull request 175).
 
    **Step back before the third compaction of 23 November: the order changes.** The
-   picture's table for Oak's document holds 26 rows that are not right. Two are schema
+   picture's table for Oak's document held, at that step back, 26 rows that were not right
+   (24 since pull requests 187 and 188). Two are schema
    rows, `format: uri` and `default`, and both wait on the amendment (unit 6). Of the 24
    structure rows, 21 cells are the `paths` type that nothing writes (unit 8), and the
    rest are the endpoint definition's shape (unit 6 again). Units 4 and 5 moved none of
@@ -395,8 +396,11 @@ specification are approved and on `main`.
       definition and where a run's report is returned, both the public surface
       (SPEC-N-4).
    2. **Unit 8 beside it**, in the wait on the owner: the rows for the document's
-      structure to TypeScript, then the `paths` type. It is 21 of the 26.
-   3. **The leftovers of unit 5 become one unit, after those.** Every one of them was
+      structure to TypeScript, then the `paths` type. It is 21 of the 24 cells left.
+   3. **The Zod reader and the declarations it passes over**, set out below. It comes
+      before the leftovers of unit 5 because it loses whole schemas, and it depends on
+      nothing above.
+   4. **The leftovers of unit 5 become one unit, after those.** Every one of them was
       the same finding: a keyword the reader did not look at. The reader copies the
       keywords it knows and lets the others fall. The cure proposed is the other kind of
       list: the keywords the reader reads, with any other keyword of a schema refused by
@@ -436,8 +440,10 @@ specification are approved and on `main`.
    review round of 187).
 
    **Unit 8, the prototype of the `paths` module (23 November).** It is
-   `lib/tests-picture/prototypes/paths-type.ts`, written from the model alone, with its
-   tests beside it. No template writes it and nothing in `src` reads it, because its
+   `lib/tests-picture/prototypes/paths-type.ts` on the branch `feat/paths-type-prototype`,
+   written from the model alone, with its tests beside it. The branch is pushed and is
+   not merged: a test that holds the shape would assume rows that are not approved
+   (section 12). No template writes it and nothing in `src` reads it, because its
    rows are not approved. Every schema position is written by the type writer that
    writes the exported component types. Its tests are at type level, on a client of
    `openapi-fetch` built over the type: `data` is the success body and `error` each
@@ -449,10 +455,13 @@ specification are approved and on `main`.
 
    What it found, each a choice the rows for the document's structure have to state:
 
-   - **A status the client's types do not key.** `openapi-fetch` takes `data` from
-     `200` to `207` and `2XX`, and `error` from a list of `4xx` and `5xx` codes, `4XX`,
-     `5XX` and `default`. A `302`, `1XX` or `3XX` is in the type and reaches neither.
-     Oak's one `302` is such a response. The type is right; the row says so.
+   - **A status the client's types do not key.** `openapi-fetch` 0.15.2, by the types of
+     `openapi-typescript-helpers` 0.0.15 it is installed with (`OkStatus` and
+     `ErrorStatus`), takes `data` from `200` to `204`, `206`, `207` and `2XX`, and `error` from a list of `4xx` and `5xx` codes, `4XX`,
+     `5XX` and `default`. A `205`, a `302`, `1XX` or `3XX` is in the type and reaches neither. The declared
+     range is `^0.15.0`, so a later version may differ; the observation is of these two.
+     Oak's one `302` is such a response. That is what was observed of the client; how
+     the row words it is for the amendment, and is not settled here.
    - **A response with no body** is `content?: never`, and a call to it gives `data` of
      `undefined`. Nothing is invented for it.
    - **An operation with no `operationId`** has no key in `operations`, so it is written
@@ -470,15 +479,44 @@ specification are approved and on `main`.
      Ecosystem repository's present file has more names only because it is rewritten
      after generation.
 
-   Next for unit 8: the rows, as an amendment the owner approves, then the writer in
-   `src` and a template that emits it.
+   Unit 8's rows are approved: Appendix B.4, as revision 0.11.1, approved by the owner by
+   name on 24 November ("I approve 0.11.1") after two rounds of hosted review of the
+   draft and one of the change. There is no revision 0.11.0: the owner's first words
+   named no exact version and are not an approval of record. The
+   writer refuses, as not built, anything given by reference to a component other than a
+   schema: 0.11.1 leaves it in no row, because a named definition stays named. Next
+   is the writer, test first: the prototype moves into `src` with its type-level tests,
+   a template emits the module, and the picture's 21 cells in the TypeScript column are
+   judged against it. Two faults in the model that the prototype exposed are repaired
+   (pull request 191): a parameter stated on a path item and again on its operation was
+   held twice, and a path item's parameter given by reference was not among the
+   operation's parameters. One is left for the writer: the header definitions OpenAPI
+   says are ignored are held like any other, and Appendix B.4 writes them nowhere.
 
-   **The picture's own, from the review of pull request 188.** The walk names a `format`
-   by its value and does not look at the type beside it, so a format in a schema whose
-   type is not `string` alone is counted under its format row, though a format constrains
-   only strings and Appendix B.3 excludes that schema from the `format: uri` row. It
-   holds for every format row. Oak's uses are all `type: string` alone. The repair is in
-   the walk: such a schema is named by no format row.
+   Recorded from the reviews of pull requests 190 and 191, each with its decision:
+
+   - **For the next amendment:** Appendix B.4 names "given by reference to a component";
+     a reference may point elsewhere. No row covers that form and SPEC-I-1 stops it, so
+     the writer refuses every such reference; the wording is broadened when the text is
+     next amended.
+   - **The approval check reads the whole cell.** It passed a row on words the seat
+     wrote beside the owner's. It is to look for the version inside the quoted words
+     only (`agent-tools`, the specification approval validator). Its own change.
+   - **The commit tooling cannot take a rename in one commit.** The staged-files check
+     wants the new path only, and the machine-local-path scan then tries to read the old
+     one. A rename lands as a removal and an addition until that is repaired.
+   - **Won't fix in 191:** a stored model whose marker of a path item's reference sits on
+     a parameter the reference does not resolve to. The reader cannot build one. It is
+     a question of whether the stored model's boundary checks coherence across fields
+     at all, which it does nowhere today.
+
+   **The picture's own, from the review of pull request 188. Not repaired.** The walk
+   names a `format` by its value and does not look at the type beside it, so a format in a
+   schema whose type it does not apply to (`format: uri` beside `type: number`, or with
+   no `type`) is counted under its format row, though Appendix B.3 excludes that schema
+   from the `format: uri` row. It holds for every format row, the number formats among
+   them. Oak's uses of `format: uri` are all `type: string` alone. The repair, still to
+   do, is in the walk: a format is named by its row only beside the type it applies to.
 
    **Settled without the owner, at the owner's word of 23 November.** Their approval of
    revision 0.10.1 did not say which of two variants it covered. Asked, they directed the

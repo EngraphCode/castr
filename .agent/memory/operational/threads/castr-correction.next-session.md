@@ -19,16 +19,24 @@ subagents: use the model that fits the task.
   `propertyNames` that refuses no name (row 2); every writer refuses a schema-valued
   `additionalProperties` outside the row; and Oak's document converts in every output.
   With 177 a `const` that decides alone is read and written as a literal. The
-  specification is 0.10.1 once its pull request merges: the owner approved it on 23
+  specification reached 0.10.1, and 0.11.1 on 24 November: the owner approved it on 23
   November by question ("I approve revision 0.10.0", then "I approve revision 0.10.1" for two
   adjustments from the first hosted review: the `format: uri` row covers `type: string`
   alone, and a new class, carried with a declared limit), choosing `z.url()` with a declared
   limit (SPEC-P-8) for `format: uri`. Its code is merged (187, 188), and Oak's document has 24 of 74
-  rows not right, all of them the document's structure. Next is unit 8, the `paths` type:
-  a prototype on the branch `feat/paths-type-prototype`, checked at type level against a
-  client of `openapi-fetch`, then its rows by amendment, then the writer. No template
-  emits it before the rows are approved. The plan also holds a newer unit that ranks
-  above the leftovers of unit 5: the Zod reader passes over declarations it cannot read.
+  rows not right, all of them the document's structure. The order from here is the plan's numbered order, and
+  the plan is the authority:
+  1. Unit 6, second part: the endpoint definition's shape and the run report, held for
+     its own amendment (the public surface).
+  2. Unit 8, beside it: the `paths` module. A prototype is on the branch
+     `feat/paths-type-prototype`, checked at type level against a client of
+     `openapi-fetch`. Its rows are approved: Appendix B.4, revision 0.11.1 (owner,
+     24 November, by name: "I approve 0.11.1"). There is no 0.11.0. The approval check needs the owner's words to name the exact version; a
+     family such as 0.11.x does not pass it, and must not be made to pass by the seat's
+     own framing words in the cell. Next is the writer in `src`, test first, with three faults of the model the
+     plan lists. No template emits it before the rows are approved.
+  3. The Zod reader, which passes over declarations it cannot read.
+  4. The leftovers of unit 5, as one unit.
 - **Also merged on 23 November:** 176 (the sort and its queue, in the plan), 178 (`enum`
   as literals in TypeScript, a union kept whole, and its members told apart by what is
   written) and 179 (the picture counts a closed object's `false` once). No pull request
@@ -41,7 +49,8 @@ subagents: use the model that fits the task.
   paragraph of that name first. In short: unit 6 (the amendment, ending in a question to
   the owner) is next, unit 8 (the `paths` type) runs beside it, and the leftovers of
   unit 5 become one unit after those. The reason is the picture's table for Oak's
-  document: all 26 rows left run through units 6 and 8.
+  document: at that step back all 26 rows then left ran through units 6 and 8. Two
+  have since been made right, and 24 are left.
 - **How this seat works a pull request**, since no file says it:
   - A review arrives a few minutes after each push. The reviewer's summary comment on
     the pull request holds the commit it reviewed and whether anything is unresolved;
@@ -65,7 +74,7 @@ subagents: use the model that fits the task.
   prepare for compaction, post-compaction we continue". So the seat carries on after it
   without being asked again. A third letter to a successor is under `.agent/experience/`.
 - **The picture:** `pnpm picture` from `lib/` prints the counts. Oak's document uses 74
-  of 318 rows and 26 are not right; it was 29 of 75 after 175. Units 4 and 5 touch no
+  of 318 rows and 24 are not right; it was 29 of 75 after 175 and 26 before 187 and 188. Units 4 and 5 touch no
   row Oak uses.
 - **What review taught on these pull requests.** A snapshot change was accepted
   that had lost a branch of a union: read a changed snapshot for what is gone, not only
