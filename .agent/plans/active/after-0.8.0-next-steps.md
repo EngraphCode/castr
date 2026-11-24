@@ -479,8 +479,11 @@ specification are approved and on `main`.
      Ecosystem repository's present file has more names only because it is rewritten
      after generation.
 
-   Unit 8's rows are approved: amendment 0.11.0, Appendix B.4, approved by the owner on
-   24 November ("I approve 0.11.x") after two rounds of hosted review of the draft. Next
+   Unit 8's rows are approved: Appendix B.4, as amendment 0.11.0 and its adjustment
+   0.11.1, approved by the owner on 24 November ("I approve 0.11.x", then "I approve
+   0.11.1") after two rounds of hosted review of the draft and one of the change. The
+   writer refuses, as not built, anything given by reference to a component other than a
+   schema: 0.11.1 leaves it in no row, because a named definition stays named. Next
    is the writer, test first: the prototype moves into `src` with its type-level tests,
    a template emits the module, and the picture's 21 cells in the TypeScript column are
    judged against it. Three faults in the model are repaired with it, each found by
