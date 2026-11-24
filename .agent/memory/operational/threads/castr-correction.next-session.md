@@ -24,6 +24,34 @@ parameter held twice) is the unit of work in its own right, valued by what the m
 then holds truly, whether or not any writer is waiting for it. Do not present such a
 finding as a blocker, a detour or a discovery.
 
+### Two design constraints the owner restated on 24 November
+
+After agreeing a restatement of Castr's value and audiences, the owner added, verbatim:
+
+> Castr must also be able to take in various formats and output various formats, not on
+> OpenAPI in; however, that is not the current focus, but it should be considered when
+> designing architecture.
+
+> An additional design constrait is using an AST-based approach, not string manipulation
+
+What they mean for the work in hand:
+
+- **Many formats in, many out.** SPEC-C-2 is that capability and is second; the present
+  focus stays OpenAPI in. But a change to the model is designed as a change to the
+  format-independent model, not to an OpenAPI reader's convenience. The mark this seat
+  added for a kept reference (`ref`, `pathItemRef`) holds an OpenAPI reference string;
+  when another reader has to fill it, ask whether the model should hold the name of the
+  thing referred to and not the source format's way of writing the reference.
+- **AST, not strings.** The directive already says TypeScript and Zod are generated with
+  `ts-morph`. **The prototype of the `paths` module breaks this**: it assembles the
+  module by joining template strings (`block`, `key`, `` `${…}: ${…}` ``). That was
+  acceptable for finding the rows and is not the form of the writer. The writer in `src`
+  builds the five exported types as `ts-morph` structures (interfaces, properties, type
+  aliases) and takes each schema position from the type writer; none of the prototype's
+  string assembly is carried over. Also on `main` from this seat and to be looked at in
+  the same light: the Zod writer's metadata is written by `JSON.stringify` into `.meta(`
+  (it was so before the `default` annotation was added to it).
+
 ### State at the stop
 
 - `main` holds specification **0.11.1** (Appendix B.4, the rows for the `paths` module;
