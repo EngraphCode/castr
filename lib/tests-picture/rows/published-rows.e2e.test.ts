@@ -15,6 +15,7 @@ import { describe, it, expect } from 'vitest';
 import { loadDefinition, readPins } from './definitions.js';
 import type { Inventory, ObjectKind } from './inventory.js';
 import {
+  dialect2020DeprecatedKeywords,
   dialect2020Keywords,
   draft07Keywords,
   draft07TypeValues,
@@ -100,7 +101,7 @@ describe('the keywords the Draft 2020-12 dialect declares itself', () => {
   const declared = dialect2020Keywords(loadDefinition).map((entry) => entry.keyword);
   const inAVocabulary = new Set(schemaKeywords(loadDefinition).map((entry) => entry.keyword));
 
-  it('declares four deprecated keywords that none of its vocabularies holds', () => {
+  it('declares four keywords that none of its vocabularies holds', () => {
     expect([...declared].sort()).toEqual([
       '$recursiveAnchor',
       '$recursiveRef',
@@ -108,6 +109,10 @@ describe('the keywords the Draft 2020-12 dialect declares itself', () => {
       'dependencies',
     ]);
     expect(declared.filter((keyword) => inAVocabulary.has(keyword))).toEqual([]);
+  });
+
+  it('marks every one of the four deprecated', () => {
+    expect([...dialect2020DeprecatedKeywords(loadDefinition)].sort()).toEqual([...declared].sort());
   });
 
   it('declares two of the three keywords of Draft-07 that no vocabulary holds', () => {

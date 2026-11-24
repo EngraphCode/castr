@@ -263,12 +263,13 @@ list of format names holds 32, leaving out 19 formats Zod defines (`mac`, `hex`,
 The list is read at one pinned version, and the test that compares the installed version
 with the pin fails on any other, so the list is read again when Zod moves. What this
 reading does not see, which a list made by hand has to hold, is a method or a factory
-that builds a construct with particular fields and no interface of its own:
+that builds a construct with particular fields and no interface of its own. Two examples,
+which are not the whole of that list:
 
 - `z.strictObject` and `z.looseObject` build an object with a `catchall`, and
   `z.stringbool` builds a codec;
-- `z.check` and `z.superRefine`, `z.describe` and `z.meta` build the base check with the
-  `check` values `custom`, `describe` and `meta`, which no type states.
+- `z.check`, `z.refine` and `z.superRefine`, `z.describe` and `z.meta` build the base
+  check with the `check` values `custom`, `describe` and `meta`, which no type states.
 
 Constructs that only the specifications' text
 defines (the values of `format`, boolean schemas, a keyword no vocabulary defines) cannot

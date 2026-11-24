@@ -1,4 +1,5 @@
 import type { Definition } from './definitions.js';
+import { isJsonObject } from './json.js';
 import {
   readInventory,
   readKeywords,
@@ -47,6 +48,19 @@ export function schemaTypeValues(read: DefinitionReader): readonly string[] {
  */
 export function dialect2020Keywords(read: DefinitionReader): readonly KeywordKind[] {
   return readKeywords('dialect', read('jsonschema-2020-12-schema.json').schema);
+}
+
+/**
+ * Those of the dialect's own keywords that its meta-schema marks `deprecated`.
+ */
+export function dialect2020DeprecatedKeywords(read: DefinitionReader): readonly string[] {
+  const properties = read('jsonschema-2020-12-schema.json').schema['properties'];
+  if (!isJsonObject(properties)) {
+    return [];
+  }
+  return Object.entries(properties)
+    .filter(([, declared]) => isJsonObject(declared) && declared['deprecated'] === true)
+    .map(([keyword]) => keyword);
 }
 
 /**
