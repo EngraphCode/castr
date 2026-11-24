@@ -239,12 +239,17 @@ The vocabularies are not the whole of what a Draft 2020-12 document may hold. Th
 dialect's meta-schema, pinned beside them, names the seven vocabularies and also
 constrains four names that are in none of them, marking each deprecated: `definitions`,
 `dependencies`, `$recursiveAnchor` and `$recursiveRef`. They are not keywords of a
-vocabulary, and the picture lists them apart from the keywords. So two of Draft-07's
-three still have a place in a 2020-12 document, and only `additionalItems` has none. The
-2020-12 validation text (Appendix A) says implementations should assume `definitions`
-behaves as `$defs` under that meta-schema, and says what `dependencies` was replaced by
-without saying what it now does; what a document that uses the four means is for the
-list made by hand.
+vocabulary, and the picture lists them apart from the keywords. So the 2020-12 dialect
+still constrains two of Draft-07's three, and neither defines nor constrains
+`additionalItems`.
+
+That does not keep `additionalItems`, or any other name, out of a 2020-12 document. The
+core text says a schema may hold properties that are not keywords and that an unknown
+keyword should be treated as an annotation (section 4.3.1), and the meta-schema forbids
+no name. The validation text (Appendix A) says implementations should assume
+`definitions` behaves as `$defs` under that meta-schema, and says what `dependencies`
+was replaced by without saying what it now does. What a document that uses any of these
+means is for the list made by hand.
 
 Zod's constructs are read from the installed package's own types, through the compiler
 ([`rows/zod-constructs.ts`](rows/zod-constructs.ts)). Every schema and every check of
