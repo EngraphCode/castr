@@ -2,11 +2,14 @@
 
 Read [AGENT.md](../directives/AGENT.md), then use `engraph-start-right-thorough`.
 
-## Current state — 23 September 2026
+## Current state
 
-The destination is [the specification](../../docs/SPECIFICATION.md), a draft awaiting the
-owner's ratification, and the [course plan](../plans/active/castr-course.md) is the primary
-active plan. Start from the [correction thread](../memory/operational/threads/castr-correction.next-session.md),
+The destination is [the specification](../../docs/SPECIFICATION.md), ratified and changed
+only by an approved amendment, and the [course plan](../plans/active/castr-course.md) is
+the primary active plan. Its companions are
+[after-0.8.0-next-steps.md](../plans/active/after-0.8.0-next-steps.md), the one statement
+of what is next, and [model-design.md](../plans/active/model-design.md), the design of
+the model (SPEC-N-1). Start from the [correction thread](../memory/operational/threads/castr-correction.next-session.md),
 which carries the next step and the owner's standing rulings; the
 [continuity contract](../memory/operational/repo-continuity.md) routes every other thread.
 

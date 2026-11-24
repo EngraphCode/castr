@@ -1,6 +1,103 @@
 # Castr correction
 
-## Start here: handover of 24 November 2026, to a cloud session
+## Start here: 24 November 2026, the model's design
+
+Written by Firefly binds Tallow (session prefix 5196d5), a new seat on the owner's
+machine the same day as the handover below. Verify each line against git and GitHub
+before acting.
+
+### What changed
+
+The owner, 24 November 2026, verbatim: "Please plan SPEC-N-1 using the OCE cognitive
+skills, once the plan is reviewed and you approve it, begin the implementation". The
+plan is [model-design.md](../../../plans/active/model-design.md). It is ahead of every
+other item in the one statement of order, and it says what is frozen while it runs
+(the queued changes to the model, and the `paths` module), what is stopped by a silence
+in the specification, and what goes on beside it. Read its section "The
+queue, each item disposed" before picking up anything from the handover below.
+
+How this came about. The seat's review of the repository found that the specification
+lists the model's structure as an open item (SPEC-N-1), that section 12 says no code
+assumes an answer to an open item, that the owner's card of 18 November says the model
+"is redesigned by an approved amendment (SPEC-N-1) before it changes", and that the
+plan that orders the work said the design "has no step here". Pull requests 191 and 193
+had changed the model, and three more changes were queued.
+
+Also on 24 November, at the owner's instruction ("all provably merged or explicitly
+abandoned branches and worktrees should be deleted"): every branch that was an ancestor
+of `main` or written off on 21 September is gone, locally and on GitHub, with the second
+worktree and the stash. Two branches remain, `main` and `feat/paths-type-prototype`.
+The written-off pull requests keep their commits at `refs/pull/<n>/head`.
+
+### What a successor must know that no other file says
+
+- **Skills are read from the Ecosystem repository's checkout, every one of them.** The
+  owner, 24 November: "Use the OCE skills rather than the Castr ones". A skill's own
+  relative paths resolve against that checkout, not this one.
+- **A branch deletion on GitHub does not go through `git push`.** The pre-push hook runs
+  the full check for about ten minutes on any push, a deletion among them, and a command
+  that is cut off leaves `dist` half built. A deletion goes through the API
+  (`gh api -X DELETE repos/<owner>/<repo>/git/refs/heads/<branch>`), which sends no code.
+- **The claims registry and the comms events are not tracked** (the `.gitignore` under
+  `.agent/state/collaboration/`). They are this machine's, and a cloud session sees none
+  of them.
+
+### Step log for the plan
+
+- 2026-11-24, M0, the reviews. The assumptions reviewer and the four seats of the
+  conscience panel read the first draft. All four seats judged the work on track; three
+  judged the framing narrowed, each on a different point; the assumptions reviewer found
+  the direction, the weight and the reading of the owner's instruction sound and the
+  acceptance criteria, the queue table and the exits not ready. Every finding is a row
+  under "Review dispositions" in the plan. What they changed most: a test that one
+  meaning written in two formats is one value, without which every format's keywords
+  under neutral names would have passed.
+- 2026-11-24, M0, the second round. Three seats of the panel read the second draft in
+  the adversarial stance; the fourth had not returned when the plan was approved and is
+  recorded as undelivered. All three judged the work on track. One judged the framing
+  contradicted, on the hold of the writers' older text; one sound; one drifting in small
+  ways. Their findings are the last rows of "Review dispositions". The seat approved the
+  plan after them.
+
+- 2026-11-24, M0, start, by Firefly binds Tallow (5196d5). **Concept exploration, four
+  movements.** Observed: the ask names one clause; the clause's sentence is one line; the
+  thing it stands for is the structure about 26,500 product lines are written against.
+  Inherited shapes named and questioned: that a design is a document one seat drafts
+  (two earlier amendments were withdrawn after attacks on prose); that the present model
+  is the starting shape (the frame says it is evidence only); that "implementation"
+  means the model's code (SPEC-CC-2 and the card of 18 November say the code follows an
+  approval the seat cannot give). The problem, with no solution in it: the specification
+  requires a model that holds whatever its formats can mean and states no structure for
+  one, so each change answers the open item for itself, in the notation of whichever
+  reader needed it. What changed in the solution space: the design is believed by a
+  computed surface and a prototype, not by its prose; and it is derived from section 3's
+  definitions.
+- **Proportionality.** Scope: too small as named. "Plan SPEC-N-1" needs the surface of
+  three more formats computed before "designed whole" can be checked, so those are steps
+  of this plan. Instrument: a drafted amendment alone is too light for a structure this
+  much code depends on; a prototype and a coverage check are added. A survey of other
+  compilers is held to one pass. Level: every choice in the design is the seat's, by the
+  lenses; one thing is the owner's, the approval.
+- **Step back, the five questions of the plan that orders the work.** (1) It moves no
+  sentence of "What this serves" by itself; a reader of `pnpm picture` sees nothing
+  change. It is the precondition the owner's card sets for every change that would.
+  (2) Nothing has changed for Oak's document since the last step back. (3) The step is
+  the size given: one plan, one pull request. (4) The check of completeness is smaller
+  than the design it checks. (5) If it stopped here the queue would go on changing the
+  model one reader's convenience at a time.
+- **The decision matrix, on the unknowns of M0.**
+
+  | Question                                                   | Lens that settles it                                                 | Disposition                                                                                                                                                                                                                                                                                                                                             |
+  | ---------------------------------------------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | Does "begin the implementation" reach the model's code     | Strict: SPEC-CC-2, section 12, the card of 18 November               | No. The plan is carried out to the approval request. The owner delegated approval of the plan, in words that name the plan                                                                                                                                                                                                                              |
+  | May design evidence be code before the text is approved    | Strict, as disposed on 23 November for runnable proposals            | Yes, as test-side code on an unmerged branch that nothing in `src` reads. The precedent is the prototype of the `paths` module                                                                                                                                                                                                                          |
+  | One amendment for the structure, or parts                  | Architectural excellence: SPEC-AR-2, "designed once"                 | One. What would show it wrong: review shows a part that no other part depends on                                                                                                                                                                                                                                                                        |
+  | Do the queued repairs that leave the model alone wait      | Strict: section 12, "§9 binds the present code today"; then SPEC-I-1 | No, with one stop. The OpenAPI reader's one rule of refusal and the writer repairs go on. The Zod reader's refusal is stopped: a Zod reader's refusals have no kind in the specification                                                                                                                                                                |
+  | Are the writers repaired on syntax trees before the design | Strict: section 12, "§9 binds the present code today"                | They are not held. A node built from a value outlives the model, so the work is not undone. One exception the model forces: the Zod writer writes text the model holds. The first draft held all of it by lens four, and the second held the older text; two reviewers showed the reason partly false and a third that the hold contradicted section 12 |
+  | Do pull requests 191 and 193 stand while SPEC-N-1 is open  | Strict: the card, "before it changes"                                | Yes. Taking them out is itself a change to the model before an approved amendment, and brings back a breach of SPEC-PR-3. Nothing extends them                                                                                                                                                                                                          |
+  | Is another compiler's model adopted                        | Proportionality, then the lenses once the survey is in               | Not decided. One bounded survey (M3) is the instrument, and its note is written whatever it finds                                                                                                                                                                                                                                                       |
+
+## Earlier: handover of 24 November 2026, to a cloud session
 
 Written by Firefly mends Quench (session prefix 4f7b54) when the owner asked that the
 work be made safe, stopped on this machine and carried on in a Claude Code cloud session
@@ -2861,15 +2958,16 @@ this discovery for the architectural repair; no implementation is claimed here.
 
 ## Participating agent identities
 
-| Agent                  | Platform    | Model            | Session prefix | Agent UUID                           | Role                                           | First session | Last session |
-| ---------------------- | ----------- | ---------------- | -------------- | ------------------------------------ | ---------------------------------------------- | ------------- | ------------ |
-| Bora seeks Turbulence  | codex       | gpt-6-astra      | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd                    | 2026-09-06    | 2026-09-10   |
-| Coal weaves Pumice     | claude-code | claude-fable-5-1 | f67c69         | d0dfc3a1-ed69-535c-96bd-03c07648c274 | handover analysis, value-proof sequence        | 2026-09-12    | 2026-09-20   |
-| Foxglove weaves Acorn  | codex       | gpt-6-astra      | 01a088         | a6955478-7b8e-59e9-870e-dcef0d6e81cd | final Cricket I2 proof                         | 2026-09-10    | 2026-09-10   |
-| Candle weaves Residue  | claude-code | claude-fable-5-1 | a4c7fb         | 6803f4ef-dcc2-5305-a2c8-b82944f21b0f | bootstrap merge-driver cure, PR lifecycle      | 2026-09-20    | 2026-09-21   |
-| Poppy calls Topsoil    | claude-code | claude-fable-5-1 | bf551f         | (seed-derived; not registered)       | PR closure, PR #109, destination specification | 2026-09-21    | 2026-09-23   |
-| Mussel mends Buoy      | claude-code | claude-opus-5-5  | 372325         | b69485ad-3a77-5c8a-b2c0-cc764d734103 | PR #110 round-1 cure and merge                 | 2026-09-23    | 2026-09-23   |
-| Smith stirs Ashes      | claude-code | claude-opus-5-5  | 7bd175         | 02ed168a-55c7-5450-8fdb-b7fd399d9c86 | Sonar analysis (sub-agent)                     | 2026-11-01    | 2026-11-01   |
-| Bilby hunts Dreamscape | claude-code | claude-opus-5-5  | d71882         | 767b6de5-9347-5fdb-bbdf-eeb98791ec13 | review, ratification walk, draft 0.5.0         | 2026-11-01    | 2026-11-02   |
-| Ingot binds Patina     | claude-code | claude-fable-5-2 | 194219         | 8fde4762-1621-5ce7-b563-2d0f4f647804 | alerts, MEASURE, 0.5.2 to 0.7.0, PICTURE       | 2026-11-18    | 2026-11-21   |
-| Firefly mends Quench   | claude-code | claude-fable-5-2 | 4f7b54         | f424d6ac-9c42-55de-8327-a0fdf5c046ec | N0, specification 0.9.0 and 0.9.1, the fix     | 2026-11-22    | 2026-11-23   |
+| Agent                  | Platform    | Model            | Session prefix | Agent UUID                           | Role                                               | First session | Last session |
+| ---------------------- | ----------- | ---------------- | -------------- | ------------------------------------ | -------------------------------------------------- | ------------- | ------------ |
+| Bora seeks Turbulence  | codex       | gpt-6-astra      | 01a072         | 2b847d50-adfe-50d7-a93c-c5ac58ba45a2 | coordinator and PR shepherd                        | 2026-09-06    | 2026-09-10   |
+| Coal weaves Pumice     | claude-code | claude-fable-5-1 | f67c69         | d0dfc3a1-ed69-535c-96bd-03c07648c274 | handover analysis, value-proof sequence            | 2026-09-12    | 2026-09-20   |
+| Foxglove weaves Acorn  | codex       | gpt-6-astra      | 01a088         | a6955478-7b8e-59e9-870e-dcef0d6e81cd | final Cricket I2 proof                             | 2026-09-10    | 2026-09-10   |
+| Candle weaves Residue  | claude-code | claude-fable-5-1 | a4c7fb         | 6803f4ef-dcc2-5305-a2c8-b82944f21b0f | bootstrap merge-driver cure, PR lifecycle          | 2026-09-20    | 2026-09-21   |
+| Poppy calls Topsoil    | claude-code | claude-fable-5-1 | bf551f         | (seed-derived; not registered)       | PR closure, PR #109, destination specification     | 2026-09-21    | 2026-09-23   |
+| Mussel mends Buoy      | claude-code | claude-opus-5-5  | 372325         | b69485ad-3a77-5c8a-b2c0-cc764d734103 | PR #110 round-1 cure and merge                     | 2026-09-23    | 2026-09-23   |
+| Smith stirs Ashes      | claude-code | claude-opus-5-5  | 7bd175         | 02ed168a-55c7-5450-8fdb-b7fd399d9c86 | Sonar analysis (sub-agent)                         | 2026-11-01    | 2026-11-01   |
+| Bilby hunts Dreamscape | claude-code | claude-opus-5-5  | d71882         | 767b6de5-9347-5fdb-bbdf-eeb98791ec13 | review, ratification walk, draft 0.5.0             | 2026-11-01    | 2026-11-02   |
+| Ingot binds Patina     | claude-code | claude-fable-5-2 | 194219         | 8fde4762-1621-5ce7-b563-2d0f4f647804 | alerts, MEASURE, 0.5.2 to 0.7.0, PICTURE           | 2026-11-18    | 2026-11-21   |
+| Firefly mends Quench   | claude-code | claude-fable-5-2 | 4f7b54         | f424d6ac-9c42-55de-8327-a0fdf5c046ec | N0, specification 0.9.0 and 0.9.1, the fix         | 2026-11-22    | 2026-11-23   |
+| Firefly binds Tallow   | claude-code | claude-fable-5-2 | 5196d5         | 997baefd-74bb-575f-895f-44c186bc9a4b | repository review, the plan for the model's design | 2026-11-24    | 2026-11-24   |
