@@ -77,6 +77,21 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
   `definitions`, `dependencies`); fourteen of Draft 2020-12's 57 are not in Draft-07.
   The two drafts list the same seven values of `type`. Next: the texts, read section by
   section for what no machine-readable file holds; then Zod.
+- 2026-11-24, M1, the part for Zod, worked ahead of the reading of the texts, which
+  four readers are doing in the background. Pull request 197 (Draft-07) merged as
+  `ec9a6753`. **Step back.** The step is the size given. Nothing changes for Oak's
+  document: the third step of which that is so, and the owner was told at the close of
+  M0 that none of the design's steps would. **Found by doing, not decided:** Zod states
+  what a schema can be in closed unions of its own core types, so the list is computed
+  through the compiler from resolved types and no declaration's text is read. At 4.6.7:
+  40 values of a definition's `type`; 39 schemas with their fields (`int` is a format of
+  a number and has no schema of its own); 15 checks; 32 string formats, five number
+  formats, two bigint formats. **What the reading does not see,** for the hand list and
+  for M2: `$ZodExactOptional` is outside Zod's own union and its definition has no field
+  that tells it from an optional; and a factory such as `z.strictObject` or
+  `z.stringbool` builds a kind with particular fields. Appendix A names constructs by
+  method; the structure will be set against definitions, so M4 needs the map between
+  the two.
 
 - 2026-11-24, M0, the reviews. The assumptions reviewer and the four seats of the
   conscience panel read the first draft. All four seats judged the work on track; three
