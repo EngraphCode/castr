@@ -60,6 +60,11 @@ export function isValidContentMap(value: unknown): boolean {
   );
 }
 
+/** A reference kept beside the thing it gave is text where it is present. */
+export function isOptionalText(value: unknown): boolean {
+  return value === undefined || typeof value === 'string';
+}
+
 function isValidResponseHeader(value: unknown): boolean {
   return (
     isRecord(value) &&
@@ -67,10 +72,19 @@ function isValidResponseHeader(value: unknown): boolean {
     hasOptionalValue(value, 'content', isValidContentMap) &&
     hasOptionalValue(value, 'description', (field) => typeof field === 'string') &&
     hasOptionalBooleanValues(value, ['required', 'deprecated']) &&
-    hasOptionalValue(value, 'examples', isValidExamplesMap)
+    hasOptionalValue(value, 'examples', isValidExamplesMap) &&
+    isOptionalText(value['ref'])
   );
 }
 
-export function isValidResponseHeaders(value: unknown): boolean {
+function isValidResponseHeaders(value: unknown): boolean {
   return isRecord(value) && Object.values(value).every((header) => isValidResponseHeader(header));
+}
+
+/** A response's headers, and the reference it was given by, where either is present. */
+export function hasValidResponseHeadersAndReference(value: UnknownRecord): boolean {
+  return (
+    (value['headers'] === undefined || isValidResponseHeaders(value['headers'])) &&
+    isOptionalText(value['ref'])
+  );
 }

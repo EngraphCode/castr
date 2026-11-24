@@ -14,6 +14,10 @@ import type { IRComponent } from './schema.components.js';
  * Bumped on a breaking change to the IR's own shape. `2.0.0`: security
  * requirements became grouped (`IRSecurityRequirement.schemes`); the `1.0.0`
  * flat `{ schemeName, scopes }` security shape no longer validates.
+ * `2.1.0`: a parameter, request body, response and response header keep the
+ * reference they were given by (`ref`), and a parameter the reference its path
+ * item gave it by (`pathItemRef`). A model stored at `2.0.0` holds neither, and
+ * would be read as one in which nothing was given by reference.
  *
  * @example
  * ```typescript
@@ -24,7 +28,7 @@ import type { IRComponent } from './schema.components.js';
  * @see {@link CastrDocument.version}
  * @public
  */
-export const IR_SCHEMA_VERSION = '2.0.0';
+export const IR_SCHEMA_VERSION = '2.1.0';
 import type {
   CastrAdditionalOperation,
   CastrOperation,
@@ -75,7 +79,7 @@ export interface CastrDocument {
    * parsers as {@link IR_SCHEMA_VERSION}. Persisted IR carrying an older
    * version may no longer satisfy the current structural validators.
    *
-   * @example '2.0.0'
+   * @example '2.1.0'
    */
   version: string;
 

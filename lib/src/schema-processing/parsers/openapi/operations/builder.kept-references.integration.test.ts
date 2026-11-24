@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { IR_SCHEMA_VERSION, isCastrDocument } from '../../../ir/index.js';
 import { writeOpenApi } from '../../../writers/openapi/index.js';
 import { buildIR } from '../index.js';
 
@@ -75,6 +76,44 @@ describe('what an operation is given by reference (SPEC-PR-3)', () => {
     expect(written?.responses?.['200']).toEqual({ $ref: '#/components/responses/Made' });
     expect(written?.responses?.['201']).toMatchObject({
       headers: { 'X-Rate': { $ref: '#/components/headers/Rate' } },
+    });
+  });
+
+  describe('at the boundary of a stored model', () => {
+    const model = buildIR(DOCUMENT);
+    const [built] = model.operations;
+    const [first, second] = built?.responses ?? [];
+    const withOperation = (changed: object): unknown => ({
+      ...model,
+      operations: [{ ...built, ...changed }],
+    });
+
+    it('accepts the model the reader builds', () => {
+      expect(isCastrDocument(model)).toBe(true);
+    });
+
+    it('refuses a request body whose reference is not text', () => {
+      const changed = withOperation({ requestBody: { ...built?.requestBody, ref: 7 } });
+
+      expect(isCastrDocument(changed)).toBe(false);
+    });
+
+    it('refuses a response whose reference is not text', () => {
+      const changed = withOperation({ responses: [{ ...first, ref: 7 }, second] });
+
+      expect(isCastrDocument(changed)).toBe(false);
+    });
+
+    it('refuses a response header whose reference is not text', () => {
+      const headers = { 'X-Rate': { ...second?.headers?.['X-Rate'], ref: 7 } };
+      const changed = withOperation({ responses: [first, { ...second, headers }] });
+
+      expect(isCastrDocument(changed)).toBe(false);
+    });
+
+    it('carries a version that a model stored before references were kept does not', () => {
+      expect(model.version).toBe(IR_SCHEMA_VERSION);
+      expect(IR_SCHEMA_VERSION).not.toBe('2.0.0');
     });
   });
 });

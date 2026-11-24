@@ -9,7 +9,8 @@ import {
 import {
   isValidContentMap,
   isValidMediaTypeEntry,
-  isValidResponseHeaders,
+  isOptionalText,
+  hasValidResponseHeadersAndReference,
 } from './content/validators.content.js';
 import { isCastrSchema, isCastrSchemaNode } from './validators.schema.js';
 import { isValidOptionalSecurityArray } from './security/validators.security.js';
@@ -167,8 +168,8 @@ function hasValidParameterOptionalFields(value: UnknownRecord): boolean {
   return (
     (value['content'] === undefined || isValidContentMap(value['content'])) &&
     (value['metadata'] === undefined || isCastrSchemaNode(value['metadata'])) &&
-    (value['pathItemRef'] === undefined || typeof value['pathItemRef'] === 'string') &&
-    (value['ref'] === undefined || typeof value['ref'] === 'string')
+    isOptionalText(value['pathItemRef']) &&
+    isOptionalText(value['ref'])
   );
 }
 
@@ -204,7 +205,11 @@ function isValidRequestBody(value: unknown): boolean {
     return false;
   }
 
-  return typeof value['required'] === 'boolean' && isValidContentMap(value['content']);
+  return (
+    typeof value['required'] === 'boolean' &&
+    isValidContentMap(value['content']) &&
+    isOptionalText(value['ref'])
+  );
 }
 
 function hasValidOperationShape(value: UnknownRecord): boolean {
@@ -252,6 +257,6 @@ function isValidResponse(value: unknown): boolean {
     typeof value['statusCode'] === 'string' &&
     (value['schema'] === undefined || isCastrSchema(value['schema'])) &&
     (value['content'] === undefined || isValidContentMap(value['content'])) &&
-    (value['headers'] === undefined || isValidResponseHeaders(value['headers']))
+    hasValidResponseHeadersAndReference(value)
   );
 }

@@ -464,7 +464,7 @@ exports[`same-schema-different-name - IR Snapshot 1`] = `
         ],
         "schemaNames": [],
         "servers": [],
-        "version": "2.0.0",
+        "version": "2.1.0",
     },
     "endpoints": [
         {
