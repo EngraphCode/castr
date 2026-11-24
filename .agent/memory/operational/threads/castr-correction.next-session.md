@@ -127,6 +127,28 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
     rules the OpenAPI text states that SPEC-FV-2 does not hold, and the ambiguity of a
     header's `allowReserved`, both holding for 3.2.1 by the comparison.
     **Still owed for M1:** the hand lists, one per format, naming every section read.
+- 2026-11-24, M1, Zod set against Appendix A. **Step back, late and true:** the plan's
+  own todo says Zod is "set against Appendix A", and the seat had merged the list of
+  definitions and pushed the map from methods to definitions out to M4. The advisor
+  pointed at the todo. It is done here, computed (`rows/zod-builders.ts`): by type, the
+  146 exported functions and 24 methods of every schema that build a schema or a check,
+  and the methods each of 23 kinds has of its own; by running, what one example of each
+  construct Appendix A names leaves in a schema. **Found:** the four policies for
+  unknown keys are one field, `catchall` (absent, `never`, `unknown`, a schema), as the
+  survey of tools said of Zod; an exact optional differs from an optional in its class
+  alone; `.brand` leaves nothing; `.meta` and `.describe` leave nothing in the schema
+  and an entry in Zod's registry; `.nullish` is an optional of a nullable; `.transform`
+  is a pipe into a transform. **For the amendment, a silence in the specification
+  (SPEC-I-1):** Appendix A names 44 constructs, and 120 functions and methods are not
+  named. Most are plain kinds and checks the profiles cover elsewhere; some are
+  constructs of their own with no row: `z.discriminatedUnion`, `z.xor`, `z.json`,
+  `z.function`, `z.promise`, `z.success`, `z.nonoptional`, `z.keyof`, `z.stringFormat`,
+  and an object's `strict`, `loose`, `strip`, `passthrough`, `extend`, `pick`, `omit`
+  and `partial`. The design must give each an element or a cited refusal, and the
+  amendment must give the appendix rows for them. **Not done test-first:** the readings
+  were probed in a scratch file and the tests written from what the probe showed, then
+  seen to pass; the exact tables are what fail when Zod changes. **Lenses, short:** this
+  moves no sentence of "What this plan may not do"; nothing under `lib/src` is touched.
 
 - 2026-11-24, M0, the reviews. The assumptions reviewer and the four seats of the
   conscience panel read the first draft. All four seats judged the work on track; three
