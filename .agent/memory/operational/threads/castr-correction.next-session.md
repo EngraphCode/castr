@@ -9,6 +9,80 @@ session and none of this machine's files. Verify each line against git and GitHu
 acting. The section below this one is the earlier handover and is still true where this
 one is silent.
 
+### The frame is in AGENT.md now
+
+The owner, 24 November, after the corrections recorded below: "Castr was built
+incorrectly, this work is the remediation, pre-existing approaches must always be
+questioned", and "I am not sure when that frame was lost, but I would like it to not be
+lost again." It is written as the first section of
+[AGENT.md](../../../directives/AGENT.md), "The frame of this work", which every session
+reads at its start, and at the head of the plan. This record repeats it only so that a
+successor sees how it was lost: the seat worked a queue of small faults and then a
+writer, each found by the review of the one before, and came to treat the code as it
+stood as the thing to extend.
+
+Things this seat built or extended that the frame says to question, not to trust:
+
+- the prototype of the `paths` module, which joins strings;
+- the TypeScript type writer's `const` and `enum` literals (pull requests 177 and 178),
+  written as text, against SPEC-AR-3;
+- the Zod writer's metadata, written by `JSON.stringify` into `.meta(`, which the seat
+  extended for `default`;
+- the marks `ref` and `pathItemRef`, which hold an OpenAPI reference as text in a model
+  that is meant to be independent of format;
+- the reader's fold of a path item's parameters into each operation, kept from the old
+  code and repaired in place (pull request 191) without asking whether the model should
+  hold a path item as a thing of its own, which Appendix B.4's first row and a path with
+  no operation both suggest it should.
+
+### The frame, corrected by the owner on 24 November
+
+The seat reported that it had "found, by measuring before building, that the writer
+cannot be built on today's model". The owner, verbatim: "The model needing to change is
+the whole point of the current effort, this is not a surprise."
+
+So read everything below, and the plan's paragraph headed
+"Where the model is wrong, as the `paths` module showed on 24 November", in this
+frame and not the seat's: **correcting the model is the work.** An output such as the
+`paths` module is a consumer that shows where the model is wrong; it is not the goal
+that the model stands in the way of. A place where the model loses or misstates what a
+document says (a reference followed and forgotten, a path with no operation dropped, a
+parameter held twice) is the unit of work in its own right, valued by what the model
+then holds truly, whether or not any writer is waiting for it. Do not present such a
+finding as a blocker, a detour or a discovery.
+
+### Two design constraints the owner restated on 24 November
+
+After agreeing a restatement of Castr's value and audiences, the owner added, verbatim:
+
+> Castr must also be able to take in various formats and output various formats, not on
+> OpenAPI in; however, that is not the current focus, but it should be considered when
+> designing architecture.
+
+> An additional design constrait is using an AST-based approach, not string manipulation
+
+What they mean for the work in hand:
+
+- **Many formats in, many out.** SPEC-C-2 is that capability and is second; the present
+  focus stays OpenAPI in. But a change to the model is designed as a change to the
+  format-independent model, not to an OpenAPI reader's convenience. The mark this seat
+  added for a kept reference (`ref`, `pathItemRef`) holds an OpenAPI reference string;
+  when another reader has to fill it, ask whether the model should hold the name of the
+  thing referred to and not the source format's way of writing the reference.
+- **AST, not strings**, in the IR and the writers alike; where it cannot be done it is
+  flagged to the owner and discussed (the owner's later words, in AGENT.md). The
+  directive already said TypeScript and Zod are generated with `ts-morph`. **The prototype of the `paths` module breaks this**: it assembles the
+  module by joining template strings (`block`, `key`, `` `${…}: ${…}` ``). That was
+  acceptable for finding the rows and is not the form of the writer. The specification already says this in SPEC-AR-3:
+  generated code is syntax-tree nodes printed by the compiler's printer, and no writer
+  assembles target syntax as text. The type writer itself breaks it (this seat wrote
+  `const` and `enum` literals with `JSON.stringify` and a join of `" | "` in pull requests
+  177 and 178), so a module of types is not made compliant by taking each schema's type
+  from it. The type writer is repaired first, or the two are built together on syntax
+  trees; the plan says so. None of the prototype's string assembly is carried over. Also on `main` from this seat and to be looked at in
+  the same light: the Zod writer's metadata is written by `JSON.stringify` into `.meta(`
+  (it was so before the `default` annotation was added to it).
+
 ### State at the stop
 
 - `main` holds specification **0.11.1** (Appendix B.4, the rows for the `paths` module;
@@ -36,7 +110,8 @@ one is silent.
 ### What to do next, in order
 
 The plan (`.agent/plans/active/after-0.8.0-next-steps.md`) is the authority; its
-paragraph "Before the writer" gives the steps for the `paths` module. In short:
+paragraph headed "Where the model is wrong, as the `paths` module showed on 24 November"
+gives the steps. In short:
 
 1. Finish pull request 193 as above.
 2. The model keeps what it still loses, each its own pull request, test first: a path
