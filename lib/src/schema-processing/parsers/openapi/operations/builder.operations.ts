@@ -9,7 +9,6 @@ import {
   STANDARD_HTTP_METHODS,
 } from '../../../../shared/openapi/http-methods.js';
 import type { IRBuildContext } from '../builder.types.js';
-import { buildCastrParameters } from './builder.parameters.js';
 import { buildCastrResponses } from './builder.responses.js';
 import type { CastrAdditionalOperation, CastrOperation } from '../../../ir/index.js';
 import {
@@ -17,7 +16,7 @@ import {
   addPathItemFields,
   type CastrOperationLike,
   type HttpMethod,
-  mergePathAndOperationParameters,
+  buildOperationParameters,
 } from './fields/builder.operations.fields.js';
 
 const PARAMETER_LOCATION_QUERY_STRING = 'querystring';
@@ -70,13 +69,7 @@ function extractPathOperations(
       continue;
     }
 
-    const irOperation = buildCastrOperation(
-      method,
-      path,
-      mergePathAndOperationParameters(pathItem, operation),
-      pathItem,
-      doc,
-    );
+    const irOperation = buildCastrOperation(method, path, operation, pathItem, doc);
     operations.push(irOperation);
   }
 
@@ -108,13 +101,7 @@ function extractPathAdditionalOperations(
       continue;
     }
 
-    const irOperation = buildCastrOperation(
-      method,
-      path,
-      mergePathAndOperationParameters(pathItem, operation),
-      pathItem,
-      doc,
-    );
+    const irOperation = buildCastrOperation(method, path, operation, pathItem, doc);
     operations.push(irOperation);
   }
 
@@ -152,7 +139,7 @@ function buildCastrOperation(
     ...(operation.operationId ? { operationId: operation.operationId } : {}),
     method,
     path,
-    parameters: buildCastrParameters(operation.parameters, context),
+    parameters: buildOperationParameters(pathItem, operation, context),
     parametersByLocation: {
       query: [],
       path: [],

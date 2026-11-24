@@ -92,11 +92,6 @@ test('common-parameters', async () => {
         requestFormat: "json",
         parameters: [
           {
-            name: "petId",
-            type: "Query",
-            schema: z.string(),
-          },
-          {
             name: "otherParam",
             type: "Query",
             schema: paramRef.optional(),
@@ -123,7 +118,6 @@ test('common-parameters', async () => {
         request: {
           queryParams: z
             .object({
-              petId: z.string(),
               otherParam: paramRef.optional(),
               petId: z.number(),
               personId: z.number(),

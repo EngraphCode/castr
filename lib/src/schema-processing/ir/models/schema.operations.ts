@@ -296,6 +296,13 @@ export interface CastrParameter {
    * Whether parameter allows reserved characters.
    */
   allowReserved?: boolean;
+
+  /**
+   * The reference by which the operation's path item gave this parameter, where it did.
+   * The parameter is one of the operation's own in every other respect; an OpenAPI
+   * document written from the model states it on the path item, by this reference.
+   */
+  pathItemRef?: string;
 }
 
 /**
