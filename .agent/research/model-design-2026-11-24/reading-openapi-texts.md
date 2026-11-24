@@ -5,6 +5,18 @@
 > account of the sources it names, kept whole so that the reading can be checked. The
 > seat has not yet checked its claims against the sources; what the design takes from it
 > is stated, with what was checked, in the notes that cite it.
+>
+> **It reads the wrong patch version, by the seat's error.** The seat's brief named
+> OpenAPI 3.2.0. The specification names 3.2.1 as the version written (section 6), and
+> the two texts differ. Nothing here is taken as true of 3.2.1 until it is checked
+> against the comparison of 3.2.1 with 3.2.0, `reading-openapi-3.2.1-differences.md`
+> beside this file.
+>
+> **Finding 2 below is withdrawn.** It says both texts name
+> `https://spec.openapis.org/oas/3.1/dialect/base` and asks for SPEC-FV-1's third case to
+> be checked. That is true of 3.2.0 and false of 3.2.1, and the case as approved agrees
+> with 3.2.1: see finding 1 of
+> [the redraft of the corrections amendment](../../analysis-and-reports/amendment-corrections-redraft-2026-11-22.md).
 
 Texts read on 2026-11-24:
 
