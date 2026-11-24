@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { isCastrDocument } from '../../../ir/index.js';
 import { writeOpenApi } from '../../../writers/openapi/index.js';
 import { buildIR } from '../index.js';
 
@@ -81,5 +82,23 @@ describe('the parameters of a path item and of its operation', () => {
 
     expect(names).toEqual(['path id', 'query q']);
     expect(pathItem?.parameters).toEqual([{ $ref: '#/components/parameters/Page' }]);
+  });
+
+  it('is a model the boundary accepts, and one it refuses where the reference is no text', () => {
+    const model = buildIR(DOCUMENT);
+    const withReference = (reference: unknown): unknown => ({
+      ...model,
+      operations: model.operations.map((operation) => ({
+        ...operation,
+        parameters: operation.parameters.map((parameter) =>
+          parameter.pathItemRef === undefined
+            ? parameter
+            : { ...parameter, pathItemRef: reference },
+        ),
+      })),
+    });
+
+    expect(isCastrDocument(withReference('#/components/parameters/Page'))).toBe(true);
+    expect(isCastrDocument(withReference(7))).toBe(false);
   });
 });
