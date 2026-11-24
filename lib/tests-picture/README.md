@@ -276,23 +276,28 @@ A definition is what a schema holds; a function or a method is how an author get
 first and against Appendix A of the specification:
 
 - **By type:** the 146 functions Zod exports that build a schema or a check, the 24
-  methods every schema has that build one, and, for each of 23 kinds, the methods only
-  that kind has (an object's `strict`, `loose`, `strip`, `passthrough` and `catchall`
-  among them). Each is listed with the kind its return type states.
+  methods every schema has that build one, and, for each of 23 kinds, the 118 methods
+  only that kind has that build one (an object's `strict`, `loose`, `strip`,
+  `passthrough` and `catchall` among them). A method that returns anything else, such as
+  a function schema's `implement`, is not listed.
 - **By running:** one example of each construct Appendix A names is built, and what it
-  leaves in the schema is read. This shows what no type states. `z.strictObject` and
+  leaves in the schema is read: its class, its kind, its fields, its checks, and the kind
+  of each field that is itself a schema. A schema held inside a list or a map, such as an
+  object's shape, is not read. This shows what no type states. `z.strictObject` and
   `z.looseObject` leave an object whose `catchall` is `never` or `unknown`, and a plain
   `z.object` leaves none, so the four policies for unknown keys are one field. An exact
   optional differs from an optional only in its class. `.refine` and `.superRefine`
   leave a check that states `custom`. `.brand` leaves nothing. `.meta` and `.describe`
-  leave nothing in the schema either: they enter it in Zod's registry of metadata.
+  leave nothing in the schema either: they enter it in Zod's registry of metadata, which
+  is one for the whole process, so the reading takes each entry out again.
 - **Against Appendix A:** a test reads the appendix's first column from the
   specification and requires an example for every name in it and for no other. Every
-  name is a construct Zod has. The functions and methods the appendix does not name are
-  listed in the test, 120 of them: most are plain kinds and checks, and some are
-  constructs of their own that the appendix is silent on, `z.discriminatedUnion`,
-  `z.xor`, `z.json`, `z.function`, `z.promise`, `z.success` and `z.nonoptional` among
-  them.
+  name is a construct Zod has. What the appendix does not name is listed in the test: 120
+  functions and methods of every schema, and 117 of the 118 methods of one kind, `.catchall`
+  being the one it names. Most are plain kinds and checks, and some are constructs of
+  their own that the appendix is silent on: `z.discriminatedUnion`, `z.xor`, `z.json`,
+  `z.function`, `z.promise`, `z.success` and `z.nonoptional`, and an object's `strict`,
+  `loose`, `extend`, `pick`, `omit` and `partial`, among them.
 
 What neither reading shows is what a method does to the fields of the kind it returns,
 beyond the examples run here.

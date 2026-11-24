@@ -9,7 +9,7 @@
  *   check its return type states. Read through the compiler from resolved types.
  * - **By running.** Each construct Appendix A names is built at the installed version,
  *   and the definition it leaves is read: its class, its kind, its fields, the checks it
- *   holds and the kind of each schema inside it. This shows what no type states, such as
+ *   holds and the kind of each field that is itself a schema. This shows what no type states, such as
  *   the `catchall` a strict object is given.
  */
 
@@ -43,11 +43,14 @@ export interface ZodBuilders {
   readonly factories: readonly ZodBuilder[];
   /** Methods of every schema that build a schema, named as `.name`. */
   readonly methods: readonly ZodBuilder[];
-  /** For each kind of schema, the methods its classes have beyond those of every schema. */
+  /** For each kind of schema, the builders its classes have beyond those of every schema. */
   readonly kindMethods: readonly ZodKindMethods[];
 }
 
-/** The methods the classes of one kind of schema have beyond those every schema has. */
+/**
+ * The methods the classes of one kind of schema have beyond those every schema has, that
+ * build a schema or a check.
+ */
 interface ZodKindMethods {
   readonly kind: string;
   readonly methods: readonly string[];
@@ -62,9 +65,12 @@ export interface ZodBuilt {
   readonly fields: readonly string[];
   /** The check each attached check states, with its format where it states one. */
   readonly checks: readonly string[];
-  /** For each field that holds a schema, the kind of that schema. */
+  /**
+   * For each field whose value is itself a schema, the kind of that schema. A schema held
+   * inside a list or a map, such as an object's shape, is not read.
+   */
   readonly inner: Readonly<Record<string, string>>;
-  /** Whether the schema is entered in Zod's global registry of metadata. */
+  /** Whether building the construct entered the schema in Zod's registry of metadata. */
   readonly registered: boolean;
 }
 
@@ -133,28 +139,28 @@ function readCallables(
 }
 
 /**
- * Reads, for every exported schema class, the methods it has that not every schema has,
- * and gathers them by the kind the class's definition states.
+ * Reads, for every exported schema class, the methods it has that not every schema has
+ * and that build a schema or a check, and gathers them by the kind the class's
+ * definition states. A method that returns anything else, such as a function schema's
+ * `implement`, is not a builder and is left out.
  */
 function readKindMethods(
   exported: readonly MorphSymbol[],
   shared: ReadonlySet<string>,
   at: Node,
+  everyKind: number,
 ): readonly ZodKindMethods[] {
   const byKind = new Map<string, Set<string>>();
   for (const symbol of exported) {
     const declared = declaredInterface(symbol);
-    const definition = definitionOf(declared, at);
-    const [kind, ...others] = literalValues(propertyType(definition, 'type', at));
+    const [kind, ...others] = literalValues(propertyType(definitionOf(declared, at), 'type', at));
     if (declared === undefined || kind === undefined || others.length > 0) {
       continue;
     }
+    const own = declared.getProperties().filter((property) => !shared.has(property.getName()));
     const methods = byKind.get(kind) ?? new Set<string>();
-    for (const property of declared.getProperties()) {
-      const callable = property.getTypeAtLocation(at).getCallSignatures().length > 0;
-      if (callable && !shared.has(property.getName())) {
-        methods.add(property.getName());
-      }
+    for (const builder of readCallables('', own, at, everyKind)) {
+      methods.add(builder.name);
     }
     byKind.set(kind, methods);
   }
@@ -192,6 +198,7 @@ export function readZodBuilders(): ZodBuilders {
       exported,
       new Set(schema.getProperties().map((property) => property.getName())),
       at,
+      everyKind,
     ),
   };
 }
@@ -207,6 +214,10 @@ function checkName(check: z.core.$ZodCheck): string {
  */
 function readBuilt(construct: string, schema: z.ZodType): ZodBuilt {
   const definition = schema._zod.def;
+  // Zod's registry is one for the whole process. What the example entered is taken out
+  // again, so that reading leaves no trace for whatever runs next.
+  const registered = z.globalRegistry.has(schema);
+  z.globalRegistry.remove(schema);
   const held = Object.entries(definition).filter(
     ([name, value]: [string, unknown]) => !SHARED_FIELDS.has(name) && value !== undefined,
   );
@@ -220,7 +231,7 @@ function readBuilt(construct: string, schema: z.ZodType): ZodBuilt {
     fields: held.map(([name]) => name).sort(byName),
     checks: (definition.checks ?? []).map(checkName),
     inner: Object.fromEntries(inner),
-    registered: z.globalRegistry.has(schema),
+    registered,
   };
 }
 

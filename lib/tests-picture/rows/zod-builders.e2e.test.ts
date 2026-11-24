@@ -201,7 +201,10 @@ const METHODS: readonly BuilderRow[] = [
   ['.with', [], true, [], false],
 ];
 
-/** For each kind of schema, the methods its classes have beyond those of every schema. */
+/**
+ * For each kind of schema, the methods its classes have beyond those of every schema,
+ * that build a schema or a check.
+ */
 const KIND_METHODS: readonly (readonly [string, readonly string[]])[] = [
   ['array', ['length', 'max', 'min', 'nonempty', 'unwrap']],
   [
@@ -226,7 +229,7 @@ const KIND_METHODS: readonly (readonly [string, readonly string[]])[] = [
   ['default', ['removeDefault', 'unwrap']],
   ['enum', ['exclude', 'extract']],
   ['file', ['max', 'mime', 'min']],
-  ['function', ['implement', 'implementAsync', 'input', 'output']],
+  ['function', ['input', 'output']],
   ['lazy', ['unwrap']],
   ['map', ['max', 'min', 'nonempty', 'size']],
   ['nonoptional', ['unwrap']],
@@ -635,6 +638,12 @@ describe('the methods each kind of schema has beyond those of every schema', () 
     expect(builders.kindMethods.map((entry) => [entry.kind, entry.methods])).toEqual(KIND_METHODS);
   });
 
+  it('leaves out a method that builds neither a schema nor a check', () => {
+    const ofAFunction = builders.kindMethods.find((entry) => entry.kind === 'function');
+
+    expect(ofAFunction?.methods).toEqual(['input', 'output']);
+  });
+
   it('gives an object the four methods that set its policy for unknown keys', () => {
     const object = builders.kindMethods.find((entry) => entry.kind === 'object');
 
@@ -701,6 +710,20 @@ describe('Appendix A set against what Zod builds', () => {
     expect(
       names.filter((name) => ofOneKind.includes(name) && !everyBuilder.includes(name)),
     ).toEqual(['.catchall']);
+  });
+
+  it('names no other method of one kind, so every other one is unnamed', () => {
+    const unnamed = builders.kindMethods.map((entry) => [
+      entry.kind,
+      entry.methods.filter((method) => !names.includes(`.${method}`)),
+    ]);
+    const expected = KIND_METHODS.map(([kind, methods]) => [
+      kind,
+      methods.filter((method) => method !== 'catchall'),
+    ]);
+
+    expect(unnamed).toEqual(expected);
+    expect(unnamed.flatMap(([, methods]) => methods)).toHaveLength(117);
   });
 
   it('does not name these functions and these methods of every schema', () => {

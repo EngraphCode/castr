@@ -23,8 +23,9 @@ export interface ZodProbe {
   readonly exported: readonly MorphSymbol[];
 }
 
+/** Orders two names the same way on every machine. */
 export function byName(left: string, right: string): number {
-  return left.localeCompare(right);
+  return left.localeCompare(right, 'en');
 }
 
 export function membersOf(type: Type): readonly Type[] {
