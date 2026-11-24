@@ -519,10 +519,12 @@ specification are approved and on `main`.
       response header was given, with the OpenAPI writer writing it back as a reference
       (pull request 193; a breach of SPEC-PR-3 that stands whether or not the `paths`
       module is ever written); then a path item under `paths` that holds no operation;
-      then the reference by which a path item was given. The refusals of step 2 for a
-      path item cannot fire until the last two are in the model.
+      then the reference by which a path item was given; then a document's `$defs`. A
+      refusal of step 2 cannot fire for a thing the model does not hold, so each of these
+      comes before its refusal.
    2. **The refusals, each with a failing case first**, for what B.4 leaves in no row:
-      anything given by reference other than a schema; additional operations and the
+      anything given by reference other than a schema; the presence of any map of
+      `components` but `schemas`, referred to or not, since B.4 leaves each in no row; additional operations and the
       `query` method; a document that holds `webhooks` or `$defs`; a `querystring`
       parameter; a parameter or header with `content`; a media type with `itemSchema`,
       with no schema, or given by reference; an operation with no `responses`; a path
