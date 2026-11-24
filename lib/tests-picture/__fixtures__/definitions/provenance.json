@@ -105,6 +105,19 @@
       "licence": "BSD-3-Clause"
     },
     {
+      "file": "jsonschema-2020-12-schema.json",
+      "id": "https://json-schema.org/draft/2020-12/schema",
+      "bytes": 2452,
+      "sha256": "41da76f5afb7ce062d248f762463a92f7ca47e4e0f905b224ba6afeef91ded0f",
+      "source": {
+        "kind": "served",
+        "url": "https://json-schema.org/draft/2020-12/schema",
+        "fetchedAt": "2026-11-24T18:47:22Z"
+      },
+      "publisher": "JSON Schema Specification Authors",
+      "licence": "BSD-3-Clause"
+    },
+    {
       "file": "jsonschema-draft-07-schema.json",
       "id": "http://json-schema.org/draft-07/schema#",
       "bytes": 4979,

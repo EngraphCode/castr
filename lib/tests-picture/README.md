@@ -232,7 +232,25 @@ The keywords of JSON Schema Draft-07 are computed the same way, from its one pin
 meta-schema. No row of the picture uses them: Draft-07 is not a schema dialect of OpenAPI
 3.1 or 3.2. They are listed because the model's design is made against every format the
 specification names (SPEC-AR-2), and the tests state how the two drafts differ: three
-keywords only Draft-07 has, fourteen only Draft 2020-12 has.
+keywords of Draft-07 that no vocabulary of Draft 2020-12 holds (`additionalItems`,
+`definitions` and `dependencies`), and fourteen that only Draft 2020-12 has.
+
+The vocabularies are not the whole of what a Draft 2020-12 document may hold. The
+dialect's meta-schema, pinned beside them, names the seven vocabularies and also
+constrains four names that are in none of them, marking each deprecated: `definitions`,
+`dependencies`, `$recursiveAnchor` and `$recursiveRef`. They are not keywords of a
+vocabulary, and the picture lists them apart from the keywords. So the 2020-12 dialect
+still constrains two of Draft-07's three, and neither defines nor constrains
+`additionalItems`.
+
+That does not keep `additionalItems`, or any other name, out of a 2020-12 document. The
+core text says a schema may hold properties that are not keywords and that an unknown
+keyword should be treated as an annotation (section 4.3.1), and the meta-schema forbids
+no name. The validation text (Appendix A) says implementations should assume
+`definitions` behaves as `$defs` under that meta-schema, and says what `dependencies`
+was replaced by without saying what it now does. What a document that uses any of these
+means is for the list made by hand.
+
 Zod's constructs are read from the installed package's own types, through the compiler
 ([`rows/zod-constructs.ts`](rows/zod-constructs.ts)). Every schema and every check of
 Zod holds a definition, and Zod's core module exports an interface for each. The reading
@@ -253,9 +271,13 @@ list of format names holds 32, leaving out 19 formats Zod defines (`mac`, `hex`,
 The list is read at one pinned version, and the test that compares the installed version
 with the pin fails on any other, so the list is read again when Zod moves. What this
 reading does not see, which a list made by hand has to hold, is a method or a factory
-that builds a kind with particular fields and no interface of its own: `z.strictObject`
-and `z.looseObject` build an object with a `catchall`, and `z.stringbool` builds a
-codec.
+that builds a construct with particular fields and no interface of its own. Two examples,
+which are not the whole of that list:
+
+- `z.strictObject` and `z.looseObject` build an object with a `catchall`, and
+  `z.stringbool` builds a codec;
+- `z.check`, `z.refine` and `z.superRefine`, `z.describe` and `z.meta` build the base
+  check with the `check` values `custom`, `describe` and `meta`, which no type states.
 
 Constructs that only the specifications' text
 defines (the values of `format`, boolean schemas, a keyword no vocabulary defines) cannot

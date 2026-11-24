@@ -32,6 +32,7 @@ The files under `lib/tests-picture/__fixtures__/definitions/` are the published
 definitions of the formats Castr reads. Those named `oas-` are the OpenAPI Initiative's,
 served at <https://spec.openapis.org/oas/> and reproduced under the Apache License 2.0.
 Those named `jsonschema-2020-12-` are the JSON Schema Specification Authors', served at
-<https://json-schema.org/draft/2020-12/meta/> and reproduced under the 3-clause BSD
+<https://json-schema.org/draft/2020-12/meta/>, with the dialect's own meta-schema at
+<https://json-schema.org/draft/2020-12/schema>, and reproduced under the 3-clause BSD
 licence. `jsonschema-draft-07-schema.json` is theirs too, served at
 <https://json-schema.org/draft-07/schema> and reproduced under the same licence.

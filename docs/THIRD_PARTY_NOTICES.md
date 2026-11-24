@@ -101,7 +101,7 @@ recorded for them.
 
 ## Published definitions of the formats
 
-- **Files:** the nineteen files pinned in `lib/tests-picture/__fixtures__/definitions/`,
+- **Files:** the twenty files pinned in `lib/tests-picture/__fixtures__/definitions/`,
   unchanged from the bytes their publishers served on the day each was fetched (20, 22
   or 24 November 2026). That directory's `provenance.json` records each file's identifier, URL,
   fetch time and SHA-256, and [the picture's README](../lib/tests-picture/README.md) says
@@ -122,8 +122,9 @@ recorded for them.
 
 ### JSON Schema meta-schemas
 
-- **Files:** the eight whose names begin `jsonschema-2020-12-`: the vocabulary
-  meta-schemas of JSON Schema Draft 2020-12. And `jsonschema-draft-07-schema.json`, the
+- **Files:** the nine whose names begin `jsonschema-2020-12-`: the vocabulary
+  meta-schemas of JSON Schema Draft 2020-12, and the meta-schema of the dialect itself,
+  served at <https://json-schema.org/draft/2020-12/schema>. And `jsonschema-draft-07-schema.json`, the
   one meta-schema of JSON Schema Draft-07, served at
   <https://json-schema.org/draft-07/schema> and the same bytes as `schema.json` on that
   repository's `draft-07` branch at commit `20a3fee852db88519dcb3bb329b7a872ebad8953`.

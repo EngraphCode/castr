@@ -1,4 +1,5 @@
 import type { Definition } from './definitions.js';
+import { isJsonObject } from './json.js';
 import {
   readInventory,
   readKeywords,
@@ -39,6 +40,31 @@ export function schemaKeywords(read: DefinitionReader): readonly KeywordKind[] {
  */
 export function schemaTypeValues(read: DefinitionReader): readonly string[] {
   return readTypeValues(read('jsonschema-2020-12-validation.json').schema, '$defs');
+}
+
+/**
+ * One name the Draft 2020-12 dialect's own meta-schema constrains that is in none of
+ * the vocabularies it names. It is not a keyword of a vocabulary: the meta-schema states
+ * its syntax and, by `deprecated`, that it is kept from an earlier draft.
+ */
+export interface DialectOwnName {
+  readonly name: string;
+  readonly deprecated: boolean;
+}
+
+/**
+ * The names the Draft 2020-12 dialect's own meta-schema constrains itself, beyond the
+ * keywords of its vocabularies.
+ */
+export function dialect2020OwnNames(read: DefinitionReader): readonly DialectOwnName[] {
+  const properties = read('jsonschema-2020-12-schema.json').schema['properties'];
+  if (!isJsonObject(properties)) {
+    return [];
+  }
+  return Object.entries(properties).map(([name, declared]) => ({
+    name,
+    deprecated: isJsonObject(declared) && declared['deprecated'] === true,
+  }));
 }
 
 /**

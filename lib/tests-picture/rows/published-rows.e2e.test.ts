@@ -15,6 +15,7 @@ import { describe, it, expect } from 'vitest';
 import { loadDefinition, readPins } from './definitions.js';
 import type { Inventory, ObjectKind } from './inventory.js';
 import {
+  dialect2020OwnNames,
   draft07Keywords,
   draft07TypeValues,
   openApi31Objects,
@@ -49,7 +50,7 @@ describe('the pinned definitions', () => {
   it('every pinned file still has the bytes and the identifier its pin records', () => {
     const pins = readPins();
 
-    expect(pins).toHaveLength(19);
+    expect(pins).toHaveLength(20);
     for (const pin of pins) {
       expect(loadDefinition(pin.file).pin).toEqual(pin);
     }
@@ -95,6 +96,36 @@ describe('JSON Schema 2020-12 keywords', () => {
   });
 });
 
+describe('the names the Draft 2020-12 dialect constrains itself', () => {
+  const own = dialect2020OwnNames(loadDefinition);
+  const names = own.map((entry) => entry.name);
+  const inAVocabulary = new Set(schemaKeywords(loadDefinition).map((entry) => entry.keyword));
+
+  it('constrains four names that are in none of its vocabularies', () => {
+    expect([...names].sort()).toEqual([
+      '$recursiveAnchor',
+      '$recursiveRef',
+      'definitions',
+      'dependencies',
+    ]);
+    expect(names.filter((name) => inAVocabulary.has(name))).toEqual([]);
+  });
+
+  it('marks every one of the four deprecated', () => {
+    expect(own.filter((entry) => !entry.deprecated)).toEqual([]);
+  });
+
+  it('constrains two of the three keywords of Draft-07 that no vocabulary holds', () => {
+    const draft07 = new Set(draft07Keywords(loadDefinition).map((entry) => entry.keyword));
+
+    expect(names.filter((name) => draft07.has(name)).sort()).toEqual([
+      'definitions',
+      'dependencies',
+    ]);
+    expect(names).not.toContain('additionalItems');
+  });
+});
+
 describe('JSON Schema Draft-07 keywords', () => {
   const draft07 = draft07Keywords(loadDefinition).map((entry) => entry.keyword);
   const draft2020 = new Set(schemaKeywords(loadDefinition).map((entry) => entry.keyword));
@@ -108,7 +139,7 @@ describe('JSON Schema Draft-07 keywords', () => {
     expect(draft07TypeValues(loadDefinition)).toEqual(schemaTypeValues(loadDefinition));
   });
 
-  it('holds the three keywords Draft 2020-12 replaced or removed', () => {
+  it('holds three keywords that no vocabulary of Draft 2020-12 holds', () => {
     expect(draft07.filter((keyword) => !draft2020.has(keyword)).sort()).toEqual([
       'additionalItems',
       'definitions',
