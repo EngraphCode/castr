@@ -531,14 +531,17 @@ specification are approved and on `main`.
       item with parameters and no operation; a clash with the five names. And the
       ignored header definitions written nowhere, compared without regard to case. The
       prototype drops every one of these in silence today.
-   3. **Count, before choosing how the module is emitted.** Run the writer with its
-      refusals over every document the snapshot, characterisation and generated suites
-      convert today, and count how many it refuses. Appendix B.1 says a rejection in one
-      column is a rejection of that output only. If the module went into the one shared
-      file by default, each refusal would take the Zod and the endpoint definitions down
-      with it. The count decides between a shared file and a separate output; a new
-      option, template or file is the public surface (SPEC-N-4). If the strict reading
-      leaves two forms standing, that is one question to the owner.
+   3. **The module is an output of its own, and the strict reading settles that.**
+      Appendix B.1 says a rejection in one column is a rejection of that output only. So
+      a document the `paths` module refuses must still give its Zod and its endpoint
+      definitions, for every valid document and not only the ones a suite holds today.
+      The module therefore cannot be written into the one shared file in a way that lets
+      its refusal stop the others: it is requested and refused apart from them. How it
+      is requested (an option, a template, a file) is the public surface (SPEC-N-4); the
+      writer's pull request states the form and why, and it is a question to the owner
+      only if two forms survive the strict reading. A count of how many documents the
+      existing suites convert that the module would refuse is still taken, as a measure
+      of how much of the format the rows cover; it decides nothing.
    4. **Two gaps in the prototype's tests to close with the writer.** A body written in
       place is unproved: assert that a response body in `paths` and `z.output` of the Zod
       schema for the same operation, status and media type are mutually assignable, for
