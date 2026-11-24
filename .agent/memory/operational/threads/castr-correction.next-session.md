@@ -19,7 +19,7 @@ subagents: use the model that fits the task.
   `propertyNames` that refuses no name (row 2); every writer refuses a schema-valued
   `additionalProperties` outside the row; and Oak's document converts in every output.
   With 177 a `const` that decides alone is read and written as a literal. The
-  specification is 0.10.1 once its pull request merges: the owner approved it on 23
+  specification reached 0.10.1, and 0.11.0 on 24 November: the owner approved it on 23
   November by question ("I approve revision 0.10.0", then "I approve revision 0.10.1" for two
   adjustments from the first hosted review: the `format: uri` row covers `type: string`
   alone, and a new class, carried with a declared limit), choosing `z.url()` with a declared
@@ -30,9 +30,10 @@ subagents: use the model that fits the task.
      its own amendment (the public surface).
   2. Unit 8, beside it: the `paths` module. A prototype is on the branch
      `feat/paths-type-prototype`, checked at type level against a client of
-     `openapi-fetch`. Its rows are drafted as amendment 0.11.0 on the branch
-     `docs/amendment-0.11.0-draft` (pull request 190), not in this tree until that
-     merges, and are reviewed before the owner is asked; then the writer. No template emits it before the rows are approved.
+     `openapi-fetch`. Its rows are approved as amendment 0.11.0, Appendix B.4 (owner,
+     24 November: "I approve 0.11.x", which also covers a patch adjustment within
+     0.11). Next is the writer in `src`, test first, with three faults of the model the
+     plan lists. No template emits it before the rows are approved.
   3. The Zod reader, which passes over declarations it cannot read.
   4. The leftovers of unit 5, as one unit.
 - **Also merged on 23 November:** 176 (the sort and its queue, in the plan), 178 (`enum`
