@@ -490,16 +490,12 @@ specification are approved and on `main`.
    Unit 8's rows are approved: Appendix B.4, as revision 0.11.1, approved by the owner by
    name on 24 November ("I approve 0.11.1") after two rounds of hosted review of the
    draft and one of the change. There is no revision 0.11.0: the owner's first words
-   named no exact version and are not an approval of record. The
-   writer refuses, as not built, anything given by reference to a component other than a
-   schema: 0.11.1 leaves it in no row, because a named definition stays named. Next
-   is the writer, test first: the prototype moves into `src` with its type-level tests,
-   a template emits the module, and the picture's 21 cells in the TypeScript column are
-   judged against it. Two faults in the model that the prototype exposed are repaired
-   (pull request 191): a parameter stated on a path item and again on its operation was
-   held twice, and a path item's parameter given by reference was not among the
-   operation's parameters. One is left for the writer: the header definitions OpenAPI
-   says are ignored are held like any other, and Appendix B.4 writes them nowhere.
+   named no exact version and are not an approval of record.
+   Rows are not an instruction to build a writer next: what comes next is the paragraph
+   below. Two faults of the model are repaired (pull request 191): a parameter stated on
+   a path item and again on its operation was held twice, and a path item's parameter
+   given by reference was not among the operation's parameters. One is open: the header
+   definitions OpenAPI says are ignored are held in the model like any other.
 
    **Where the model is wrong, as the `paths` module showed on 24 November, and the order
    it sets.** Correcting the model is the work of this effort (the owner, 24 November,
@@ -524,6 +520,20 @@ specification are approved and on `main`.
    - **`$defs` is not in the model.** `webhooks` is.
 
    So the order for unit 8 is:
+
+   Before any of it, a fault this seat extended and the specification already forbids.
+   SPEC-AR-3 says generated code is built as syntax-tree nodes and printed by the
+   compiler's printer, and that no writer assembles target syntax as text. The
+   TypeScript type writer does assemble text: `writeConstType` writes a literal with
+   `JSON.stringify` and `writeEnumType` joins members with `" | "`
+   (`writers/typescript/type-writer/leaf-types.ts`, written in pull requests 177 and
+   178), and the Zod writer writes metadata the same way. The course plan
+   (`castr-course.md`) already says the TypeScript writer must move to syntax-tree
+   construction. So a module of types cannot be made compliant by taking each schema's
+   type from that writer: the type writer is repaired first, or the two are built
+   together on syntax trees. The same clause says a string whose grammar a
+   specification defines, a URI reference among them, is parsed once at the boundary
+   and held as data; the marks `ref` and `pathItemRef` hold one as text.
 
    1. **The model keeps what it loses today**, each its own pull request, test first:
       the reference by which an operation's parameter, request body, response or
