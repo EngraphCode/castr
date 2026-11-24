@@ -280,7 +280,7 @@ describe('IR Serialization', () => {
     };
 
     expect(() => deserializeIR(JSON.stringify(staleVersionedIR))).toThrow(
-      /declares schema version "1\.0\.0" but this build reads "2\.0\.0"/,
+      /declares schema version "1\.0\.0" but this build reads "2\.1\.0"/,
     );
   });
 
@@ -291,7 +291,7 @@ describe('IR Serialization', () => {
     };
 
     expect(() => serializeIR(foreignVersionIR)).toThrow(
-      /declares schema version "1\.0\.0" but this build reads "2\.0\.0"/,
+      /declares schema version "1\.0\.0" but this build reads "2\.1\.0"/,
     );
   });
 
@@ -302,7 +302,7 @@ describe('IR Serialization', () => {
     };
 
     expect(() => deserializeIR(JSON.stringify(futureIR))).toThrow(
-      /declares schema version "3\.0\.0" but this build reads "2\.0\.0"/,
+      /declares schema version "3\.0\.0" but this build reads "2\.1\.0"/,
     );
   });
 

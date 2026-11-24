@@ -40,7 +40,10 @@ export function buildIRRequestBody(
 ): IRRequestBody {
   // Handle $ref request bodies - resolve from components/requestBodies
   if (isReferenceObject(requestBody)) {
-    return buildConcreteRequestBody(resolveRequestBodyRef(requestBody, context), context);
+    return {
+      ...buildConcreteRequestBody(resolveRequestBodyRef(requestBody, context), context),
+      ref: requestBody.$ref,
+    };
   }
 
   return buildConcreteRequestBody(requestBody, context);

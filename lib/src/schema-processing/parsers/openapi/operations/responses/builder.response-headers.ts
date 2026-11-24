@@ -36,7 +36,12 @@ function buildResponseHeader(
   context: IRBuildContext,
 ): IRResponseHeader | undefined {
   if (isReferenceObject(headerObj)) {
-    return buildResponseHeader(headerName, resolveHeader(headerObj, headerName, context), context);
+    const built = buildResponseHeader(
+      headerName,
+      resolveHeader(headerObj, headerName, context),
+      context,
+    );
+    return built === undefined ? undefined : { ...built, ref: headerObj.$ref };
   }
 
   const headerContext: IRBuildContext = {
