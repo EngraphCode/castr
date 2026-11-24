@@ -493,8 +493,11 @@ specification are approved and on `main`.
    operation's parameters. One is left for the writer: the header definitions OpenAPI
    says are ignored are held like any other, and Appendix B.4 writes them nowhere.
 
-   **Before the writer: what was measured on 24 November, and the order it sets.** The
-   writer cannot meet Appendix B.4 from today's model. Run through `buildIR`:
+   **Where the model is wrong, as the `paths` module showed on 24 November, and the order
+   it sets.** Correcting the model is the work of this effort (the owner, 24 November,
+   verbatim: "The model needing to change is the whole point of the current effort, this
+   is not a surprise"). The module is a consumer that shows where; each item below is
+   work in its own right, not a step on the way to a writer. Run through `buildIR`:
 
    - **The model records no reference** for a parameter, a request body, a response or a
      response header that an operation gives by `$ref`. Each is held as the object it
