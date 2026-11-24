@@ -81,15 +81,20 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
   four readers are doing in the background. Pull request 197 (Draft-07) merged as
   `ec9a6753`. **Step back.** The step is the size given. Nothing changes for Oak's
   document: the third step of which that is so, and the owner was told at the close of
-  M0 that none of the design's steps would. **Found by doing, not decided:** Zod states
-  what a schema can be in closed unions of its own core types, so the list is computed
-  through the compiler from resolved types and no declaration's text is read. At 4.6.7:
-  40 values of a definition's `type`; 39 schemas with their fields (`int` is a format of
-  a number and has no schema of its own); 15 checks; 32 string formats, five number
-  formats, two bigint formats. **What the reading does not see,** for the hand list and
-  for M2: `$ZodExactOptional` is outside Zod's own union and its definition has no field
-  that tells it from an optional; and a factory such as `z.strictObject` or
-  `z.stringbool` builds a kind with particular fields. Appendix A names constructs by
+  M0 that none of the design's steps would. **Found by doing, not decided:** every
+  schema and check of Zod holds a definition and the core module exports an interface
+  for each, so the list is computed through the compiler from resolved types and no
+  declaration's text is read. At 4.6.7: 40 values of a definition's `type`; 48 schemas
+  across 39 kinds (`int` is a format of a number and has no schema of its own); 16
+  checks; 50 string formats, each with its own fields; five number formats, two bigint
+  formats. **Corrected by review, twice.** The first reading took Zod's own unions as
+  complete. They are not: nine schemas are outside `$ZodTypes` (among them the
+  discriminated union, the exclusive union, the exact optional and the codec), one check
+  is outside `$ZodChecks` (`properties`), and Zod's list of string format names holds 32
+  of the 50. The lesson for the design: a publisher's own summary of its constructs is
+  a claim to test, not a list to take. **What the reading does not see,** for the hand
+  list and for M2: a factory such as `z.strictObject` or `z.stringbool` builds a kind
+  with particular fields and has no interface of its own. Appendix A names constructs by
   method; the structure will be set against definitions, so M4 needs the map between
   the two.
 
