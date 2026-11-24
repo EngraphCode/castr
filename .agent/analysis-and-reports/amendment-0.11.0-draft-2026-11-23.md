@@ -1,16 +1,17 @@
 # Amendment 0.11.0, proposed: the rows for the `paths` module
 
-**Approved on 24 November 2026.** After two rounds of hosted review of this draft, the
-owner was asked by question and approved the text ("I approve 0.11.x"). The review of the specification change then found three more cases that belong in the
-list of what the rows say nothing of, and they were adjusted as revision 0.11.1, which
-the owner approved by name the same day ("I approve 0.11.1"): anything given by
-reference to a component, because a named definition stays named (SPEC-PR-3) and the
-draft had wrongly classed it as the object it refers to; an operation with no
-`responses`; and a note that two components whose names project to one identifier are
-already a located rejection. The words "0.11.x" named no exact version, which the
-specification's own check requires, so they were not taken to cover 0.11.1. The
-specification is the text of record; this file is the draft as it was brought, kept as
-the record of how it was reached.
+**Approved on 24 November 2026, as revision 0.11.1.** After two rounds of hosted review
+of this draft the owner was asked by question and answered "I approve 0.11.x". Those
+words name no exact version, which SPEC-CC-2 requires, so they are not an approval of
+record and there is no revision 0.11.0. The review of the specification change then
+found three more cases that belong in the list of what the rows say nothing of:
+anything given by reference to a component, because a named definition stays named
+(SPEC-PR-3) and the draft had wrongly classed it as the object it refers to; an
+operation with no `responses`; and a note that two components whose names project to
+one identifier are already a located rejection. With those the text is revision 0.11.1,
+which the owner approved by name ("I approve 0.11.1"). The specification is the text of
+record; this file is the draft as it was brought, kept as the record of how it was
+reached.
 
 What follows is the draft, written on 23 November 2026 by the seat Firefly mends Quench.
 When it was written the specification was at 0.10.1 and held none of it.
