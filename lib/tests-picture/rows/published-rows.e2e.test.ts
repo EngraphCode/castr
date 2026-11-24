@@ -15,6 +15,8 @@ import { describe, it, expect } from 'vitest';
 import { loadDefinition, readPins } from './definitions.js';
 import type { Inventory, ObjectKind } from './inventory.js';
 import {
+  draft07Keywords,
+  draft07TypeValues,
   openApi31Objects,
   openApi31SchemaVocabulary,
   openApi32Objects,
@@ -47,7 +49,7 @@ describe('the pinned definitions', () => {
   it('every pinned file still has the bytes and the identifier its pin records', () => {
     const pins = readPins();
 
-    expect(pins).toHaveLength(18);
+    expect(pins).toHaveLength(19);
     for (const pin of pins) {
       expect(loadDefinition(pin.file).pin).toEqual(pin);
     }
@@ -90,6 +92,49 @@ describe('JSON Schema 2020-12 keywords', () => {
     expect(byKeyword.get('format')).toBe('format');
     expect(byKeyword.get('contentSchema')).toBe('content');
     expect(byKeyword.get('readOnly')).toBe('meta-data');
+  });
+});
+
+describe('JSON Schema Draft-07 keywords', () => {
+  const draft07 = draft07Keywords(loadDefinition).map((entry) => entry.keyword);
+  const draft2020 = new Set(schemaKeywords(loadDefinition).map((entry) => entry.keyword));
+
+  it('counts the 46 keywords of the one meta-schema', () => {
+    expect(draft07).toHaveLength(46);
+    expect(new Set(draft07).size).toBe(46);
+  });
+
+  it('lists the same seven values of type as Draft 2020-12', () => {
+    expect(draft07TypeValues(loadDefinition)).toEqual(schemaTypeValues(loadDefinition));
+  });
+
+  it('holds the three keywords Draft 2020-12 replaced or removed', () => {
+    expect(draft07.filter((keyword) => !draft2020.has(keyword)).sort()).toEqual([
+      'additionalItems',
+      'definitions',
+      'dependencies',
+    ]);
+  });
+
+  it('holds none of the fourteen keywords Draft 2020-12 has and Draft-07 has not', () => {
+    const held = new Set(draft07);
+
+    expect([...draft2020].filter((keyword) => !held.has(keyword)).sort()).toEqual([
+      '$anchor',
+      '$defs',
+      '$dynamicAnchor',
+      '$dynamicRef',
+      '$vocabulary',
+      'contentSchema',
+      'dependentRequired',
+      'dependentSchemas',
+      'deprecated',
+      'maxContains',
+      'minContains',
+      'prefixItems',
+      'unevaluatedItems',
+      'unevaluatedProperties',
+    ]);
   });
 });
 

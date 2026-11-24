@@ -33,4 +33,5 @@ definitions of the formats Castr reads. Those named `oas-` are the OpenAPI Initi
 served at <https://spec.openapis.org/oas/> and reproduced under the Apache License 2.0.
 Those named `jsonschema-2020-12-` are the JSON Schema Specification Authors', served at
 <https://json-schema.org/draft/2020-12/meta/> and reproduced under the 3-clause BSD
-licence.
+licence. `jsonschema-draft-07-schema.json` is theirs too, served at
+<https://json-schema.org/draft-07/schema> and reproduced under the same licence.

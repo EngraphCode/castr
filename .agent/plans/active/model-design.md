@@ -15,11 +15,11 @@ owner_directive: >-
 todos:
   - id: M0-PLAN
     content: 'This plan is reviewed by the assumptions reviewer, with the conscience panel read as evidence in both stances; every finding has a row under "Review dispositions"; the seat approves it; it is on main with the one statement of order amended to match it; and the owner has been told in plain words what is frozen, what is stopped and what goes on beside it.'
-    status: in_progress
+    status: completed
     depends_on: []
   - id: M1-SURFACE
     content: 'The construct kinds of the formats in section 6 that the picture does not already list are listed beside its rows: JSON Schema Draft-07 computed from its meta-schema, Zod 4 computed from the installed package at a pinned version and set against Appendix A, and, for each format, the kinds no machine-readable file holds, listed by hand and marked so. A test recomputes each computed list.'
-    status: pending
+    status: in_progress
     depends_on: [M0-PLAN]
   - id: M2-CASES
     content: 'The hard cases and the equivalence sets are written as small valid documents, each with the sentence of the specification it tests and what a naive structure loses, attacked before the note lands by a reader who knows each format read: OpenAPI, JSON Schema and Zod.'
@@ -125,10 +125,15 @@ the three parts of meaning, the accepted and produced sets, value, boundary, doc
 content) and from the formats' texts. The present model is read only as evidence of
 where meaning is lost.
 
-The method for the design step is the Ecosystem repository's `specify` skill (one
+The method for the design step is the Ecosystem repository's
+[`specify`](https://github.com/oaknational/oak-open-curriculum-ecosystem/blob/main/.agent/skills/specification/specify/SKILL-CANONICAL.md)
+skill (one
 successful case and the adverse cases before any general statement; obligations with
-their conditions; every unknown given a treatment), and `assess-specification` judges
-the draft for the one reliance asked of it: implementation.
+their conditions; every unknown given a treatment), and
+[`assess-specification`](https://github.com/oaknational/oak-open-curriculum-ecosystem/blob/main/.agent/skills/specification/assess-specification/SKILL-CANONICAL.md)
+judges
+the draft for the one reliance asked of it: implementation. Both are used as written, with no local
+form.
 
 ## The boundary of the design
 
@@ -288,8 +293,9 @@ answered on the thread and taken into the next change.
   assumes nothing about the model. Exit: each computed list has a test that fails when
   its artefact changes, and each hand list names the text and the sections it was read
   from. A hand list is a floor and is called one: a kind found after approval gets an
-  element or a cited refusal by amendment, as a new Zod construct does. Two pull
-  requests.
+  element or a cited refusal by amendment, as a new Zod construct does. Three pull
+  requests, one for each part: the reading of the texts is a different kind of work
+  from a computed list, and is reviewed by different readers.
 - **M2, the cases.** One note under `.agent/analysis-and-reports/`, with each case's
   document in a fence. A reader who knows OpenAPI, one who knows JSON Schema and one who knows Zod attack the
   list before it lands. One pull request, with M3.
@@ -310,8 +316,8 @@ answered on the thread and taken into the next change.
   returns the work to M4, and the pull request is closed, not patched.
 - **M6, the handoff.** One pull request to the course and the one statement of order.
 
-**Size.** Four merged pull requests before the amendment (this plan; two for M1; one for
-M2 with M3), one for the amendment, one for the handoff: six. Each push runs the full
+**Size.** Five merged pull requests before the amendment (this plan; three for M1; one for
+M2 with M3), one for the amendment, one for the handoff: seven. Each push runs the full
 check for about ten minutes. The items that are not frozen are outside the count. The
 base rate is against a quick approval: an amendment of sixteen rows took three rounds,
 and two earlier ones were withdrawn, after four attacks and after three drafts.
@@ -371,3 +377,5 @@ the files before it was accepted.
 | Hosted review of 196               | The thread record's note that every skill is read from the Ecosystem checkout should be limited to the cognitive skills                                                                                                                                                           | Applied in part: the owner's words are about skills, said where that checkout was present; the note now gives them, their setting and what they leave open                                                 |
 | Hosted review of 196, round 2      | The picture's hand list of what only the texts define is likely incomplete, so a construct could miss the coverage map                                                                                                                                                            | Applied in part: M1 reads each text section by section for constructs that carry meaning and names the sections; the sweep of validity rules stays with N7, since such a rule adds nothing the model holds |
 | Hosted review of 196, round 2      | A grammar-defined string could pass by being flagged alone                                                                                                                                                                                                                        | Applied: it is data, or an exception entered in the amendment for the owner to approve (SPEC-AR-3)                                                                                                         |
+| Hosted review of 196, round 3      | The plan adopts two of the Ecosystem repository's skills with no link to them                                                                                                                                                                                                     | Applied with the first change after the exit: both linked, used as written                                                                                                                                 |
+| Hosted review of 196, round 3      | The first commit carried the continuity file and the thread record with the plan                                                                                                                                                                                                  | True and not curable without rewriting history; recorded in the napkin; records land in their own commit from here                                                                                         |

@@ -2,6 +2,36 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-11-24 (the plan for the model's design — Firefly binds Tallow / 5196d5, claude-code)
+
+- **I bundled the continuity file and the thread record into the plan's commit.** The
+  rule says continuity surfaces land in their own `chore(continuity)` commit. The third
+  hosted review of pull request 196 found it; the commits were pushed, and this
+  repository does not rewrite history, so the bundle stands. What works: stage the plan
+  and the records in two commits, the records last with the `chore(continuity)` subject.
+- **I wrote nothing here until a reviewer cited a rule I had broken.** The napkin is
+  written as the work goes. This entry is late.
+- **A command I gave the owner pushed a branch deletion through the pre-push hook.** The
+  hook ran the full check, the owner's command was cut off, and `dist` was left half
+  built. A deletion on GitHub goes through the API, which sends no code.
+- **I told the owner the claims registry was tracked. It is ignored by design.** I had
+  not looked. `git check-ignore -v` is one command.
+- **I stated an owner instruction wider than its setting.** "Use the OCE skills" was said
+  on a machine with that checkout present; I wrote "every one of them" for every
+  session. A reviewer caught the clash with a cloud session's grounding. What works:
+  quote the words, say where they were said, and say what they leave open.
+- **Three reasons I wrote for holding work were shown partly false by reviewers who ran
+  them.** That the writers' rebuild would be undone by a new model was true of the
+  walking of the model and false of the building of syntax. What works: measure the
+  claim before writing it as a reason (three reads of `zodChain` in the writers took one
+  command).
+- **What worked.** The assumptions reviewer found that every acceptance criterion in the
+  first draft would have passed a list of every format's keywords under neutral names.
+  The cure was one test: a meaning written in two formats is one value.
+- **Tooling.** In zsh a variable holding several paths is one argument; use an array.
+  The `pr-watch` command takes no `--` before its arguments. The commit-message check
+  takes `-F <file>`.
+
 ## 2026-11-22 (amendment part one, first drafts — Ingot binds Patina / 194219, claude-code)
 
 - **I merged #155 with the hosted review of its head reported as failed,** not completed.

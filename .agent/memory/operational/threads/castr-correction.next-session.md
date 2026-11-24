@@ -52,6 +52,32 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
 
 ### Step log for the plan
 
+- 2026-11-24, M0, end. Pull request 196 merged (`ed119eef`) after two rounds of hosted
+  review and a third answered on its threads. The plan is on `main`. Nothing changed for
+  Oak's document, as the plan says of itself.
+- 2026-11-24, M1, start. **Step back.** (1) The step moves no sentence of "What this
+  serves"; it is the first of the three things the plan says make a structure believed.
+  (2) Nothing has changed for Oak's document, for the second step in a row; the plan
+  that orders the work asks that the owner be told so before a third, and the seat told
+  the owner at M0's close. (3) The step is larger than the plan gave it: three pull
+  requests, not two, because reading the texts section by section is a different kind
+  of work from a computed list. The plan's size is corrected to seven. (4) The check
+  built is smaller than the work: two functions and four tests. (5) Stopping here would
+  leave Draft-07 unlisted and "designed whole" unprovable for one format of four.
+- **The decision matrix, on the unknowns of M1's first part.**
+
+  | Question                                                 | Lens that settles it          | Disposition                                                                                                                                         |
+  | -------------------------------------------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | Are Draft-07's keywords rows of the picture              | Strict: what a row is         | No. A row is a construct of an OpenAPI 3.1 or 3.2 document, and Draft-07 is not a dialect of either. They are a list beside the rows, held by tests |
+  | Which licence the Draft-07 meta-schema is recorded under | Found by reading, not decided | The branch `draft-07` holds no `LICENSE`; its README says "the AFL or BSD license". Recorded as the 3-clause BSD licence, as the 2020-12 files are  |
+  | Whether the served file is the publisher's               | Found by computing            | Its git blob hash equals that of `schema.json` at commit `20a3fee8` of the publisher's repository                                                   |
+
+- 2026-11-24, M1, first part. Draft-07's 46 keywords are computed from its pinned
+  meta-schema. Three are in no vocabulary of Draft 2020-12 (`additionalItems`,
+  `definitions`, `dependencies`); fourteen of Draft 2020-12's 57 are not in Draft-07.
+  The two drafts list the same seven values of `type`. Next: the texts, read section by
+  section for what no machine-readable file holds; then Zod.
+
 - 2026-11-24, M0, the reviews. The assumptions reviewer and the four seats of the
   conscience panel read the first draft. All four seats judged the work on track; three
   judged the framing narrowed, each on a different point; the assumptions reviewer found

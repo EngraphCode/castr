@@ -367,10 +367,19 @@ export interface KeywordKind {
 }
 
 /**
- * The values `type` may take, as the validation vocabulary's meta-schema lists them.
+ * The keyword under which a JSON Schema draft keeps its definitions: `$defs` from Draft
+ * 2019-09, `definitions` before it.
  */
-export function readTypeValues(validationMetaSchema: JsonObject): readonly string[] {
-  const definitions = validationMetaSchema['$defs'];
+export type DefinitionsKeyword = '$defs' | 'definitions';
+
+/**
+ * The values `type` may take, as a meta-schema lists them under its definitions.
+ */
+export function readTypeValues(
+  metaSchema: JsonObject,
+  definitionsKeyword: DefinitionsKeyword,
+): readonly string[] {
+  const definitions = metaSchema[definitionsKeyword];
   const simpleTypes = isJsonObject(definitions) ? definitions['simpleTypes'] : undefined;
   const values = isJsonObject(simpleTypes) ? simpleTypes['enum'] : undefined;
   return Array.isArray(values) ? values.map(String).sort(byName) : [];

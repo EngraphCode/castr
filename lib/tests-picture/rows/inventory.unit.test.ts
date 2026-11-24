@@ -332,14 +332,20 @@ describe('readInventory', () => {
 
 describe('readTypeValues', () => {
   it('lists the values the validation meta-schema allows for type', () => {
-    expect(readTypeValues({ $defs: { simpleTypes: { enum: ['string', 'array'] } } })).toEqual([
-      'array',
-      'string',
-    ]);
+    expect(
+      readTypeValues({ $defs: { simpleTypes: { enum: ['string', 'array'] } } }, '$defs'),
+    ).toEqual(['array', 'string']);
   });
 
   it('lists nothing for a meta-schema that does not define them', () => {
-    expect(readTypeValues({})).toEqual([]);
+    expect(readTypeValues({}, '$defs')).toEqual([]);
+  });
+
+  it('reads them from the place a draft keeps its definitions', () => {
+    const draft07 = { definitions: { simpleTypes: { enum: ['null', 'object'] } } };
+
+    expect(readTypeValues(draft07, 'definitions')).toEqual(['null', 'object']);
+    expect(readTypeValues(draft07, '$defs')).toEqual([]);
   });
 });
 
