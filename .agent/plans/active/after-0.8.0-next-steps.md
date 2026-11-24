@@ -479,10 +479,15 @@ specification are approved and on `main`.
      Ecosystem repository's present file has more names only because it is rewritten
      after generation.
 
-   Next for unit 8: the rows. They are drafted as amendment 0.11.0 on the branch
-   `docs/amendment-0.11.0-draft` (pull request 190), which is reviewed before the owner is
-   asked; the draft is not in this tree until that pull request merges. Then the owner's
-   approval, then the writer in `src` and a template that emits it.
+   Unit 8's rows are approved: amendment 0.11.0, Appendix B.4, approved by the owner on
+   24 November ("I approve 0.11.x") after two rounds of hosted review of the draft. Next
+   is the writer, test first: the prototype moves into `src` with its type-level tests,
+   a template emits the module, and the picture's 21 cells in the TypeScript column are
+   judged against it. Three faults in the model are repaired with it, each found by
+   running a reviewer's case through the prototype: a parameter stated on a path item
+   and again on its operation is held twice; a path item's parameter given by reference
+   to a component is not among the operation's parameters; and the header definitions
+   OpenAPI says are ignored are held like any other.
 
    **The picture's own, from the review of pull request 188. Not repaired.** The walk
    names a `format` by its value and does not look at the type beside it, so a format in a

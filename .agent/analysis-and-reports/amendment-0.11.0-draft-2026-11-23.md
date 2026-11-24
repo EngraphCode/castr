@@ -1,10 +1,14 @@
 # Amendment 0.11.0, proposed: the rows for the `paths` module
 
-A draft, written on 23 November 2026 by the seat Firefly mends Quench. Nothing here is in
-`docs/SPECIFICATION.md`, which stays at 0.10.1 until the owner approves text in their own
-words, naming the version (SPEC-CC-2). This draft goes through two rounds of hosted review
-before the owner is asked: revision 0.10.0 was approved before any review and needed
-0.10.1 the same day.
+**Approved on 24 November 2026.** After two rounds of hosted review of this draft, the
+owner was asked by question and approved the text ("I approve 0.11.x"). The words cover
+revision 0.11.0 and, by their form, a patch adjustment within 0.11 that the review of
+the specification change may show is needed; a wider change is asked for afresh. The
+specification is the text of record; this file is the draft as it was brought, kept as
+the record of how it was reached.
+
+What follows is the draft, written on 23 November 2026 by the seat Firefly mends Quench.
+When it was written the specification was at 0.10.1 and held none of it.
 
 ## What it is for
 
