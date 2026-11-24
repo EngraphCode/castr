@@ -30,9 +30,8 @@ subagents: use the model that fits the task.
      its own amendment (the public surface).
   2. Unit 8, beside it: the `paths` module. A prototype is on the branch
      `feat/paths-type-prototype`, checked at type level against a client of
-     `openapi-fetch`. Its rows are approved: Appendix B.4, amendment 0.11.0 and its
-     adjustment 0.11.1 (owner, 24 November: "I approve 0.11.x", then "I approve
-     0.11.1"). The approval check needs the owner's words to name the exact version; a
+     `openapi-fetch`. Its rows are approved: Appendix B.4, revision 0.11.1 (owner,
+     24 November, by name: "I approve 0.11.1"). There is no 0.11.0. The approval check needs the owner's words to name the exact version; a
      family such as 0.11.x does not pass it, and must not be made to pass by the seat's
      own framing words in the cell. Next is the writer in `src`, test first, with three faults of the model the
      plan lists. No template emits it before the rows are approved.
