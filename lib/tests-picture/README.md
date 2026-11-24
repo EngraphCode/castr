@@ -269,15 +269,33 @@ list of format names holds 32, leaving out 19 formats Zod defines (`mac`, `hex`,
 `json_string`, with no definition of its own.
 
 The list is read at one pinned version, and the test that compares the installed version
-with the pin fails on any other, so the list is read again when Zod moves. What this
-reading does not see, which a list made by hand has to hold, is a method or a factory
-that builds a construct with particular fields and no interface of its own. Two examples,
-which are not the whole of that list:
+with the pin fails on any other, so the list is read again when Zod moves.
 
-- `z.strictObject` and `z.looseObject` build an object with a `catchall`, and
-  `z.stringbool` builds a codec;
-- `z.check`, `z.refine` and `z.superRefine`, `z.describe` and `z.meta` build the base
-  check with the `check` values `custom`, `describe` and `meta`, which no type states.
+A definition is what a schema holds; a function or a method is how an author gets one.
+[`rows/zod-builders.ts`](rows/zod-builders.ts) reads the second and sets it against the
+first and against Appendix A of the specification:
+
+- **By type:** the 146 functions Zod exports that build a schema or a check, the 24
+  methods every schema has that build one, and, for each of 23 kinds, the methods only
+  that kind has (an object's `strict`, `loose`, `strip`, `passthrough` and `catchall`
+  among them). Each is listed with the kind its return type states.
+- **By running:** one example of each construct Appendix A names is built, and what it
+  leaves in the schema is read. This shows what no type states. `z.strictObject` and
+  `z.looseObject` leave an object whose `catchall` is `never` or `unknown`, and a plain
+  `z.object` leaves none, so the four policies for unknown keys are one field. An exact
+  optional differs from an optional only in its class. `.refine` and `.superRefine`
+  leave a check that states `custom`. `.brand` leaves nothing. `.meta` and `.describe`
+  leave nothing in the schema either: they enter it in Zod's registry of metadata.
+- **Against Appendix A:** a test reads the appendix's first column from the
+  specification and requires an example for every name in it and for no other. Every
+  name is a construct Zod has. The functions and methods the appendix does not name are
+  listed in the test, 120 of them: most are plain kinds and checks, and some are
+  constructs of their own that the appendix is silent on, `z.discriminatedUnion`,
+  `z.xor`, `z.json`, `z.function`, `z.promise`, `z.success` and `z.nonoptional` among
+  them.
+
+What neither reading shows is what a method does to the fields of the kind it returns,
+beyond the examples run here.
 
 Constructs that only the specifications' text
 defines (the values of `format`, boolean schemas, a keyword no vocabulary defines) cannot

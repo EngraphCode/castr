@@ -1,0 +1,321 @@
+/**
+ * What Zod's public functions and methods build, and what the constructs Appendix A of
+ * the specification names leave in a schema.
+ *
+ * Two readings, set against each other:
+ *
+ * - **By type.** Every function the `zod` module exports, every function of its `iso`
+ *   and `coerce` namespaces, and every method of a schema, with the kind of schema or
+ *   check its return type states. Read through the compiler from resolved types.
+ * - **By running.** Each construct Appendix A names is built at the installed version,
+ *   and the definition it leaves is read: its class, its kind, its fields, the checks it
+ *   holds and the kind of each schema inside it. This shows what no type states, such as
+ *   the `catchall` a strict object is given.
+ */
+
+import { fileURLToPath } from 'node:url';
+
+import { Project, ts, type Node, type Symbol as MorphSymbol, type Type } from 'ts-morph';
+import * as z from 'zod';
+
+/**
+ * What one function or method builds, by its return type. `anySchema` and `anyCheck` say
+ * the return type states a schema or a check without saying which kind.
+ */
+export interface ZodBuilder {
+  readonly name: string;
+  readonly schemaKinds: readonly string[];
+  readonly anySchema: boolean;
+  readonly checkKinds: readonly string[];
+  readonly anyCheck: boolean;
+}
+
+/** What Zod's public surface builds, by type. */
+export interface ZodBuilders {
+  /** Exported functions that build a schema or a check, named as `z.name`. */
+  readonly factories: readonly ZodBuilder[];
+  /** Methods of every schema that build a schema, named as `.name`. */
+  readonly methods: readonly ZodBuilder[];
+  /** For each kind of schema, the methods its classes have beyond those of every schema. */
+  readonly kindMethods: readonly ZodKindMethods[];
+}
+
+/** The methods the classes of one kind of schema have beyond those every schema has. */
+interface ZodKindMethods {
+  readonly kind: string;
+  readonly methods: readonly string[];
+}
+
+/** What one built schema holds, read from its definition. */
+export interface ZodBuilt {
+  readonly construct: string;
+  readonly builtClass: string;
+  readonly kind: string;
+  /** The definition's fields beyond `type`, `error` and `checks` that hold a value. */
+  readonly fields: readonly string[];
+  /** The check each attached check states, with its format where it states one. */
+  readonly checks: readonly string[];
+  /** For each field that holds a schema, the kind of that schema. */
+  readonly inner: Readonly<Record<string, string>>;
+  /** Whether the schema is entered in Zod's global registry of metadata. */
+  readonly registered: boolean;
+}
+
+const NAMESPACES = ['iso', 'coerce'] as const;
+const SHARED_FIELDS = new Set(['type', 'error', 'checks']);
+const PROBE_SOURCE = `import * as z from 'zod';
+export type Schema = z.ZodType;
+`;
+
+function byName(left: string, right: string): number {
+  return left.localeCompare(right);
+}
+
+function literalValues(type: Type | undefined): readonly string[] {
+  if (type === undefined) {
+    return [];
+  }
+  return (type.isUnion() ? type.getUnionTypes() : [type])
+    .map((member) => member.getLiteralValue())
+    .filter((value) => typeof value === 'string')
+    .sort(byName);
+}
+
+function propertyType(type: Type | undefined, name: string, at: Node): Type | undefined {
+  return type?.getProperty(name)?.getTypeAtLocation(at);
+}
+
+/** What one return type states it is: a schema of some kinds, a check of some kinds. */
+function readReturn(returned: Type, at: Node, everyKind: number): Omit<ZodBuilder, 'name'> {
+  const definition = propertyType(propertyType(returned, '_zod', at), 'def', at);
+  const kinds = literalValues(propertyType(definition, 'type', at));
+  const checks = literalValues(propertyType(definition, 'check', at));
+  const statesAKind = definition?.getProperty('type') !== undefined;
+  const statesACheck = definition?.getProperty('check') !== undefined;
+  const anySchema = statesAKind && (kinds.length === 0 || kinds.length === everyKind);
+  return {
+    schemaKinds: anySchema ? [] : kinds,
+    anySchema,
+    checkKinds: checks,
+    anyCheck: statesACheck && checks.length === 0,
+  };
+}
+
+function merged(name: string, parts: readonly Omit<ZodBuilder, 'name'>[]): ZodBuilder {
+  const distinct = (values: readonly string[]): readonly string[] =>
+    [...new Set(values)].sort(byName);
+  return {
+    name,
+    schemaKinds: distinct(parts.flatMap((part) => part.schemaKinds)),
+    anySchema: parts.some((part) => part.anySchema),
+    checkKinds: distinct(parts.flatMap((part) => part.checkKinds)),
+    anyCheck: parts.some((part) => part.anyCheck),
+  };
+}
+
+function buildsSomething(builder: ZodBuilder): boolean {
+  return (
+    builder.anySchema ||
+    builder.anyCheck ||
+    builder.schemaKinds.length > 0 ||
+    builder.checkKinds.length > 0
+  );
+}
+
+function readCallables(
+  prefix: string,
+  symbols: readonly MorphSymbol[],
+  at: Node,
+  everyKind: number,
+): readonly ZodBuilder[] {
+  return symbols
+    .flatMap((symbol) => {
+      const signatures = symbol.getTypeAtLocation(at).getCallSignatures();
+      if (signatures.length === 0) {
+        return [];
+      }
+      const returns = signatures.map((signature) =>
+        readReturn(signature.getReturnType(), at, everyKind),
+      );
+      return [merged(`${prefix}${symbol.getName()}`, returns)];
+    })
+    .filter(buildsSomething)
+    .sort((left, right) => byName(left.name, right.name));
+}
+
+function isInterface(symbol: MorphSymbol): boolean {
+  return symbol
+    .getDeclarations()
+    .some((declaration) => declaration.getKind() === ts.SyntaxKind.InterfaceDeclaration);
+}
+
+/**
+ * Reads, for every exported schema class, the methods it has that not every schema has,
+ * and gathers them by the kind the class's definition states.
+ */
+function readKindMethods(
+  exported: readonly MorphSymbol[],
+  shared: ReadonlySet<string>,
+  at: Node,
+): readonly ZodKindMethods[] {
+  const byKind = new Map<string, Set<string>>();
+  for (const symbol of exported) {
+    const target = symbol.isAlias() ? symbol.getAliasedSymbolOrThrow() : symbol;
+    const declared = isInterface(target) ? target.getDeclaredType() : undefined;
+    const definition = propertyType(propertyType(declared, '_zod', at), 'def', at);
+    const [kind, ...others] = literalValues(propertyType(definition, 'type', at));
+    if (declared === undefined || kind === undefined || others.length > 0) {
+      continue;
+    }
+    const methods = byKind.get(kind) ?? new Set<string>();
+    for (const property of declared.getProperties()) {
+      const callable = property.getTypeAtLocation(at).getCallSignatures().length > 0;
+      if (callable && !shared.has(property.getName())) {
+        methods.add(property.getName());
+      }
+    }
+    byKind.set(kind, methods);
+  }
+  return [...byKind]
+    .filter(([, methods]) => methods.size > 0)
+    .map(([kind, methods]) => ({ kind, methods: [...methods].sort(byName) }))
+    .sort((left, right) => byName(left.kind, right.kind));
+}
+
+/**
+ * Reads what Zod's exported functions and its schemas' methods build, from their types.
+ */
+export function readZodBuilders(): ZodBuilders {
+  const project = new Project({
+    compilerOptions: {
+      strict: true,
+      module: ts.ModuleKind.NodeNext,
+      moduleResolution: ts.ModuleResolutionKind.NodeNext,
+      skipLibCheck: true,
+      noEmit: true,
+    },
+    skipAddingFilesFromTsConfig: true,
+  });
+  const probe = project.createSourceFile(
+    fileURLToPath(new URL('zod-builders.probe.ts', import.meta.url)),
+    PROBE_SOURCE,
+    { overwrite: true },
+  );
+  const at = probe.getTypeAliasOrThrow('Schema');
+  const schema = at.getType();
+  const definition = propertyType(propertyType(schema, '_zod', at), 'def', at);
+  const everyKind = literalValues(propertyType(definition, 'type', at)).length;
+  const zod = probe.getImportDeclarationOrThrow('zod').getModuleSpecifierSourceFileOrThrow();
+  const exported = project.getTypeChecker().getExportsOfModule(zod.getSymbolOrThrow());
+
+  const inNamespaces = NAMESPACES.flatMap((namespace) => {
+    const found = exported.find((symbol) => symbol.getName() === namespace);
+    if (found === undefined) {
+      throw new Error(`zod exports no namespace ${namespace}`);
+    }
+    const members = found.getTypeAtLocation(at).getProperties();
+    return readCallables(`z.${namespace}.`, members, at, everyKind);
+  });
+
+  return {
+    factories: [...readCallables('z.', exported, at, everyKind), ...inNamespaces].sort(
+      (left, right) => byName(left.name, right.name),
+    ),
+    methods: readCallables('.', schema.getProperties(), at, everyKind),
+    kindMethods: readKindMethods(
+      exported,
+      new Set(schema.getProperties().map((property) => property.getName())),
+      at,
+    ),
+  };
+}
+
+function checkName(check: z.core.$ZodCheck): string {
+  const definition = check._zod.def;
+  const format: unknown = 'format' in definition ? definition.format : undefined;
+  return typeof format === 'string' ? `${definition.check}:${format}` : definition.check;
+}
+
+/**
+ * Reads what one built schema holds.
+ */
+function readBuilt(construct: string, schema: z.ZodType): ZodBuilt {
+  const definition = schema._zod.def;
+  const held = Object.entries(definition).filter(
+    ([name, value]: [string, unknown]) => !SHARED_FIELDS.has(name) && value !== undefined,
+  );
+  const inner = held.flatMap(([name, value]: [string, unknown]) =>
+    value instanceof z.ZodType ? [[name, value._zod.def.type] as const] : [],
+  );
+  return {
+    construct,
+    builtClass: schema.constructor.name,
+    kind: definition.type,
+    fields: held.map(([name]) => name).sort(byName),
+    checks: (definition.checks ?? []).map(checkName),
+    inner: Object.fromEntries(inner),
+    registered: z.globalRegistry.has(schema),
+  };
+}
+
+const text = z.string();
+const shape = { a: z.string() };
+
+/**
+ * One example of each construct Appendix A names, built at the installed version. The
+ * name is the one Appendix A gives; a row there that names a family, such as
+ * `z.coerce.*`, has one example here.
+ */
+const APPENDIX_A_EXAMPLES: readonly (readonly [string, () => z.ZodType])[] = [
+  ['.refine', () => text.refine(() => true)],
+  ['.superRefine', () => text.superRefine(() => undefined)],
+  ['.check', () => text.check(z.minLength(1))],
+  ['.overwrite', () => text.overwrite((value) => value)],
+  ['.transform', () => text.transform((value) => value)],
+  ['.pipe', () => text.pipe(z.string())],
+  ['z.preprocess', () => z.preprocess((value) => value, text)],
+  ['z.codec', () => z.codec(z.string(), z.number(), { decode: Number, encode: String })],
+  ['z.stringbool', () => z.stringbool()],
+  ['z.coerce.*', () => z.coerce.number()],
+  ['.catch', () => text.catch('x')],
+  ['.default', () => text.default('x')],
+  ['.prefault', () => text.prefault('x')],
+  ['.optional', () => text.optional()],
+  ['.exactOptional', () => text.exactOptional()],
+  ['.nullable', () => text.nullable()],
+  ['.nullish', () => text.nullish()],
+  ['.readonly', () => z.object(shape).readonly()],
+  ['.brand', () => text.brand('Brand')],
+  ['z.lazy', () => z.lazy(() => text)],
+  ['z.custom', () => z.custom(() => true)],
+  ['z.instanceof', () => z.instanceof(Date)],
+  ['z.date', () => z.date()],
+  ['z.bigint', () => z.bigint()],
+  ['z.map', () => z.map(text, text)],
+  ['z.set', () => z.set(text)],
+  ['z.undefined', () => z.undefined()],
+  ['z.void', () => z.void()],
+  ['z.symbol', () => z.symbol()],
+  ['z.nan', () => z.nan()],
+  ['z.file', () => z.file()],
+  ['z.never', () => z.never()],
+  ['z.unknown', () => z.unknown()],
+  ['z.any', () => z.any()],
+  ['z.templateLiteral', () => z.templateLiteral(['a', z.number()])],
+  ['z.email', () => z.email()],
+  ['z.uuid', () => z.uuid()],
+  ['z.iso.*', () => z.iso.datetime()],
+  ['.meta', () => text.meta({ title: 'a title' })],
+  ['.describe', () => text.describe('a description')],
+  ['z.strictObject', () => z.strictObject(shape)],
+  ['z.looseObject', () => z.looseObject(shape)],
+  ['.catchall', () => z.object(shape).catchall(z.number())],
+  ['z.object', () => z.object(shape)],
+];
+
+/**
+ * Builds one example of each construct Appendix A names and reads what it holds.
+ */
+export function readAppendixABuilt(): readonly ZodBuilt[] {
+  return APPENDIX_A_EXAMPLES.map(([construct, build]) => readBuilt(construct, build()));
+}
