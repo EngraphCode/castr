@@ -137,8 +137,9 @@ and the other is corrected.
    dated 22 November. N1 is done; N3 and N4 are withdrawn. **N0 is done: it merged as
    pull request 175 on 23 November. The next step is given by "The order from
    24 November 2026" at the head of this plan.** The part of the tables it waited on
-   is approved (revisions 0.9.0 and 0.9.1, 23 November). Read "The reframing of 23 November 2026" below before anything else
-   in this plan; its "What is next" gives the order from here. The rest of the tables
+   is approved (revisions 0.9.0 and 0.9.1, 23 November). "The reframing of 23 November 2026" below holds the
+   corrections of that day, which still stand; the order in its "What is next" is
+   history, replaced by the order at the head of this plan. The rest of the tables
    (N5) follows the fix. N2 has its judge and two slices merged; its remaining slices
    are worked during waits.
 7. Read "Review dispositions" at the foot of this plan and give each row its
