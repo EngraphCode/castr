@@ -66,6 +66,42 @@ todos:
 
 # After specification 0.8.0: the next steps
 
+## The order from 24 November 2026
+
+Where a line lower in this plan says otherwise, this section governs.
+
+The owner, 24 November 2026, verbatim: "Please plan SPEC-N-1 using the OCE cognitive
+skills, once the plan is reviewed and you approve it, begin the implementation". The
+model's design has its own plan, [model-design.md](model-design.md), and it comes first.
+Its section "The queue, each item disposed" gives every item below its place. In short:
+
+1. **The model's design**, to the owner's approval of its amendment (that plan's M1 to
+   M5).
+2. **Not frozen, and independent of the design.** Each is worked when a step of the
+   design waits on a review or on the owner, one at a time, and otherwise after it:
+   - the writers' text assembly, rebuilt as syntax-tree nodes one unit at a time, the
+     text gained after the card of 18 November first (`const` and `enum` literals in the
+     TypeScript writer, `default` in the Zod writer's `.meta(`). The one part that waits
+     on the model is where the Zod writer writes text the model holds;
+   - one rule by which the OpenAPI reader refuses a keyword it does not read (the
+     leftovers of unit 5);
+   - `const` and `enum` beside a keyword that also decides, and the OpenAPI writer's
+     refusal of a boolean schema.
+3. **Frozen until the amendment is approved:** the model keeping a path with no
+   operation, the reference a path item is given by, and `$defs`; the ignored header
+   definitions leaving it; the refusals for what Appendix B.4 leaves in no row; and the
+   `paths` module in `src`. Pull requests 191 and 193 stand and are not extended.
+4. **Stopped by a silence in the specification:** the refusal for a declaration the Zod
+   reader passes over. A Zod reader's refusals have no kind yet (the 0.8.0 row of the
+   specification's change log), so text gives the kind first (SPEC-I-1).
+5. **After the approval:** the second part of unit 6 (the endpoint definition's shape
+   and the run report), and N6, which writes the remaining legs from the approved
+   structure. Whatever of the writers' text assembly is left is one of those legs, by
+   name.
+
+N7 is neither frozen nor moved; its open kinds of reference are cases the design holds.
+N2's remaining slices and N5's remaining tables are unchanged, in their waits.
+
 This plan is a companion to [the course](castr-course.md). It holds the next steps in
 enough detail for a session that starts with no memory of the last one. It is the one
 statement of what is next: the thread record, the continuity file and the course point
@@ -76,8 +112,9 @@ and the other is corrected.
 
 1. Read the top of
    [the thread record](../../memory/operational/threads/castr-correction.next-session.md):
-   "Start here: handover of 21 November 2026", "After the handover" and "The matrix
-   pass of 22 November 2026". They hold what stands, the owner's decisions ten to
+   its first section, which is the newest state, then "Start here: handover of
+   21 November 2026", "After the handover" and "The matrix pass of 22 November 2026".
+   They hold what stands, the owner's decisions ten to
    fourteen, how work lands in this repository (with the commit helper), and the
    dispositions already made. Decisions one to nine are lower in that record, from "Six
    decisions, by question prompt, 20 November 2026".
@@ -98,10 +135,11 @@ and the other is corrected.
 6. Before a step's first edit, do its step back and run the decision matrix on its
    unknowns, and write both under "Step log" in the thread record. N0's are there,
    dated 22 November. N1 is done; N3 and N4 are withdrawn. **N0 is done: it merged as
-   pull request 175 on 23 November. The next step is the first unit not yet merged of
-   the queue under "The sort" in "What is next".** The part of the tables it waited on
-   is approved (revisions 0.9.0 and 0.9.1, 23 November). Read "The reframing of 23 November 2026" below before anything else
-   in this plan; its "What is next" gives the order from here. The rest of the tables
+   pull request 175 on 23 November. The next step is given by "The order from
+   24 November 2026" at the head of this plan.** The part of the tables it waited on
+   is approved (revisions 0.9.0 and 0.9.1, 23 November). "The reframing of 23 November 2026" below holds the
+   corrections of that day, which still stand; the order in its "What is next" is
+   history, replaced by the order at the head of this plan. The rest of the tables
    (N5) follows the fix. N2 has its judge and two slices merged; its remaining slices
    are worked during waits.
 7. Read "Review dispositions" at the foot of this plan and give each row its
@@ -519,7 +557,11 @@ specification are approved and on `main`.
    - **A path item given by reference carries no mark** of it either.
    - **`$defs` is not in the model.** `webhooks` is.
 
-   So the order for unit 8 is:
+   So the order for unit 8 is as follows. **From 24 November it is frozen** by "The
+   order from 24 November 2026" at the head of this plan: what remains of step 1, and
+   steps 2 to 4, wait on the approval of the model's design. Of the repair of the
+   writers named first below, the two functions of pull requests 177 and 178 are not
+   frozen, and neither is the rest but where the Zod writer writes text the model holds.
 
    Before any of it, a fault this seat extended and the specification already forbids.
    SPEC-AR-3 says generated code is built as syntax-tree nodes and printed by the
@@ -1242,7 +1284,7 @@ step it names starts.
 - HOME and MOVE stay in the course. Nothing moves until the picture reads right.
 - Kinds for the refusals of a JSON Schema reader and of a Zod reader: written by the
   amendment that opens the capability needing them.
-- The model's design (SPEC-N-1) has no step here; N6 says where it goes.
+- The model's design (SPEC-N-1): its plan is [model-design.md](model-design.md).
 
 ## Risks
 

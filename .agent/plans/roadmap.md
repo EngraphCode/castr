@@ -2,9 +2,12 @@
 
 ## Current execution
 
-The destination is [the specification](../../docs/SPECIFICATION.md), a draft awaiting the
-owner's ratification. The [course plan](active/castr-course.md) is the primary active plan,
-and the [correction thread](../memory/operational/threads/castr-correction.next-session.md)
+The destination is [the specification](../../docs/SPECIFICATION.md), ratified and changed
+only by an approved amendment. The [course plan](active/castr-course.md) is the primary
+active plan, with two companions: [after-0.8.0-next-steps.md](active/after-0.8.0-next-steps.md),
+the one statement of what is next, and [model-design.md](active/model-design.md), the
+design of the model (SPEC-N-1), which comes first. The
+[correction thread](../memory/operational/threads/castr-correction.next-session.md)
 owns the next landing. The superseded
 [documentation and fidelity correction](archive/castr-documentation-and-fidelity-correction.md)
 is archived.
