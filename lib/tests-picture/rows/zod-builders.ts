@@ -13,10 +13,17 @@
  *   the `catchall` a strict object is given.
  */
 
-import { fileURLToPath } from 'node:url';
-
-import { Project, ts, type Node, type Symbol as MorphSymbol, type Type } from 'ts-morph';
+import type { Node, Symbol as MorphSymbol, Type } from 'ts-morph';
 import * as z from 'zod';
+
+import {
+  byName,
+  compileZodProbe,
+  declaredInterface,
+  definitionOf,
+  literalValues,
+  propertyType,
+} from './zod-types.js';
 
 /**
  * What one function or method builds, by its return type. `anySchema` and `anyCheck` say
@@ -67,27 +74,9 @@ const PROBE_SOURCE = `import * as z from 'zod';
 export type Schema = z.ZodType;
 `;
 
-function byName(left: string, right: string): number {
-  return left.localeCompare(right);
-}
-
-function literalValues(type: Type | undefined): readonly string[] {
-  if (type === undefined) {
-    return [];
-  }
-  return (type.isUnion() ? type.getUnionTypes() : [type])
-    .map((member) => member.getLiteralValue())
-    .filter((value) => typeof value === 'string')
-    .sort(byName);
-}
-
-function propertyType(type: Type | undefined, name: string, at: Node): Type | undefined {
-  return type?.getProperty(name)?.getTypeAtLocation(at);
-}
-
 /** What one return type states it is: a schema of some kinds, a check of some kinds. */
 function readReturn(returned: Type, at: Node, everyKind: number): Omit<ZodBuilder, 'name'> {
-  const definition = propertyType(propertyType(returned, '_zod', at), 'def', at);
+  const definition = definitionOf(returned, at);
   const kinds = literalValues(propertyType(definition, 'type', at));
   const checks = literalValues(propertyType(definition, 'check', at));
   const statesAKind = definition?.getProperty('type') !== undefined;
@@ -143,12 +132,6 @@ function readCallables(
     .sort((left, right) => byName(left.name, right.name));
 }
 
-function isInterface(symbol: MorphSymbol): boolean {
-  return symbol
-    .getDeclarations()
-    .some((declaration) => declaration.getKind() === ts.SyntaxKind.InterfaceDeclaration);
-}
-
 /**
  * Reads, for every exported schema class, the methods it has that not every schema has,
  * and gathers them by the kind the class's definition states.
@@ -160,9 +143,8 @@ function readKindMethods(
 ): readonly ZodKindMethods[] {
   const byKind = new Map<string, Set<string>>();
   for (const symbol of exported) {
-    const target = symbol.isAlias() ? symbol.getAliasedSymbolOrThrow() : symbol;
-    const declared = isInterface(target) ? target.getDeclaredType() : undefined;
-    const definition = propertyType(propertyType(declared, '_zod', at), 'def', at);
+    const declared = declaredInterface(symbol);
+    const definition = definitionOf(declared, at);
     const [kind, ...others] = literalValues(propertyType(definition, 'type', at));
     if (declared === undefined || kind === undefined || others.length > 0) {
       continue;
@@ -186,27 +168,11 @@ function readKindMethods(
  * Reads what Zod's exported functions and its schemas' methods build, from their types.
  */
 export function readZodBuilders(): ZodBuilders {
-  const project = new Project({
-    compilerOptions: {
-      strict: true,
-      module: ts.ModuleKind.NodeNext,
-      moduleResolution: ts.ModuleResolutionKind.NodeNext,
-      skipLibCheck: true,
-      noEmit: true,
-    },
-    skipAddingFilesFromTsConfig: true,
-  });
-  const probe = project.createSourceFile(
-    fileURLToPath(new URL('zod-builders.probe.ts', import.meta.url)),
-    PROBE_SOURCE,
-    { overwrite: true },
-  );
-  const at = probe.getTypeAliasOrThrow('Schema');
+  const probe = compileZodProbe('zod-builders.probe.ts', 'zod', PROBE_SOURCE);
+  const at = probe.file.getTypeAliasOrThrow('Schema');
   const schema = at.getType();
-  const definition = propertyType(propertyType(schema, '_zod', at), 'def', at);
-  const everyKind = literalValues(propertyType(definition, 'type', at)).length;
-  const zod = probe.getImportDeclarationOrThrow('zod').getModuleSpecifierSourceFileOrThrow();
-  const exported = project.getTypeChecker().getExportsOfModule(zod.getSymbolOrThrow());
+  const everyKind = literalValues(propertyType(definitionOf(schema, at), 'type', at)).length;
+  const { exported } = probe;
 
   const inNamespaces = NAMESPACES.flatMap((namespace) => {
     const found = exported.find((symbol) => symbol.getName() === namespace);
