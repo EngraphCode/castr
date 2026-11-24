@@ -2,19 +2,22 @@
  * The constructs of Zod, read from the installed package's own types through the
  * compiler.
  *
- * Zod states what a schema can be in three closed unions of its core types: the schemas,
- * the checks and the formats. Each schema and each check holds a definition, a plain
- * object whose fields are what the construct says. This reading lists those, so that a
- * release of Zod that adds one changes the list.
+ * Every schema and every check of Zod holds a definition, a plain object whose fields are
+ * what the construct says. Zod's core module exports an interface for each. This reading
+ * takes every exported interface that holds a definition and lists it, so that a release
+ * of Zod that adds one changes the list.
+ *
+ * Zod also states unions of its own: its schemas and its checks. They are not complete,
+ * so each entry here says whether Zod's own union lists it.
  *
  * Nothing is read from the text of a declaration. Every name and every literal value
- * comes from a type the compiler has resolved.
+ * comes from a type or a symbol the compiler has resolved.
  */
 
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 
-import { Project, ts, type Node, type Type, type TypeAliasDeclaration } from 'ts-morph';
+import { Project, ts, type Node, type Symbol as MorphSymbol, type Type } from 'ts-morph';
 
 /**
  * The version of Zod the lists were read at. A different installed version fails the
@@ -23,28 +26,33 @@ import { Project, ts, type Node, type Type, type TypeAliasDeclaration } from 'ts
 export const ZOD_PINNED_VERSION = '4.6.7';
 
 /**
- * One kind of schema, with the fields its definition holds beyond the three every
- * definition holds.
+ * One schema: the interface Zod exports for it, the kind its definition states, the
+ * fields the definition holds beyond the three every definition holds, and whether Zod's
+ * own union of schemas lists it.
  */
-interface ZodSchemaKind {
+interface ZodSchemaConstruct {
+  readonly name: string;
   readonly kind: string;
   readonly fields: readonly string[];
+  readonly listed: boolean;
 }
 
 /**
- * One kind of check, with the fields its definition holds beyond the four every check
- * holds.
+ * One check: its interface, the check its definition states, the fields the definition
+ * holds beyond the four every check holds, and whether Zod's own union of checks lists it.
  */
-interface ZodCheckKind {
+interface ZodCheckConstruct {
+  readonly name: string;
   readonly check: string;
   readonly fields: readonly string[];
+  readonly listed: boolean;
 }
 
 /**
  * One string format, with the fields its definition holds beyond those every string
  * format holds. A format with no fields takes no parameter.
  */
-interface ZodStringFormatKind {
+interface ZodStringFormatConstruct {
   readonly format: string;
   readonly fields: readonly string[];
 }
@@ -54,13 +62,14 @@ interface ZodStringFormatKind {
  */
 export interface ZodConstructs {
   readonly version: string;
+  /** The values a schema definition may give for its `type`. */
   readonly kindValues: readonly string[];
-  readonly schemaKinds: readonly ZodSchemaKind[];
-  readonly checks: readonly ZodCheckKind[];
+  readonly schemas: readonly ZodSchemaConstruct[];
+  readonly checks: readonly ZodCheckConstruct[];
   /** The names in Zod's own list of string formats. */
   readonly stringFormatNames: readonly string[];
   /** The string formats Zod defines a schema or a check for, each with its fields. */
-  readonly stringFormats: readonly ZodStringFormatKind[];
+  readonly stringFormats: readonly ZodStringFormatConstruct[];
   readonly numberFormats: readonly string[];
   readonly bigintFormats: readonly string[];
 }
@@ -85,6 +94,12 @@ export type NumberFormats = core.$ZodNumberFormats;
 export type BigIntFormats = core.$ZodBigIntFormats;
 `;
 
+/** One exported interface that holds a definition. */
+interface Defined {
+  readonly name: string;
+  readonly definition: Type;
+}
+
 function byName(left: string, right: string): number {
   return left.localeCompare(right);
 }
@@ -93,19 +108,24 @@ function membersOf(type: Type): readonly Type[] {
   return type.isUnion() ? type.getUnionTypes() : [type];
 }
 
-function literalValues(type: Type): readonly string[] {
+function literalValues(type: Type | undefined): readonly string[] {
+  if (type === undefined) {
+    return [];
+  }
   return membersOf(type)
     .map((member) => member.getLiteralValue())
     .filter((value) => typeof value === 'string')
     .sort(byName);
 }
 
-function propertyType(type: Type, name: string, at: Node): Type {
-  const property = type.getProperty(name);
-  if (property === undefined) {
-    throw new Error(`${type.getText()} has no property ${name}`);
-  }
-  return property.getTypeAtLocation(at);
+/** The one literal a type states, or nothing when it states none or several. */
+function oneLiteral(type: Type | undefined): string | undefined {
+  const values = literalValues(type);
+  return values.length === 1 ? values[0] : undefined;
+}
+
+function propertyType(type: Type | undefined, name: string, at: Node): Type | undefined {
+  return type?.getProperty(name)?.getTypeAtLocation(at);
 }
 
 function fieldNames(definition: Type, shared: ReadonlySet<string>): readonly string[] {
@@ -116,29 +136,85 @@ function fieldNames(definition: Type, shared: ReadonlySet<string>): readonly str
     .sort(byName);
 }
 
-function oneLiteral(type: Type, what: string): string {
-  const values = literalValues(type);
-  const [value] = values;
-  if (value === undefined || values.length !== 1) {
-    throw new Error(`${what} does not name exactly one kind: ${values.join(', ')}`);
-  }
-  return value;
+function namesIn(union: Type): ReadonlySet<string> {
+  return new Set(
+    membersOf(union)
+      .map((member) => member.getSymbol()?.getName())
+      .filter((name) => name !== undefined),
+  );
+}
+
+function isInterface(symbol: MorphSymbol): boolean {
+  return symbol
+    .getDeclarations()
+    .some((declaration) => declaration.getKind() === ts.SyntaxKind.InterfaceDeclaration);
+}
+
+/** Every interface the module exports that holds a definition. */
+function readDefined(exported: readonly MorphSymbol[], at: Node): readonly Defined[] {
+  return exported.flatMap((symbol) => {
+    const target = symbol.isAlias() ? symbol.getAliasedSymbolOrThrow() : symbol;
+    if (!isInterface(target)) {
+      return [];
+    }
+    const definition = propertyType(propertyType(target.getDeclaredType(), '_zod', at), 'def', at);
+    return definition === undefined ? [] : [{ name: symbol.getName(), definition }];
+  });
+}
+
+function readSchemas(
+  defined: readonly Defined[],
+  listed: ReadonlySet<string>,
+  at: Node,
+): readonly ZodSchemaConstruct[] {
+  return defined
+    .flatMap(({ name, definition }) => {
+      const kind = oneLiteral(propertyType(definition, 'type', at));
+      const formats = literalValues(propertyType(definition, 'format', at));
+      const statesACheck = definition.getProperty('check') !== undefined;
+      if (kind === undefined || (statesACheck && formats.length > 0)) {
+        return [];
+      }
+      const fields = fieldNames(definition, SHARED_SCHEMA_FIELDS);
+      return [{ name, kind, fields, listed: listed.has(name) }];
+    })
+    .sort((left, right) => byName(left.name, right.name));
+}
+
+function readChecks(
+  defined: readonly Defined[],
+  listed: ReadonlySet<string>,
+  at: Node,
+): readonly ZodCheckConstruct[] {
+  return defined
+    .flatMap(({ name, definition }) => {
+      const check = oneLiteral(propertyType(definition, 'check', at));
+      const isASchema = definition.getProperty('type') !== undefined;
+      const formats = literalValues(propertyType(definition, 'format', at));
+      if (check === undefined || isASchema || formats.length > 0) {
+        return [];
+      }
+      const fields = fieldNames(definition, SHARED_CHECK_FIELDS);
+      return [{ name, check, fields, listed: listed.has(name) }];
+    })
+    .sort((left, right) => byName(left.name, right.name));
 }
 
 /**
- * Reads the string formats from the union of every schema and check that states one.
- * One member may state several formats, as the hash formats do; each is listed.
+ * The string formats, read from Zod's union of every schema and check that states one.
+ * The union is read, and not the exported interfaces, because Zod defines some formats
+ * only as one generic interface given a name there: `hex`, `hostname`, the currency code
+ * and the hash formats. One member may name several formats; each is listed.
  */
-function readStringFormats(constructs: TypeAliasDeclaration): readonly ZodStringFormatKind[] {
-  return membersOf(constructs.getType())
+function readStringFormats(union: Type, at: Node): readonly ZodStringFormatConstruct[] {
+  return membersOf(union)
     .flatMap((construct) => {
-      const definition = propertyType(
-        propertyType(construct, '_zod', constructs),
-        'def',
-        constructs,
-      );
+      const definition = propertyType(propertyType(construct, '_zod', at), 'def', at);
+      if (definition === undefined) {
+        return [];
+      }
       const fields = fieldNames(definition, SHARED_STRING_FORMAT_FIELDS);
-      return literalValues(propertyType(definition, 'format', constructs)).map((format) => ({
+      return literalValues(propertyType(definition, 'format', at)).map((format) => ({
         format,
         fields,
       }));
@@ -183,38 +259,22 @@ export function readZodConstructs(): ZodConstructs {
     throw new Error(`the probe of zod's types does not compile: ${String(unresolved.length)}`);
   }
 
-  const definition = probe.getTypeAliasOrThrow('Definition');
-  const schemas = probe.getTypeAliasOrThrow('Schemas');
-  const checks = probe.getTypeAliasOrThrow('Checks');
-
-  const schemaKinds = membersOf(schemas.getType())
-    .map((schema) => {
-      const schemaDefinition = propertyType(propertyType(schema, '_zod', schemas), 'def', schemas);
-      return {
-        kind: oneLiteral(propertyType(schemaDefinition, 'type', schemas), schema.getText()),
-        fields: fieldNames(schemaDefinition, SHARED_SCHEMA_FIELDS),
-      };
-    })
-    .sort((left, right) => byName(left.kind, right.kind));
-
-  const checkKinds = membersOf(checks.getType())
-    .map((check) => {
-      const checkDefinition = propertyType(propertyType(check, '_zod', checks), 'def', checks);
-      return {
-        check: oneLiteral(propertyType(checkDefinition, 'check', checks), check.getText()),
-        fields: fieldNames(checkDefinition, SHARED_CHECK_FIELDS),
-      };
-    })
-    .sort((left, right) => byName(left.check, right.check));
+  const at = probe.getTypeAliasOrThrow('Definition');
+  const core = probe
+    .getImportDeclarationOrThrow('zod/v4/core')
+    .getModuleSpecifierSourceFileOrThrow();
+  const exported = project.getTypeChecker().getExportsOfModule(core.getSymbolOrThrow());
+  const defined = readDefined(exported, at);
+  const aliasType = (name: string): Type => probe.getTypeAliasOrThrow(name).getType();
 
   return {
     version: readInstalledVersion(),
-    kindValues: literalValues(propertyType(definition.getType(), 'type', definition)),
-    schemaKinds,
-    checks: checkKinds,
-    stringFormatNames: literalValues(probe.getTypeAliasOrThrow('StringFormats').getType()),
-    stringFormats: readStringFormats(probe.getTypeAliasOrThrow('StringFormatConstructs')),
-    numberFormats: literalValues(probe.getTypeAliasOrThrow('NumberFormats').getType()),
-    bigintFormats: literalValues(probe.getTypeAliasOrThrow('BigIntFormats').getType()),
+    kindValues: literalValues(propertyType(at.getType(), 'type', at)),
+    schemas: readSchemas(defined, namesIn(aliasType('Schemas')), at),
+    checks: readChecks(defined, namesIn(aliasType('Checks')), at),
+    stringFormatNames: literalValues(aliasType('StringFormats')),
+    stringFormats: readStringFormats(aliasType('StringFormatConstructs'), at),
+    numberFormats: literalValues(aliasType('NumberFormats')),
+    bigintFormats: literalValues(aliasType('BigIntFormats')),
   };
 }

@@ -13,67 +13,96 @@ import { readZodConstructs, ZOD_PINNED_VERSION } from './zod-constructs.js';
 const constructs = readZodConstructs();
 
 type Row = readonly [string, readonly string[]];
+type ConstructRow = readonly [string, string, readonly string[], boolean];
 
-/** Every schema kind, with the fields its definition holds beyond `type`, `error` and `checks`. */
-const SCHEMA_KINDS: readonly Row[] = [
-  ['any', []],
-  ['array', ['element']],
-  ['bigint', ['coerce']],
-  ['boolean', ['coerce']],
-  ['catch', ['catchValue', 'innerType']],
-  ['custom', ['abort', 'check', 'fn', 'params', 'path', 'when']],
-  ['date', ['coerce']],
-  ['default', ['defaultValue', 'innerType']],
-  ['enum', ['entries']],
-  ['file', []],
-  ['function', ['input', 'output']],
-  ['intersection', ['left', 'right']],
-  ['lazy', ['getter']],
-  ['literal', ['values']],
-  ['map', ['keyType', 'valueType']],
-  ['nan', []],
-  ['never', []],
-  ['nonoptional', ['innerType']],
-  ['null', []],
-  ['nullable', ['innerType']],
-  ['number', ['coerce']],
-  ['object', ['catchall', 'shape']],
-  ['optional', ['innerType']],
-  ['pipe', ['in', 'out', 'reverseTransform', 'transform']],
-  ['prefault', ['defaultValue', 'innerType']],
-  ['promise', ['innerType']],
-  ['readonly', ['innerType']],
-  ['record', ['keyType', 'mode', 'partial', 'valueType']],
-  ['set', ['valueType']],
-  ['string', ['coerce']],
-  ['success', ['innerType']],
-  ['symbol', []],
-  ['template_literal', ['format', 'parts']],
-  ['transform', ['transform']],
-  ['tuple', ['items', 'rest']],
-  ['undefined', []],
-  ['union', ['inclusive', 'options']],
-  ['unknown', []],
-  ['void', []],
+/**
+ * Every schema Zod exports a definition for: its interface, the kind it states, the
+ * fields it holds beyond `type`, `error` and `checks`, and whether Zod's own union of
+ * schemas lists it.
+ */
+const SCHEMAS: readonly ConstructRow[] = [
+  ['$ZodAny', 'any', [], true],
+  ['$ZodArray', 'array', ['element'], true],
+  ['$ZodBigInt', 'bigint', ['coerce'], true],
+  ['$ZodBigIntFormat', 'bigint', ['abort', 'check', 'coerce', 'format', 'when'], false],
+  ['$ZodBoolean', 'boolean', ['coerce'], true],
+  ['$ZodCatch', 'catch', ['catchValue', 'innerType'], true],
+  ['$ZodCodec', 'pipe', ['in', 'out', 'reverseTransform', 'transform'], false],
+  ['$ZodCustom', 'custom', ['abort', 'check', 'fn', 'params', 'path', 'when'], true],
+  [
+    '$ZodCustomStringFormat',
+    'string',
+    ['abort', 'check', 'coerce', 'fn', 'format', 'pattern', 'when'],
+    false,
+  ],
+  ['$ZodDate', 'date', ['coerce'], true],
+  ['$ZodDefault', 'default', ['defaultValue', 'innerType'], true],
+  [
+    '$ZodDiscriminatedUnion',
+    'union',
+    ['discriminator', 'inclusive', 'options', 'unionFallback'],
+    false,
+  ],
+  ['$ZodEnum', 'enum', ['entries'], true],
+  ['$ZodExactOptional', 'optional', ['innerType'], false],
+  ['$ZodFile', 'file', [], true],
+  ['$ZodFunction', 'function', ['input', 'output'], true],
+  ['$ZodIntersection', 'intersection', ['left', 'right'], true],
+  ['$ZodLazy', 'lazy', ['getter'], true],
+  ['$ZodLiteral', 'literal', ['values'], true],
+  ['$ZodMap', 'map', ['keyType', 'valueType'], true],
+  ['$ZodNaN', 'nan', [], true],
+  ['$ZodNever', 'never', [], true],
+  ['$ZodNonOptional', 'nonoptional', ['innerType'], true],
+  ['$ZodNull', 'null', [], true],
+  ['$ZodNullable', 'nullable', ['innerType'], true],
+  ['$ZodNumber', 'number', ['coerce'], true],
+  ['$ZodNumberFormat', 'number', ['abort', 'check', 'coerce', 'format', 'when'], false],
+  ['$ZodObject', 'object', ['catchall', 'shape'], true],
+  ['$ZodOptional', 'optional', ['innerType'], true],
+  ['$ZodPipe', 'pipe', ['in', 'out', 'reverseTransform', 'transform'], true],
+  ['$ZodPrefault', 'prefault', ['defaultValue', 'innerType'], true],
+  ['$ZodPreprocess', 'pipe', ['in', 'out', 'reverseTransform', 'transform'], false],
+  ['$ZodPromise', 'promise', ['innerType'], true],
+  ['$ZodReadonly', 'readonly', ['innerType'], true],
+  ['$ZodRecord', 'record', ['keyType', 'mode', 'partial', 'valueType'], true],
+  ['$ZodSet', 'set', ['valueType'], true],
+  ['$ZodString', 'string', ['coerce'], true],
+  ['$ZodStringFormat', 'string', ['abort', 'check', 'coerce', 'format', 'pattern', 'when'], false],
+  ['$ZodSuccess', 'success', ['innerType'], true],
+  ['$ZodSymbol', 'symbol', [], true],
+  ['$ZodTemplateLiteral', 'template_literal', ['format', 'parts'], true],
+  ['$ZodTransform', 'transform', ['transform'], true],
+  ['$ZodTuple', 'tuple', ['items', 'rest'], true],
+  ['$ZodUndefined', 'undefined', [], true],
+  ['$ZodUnion', 'union', ['inclusive', 'options'], true],
+  ['$ZodUnknown', 'unknown', [], true],
+  ['$ZodVoid', 'void', [], true],
+  ['$ZodXor', 'union', ['inclusive', 'options'], false],
 ];
 
-/** Every check, with the fields its definition holds beyond `check`, `error`, `abort` and `when`. */
-const CHECKS: readonly Row[] = [
-  ['bigint_format', ['format']],
-  ['greater_than', ['inclusive', 'value']],
-  ['length_equals', ['length']],
-  ['less_than', ['inclusive', 'value']],
-  ['max_length', ['maximum']],
-  ['max_size', ['maximum']],
-  ['mime_type', ['mime']],
-  ['min_length', ['minimum']],
-  ['min_size', ['minimum']],
-  ['multiple_of', ['value']],
-  ['number_format', ['format']],
-  ['overwrite', ['tx']],
-  ['property', ['property', 'schema']],
-  ['size_equals', ['size']],
-  ['string_format', ['format', 'pattern']],
+/**
+ * Every check Zod exports a definition for: its interface, the check it states, the
+ * fields it holds beyond `check`, `error`, `abort` and `when`, and whether Zod's own
+ * union of checks lists it.
+ */
+const CHECKS: readonly ConstructRow[] = [
+  ['$ZodCheckBigIntFormat', 'bigint_format', ['format'], true],
+  ['$ZodCheckGreaterThan', 'greater_than', ['inclusive', 'value'], true],
+  ['$ZodCheckLengthEquals', 'length_equals', ['length'], true],
+  ['$ZodCheckLessThan', 'less_than', ['inclusive', 'value'], true],
+  ['$ZodCheckMaxLength', 'max_length', ['maximum'], true],
+  ['$ZodCheckMaxSize', 'max_size', ['maximum'], true],
+  ['$ZodCheckMimeType', 'mime_type', ['mime'], true],
+  ['$ZodCheckMinLength', 'min_length', ['minimum'], true],
+  ['$ZodCheckMinSize', 'min_size', ['minimum'], true],
+  ['$ZodCheckMultipleOf', 'multiple_of', ['value'], true],
+  ['$ZodCheckNumberFormat', 'number_format', ['format'], true],
+  ['$ZodCheckOverwrite', 'overwrite', ['tx'], true],
+  ['$ZodCheckProperties', 'properties', ['shape'], false],
+  ['$ZodCheckProperty', 'property', ['property', 'schema'], true],
+  ['$ZodCheckSizeEquals', 'size_equals', ['size'], true],
+  ['$ZodCheckStringFormat', 'string_format', ['format', 'pattern'], true],
 ];
 
 /** Every string format Zod defines a schema or a check for, with its own fields. */
@@ -218,22 +247,48 @@ describe('the schema kinds of Zod', () => {
     ]);
   });
 
-  it('reads a definition for 39 of them, and none for int, which is a format of number', () => {
-    const read = constructs.schemaKinds.map((entry) => entry.kind);
+  it('reads a schema of every kind but int, which is a format of number', () => {
+    const kinds = new Set(constructs.schemas.map((entry) => entry.kind));
 
-    expect(read).toHaveLength(39);
-    expect(constructs.kindValues.filter((kind) => !read.includes(kind))).toEqual(['int']);
+    expect(constructs.kindValues.filter((kind) => !kinds.has(kind))).toEqual(['int']);
   });
 
-  it('lists every kind with the fields of its definition', () => {
-    expect(constructs.schemaKinds.map((entry) => [entry.kind, entry.fields])).toEqual(SCHEMA_KINDS);
+  it('lists all 48 schemas, each with its kind and the fields of its definition', () => {
+    expect(constructs.schemas).toHaveLength(48);
+    expect(
+      constructs.schemas.map((entry) => [entry.name, entry.kind, entry.fields, entry.listed]),
+    ).toEqual(SCHEMAS);
+  });
+
+  it('finds nine schemas that the union Zod states of its schemas leaves out', () => {
+    const unlisted = constructs.schemas.filter((entry) => !entry.listed);
+
+    expect(unlisted.map((entry) => entry.name)).toEqual([
+      '$ZodBigIntFormat',
+      '$ZodCodec',
+      '$ZodCustomStringFormat',
+      '$ZodDiscriminatedUnion',
+      '$ZodExactOptional',
+      '$ZodNumberFormat',
+      '$ZodPreprocess',
+      '$ZodStringFormat',
+      '$ZodXor',
+    ]);
   });
 });
 
 describe('the checks of Zod', () => {
-  it('lists all 15 checks with the fields of each definition', () => {
-    expect(constructs.checks).toHaveLength(15);
-    expect(constructs.checks.map((entry) => [entry.check, entry.fields])).toEqual(CHECKS);
+  it('lists all 16 checks, each with the fields of its definition', () => {
+    expect(constructs.checks).toHaveLength(16);
+    expect(
+      constructs.checks.map((entry) => [entry.name, entry.check, entry.fields, entry.listed]),
+    ).toEqual(CHECKS);
+  });
+
+  it('finds one check that the union Zod states of its checks leaves out', () => {
+    const unlisted = constructs.checks.filter((entry) => !entry.listed);
+
+    expect(unlisted.map((entry) => entry.name)).toEqual(['$ZodCheckProperties']);
   });
 });
 
