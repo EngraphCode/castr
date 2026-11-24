@@ -43,10 +43,9 @@ paragraph "Before the writer" gives the steps for the `paths` module. In short:
    item under `paths` with no operation; the reference a path item is given by; a
    document's `$defs`.
 3. The refusals for what Appendix B.4 leaves in no row, each with a failing case first.
-4. Count how many documents the existing suites convert that the writer would then
-   refuse. That count decides whether the module shares a file with the Zod or is a
-   separate output. If the strict reading leaves two forms, that is one question to the
-   owner.
+4. The module is an output of its own: by Appendix B.1 its refusal must not stop the
+   Zod or the endpoint definitions for any valid document. How it is requested is the
+   public surface; the plan says how that is decided.
 5. The writer in `src`, with the prototype's type-level tests and the two gaps the plan
    names.
 
