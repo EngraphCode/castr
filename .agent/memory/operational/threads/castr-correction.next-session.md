@@ -376,6 +376,52 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
   it); a regular expression kept as text with its dialect and flags, the one
   grammar-defined string the seat does not intend to model.
 
+- 2026-11-25, M4, the prototype made whole enough to count what is owed. **Where:**
+  the branch `design/model-prototype`, `lib/tests-picture/design/`, 80 tests. Still off
+  main until M5.
+  **Choices since the last entry, each with what decided it:**
+  - **The profile only narrows** (SPEC-P-1's own sentence: the closed reading "narrows
+    the source's accepted set"). Closing each branch of a `oneOf` where it is written
+    would accept a value the source refuses: two objects that state no policy and share
+    an optional key both accept the value, so the source's choice refuses it. So the
+    by-value reading, which can only refuse, is the strict one, and it was not put to
+    the owner as a question. Its consequence is for the owner to see at M5: a `oneOf`
+    over objects that state no policy is not disambiguated by closure.
+  - **How a source spelt a reference is in the record, not in the edge** (review of pull
+    request 210: inside the edge it made two spellings of one reference two values,
+    against the trial's own rule that the record is outside equality).
+  - **An exact number's exponent is unbounded, and zero has one form** (the same review).
+  - **The boundary half:** everything a description can state once and use twice is a
+    part with an identity, and whatever uses one holds an edge with, optionally, words
+    that replace the part's own. A path's item and an operation are parts; boundaries
+    are derived by a function. An address is a list of text and variables; a media
+    range, a status and a value read at run time are data. An encoding's mode (styled,
+    or by media type) is meaning. Four functions say what a writer reads at one
+    boundary from the model alone: the boundaries, and the parameters, security and
+    servers in force.
+    **The proofs, as they stand on the branch:**
+  - **1, whole:** a coverage map with a check that recomputes every list. In it: the
+    keywords and type values of both JSON Schema drafts, Zod's 48 schema definitions and
+    16 checks, the 207 fields, keys and extension points of an OpenAPI document, and the
+    152 rows of the two hand lists that say the model holds something. Each entry names
+    elements the compiler confirms exist, says the kind decides how a document is read,
+    cites a clause that refuses it, or is owed. **About a hundred kinds are owed, each
+    by name in the check**; Zod's formats are not in the map. Proof 1 passes when that
+    list is empty.
+  - **2:** the canonical rules are a function with tests, run, not type-level.
+  - **4:** the canonical function names every kind of shape. No removed branch has been
+    shown to fail to compile.
+  - **5:** a check finds every string of both halves through the compiler and fails on
+    one not listed: 94, of which 32 are text in a grammar a specification defines, most
+    of them addresses kept for a person to follow. Each is a request to the owner that
+    the amendment must carry. The owner was told six by name in the session before the
+    boundary half existed; the other 26 have not been named to the owner.
+  - **6:** every statement of the cases note about a JSON Schema document holds against
+    a hand-written value; sixteen Zod schemas and sixteen pairings of an intersection
+    are held to Zod. The OpenAPI fragments of the cases are not yet values.
+    **Not done:** the kinds owed; the OpenAPI fragments as values; a reader round on the
+    trial; the amendment.
+
 - 2026-11-24, M0, the reviews. The assumptions reviewer and the four seats of the
   conscience panel read the first draft. All four seats judged the work on track; three
   judged the framing narrowed, each on a different point; the assumptions reviewer found
