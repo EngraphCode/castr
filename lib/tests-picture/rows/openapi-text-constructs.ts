@@ -22,35 +22,19 @@
 import { readFileSync } from 'node:fs';
 
 import { isJsonObject, type JsonObject } from './json.js';
-
-/**
- * What kind of thing a row is.
- *
- * - `holds`: a fact a model of the document must hold, because no field states it.
- * - `default`: what an absent field means.
- * - `reading`: a rule for reading a document: what a name refers to, which of two wins,
- *   what is ignored. The model holds the result.
- * - `runtime`: what a field means when a request or a response is made. The model holds
- *   the field; the rule is for whoever serialises.
- * - `validity`: which documents are valid. It adds nothing to the model; these go to the
- *   sweep of validity rules (SPEC-FV-2).
- * - `grammar`: a string whose grammar a specification defines.
- * - `undefined`: something the text says is undefined or left to the implementation.
- */
-const DISPOSITIONS = [
-  'holds',
-  'default',
-  'reading',
-  'runtime',
-  'validity',
-  'grammar',
-  'undefined',
-] as const;
+import {
+  DISPOSITIONS,
+  citedSections,
+  oneOf,
+  onlyKeys,
+  strings,
+  text,
+  type TextDisposition,
+} from './text-constructs.js';
 
 /** Which version lines a row is true of. */
 const VERSION_LINES = ['3.1', '3.2', 'both'] as const;
 
-export type TextDisposition = (typeof DISPOSITIONS)[number];
 type TextVersions = (typeof VERSION_LINES)[number];
 
 /** One thing the text defines. */
@@ -75,45 +59,14 @@ export interface TextConstructList {
   readonly constructs: readonly TextConstruct[];
 }
 
-function strings(value: unknown, what: string): readonly string[] {
-  if (!Array.isArray(value) || !value.every((item) => typeof item === 'string')) {
-    throw new TypeError(`${what} is not a list of strings`);
-  }
-  return value;
-}
-
-function oneOf<const Allowed extends string>(
-  value: unknown,
-  allowed: readonly Allowed[],
-  what: string,
-): Allowed {
-  const found = allowed.find((candidate) => candidate === value);
-  if (found === undefined) {
-    throw new TypeError(`${what} is not one of ${allowed.join(', ')}`);
-  }
-  return found;
-}
-
-function text(value: unknown, what: string): string {
-  if (typeof value !== 'string' || value.length === 0) {
-    throw new TypeError(`${what} is not a string that says something`);
-  }
-  return value;
-}
-
 function readConstruct(entry: unknown, index: number): TextConstruct {
   const what = `row ${String(index + 1)} of the hand list`;
   if (!isJsonObject(entry)) {
     throw new TypeError(`${what} is not an object`);
   }
-  const unknownKeys = Object.keys(entry).filter(
-    (key) => !['sections', 'versions', 'disposition', 'says'].includes(key),
-  );
-  if (unknownKeys.length > 0) {
-    throw new TypeError(`${what} holds a key the list does not have: ${unknownKeys.join(', ')}`);
-  }
+  onlyKeys(entry, ['sections', 'versions', 'disposition', 'says'], what);
   return {
-    sections: strings(entry['sections'], `${what}: sections`),
+    sections: citedSections(entry['sections'], `${what}: sections`),
     versions: oneOf(entry['versions'], VERSION_LINES, `${what}: versions`),
     disposition: oneOf(entry['disposition'], DISPOSITIONS, `${what}: disposition`),
     says: text(entry['says'], `${what}: says`),
@@ -131,9 +84,23 @@ function readVersions(value: unknown): TextConstructList['versionsRead'] {
 }
 
 /**
+ * The version of the text whose sections a row cites: that read for 3.1 for a row true of
+ * 3.1 alone, and that read for 3.2 for every other row.
+ */
+export function citedVersionOf(list: TextConstructList, construct: TextConstruct): string {
+  return construct.versions === '3.1' ? list.versionsRead['3.1'] : list.versionsRead['3.2'];
+}
+
+/**
  * Reads a hand list from its parsed file, refusing anything that is not of its shape.
  */
 export function readTextConstructList(parsed: JsonObject): TextConstructList {
+  onlyKeys(
+    parsed,
+    ['note', 'versionsRead', 'readWithNothingToHold', 'constructs'],
+    'the hand list',
+  );
+  text(parsed['note'], 'the note of the hand list');
   const { constructs } = parsed;
   if (!Array.isArray(constructs)) {
     throw new TypeError('the hand list holds no list of constructs');
