@@ -14,10 +14,9 @@ import type {
   PathItem,
   Security,
   Server,
-  TemplatePart,
   Use,
 } from './boundary.js';
-import type { DefinitionId } from './model.js';
+import type { DefinitionId, TemplatePart } from './model.js';
 
 const NOTHING = new Map<string, never>();
 

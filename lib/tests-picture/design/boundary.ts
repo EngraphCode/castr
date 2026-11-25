@@ -12,7 +12,17 @@
  * this.
  */
 
-import type { Constant, DefinitionId, Edge, Shape } from './model.js';
+import type {
+  Constant,
+  DefinitionId,
+  Edge,
+  MediaRange,
+  Method,
+  ParameterLocation,
+  Shape,
+  Status,
+  TemplatePart,
+} from './model.js';
 
 /** Words for a person. */
 interface Words {
@@ -33,32 +43,6 @@ export interface Use {
 interface Link {
   readonly url: string;
   readonly description?: string;
-}
-
-/** A piece of a templated address: text as it stands, or a named variable. */
-export type TemplatePart =
-  | { readonly part: 'text'; readonly text: string }
-  | { readonly part: 'variable'; readonly name: string };
-
-/** An HTTP method: one the formats name, or another token exactly as it is sent. */
-export type Method =
-  | {
-      readonly method:
-        'get' | 'put' | 'post' | 'delete' | 'options' | 'head' | 'patch' | 'trace' | 'query';
-    }
-  | { readonly method: 'other'; readonly token: string };
-
-/** Which responses a description speaks of: one status, a hundred of them, or all the rest. */
-type Status =
-  | { readonly status: 'code'; readonly code: number }
-  | { readonly status: 'class'; readonly hundreds: 1 | 2 | 3 | 4 | 5 }
-  | { readonly status: 'rest' };
-
-/** A media type or a range of them, its parts apart. A `*` is a part left open. */
-interface MediaRange {
-  readonly type: string;
-  readonly subtype: string;
-  readonly parameters: ReadonlyMap<string, string>;
 }
 
 export interface Server {
@@ -96,7 +80,7 @@ interface Styled {
 }
 
 /** What carries a parameter's or a header's value: a shape and a style, or one media type. */
-type Carried =
+export type Carried =
   | { readonly by: 'shape'; readonly shape: Shape; readonly styled: Styled }
   | { readonly by: 'media'; readonly range: MediaRange; readonly media: Use };
 
@@ -122,7 +106,7 @@ interface Carrier {
 
 export interface Parameter extends Carrier {
   readonly name: string;
-  readonly location: 'query' | 'whole-query' | 'header' | 'path' | 'cookie';
+  readonly location: ParameterLocation;
   /** A client may send it empty in place of leaving it out. */
   readonly mayBeEmpty: boolean;
 }
@@ -148,7 +132,7 @@ type Encodings =
   | { readonly by: 'name'; readonly names: ReadonlyMap<string, Encoding> }
   | { readonly by: 'position'; readonly positions: readonly Encoding[]; readonly after?: Encoding };
 
-interface Media {
+export interface Media {
   /** The whole content, where a shape is given for it. */
   readonly whole?: Shape;
   /** Each value of content that is a sequence of values. */
@@ -160,7 +144,7 @@ interface Media {
 
 type Content = readonly { readonly range: MediaRange; readonly media: Use }[];
 
-interface Body {
+export interface Body {
   readonly description?: string;
   readonly required: boolean;
   readonly content: Content;
@@ -190,7 +174,7 @@ interface Follow {
   readonly operation: Edge;
   readonly parameters: readonly {
     readonly name: string;
-    readonly location?: Parameter['location'];
+    readonly location?: ParameterLocation;
     readonly value: Passed;
   }[];
   readonly body?: Passed;
@@ -199,7 +183,7 @@ interface Follow {
   readonly extensions: Extensions;
 }
 
-interface Response extends Words {
+export interface Response extends Words {
   readonly headers: ReadonlyMap<string, Use>;
   readonly content: Content;
   readonly follows: ReadonlyMap<string, Use>;

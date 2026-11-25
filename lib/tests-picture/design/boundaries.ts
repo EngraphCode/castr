@@ -11,17 +11,15 @@ import { isDeepStrictEqual } from 'node:util';
 
 import type {
   Boundaries,
-  Method,
   Operation,
   Parameter,
   Part,
   PathItem,
   Security,
   Server,
-  TemplatePart,
   Use,
 } from './boundary.js';
-import type { DefinitionId } from './model.js';
+import type { DefinitionId, Method, TemplatePart } from './model.js';
 
 /** One operation at one path: where a request and its responses cross. */
 export interface Boundary {

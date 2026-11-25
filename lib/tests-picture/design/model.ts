@@ -109,6 +109,35 @@ export interface ByKind {
   readonly object?: 'any' | ObjectPart;
 }
 
+/** A piece of a templated address: text as it stands, or a named variable. */
+export type TemplatePart =
+  | { readonly part: 'text'; readonly text: string }
+  | { readonly part: 'variable'; readonly name: string };
+
+/** An HTTP method: one the formats name, or another token exactly as it is sent. */
+export type Method =
+  | {
+      readonly method:
+        'get' | 'put' | 'post' | 'delete' | 'options' | 'head' | 'patch' | 'trace' | 'query';
+    }
+  | { readonly method: 'other'; readonly token: string };
+
+/** Which responses a description speaks of: one status, a hundred of them, or all the rest. */
+export type Status =
+  | { readonly status: 'code'; readonly code: number }
+  | { readonly status: 'class'; readonly hundreds: 1 | 2 | 3 | 4 | 5 }
+  | { readonly status: 'rest' };
+
+/** A media type or a range of them, its parts apart. A `*` is a part left open. */
+export interface MediaRange {
+  readonly type: string;
+  readonly subtype: string;
+  readonly parameters: ReadonlyMap<string, string>;
+}
+
+/** Where a parameter is carried. `whole-query` is the query string taken as one value. */
+export type ParameterLocation = 'query' | 'whole-query' | 'header' | 'path' | 'cookie';
+
 /** Where a definition is, in the model's own terms. */
 export type Step =
   | { readonly step: 'named'; readonly name: string }
@@ -122,7 +151,37 @@ export type Step =
   | { readonly step: 'otherwise' }
   | { readonly step: 'negated' }
   /** Inside data its source does not read as a schema, by the keys and indexes that lead there. */
-  | { readonly step: 'data'; readonly path: readonly (string | number)[] };
+  | { readonly step: 'data'; readonly path: readonly (string | number)[] }
+  /** A part of a description filed under a name, among the parts of its kind. */
+  | { readonly step: 'part'; readonly kind: PartKind; readonly name: string }
+  | { readonly step: 'path'; readonly path: readonly TemplatePart[] }
+  | { readonly step: 'webhook'; readonly name: string }
+  | { readonly step: 'method'; readonly method: Method }
+  | { readonly step: 'parameter'; readonly name: string; readonly location: ParameterLocation }
+  | { readonly step: 'body' }
+  | { readonly step: 'response'; readonly on: Status }
+  | { readonly step: 'media'; readonly range: MediaRange }
+  | { readonly step: 'header'; readonly name: string }
+  | { readonly step: 'example'; readonly name: string }
+  | { readonly step: 'follow'; readonly name: string }
+  | { readonly step: 'callback'; readonly name: string }
+  /** One of the requests a callback describes, counted from 0. */
+  | { readonly step: 'call'; readonly index: number };
+
+/** The kinds of part a description can state once and use twice. */
+type PartKind =
+  | 'path-item'
+  | 'operation'
+  | 'parameter'
+  | 'header'
+  | 'body'
+  | 'media'
+  | 'response'
+  | 'example'
+  | 'follow'
+  | 'callback'
+  | 'scheme'
+  | 'tag';
 
 /** A resource: a document, or a part of one that its source gave an identifier of its own. */
 export interface ResourceId {
