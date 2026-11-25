@@ -405,8 +405,8 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
     16 checks, the 207 fields, keys and extension points of an OpenAPI document, and the
     152 rows of the two hand lists that say the model holds something. Each entry names
     elements the compiler confirms exist, says the kind decides how a document is read,
-    cites a clause that refuses it, or is owed. **About a hundred kinds are owed, each
-    by name in the check**; Zod's formats are not in the map. Proof 1 passes when that
+    cites a clause that refuses it, or is owed. **81 kinds are owed, each by name in the
+    check**; Zod's formats are not in the map. Proof 1 passes when that
     list is empty.
   - **2:** the canonical rules are a function with tests, run, not type-level.
   - **4:** the canonical function names every kind of shape. No removed branch has been
