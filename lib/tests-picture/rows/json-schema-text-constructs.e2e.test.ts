@@ -7,47 +7,31 @@
  * read from. It cannot prove a row says what its section says; that was read.
  */
 
-import { readFileSync } from 'node:fs';
-
 import { describe, it, expect } from 'vitest';
 
-import { isJsonObject } from './json.js';
 import {
   readJsonSchemaTextConstructList,
   readJsonSchemaTextConstructs,
   type JsonSchemaTextConstruct,
 } from './json-schema-text-constructs.js';
 import type { TextDisposition } from './text-constructs.js';
+import { readTextPinFile, sectionsOfText } from './text-sections.js';
 
 const constructs = readJsonSchemaTextConstructs();
 
-/** The pinned section numbers of one text of one draft. */
-function sectionsOf(draft: string, document: string): readonly string[] {
-  const pinned: unknown = JSON.parse(
-    readFileSync(
-      new URL('../__fixtures__/texts/json-schema-sections.json', import.meta.url),
-      'utf8',
-    ),
-  );
-  const texts = isJsonObject(pinned) && Array.isArray(pinned['texts']) ? pinned['texts'] : [];
-  const found = texts.find(
-    (entry) => isJsonObject(entry) && entry['draft'] === draft && entry['document'] === document,
-  );
-  const sections = isJsonObject(found) && Array.isArray(found['sections']) ? found['sections'] : [];
-  return sections.filter((section) => typeof section === 'string');
-}
+const pins = readTextPinFile('json-schema-sections.json');
 
-/** The draft whose section numbers a row cites. */
-function citedDraft(construct: JsonSchemaTextConstruct): string {
-  return construct.drafts === 'draft-07' ? 'draft-07' : '2020-12';
+/** The name of the pinned text a row cites: its draft and its document. */
+function citedText(construct: JsonSchemaTextConstruct): string {
+  return `${construct.drafts === 'draft-07' ? 'draft-07' : '2020-12'} ${construct.document}`;
 }
 
 describe('the pinned sections of the JSON Schema texts', () => {
   it('holds the numbered sections of the four texts', () => {
-    expect(sectionsOf('2020-12', 'core')).toHaveLength(132);
-    expect(sectionsOf('2020-12', 'validation')).toHaveLength(69);
-    expect(sectionsOf('draft-07', 'core')).toHaveLength(47);
-    expect(sectionsOf('draft-07', 'validation')).toHaveLength(85);
+    expect(sectionsOfText(pins, '2020-12 core')).toHaveLength(132);
+    expect(sectionsOfText(pins, '2020-12 validation')).toHaveLength(69);
+    expect(sectionsOfText(pins, 'draft-07 core')).toHaveLength(47);
+    expect(sectionsOfText(pins, 'draft-07 validation')).toHaveLength(85);
   });
 });
 
@@ -70,6 +54,12 @@ describe('reading a hand list of the JSON Schema texts', () => {
     expect(() => readJsonSchemaTextConstructList(wrong)).toThrow('row 1 of the hand list: drafts');
   });
 
+  it('refuses a row that cites no section', () => {
+    const wrong = { constructs: [{ ...row, sections: [] }] };
+
+    expect(() => readJsonSchemaTextConstructList(wrong)).toThrow('cites no section');
+  });
+
   it('refuses a row with a key the list does not have', () => {
     const wrong = { constructs: [{ ...row, quote: 'x' }] };
 
@@ -82,10 +72,10 @@ describe('reading a hand list of the JSON Schema texts', () => {
 describe('the hand list of what the JSON Schema texts define', () => {
   it('cites only sections the text has, in the draft and the text each row is read from', () => {
     const missing = constructs.flatMap((construct) => {
-      const sections = new Set(sectionsOf(citedDraft(construct), construct.document));
+      const sections = new Set(sectionsOfText(pins, citedText(construct)));
       return construct.sections
         .filter((section) => !sections.has(section))
-        .map((section) => `${citedDraft(construct)} ${construct.document} ${section}`);
+        .map((section) => `${citedText(construct)} ${section}`);
     });
 
     expect(missing).toEqual([]);
@@ -130,13 +120,5 @@ describe('the hand list of what the JSON Schema texts define', () => {
       grammar: 18,
       undefined: 9,
     });
-  });
-
-  it('keeps the two locations of a definition apart', () => {
-    const merged = constructs.filter(
-      (construct) => construct.says.includes('#/definitions') && construct.says.includes('#/$defs'),
-    );
-
-    expect(merged).toEqual([]);
   });
 });

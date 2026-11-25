@@ -1,9 +1,9 @@
 {
-  "note": "Section numbers of the specification texts the hand lists were read from. Numbers only: no text of a specification is reproduced. Each list is the content of every heading's element with class \"secno\" in the served page, in document order.",
+  "note": "Section numbers of the OpenAPI texts the hand list was read from. Numbers only: no text of the specification is reproduced. `pnpm picture:check-texts` fetches each text and recomputes its bytes, its digest and its sections.",
   "texts": [
     {
-      "format": "openapi",
-      "version": "3.1.2",
+      "text": "3.1.2",
+      "markup": "respec-html",
       "url": "https://spec.openapis.org/oas/v3.1.2.html",
       "fetchedAt": "2026-11-24T23:50:00Z",
       "bytes": 594687,
@@ -228,8 +228,8 @@
       ]
     },
     {
-      "format": "openapi",
-      "version": "3.2.1",
+      "text": "3.2.1",
+      "markup": "respec-html",
       "url": "https://spec.openapis.org/oas/v3.2.1.html",
       "fetchedAt": "2026-11-24T23:50:00Z",
       "bytes": 678358,

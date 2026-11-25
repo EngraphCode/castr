@@ -608,7 +608,7 @@
       "document": "validation",
       "drafts": "2020-12",
       "disposition": "holds",
-      "says": "A `format` a tool does not know is an annotation under the annotation vocabulary, and under the assertion vocabulary the value fails."
+      "says": "A `format` a tool does not know is always collected as an annotation. Under the assertion vocabulary the tool must fail on meeting one; the text does not say whether that is the value failing or the schema being refused."
     },
     {
       "sections": ["7.3.1"],

@@ -22,9 +22,9 @@ import { readFileSync } from 'node:fs';
 import { isJsonObject, type JsonObject } from './json.js';
 import {
   DISPOSITIONS,
+  citedSections,
   oneOf,
   onlyKeys,
-  strings,
   text,
   type TextDisposition,
 } from './text-constructs.js';
@@ -51,7 +51,7 @@ function readConstruct(entry: unknown, index: number): JsonSchemaTextConstruct {
   }
   onlyKeys(entry, ['sections', 'document', 'drafts', 'disposition', 'says'], what);
   return {
-    sections: strings(entry['sections'], `${what}: sections`),
+    sections: citedSections(entry['sections'], `${what}: sections`),
     document: oneOf(entry['document'], DOCUMENTS, `${what}: document`),
     drafts: oneOf(entry['drafts'], DRAFTS, `${what}: drafts`),
     disposition: oneOf(entry['disposition'], DISPOSITIONS, `${what}: disposition`),

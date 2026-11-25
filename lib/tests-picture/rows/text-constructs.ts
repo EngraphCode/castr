@@ -38,6 +38,15 @@ export function strings(value: unknown, what: string): readonly string[] {
   return value;
 }
 
+/** The sections a row cites: at least one, each a string. */
+export function citedSections(value: unknown, what: string): readonly string[] {
+  const sections = strings(value, what);
+  if (sections.length === 0) {
+    throw new TypeError(`${what} cites no section`);
+  }
+  return sections;
+}
+
 export function oneOf<const Allowed extends string>(
   value: unknown,
   allowed: readonly Allowed[],

@@ -336,8 +336,11 @@ The list is a floor, and says so. Three things are proved by test and one is not
 - **Proved:** every section a row cites exists in the version it was read from. The
   section numbers of both texts are pinned in
   [`__fixtures__/texts/openapi-sections.json`](__fixtures__/texts/openapi-sections.json),
-  with each page's address and digest; numbers only, so no text of the specification is
-  reproduced.
+  with each page's address, size and digest; numbers only, so no text of the
+  specification is reproduced. The texts are not kept here, so no gate can recompute a
+  pin. `pnpm picture:check-texts`, run from `lib/`, fetches each text and recomputes its
+  size, its digest and its sections, and says how any differs from its pin; it is run
+  when a hand list is revised.
 - **Proved:** each of the thirty objects of chapter 4 of 3.2.1 is cited by a row or is
   named as read with nothing to hold, and none is both.
 - **Proved, once, by program:** every quotation in the readers' reports the list was

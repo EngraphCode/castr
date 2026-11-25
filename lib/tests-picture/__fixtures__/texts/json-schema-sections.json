@@ -1,11 +1,9 @@
 {
-  "note": "Section numbers of the JSON Schema texts the hand list was read from. Numbers only: no text of a specification is reproduced. Each list is every numbered heading of the body of the plain-text Internet-Draft, in document order; an appendix is written as its letter.",
+  "note": "Section numbers of the JSON Schema texts the hand list was read from. Numbers only: no text of a specification is reproduced. `pnpm picture:check-texts` fetches each text and recomputes its bytes, its digest and its sections.",
   "texts": [
     {
-      "format": "json-schema",
-      "draft": "2020-12",
-      "document": "core",
-      "name": "draft-bhutton-json-schema-01",
+      "text": "2020-12 core",
+      "markup": "internet-draft-text",
       "url": "https://www.ietf.org/archive/id/draft-bhutton-json-schema-01.txt",
       "fetchedAt": "2026-11-24T23:50:00Z",
       "bytes": 162227,
@@ -146,10 +144,8 @@
       ]
     },
     {
-      "format": "json-schema",
-      "draft": "2020-12",
-      "document": "validation",
-      "name": "draft-bhutton-json-schema-validation-01",
+      "text": "2020-12 validation",
+      "markup": "internet-draft-text",
       "url": "https://www.ietf.org/archive/id/draft-bhutton-json-schema-validation-01.txt",
       "fetchedAt": "2026-11-24T23:50:00Z",
       "bytes": 64328,
@@ -227,10 +223,8 @@
       ]
     },
     {
-      "format": "json-schema",
-      "draft": "draft-07",
-      "document": "core",
-      "name": "draft-handrews-json-schema-01",
+      "text": "draft-07 core",
+      "markup": "internet-draft-text",
       "url": "https://www.ietf.org/archive/id/draft-handrews-json-schema-01.txt",
       "fetchedAt": "2026-11-24T23:50:00Z",
       "bytes": 49308,
@@ -286,10 +280,8 @@
       ]
     },
     {
-      "format": "json-schema",
-      "draft": "draft-07",
-      "document": "validation",
-      "name": "draft-handrews-json-schema-validation-01",
+      "text": "draft-07 validation",
+      "markup": "internet-draft-text",
       "url": "https://www.ietf.org/archive/id/draft-handrews-json-schema-validation-01.txt",
       "fetchedAt": "2026-11-24T23:50:00Z",
       "bytes": 60889,

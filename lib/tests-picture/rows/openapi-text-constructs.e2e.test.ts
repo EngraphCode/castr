@@ -7,32 +7,26 @@
  * says what its section says; that was read.
  */
 
-import { readFileSync } from 'node:fs';
-
 import { describe, it, expect } from 'vitest';
 
-import { isJsonObject } from './json.js';
 import {
   readOpenApiTextConstructs,
   readTextConstructList,
   type TextConstruct,
 } from './openapi-text-constructs.js';
 import type { TextDisposition } from './text-constructs.js';
+import { readTextPinFile, sectionsOfText } from './text-sections.js';
 
 const list = readOpenApiTextConstructs();
 const OPENAPI_TEXT_CONSTRUCTS = list.constructs;
 const OPENAPI_TEXT_READ_WITH_NOTHING_TO_HOLD = list.readWithNothingToHold;
 const OPENAPI_TEXT_VERSIONS = list.versionsRead;
 
+const pins = readTextPinFile('openapi-sections.json');
+
 /** The pinned section numbers of one version of the text. */
 function sectionsOf(version: string): readonly string[] {
-  const pinned: unknown = JSON.parse(
-    readFileSync(new URL('../__fixtures__/texts/openapi-sections.json', import.meta.url), 'utf8'),
-  );
-  const texts = isJsonObject(pinned) && Array.isArray(pinned['texts']) ? pinned['texts'] : [];
-  const found = texts.find((text) => isJsonObject(text) && text['version'] === version);
-  const sections = isJsonObject(found) && Array.isArray(found['sections']) ? found['sections'] : [];
-  return sections.filter((section) => typeof section === 'string');
+  return sectionsOfText(pins, version);
 }
 
 /** The version whose section numbers a row cites. */
@@ -74,6 +68,12 @@ describe('reading a hand list', () => {
     expect(() => readTextConstructList(wrong)).toThrow('holds a key the list does not have: note');
   });
 
+  it('refuses a row that cites no section', () => {
+    const wrong = { ...valid, constructs: [{ ...valid.constructs[0], sections: [] }] };
+
+    expect(() => readTextConstructList(wrong)).toThrow('cites no section');
+  });
+
   it('refuses a row that says nothing', () => {
     const wrong = { ...valid, constructs: [{ ...valid.constructs[0], says: '' }] };
 
@@ -95,14 +95,6 @@ describe('the hand list of what the OpenAPI text defines', () => {
     });
 
     expect(missing).toEqual([]);
-  });
-
-  it('gives every row at least one section and something it says', () => {
-    const empty = OPENAPI_TEXT_CONSTRUCTS.filter(
-      (construct) => construct.sections.length === 0 || construct.says.length === 0,
-    );
-
-    expect(empty).toEqual([]);
   });
 
   it('says nothing twice', () => {

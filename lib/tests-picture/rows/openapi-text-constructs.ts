@@ -24,6 +24,7 @@ import { readFileSync } from 'node:fs';
 import { isJsonObject, type JsonObject } from './json.js';
 import {
   DISPOSITIONS,
+  citedSections,
   oneOf,
   onlyKeys,
   strings,
@@ -65,7 +66,7 @@ function readConstruct(entry: unknown, index: number): TextConstruct {
   }
   onlyKeys(entry, ['sections', 'versions', 'disposition', 'says'], what);
   return {
-    sections: strings(entry['sections'], `${what}: sections`),
+    sections: citedSections(entry['sections'], `${what}: sections`),
     versions: oneOf(entry['versions'], VERSION_LINES, `${what}: versions`),
     disposition: oneOf(entry['disposition'], DISPOSITIONS, `${what}: disposition`),
     says: text(entry['says'], `${what}: says`),
