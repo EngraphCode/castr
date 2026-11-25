@@ -224,8 +224,9 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
   finding:** no surveyed system holds all the specification asks, so none is taken
   whole; four ideas recur where meaning survives (a definition keyed by its source's
   identity; evaluation as a result and the set of what was evaluated; the two sides as
-  views of one node; exact numbers). **What the attack found in the seat's draft:** three
-  false claims and seventeen that said more than the source, the same fault as in the
+  views of one node; exact numbers). **What the attack found in the seat's draft:** four
+  false claims (one in OpenAPI, one in JSON Schema, two in Zod) and seventeen that said
+  more than the source, the same fault as in the
   hand lists. The seat had checked that each Zod fragment ran, not that it matched the
   other members of its set. **What the seat checked of the finished note:** 116 stated
   passes and failures hold under Hyperjump; all 31 OpenAPI fragments are valid under the
