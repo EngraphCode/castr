@@ -19,6 +19,7 @@ import {
   schemaTypeValues,
 } from '../rows/published-rows.js';
 import { readJsonSchemaTextConstructs } from '../rows/json-schema-text-constructs.js';
+import { readOpenApiTextConstructs } from '../rows/openapi-text-constructs.js';
 import { readZodConstructs } from '../rows/zod-constructs.js';
 
 import {
@@ -27,6 +28,7 @@ import {
   DRAFT_2020_12,
   JSON_SCHEMA_TEXT,
   OPENAPI,
+  OPENAPI_TEXT,
   TYPE_VALUES,
   ZOD_CHECKS,
   ZOD_SCHEMAS,
@@ -72,6 +74,13 @@ const LISTS: readonly (readonly [string, readonly string[], Readonly<Record<stri
         .filter((row) => row.disposition === 'holds' || row.disposition === 'default')
         .map((row) => row.id),
       JSON_SCHEMA_TEXT,
+    ],
+    [
+      'OpenAPI text',
+      readOpenApiTextConstructs()
+        .constructs.filter((row) => row.disposition === 'holds' || row.disposition === 'default')
+        .map((row) => row.id),
+      OPENAPI_TEXT,
     ],
   ];
 
@@ -201,6 +210,24 @@ describe('the coverage map', () => {
       'JSON Schema text JT-130',
       'JSON Schema text JT-132',
       'JSON Schema text JT-134',
+      'OpenAPI text OT-003',
+      'OpenAPI text OT-014',
+      'OpenAPI text OT-017',
+      'OpenAPI text OT-034',
+      'OpenAPI text OT-076',
+      'OpenAPI text OT-082',
+      'OpenAPI text OT-098',
+      'OpenAPI text OT-107',
+      'OpenAPI text OT-108',
+      'OpenAPI text OT-114',
+      'OpenAPI text OT-117',
+      'OpenAPI text OT-121',
+      'OpenAPI text OT-122',
+      'OpenAPI text OT-124',
+      'OpenAPI text OT-125',
+      'OpenAPI text OT-129',
+      'OpenAPI text OT-130',
+      'OpenAPI text OT-132',
     ]);
   });
 });

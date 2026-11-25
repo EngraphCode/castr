@@ -11,8 +11,8 @@
  * So far: the keywords and the type values of JSON Schema Draft 2020-12 and Draft-07, the
  * four names the 2020-12 dialect constrains outside its vocabularies, Zod's schema
  * definitions and checks, and the rows of the JSON Schema hand list that say what a model
- * must hold. and the objects and fields of an OpenAPI document. The OpenAPI hand list and Zod's
- * formats are not in the map yet.
+ * must hold. the objects and fields of an OpenAPI document, and the rows of the OpenAPI hand list
+ * that say what a model must hold. Zod's formats are not in the map yet.
  */
 
 /** What the prototype does with one kind. */
@@ -532,4 +532,79 @@ export const OPENAPI: Readonly<Record<string, Coverage>> = {
   'oauth-flows/device-authorization[x-]': {
     owed: 'fields no format defines, on this object: no place for them',
   },
+};
+
+/**
+ * The rows of the OpenAPI hand list whose disposition is that the model holds something,
+ * or that an absent field has a meaning. As with JSON Schema's, the other rows have no
+ * entry here.
+ */
+export const OPENAPI_TEXT: Readonly<Record<string, Coverage>> = {
+  'OT-002': { reading: 'a deprecated field is read like any other' },
+  'OT-003': { owed: 'that the text leaves a construct undefined: no element says so' },
+  'OT-005': { held: ['Media'] },
+  'OT-009': { held: ['ResourceId.resource'] },
+  'OT-010': { held: ['Api.servers'] },
+  'OT-011': { held: ['Security', 'Requirement'] },
+  'OT-012': { held: ['Api.tags', 'Operation.tags'] },
+  'OT-013': { held: ['Api.webhooks'] },
+  'OT-014': { owed: 'a description of several documents, one the entry: no element' },
+  'OT-017': {
+    owed: 'an address that identifies and an address that locates, told apart: no element',
+  },
+  'OT-024': { held: ['Edge'] },
+  'OT-028': { held: ['Server.variables'] },
+  'OT-029': { held: ['PartDefinition'] },
+  'OT-032': { held: ['Api.paths', 'PathItem'] },
+  'OT-034': { owed: 'what a path parameter’s value may not hold: no element' },
+  'OT-040': { held: ['Parameter.name', 'Parameter.location'] },
+  'OT-042': { held: ['Method[other]'] },
+  'OT-043': { held: ['Operation.name'] },
+  'OT-044': { held: ['Operation.deprecated', 'Carrier.deprecated'] },
+  'OT-047': { held: ['Parameter.location'] },
+  'OT-053': { held: ['Carrier.required'] },
+  'OT-054': { held: ['Parameter.mayBeEmpty'] },
+  'OT-055': { held: ['Carried'] },
+  'OT-057': { held: ['Styled.style'] },
+  'OT-058': { held: ['Styled.explode'] },
+  'OT-059': { held: ['Styled.explode'] },
+  'OT-062': { held: ['Styled.reserved'] },
+  'OT-064': { held: ['Styled.style'] },
+  'OT-071': { reading: 'which values a style treats as undefined is the style’s own rule' },
+  'OT-073': { held: ['Body.required'] },
+  'OT-074': { held: ['Media.whole'] },
+  'OT-075': { held: ['Media.each'] },
+  'OT-076': { owed: 'server-sent events described as the parsed event: no element' },
+  'OT-077': { held: ['Encodings[name]'] },
+  'OT-081': { held: ['Encodings[position]'] },
+  'OT-082': { owed: 'a length that counts octets on binary content: lengths count code points' },
+  'OT-083': { held: ['Media.whole'] },
+  'OT-084': { held: ['Encoding.as'] },
+  'OT-089': { held: ['Encoding.within'] },
+  'OT-092': { held: ['Status[rest]'] },
+  'OT-097': { held: ['Example.value'] },
+  'OT-098': { owed: 'the character set assumed for an example held elsewhere: no element' },
+  'OT-099': { held: ['Follow.operation'] },
+  'OT-102': { held: ['Runtime'] },
+  'OT-104': { held: ['Header', 'Response.headers'] },
+  'OT-105': { held: ['Carrier.required', 'Styled'] },
+  'OT-107': { owed: 'how a `Set-Cookie` value is laid out in an example: no element' },
+  'OT-108': { owed: 'a media type described through a schema for another form of it: no element' },
+  'OT-110': { held: ['Tag.name', 'Tag.parent', 'Tag.kind'] },
+  'OT-114': { owed: 'a keyword no vocabulary in force defines, with its value: no element' },
+  'OT-116': { held: ['NumberPart.whole', 'Exact'] },
+  'OT-117': { owed: 'the three forms of data, and which one a shape describes: no element' },
+  'OT-119': { held: ['Said.direction'] },
+  'OT-120': { held: ['Shape[all]'] },
+  'OT-121': {
+    owed: 'a choice of stated values each with words of its own, read as an enumeration: no element',
+  },
+  'OT-122': { owed: 'a discriminator: no element' },
+  'OT-124': { owed: 'a discriminator: no element' },
+  'OT-125': { owed: 'a discriminator: no element' },
+  'OT-129': { owed: 'how a value is written as XML: no element' },
+  'OT-130': { owed: 'how a value is written as XML: no element' },
+  'OT-132': { owed: 'how a value is written as XML: no element' },
+  'OT-137': { held: ['Requirement'] },
+  'OT-139': { held: ['Extensions'] },
 };
