@@ -27,6 +27,8 @@ import {
   citedSections,
   oneOf,
   onlyKeys,
+  refuseRepeatedKeys,
+  rowKey,
   strings,
   text,
   type TextDisposition,
@@ -39,6 +41,8 @@ type TextVersions = (typeof VERSION_LINES)[number];
 
 /** One thing the text defines. */
 export interface TextConstruct {
+  /** The row's key, which never changes: `OT-` and three digits. */
+  readonly id: string;
   /** The sections of 3.2.1 the row was read from; of 3.1.2 for a row true of 3.1 only. */
   readonly sections: readonly string[];
   readonly versions: TextVersions;
@@ -64,8 +68,9 @@ function readConstruct(entry: unknown, index: number): TextConstruct {
   if (!isJsonObject(entry)) {
     throw new TypeError(`${what} is not an object`);
   }
-  onlyKeys(entry, ['sections', 'versions', 'disposition', 'says'], what);
+  onlyKeys(entry, ['id', 'sections', 'versions', 'disposition', 'says'], what);
   return {
+    id: rowKey(entry['id'], 'OT', what),
     sections: citedSections(entry['sections'], `${what}: sections`),
     versions: oneOf(entry['versions'], VERSION_LINES, `${what}: versions`),
     disposition: oneOf(entry['disposition'], DISPOSITIONS, `${what}: disposition`),
@@ -105,10 +110,12 @@ export function readTextConstructList(parsed: JsonObject): TextConstructList {
   if (!Array.isArray(constructs)) {
     throw new TypeError('the hand list holds no list of constructs');
   }
+  const rows = constructs.map((entry: unknown, index) => readConstruct(entry, index));
+  refuseRepeatedKeys(rows.map((row) => row.id));
   return {
     versionsRead: readVersions(parsed['versionsRead']),
     readWithNothingToHold: strings(parsed['readWithNothingToHold'], 'readWithNothingToHold'),
-    constructs: constructs.map((entry: unknown, index) => readConstruct(entry, index)),
+    constructs: rows,
   };
 }
 

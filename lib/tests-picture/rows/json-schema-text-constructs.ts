@@ -25,6 +25,8 @@ import {
   citedSections,
   oneOf,
   onlyKeys,
+  refuseRepeatedKeys,
+  rowKey,
   text,
   type TextDisposition,
 } from './text-constructs.js';
@@ -37,6 +39,8 @@ const DRAFTS = ['2020-12', 'draft-07', 'both'] as const;
 
 /** One thing the texts define. */
 export interface JsonSchemaTextConstruct {
+  /** The row's key, which never changes: `JT-` and three digits. */
+  readonly id: string;
   readonly sections: readonly string[];
   readonly document: (typeof DOCUMENTS)[number];
   readonly drafts: (typeof DRAFTS)[number];
@@ -49,8 +53,9 @@ function readConstruct(entry: unknown, index: number): JsonSchemaTextConstruct {
   if (!isJsonObject(entry)) {
     throw new TypeError(`${what} is not an object`);
   }
-  onlyKeys(entry, ['sections', 'document', 'drafts', 'disposition', 'says'], what);
+  onlyKeys(entry, ['id', 'sections', 'document', 'drafts', 'disposition', 'says'], what);
   return {
+    id: rowKey(entry['id'], 'JT', what),
     sections: citedSections(entry['sections'], `${what}: sections`),
     document: oneOf(entry['document'], DOCUMENTS, `${what}: document`),
     drafts: oneOf(entry['drafts'], DRAFTS, `${what}: drafts`),
@@ -81,7 +86,9 @@ export function readJsonSchemaTextConstructList(
   if (!Array.isArray(constructs)) {
     throw new TypeError('the hand list holds no list of constructs');
   }
-  return constructs.map((entry: unknown, index) => readConstruct(entry, index));
+  const rows = constructs.map((entry: unknown, index) => readConstruct(entry, index));
+  refuseRepeatedKeys(rows.map((row) => row.id));
+  return rows;
 }
 
 /**

@@ -338,6 +338,10 @@ text and faulted 44. The seat checked that the reader's quotations are in the te
 applied its corrections: 39 rows rewritten, five given the sections they lacked, and
 three added. The seat did not itself read each rewritten row against its section.
 
+Each row of this list and of the one for JSON Schema has a key (`OT-014`, `JT-102`)
+that never changes and is never reused, so that a map from rows to something else
+survives a row being reworded, added or removed.
+
 The list is a floor, and says so. Three things are proved by test and one is not:
 
 - **Proved:** every section a row cites exists in the version it was read from. The

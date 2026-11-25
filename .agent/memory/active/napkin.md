@@ -2,6 +2,26 @@
 
 This file captures session-scoped discoveries, mistakes, corrections, and useful patterns before they are distilled or promoted into permanent docs.
 
+## 2026-11-25 (the hand lists, the cases, and a joined commit: Firefly binds Tallow / 5196d5)
+
+- **A hand list of what a text says is swept for overstatement before its first push.**
+  Four review rounds each found a few rows that turned the text's "should" into a fact,
+  and each time only the named rows were fixed. A reader then checked every row against
+  its section: 50 of 135 JSON Schema rows and 44 of 140 OpenAPI rows were at fault. The
+  second finding of one class is the signal to sweep the whole.
+- **A fragment that runs is not a fragment that matches.** The cases note said every Zod
+  fragment "does what its case says" on the strength of each one running. A member of an
+  equivalence set has to be compared with the other members, by a validator.
+- **Neither Ajv nor Zod's `toJSONSchema` is an oracle.** Both state the wrong accepted
+  set in cases the seat ran. Hyperjump agreed with the texts where checked.
+- **A script of several commits stops at the first that fails.** `git add … && git commit`
+  followed by a second `add && commit` joined two kinds of change in one commit when the
+  first commit failed on an index lock with its files staged; a revert then failed its
+  message check and left a second wrong commit. Both were pushed. Use `set -e`, read
+  each exit code before the next commit, and never open a pull request on an unread log.
+  The repair was a fresh branch from main and a closed pull request (206), not a
+  rewritten history.
+
 ## 2026-11-24, later (the surface of the formats — Firefly binds Tallow / 5196d5, claude-code)
 
 - **I briefed a reader with OpenAPI 3.2.0 when the specification names 3.2.1.** The plan
