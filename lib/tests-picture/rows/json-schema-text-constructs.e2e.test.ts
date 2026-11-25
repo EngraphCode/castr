@@ -33,6 +33,7 @@ describe('the pinned sections of the JSON Schema texts', () => {
 
 describe('reading a hand list of the JSON Schema texts', () => {
   const row = {
+    id: 'JT-001',
     sections: ['4.2.1'],
     document: 'core',
     drafts: 'both',
@@ -48,6 +49,20 @@ describe('reading a hand list of the JSON Schema texts', () => {
     const wrong = { note: 'A list.', constructs: [{ ...row, drafts: 'draft-04' }] };
 
     expect(() => readJsonSchemaTextConstructList(wrong)).toThrow('row 1 of the hand list: drafts');
+  });
+
+  it('refuses a row with no key of the list', () => {
+    const wrong = { note: 'A list.', constructs: [{ ...row, id: 'OT-001' }] };
+
+    expect(() => readJsonSchemaTextConstructList(wrong)).toThrow('no key of the form JT-000');
+  });
+
+  it('refuses two rows of one key', () => {
+    const wrong = { note: 'A list.', constructs: [row, { ...row, says: 'Another.' }] };
+
+    expect(() => readJsonSchemaTextConstructList(wrong)).toThrow(
+      'more than one row of the hand list has the key JT-001',
+    );
   });
 
   it('refuses a row that cites no section', () => {
@@ -79,7 +94,7 @@ describe('reading a hand list of the JSON Schema texts', () => {
   it('cites the 2020-12 text for a row true of both drafts, and Draft-07 for one true of it alone', () => {
     const read = readJsonSchemaTextConstructList({
       note: 'A list.',
-      constructs: [row, { ...row, drafts: 'draft-07', document: 'validation' }],
+      constructs: [row, { ...row, id: 'JT-002', drafts: 'draft-07', document: 'validation' }],
     });
 
     expect(read.map((construct) => citedTextOf(construct))).toEqual([

@@ -50,7 +50,15 @@ describe('reading a hand list', () => {
     note: 'A list.',
     versionsRead: { '3.1': '3.1.2', '3.2': '3.2.1' },
     readWithNothingToHold: ['4.2'],
-    constructs: [{ sections: ['4.1.1'], versions: 'both', disposition: 'holds', says: 'A fact.' }],
+    constructs: [
+      {
+        id: 'OT-001',
+        sections: ['4.1.1'],
+        versions: 'both',
+        disposition: 'holds',
+        says: 'A fact.',
+      },
+    ],
   };
 
   it('reads a list of the right shape', () => {
@@ -69,6 +77,20 @@ describe('reading a hand list', () => {
     expect(() => readTextConstructList(wrong)).toThrow('holds a key the list does not have: note');
   });
 
+  it('refuses a row with no key of the list', () => {
+    const wrong = { ...valid, constructs: [{ ...valid.constructs[0], id: 'row one' }] };
+
+    expect(() => readTextConstructList(wrong)).toThrow('no key of the form OT-000');
+  });
+
+  it('refuses two rows of one key', () => {
+    const wrong = { ...valid, constructs: [valid.constructs[0], valid.constructs[0]] };
+
+    expect(() => readTextConstructList(wrong)).toThrow(
+      'more than one row of the hand list has the key OT-001',
+    );
+  });
+
   it('refuses a row that cites no section', () => {
     const wrong = { ...valid, constructs: [{ ...valid.constructs[0], sections: [] }] };
 
@@ -84,7 +106,7 @@ describe('reading a hand list', () => {
   it('cites the version read for 3.1 for a row true of 3.1 alone, and that for 3.2 otherwise', () => {
     const read = readTextConstructList({
       ...valid,
-      constructs: [valid.constructs[0], { ...valid.constructs[0], versions: '3.1' }],
+      constructs: [valid.constructs[0], { ...valid.constructs[0], id: 'OT-002', versions: '3.1' }],
     });
 
     expect(read.constructs.map((construct) => citedVersionOf(read, construct))).toEqual([
