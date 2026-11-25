@@ -281,6 +281,7 @@ export interface Model {
 | `reference`, `reference-in-scope` | those of the target                                                                     | same                                                                                         |
 | `rest-of`                         | every key if `keys` is given, else those of `over`                                      | likewise for `items`                                                                         |
 | `absent-becomes`                  | those of `of`                                                                           | same                                                                                         |
+| `said`                            | those of `of`                                                                           | same                                                                                         |
 | a shape that refuses              | none                                                                                    | none                                                                                         |
 
 ### 3.2 What each node produces
@@ -297,6 +298,7 @@ export interface Model {
 | `reference`                            | what the target produces                                                                                                                                                                                                                                                                  |
 | `rest-of`                              | what `over` produces, with the rest keys as `keys` produces them                                                                                                                                                                                                                          |
 | `absent-becomes`                       | for an absent value: `value` unchanged if not `checked`, else what `of` produces for `value`; otherwise what `of` produces                                                                                                                                                                |
+| `said`                                 | what `of` produces                                                                                                                                                                                                                                                                        |
 
 Zod does not refuse an intersection whose sides produce different values at one place:
 it throws. The model has no third outcome, so a reader that can see such an
