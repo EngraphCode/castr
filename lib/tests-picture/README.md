@@ -336,8 +336,11 @@ The list is a floor, and says so. Three things are proved by test and one is not
 - **Proved:** every section a row cites exists in the version it was read from. The
   section numbers of both texts are pinned in
   [`__fixtures__/texts/openapi-sections.json`](__fixtures__/texts/openapi-sections.json),
-  with each page's address and digest; numbers only, so no text of the specification is
-  reproduced.
+  with each page's address, size and digest; numbers only, so no text of the
+  specification is reproduced. The texts are not kept here, so no gate can recompute a
+  pin. `pnpm picture:check-texts`, run from `lib/`, fetches each text and recomputes its
+  size, its digest and its sections, and says how any differs from its pin; it is run
+  when a hand list is revised.
 - **Proved:** each of the thirty objects of chapter 4 of 3.2.1 is cited by a row or is
   named as read with nothing to hold, and none is both.
 - **Proved, once, by program:** every quotation in the readers' reports the list was
@@ -347,6 +350,43 @@ The list is a floor, and says so. Three things are proved by test and one is not
 
 Versions 3.1.0 and 3.1.1 were not read apart from 3.1.2. The specification's format
 registry was not read.
+
+What the JSON Schema texts define beyond their meta-schemas is a third list made by hand,
+[`__fixtures__/texts/json-schema-text-constructs.json`](__fixtures__/texts/json-schema-text-constructs.json),
+read and checked for shape by
+[`rows/json-schema-text-constructs.ts`](rows/json-schema-text-constructs.ts): 134 rows
+from the core and the validation text of Draft 2020-12 and of Draft-07. 34 are true of
+both drafts, 68 of 2020-12 alone and 32 of Draft-07 alone. The kinds are the same seven:
+86 hold a fact, 3 a default, 12 a rule for reading, 4 a rule for a tool at run time, 3 a
+validity rule, 18 a grammar, and 8 something a text leaves undefined.
+
+A row says how strongly the text speaks and to whom: "must", "should" and "may" in a
+row are the text's own level, and "a tool" is the text's implementation. After review
+found rows that turned a recommendation into a fact, every row was read again against
+its sections for that fault, and 48 were rewritten.
+
+A meta-schema says what keywords a schema may hold. The texts say what the model has to
+be able to state about them:
+
+- what "adjacent" means, and which keywords depend on the ones beside them;
+- what an annotation is, where it attaches, when it is dropped, and which keywords read
+  another's annotation, which is how `unevaluatedProperties` and `unevaluatedItems`
+  reach past their own schema object;
+- that an absent keyword is not the same as the keyword given with a value that asserts
+  nothing;
+- the two scopes of a schema, lexical and dynamic, and what `$dynamicRef` binds to;
+- what a resource is, what `$id` is resolved against, and the two grammars of an anchor;
+- where the drafts differ in meaning and not only in keywords: an unknown keyword is an
+  annotation in 2020-12 and is ignored in Draft-07; a `$ref` in Draft-07 makes its whole
+  object the reference; two formats cite different standards.
+
+The same is proved and not proved as for the OpenAPI list. The section numbers of the
+four texts are pinned in
+[`__fixtures__/texts/json-schema-sections.json`](__fixtures__/texts/json-schema-sections.json),
+and a test proves every cited section exists in the text and the draft the row was read
+from. The standard each format cites was read in the texts for every row that names one.
+Coverage of every section is not proved for these texts, as it is for chapter 4 of
+OpenAPI: the reader's report names the sections it read, and that list is not computed.
 
 The rows are read from the latest revisions the publisher listed on 22 November 2026: for
 OpenAPI 3.1, the document schema of 2026-11-05 and the vocabulary of 2024-11-10; for 3.2,
