@@ -312,7 +312,7 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
   branch is the branch; the per-kind node. **What broke, and so the first of the two
   whole reworkings the plan allows is spent:**
   - A supplied closure cannot be put at a place in a schema: one place in a value is
-    reached from several. The seat's reading, to be tested in the second trial and
+    reached from several. The seat's reading, to be tested in the next trial and
     carried to the owner with the amendment: the profile's closure is by value. A key
     of an object value that nothing applied there accounts for is refused, and a stated
     "open" is what accounts for every key. It needs no node.
