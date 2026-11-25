@@ -264,30 +264,6 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
   is a rule for reading and not a question for N7. The seat checked the published schemas for both lines: each closes
   the Header Object and lists no such field, so a header that holds it is not valid
   by either.
-  Pull request 205 merged (`70ae2e4c`) after one round. Each row of both hand lists then
-  got a key that never changes (`OT-001`, `JT-001`), because the two sweeps reworded 87
-  rows and moved others, and the coverage map of M4 must survive that.
-- 2026-11-25, M4, start. **Step back.** (1) The step is the first that moves a sentence
-  of "What this serves": it chooses the structure the amendment records. (2) Nothing
-  changes for Oak's document in this step either; nothing in `src` reads the design
-  branch, by the plan. (3) The first drafts of this session each lost about a third of
-  their statements to attack. So the core goes to the format readers as soon as it is
-  chosen, and no general statement is written before values of the opposing cases are
-  written by hand in each candidate (the `specify` skill's fourth step). **What counts
-  as a whole reworking,** of which the plan allows two: a change to what the kinds of
-  node are, or to either of the two rules below. A case that adds a field or a kind is
-  not one. **Two rules settled before any structure, by the strict reading; both go to
-  the owner with the amendment.**
-
-  | Unknown                                                      | Lens                                                                                     | Disposition                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-  | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | What is in a value, and what sits beside it                  | Strict: section 3's "meaning" has three parts, and "lossless" says notation may change   | The value is meaning: what is accepted and produced, what is said, how it is named and referred to. Beside it, in the model and outside equality, is the record of the reading: where each thing was in its source, and whether the source stated it or a default of the text or of Castr's profile supplied it. The report reads the record; a writer does not need it. So "closed as written" and "closed as supplied" are one value with two records, and the cases note's list of pairs is wrong to call them two values. |
-  | What a policy for unknown keys attaches to                   | Strict: SPEC-P-1's rule for writing, "across composition and references"; then the texts | It attaches to a shape together with the keys that shape accounts for. One construct serves `additionalProperties` and `unevaluatedProperties`: the first is the second placed around an object's own fields alone. A shape with no policy leaves its keys to whatever encloses it, which is not the same as open (case B7). A closure Castr supplies lands on the outermost shape applied at a place a value stands, never on a definition other shapes build on (cases B1, B2, B6).                                         |
-  | The notation in which the specification states the structure | Long-term architectural excellence                                                       | Not decided. Candidates: TypeScript types in the text, or a table of kinds with their fields. Decided when the core is chosen, with the readers' attack.                                                                                                                                                                                                                                                                                                                                                                      |
-  | Whether the cases are run before the structure is written    | Strict: the plan's proof 6 needs an oracle that is not the prototype                     | Yes. The first commit of the design branch makes the notes' checks tests: the passes and failures under Hyperjump, the validity of the OpenAPI fragments, and the Zod runs. A test fails for a case with no typed value.                                                                                                                                                                                                                                                                                                      |
-
-  **Not yet tried against the cases by hand;** the two rules are dispositions, and the
-  hand-written values of I1, B1, B2, C4, C2, D2, A4 and B8 are what test them.
 
 - 2026-11-24, M0, the reviews. The assumptions reviewer and the four seats of the
   conscience panel read the first draft. All four seats judged the work on track; three
