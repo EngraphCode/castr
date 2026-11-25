@@ -35,16 +35,16 @@ This note takes a claim from a report only with its standing said. There are thr
 The requirements are the specification's. The last column says which surveyed systems
 meet each and how the claim stands.
 
-| The model must                                                | Sentence  | Who does it, and how the claim stands                                                                                              |
-| ------------------------------------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| Keep a reference as a reference, written once                 | SPEC-PR-3 | Smithy, by shape identifier; Hyperjump, by handle (checked by the seat). Zod inlines a reused schema by default (the reader's).    |
-| Hold evaluation that reaches past one schema object           | SPEC-P-1  | Hyperjump, Blaze and the formal semantics only. Every code generator surveyed reads it locally or drops it (the reader's).         |
-| Hold the four policies for unknown keys as facts              | SPEC-P-1  | Zod, in one field (checked by the seat); ArkType (the reader's). Six others hold it as a boolean, an absence or an outside option. |
-| Hold what is accepted and what is produced where they differ  | Section 3 | Effect, ArkType and Zod, as views of one node. Zod's own writer renders the two sides differently (checked by the seat).           |
-| Hold numbers exactly                                          | Section 3 | CUE, Smithy, TypeSpec, Blaze, Avro. Zod, ArkType, ajv and Hyperjump use doubles (Hyperjump checked by the seat).                   |
-| Hold a shape no value satisfies, and carry it                 | SPEC-PR-7 | ArkType refuses one when it is built (the reader's), so a canonical form taken from ArkType would break this.                      |
-| Be the same value for one meaning written in two formats      | SPEC-AR-1 | The set-theoretic systems, by construction. Hyperjump keys by source location, so two formats give two trees (the reader's).       |
-| Have no kind a writer can miss without the compiler saying so | SPEC-AR-5 | Smithy and TypeSpec lost this as they grew: later kinds fall back to a default in a visitor (the reader's).                        |
+| The model must                                                | Sentence  | Who does it, and how the claim stands                                                                                                                                                                     |
+| ------------------------------------------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Keep a reference as a reference, written once                 | SPEC-PR-3 | Smithy, by shape identifier; Hyperjump, by handle (checked by the seat). Zod inlines a reused schema by default (the reader's).                                                                           |
+| Hold evaluation that reaches past one schema object           | SPEC-P-1  | Hyperjump, Blaze and the formal semantics only. Every code generator surveyed reads it locally or drops it (the reader's).                                                                                |
+| Hold the four policies for unknown keys as facts              | SPEC-P-1  | Zod, in one field (checked by the seat); ArkType (the reader's). Six others hold it as a boolean, an absence or an outside option.                                                                        |
+| Hold what is accepted and what is produced where they differ  | Section 3 | Effect, ArkType and Zod, as views of one node. Zod's own writer renders the two sides differently (checked by the seat).                                                                                  |
+| Hold numbers exactly                                          | Section 3 | CUE, Smithy, TypeSpec, Blaze, Avro. Zod, ArkType, ajv and Hyperjump use doubles (Hyperjump checked by the seat).                                                                                          |
+| Hold a shape no value satisfies, and carry it                 | SPEC-PR-7 | ArkType refuses one when it is built (the reader's), so a canonical form taken from ArkType would break this.                                                                                             |
+| Be the same value for one meaning written in two formats      | SPEC-AR-1 | The set-theoretic systems aim at it and reach it only through a canonical form with a test for emptiness (the reader's). Hyperjump keys by source location, so two formats give two trees (the reader's). |
+| Have no kind a writer can miss without the compiler saying so | SPEC-AR-5 | Smithy and TypeSpec lost this as they grew: later kinds fall back to a default in a visitor (the reader's).                                                                                               |
 
 ## The three families, and why none is taken whole
 
@@ -70,10 +70,14 @@ represents evaluation across schema objects directly.
   nor the boundaries of a document.
 
 **A canonical set-theoretic form** (ArkType, CUE, the algebra used for witness
-generation). Shapes are sets, and equal sets are one value.
+generation). Shapes are sets, and the aim is that equal sets are one value.
 
-- It gives one meaning one value by construction, which is the specification's second
-  acceptance test.
+- It is the family built toward one value for one meaning, which is the specification's
+  second acceptance test. It does not give that for nothing: the formal reader reports
+  that only base types have a unique representation, and that two object or array
+  shapes are shown equal by a test for emptiness, not by comparing how they are written.
+  A design that takes this family still has to state its canonical form and its test of
+  equality.
 - CUE's reader of JSON Schema reads `unevaluatedProperties` locally and accepts values it
   should refuse. No member holds a dynamic reference except by expanding it.
 - ArkType refuses a shape no value satisfies (SPEC-PR-7).

@@ -2203,8 +2203,16 @@ z.strictObject({ a: z.string().optional() });
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "array",
-  "items": [{ "type": "string" }, { "type": "number" }],
-  "additionalItems": false
+  "items": [
+    {
+      "type": "string"
+    },
+    {
+      "type": "number"
+    }
+  ],
+  "additionalItems": false,
+  "minItems": 2
 }
 ```
 
@@ -2212,8 +2220,16 @@ z.strictObject({ a: z.string().optional() });
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "array",
-  "prefixItems": [{ "type": "string" }, { "type": "number" }],
-  "items": false
+  "prefixItems": [
+    {
+      "type": "string"
+    },
+    {
+      "type": "number"
+    }
+  ],
+  "items": false,
+  "minItems": 2
 }
 ```
 
@@ -2222,9 +2238,10 @@ z.tuple([z.string(), z.number()]);
 ```
 
 - **Tests:** SPEC-AR-1.
-- **One value:** positions and a shape for the rest. The JSON Schema forms put no lower
-  bound on length; Zod's tuple requires both positions. So the JSON Schema pair is one
-  value and the Zod tuple is that value with a minimum length of two.
+- **One value:** two positions, nothing after them, and a least length of two.
+- **Not the same value:** either JSON Schema form without `minItems`. A positional
+  keyword puts no lower bound on length, so those accept `[]` and `["s"]`, which Zod's
+  tuple refuses.
 
 ### I3. A dependency
 
