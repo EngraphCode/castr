@@ -407,6 +407,30 @@ dialect; the format-assertion vocabulary; and the two document schemas the speci
 names at version 0.8.0 (3.1 of 2022-10-07, 3.2 of 2025-09-17), which stay until the
 specification names others.
 
+## The cases the model's design must hold
+
+[The note of cases](../../.agent/analysis-and-reports/model-design-cases-2026-11-25.md)
+gives each hard case as a small document and says what the document means. So that
+nothing it says of a document rests on its own word, [`cases/`](cases/) reads the
+documents out of the note and runs them:
+
+- **JSON Schema.** What the note says each schema accepts and refuses is data,
+  [`__fixtures__/cases/json-schema-expectations.json`](__fixtures__/cases/json-schema-expectations.json),
+  123 statements. Each is run under `@hyperjump/json-schema`, in the draft it names, and
+  a test fails for a schema of the note that no statement runs. The texts decide what a
+  schema accepts; this validator agreed with them wherever the cases were checked, and
+  Ajv does not.
+- **OpenAPI.** Each of the 31 fragments, with `openapi` and `info` supplied, is judged
+  against the pinned schema published for 3.2 and admitted by it. Four use what 3.2
+  added and are refused by the schema for 3.1; the test names them.
+- **Zod.** Each case that holds a Zod document has a test that builds it against the
+  installed Zod and proves what the note says it does. A test fails when the note gains
+  a Zod document with no test.
+
+What this does not prove: that a document means what the note says beyond what a
+validator can show. A reference kept as a reference, a name, where a default came from:
+those are read, and the design's own proofs are what test them.
+
 ## How a definition is read
 
 [`rows/inventory.ts`](rows/inventory.ts) reads one definition into objects and fields:
