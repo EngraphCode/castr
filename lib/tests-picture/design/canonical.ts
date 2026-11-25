@@ -222,7 +222,11 @@ export function canonical(shape: Shape): Shape {
     case 'absent-becomes':
     case 'said':
       return { ...shape, of: canonical(shape.of) };
-    default:
+    case 'every':
+    case 'none':
+    case 'values':
+    case 'reference':
+    case 'reference-in-scope':
       return shape;
   }
 }

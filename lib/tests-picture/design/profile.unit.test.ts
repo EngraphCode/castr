@@ -137,6 +137,20 @@ describe('a shape used as a test', () => {
   });
 });
 
+describe('the profile only narrows', () => {
+  it('does not make a choice of exactly one accept what its source refuses', () => {
+    // Both branches accept a named thing that meows, so the source's choice refuses it.
+    // Closing each branch where it is written would accept it: wider than the source.
+    const animal = (sound: string): Shape =>
+      object({ fields: fields({ name: STRING, [sound]: STRING }) });
+    const pet = model({ kind: 'one', of: [animal('meow'), animal('bark')] });
+    const cat = { name: 'Tom', meow: 'loud' };
+
+    expect(asStated(pet, { present: true, value: cat }).accepted).toBe(false);
+    expect(accepts(pet, cat)).toBe(false);
+  });
+});
+
 describe('a closure the source states', () => {
   it('is not folded into later items where the array has `contains`', () => {
     const folded = model(array({ contains: { shape: STRING, least: 1n }, after: NUMBER }));
