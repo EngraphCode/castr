@@ -1,0 +1,119 @@
+/**
+ * What the prototype does with each kind of construct a format has: the coverage map.
+ *
+ * Each kind has one entry. An entry names the elements of the prototype that hold the
+ * kind, or says the kind decides how a document is read and is held nowhere, or cites the
+ * clause of the specification that puts it outside the model, or says plainly that it is
+ * owed. `coverage.e2e.test.ts` recomputes the lists of kinds and fails on a kind with no
+ * entry, an entry for a kind that is gone, and an entry naming an element the prototype
+ * does not have.
+ *
+ * So far: the keywords and the type values of JSON Schema Draft 2020-12 and Draft-07, and
+ * the four names the 2020-12 dialect constrains outside its vocabularies. The hand
+ * lists, Zod and OpenAPI are not in the map yet.
+ */
+
+/** What the prototype does with one kind. */
+export type Coverage =
+  /** Held by these elements, each a name `elements()` gives. */
+  | { readonly held: readonly string[] }
+  /** Decides how a document is read. The model holds what was read, not this. */
+  | { readonly reading: string }
+  /** Outside the model, by this clause of the specification. */
+  | { readonly refused: string }
+  /** Not yet held, and not refused. */
+  | { readonly owed: string };
+
+const WHEN = { held: ['Shape[when]'] } as const;
+const LEAST_OR_MOST = { held: ['NumberPart.least', 'NumberPart.most', 'Bound.exclusive'] } as const;
+
+/** Keywords that mean the same in both drafts. */
+const SHARED: Readonly<Record<string, Coverage>> = {
+  $id: { held: ['Resource.id', 'Definition.aliases'] },
+  $schema: { reading: 'names the dialect a resource is read under' },
+  $ref: { held: ['Shape[reference]', 'Edge.target'] },
+  $comment: { owed: 'a note for whoever maintains the schema; no element' },
+  items: { held: ['ArrayPart.after', 'ArrayPart.positions'] },
+  contains: { held: ['ArrayPart.contains'] },
+  additionalProperties: { held: ['ObjectPart.rest'] },
+  properties: { held: ['ObjectPart.fields'] },
+  patternProperties: { held: ['ObjectPart.patterns'] },
+  propertyNames: { held: ['ObjectPart.names'] },
+  if: WHEN,
+  then: WHEN,
+  else: WHEN,
+  allOf: { held: ['Shape[all]'] },
+  anyOf: { held: ['Shape[some]'] },
+  oneOf: { held: ['Shape[one]'] },
+  not: { held: ['Shape[not]'] },
+  type: { held: ['ByKind', 'NumberPart.whole'] },
+  const: { held: ['Shape[values]'] },
+  enum: { held: ['Shape[values]'] },
+  multipleOf: { held: ['NumberPart.multipleOf'] },
+  maximum: LEAST_OR_MOST,
+  exclusiveMaximum: LEAST_OR_MOST,
+  minimum: LEAST_OR_MOST,
+  exclusiveMinimum: LEAST_OR_MOST,
+  maxLength: { held: ['StringPart.length'] },
+  minLength: { held: ['StringPart.length'] },
+  pattern: { held: ['StringPart.patterns'] },
+  maxItems: { held: ['ArrayPart.length'] },
+  minItems: { held: ['ArrayPart.length'] },
+  uniqueItems: { held: ['ArrayPart.distinct'] },
+  maxProperties: { held: ['ObjectPart.count'] },
+  minProperties: { held: ['ObjectPart.count'] },
+  required: { held: ['ObjectPart.required', 'Field.presence'] },
+  format: { owed: 'held on number and string parts only; a format may stand on any kind' },
+  contentEncoding: { owed: 'no element' },
+  contentMediaType: { owed: 'no element' },
+  title: { held: ['Said.title'] },
+  description: { held: ['Said.description'] },
+  default: { held: ['Said.default'] },
+  readOnly: { held: ['Said.direction'] },
+  writeOnly: { held: ['Said.direction'] },
+  examples: { owed: 'no element' },
+};
+
+export const DRAFT_2020_12: Readonly<Record<string, Coverage>> = {
+  ...SHARED,
+  $anchor: { held: ['Definition.aliases'] },
+  $dynamicRef: { held: ['Shape[reference-in-scope]'] },
+  $dynamicAnchor: { held: ['Resource.dynamicAnchors'] },
+  $vocabulary: { reading: 'in a meta-schema, names the vocabularies a dialect has' },
+  $defs: { held: ['Definition', 'Step[named]'] },
+  prefixItems: { held: ['ArrayPart.positions'] },
+  dependentSchemas: WHEN,
+  dependentRequired: WHEN,
+  unevaluatedItems: { held: ['Shape[rest-of].items'] },
+  unevaluatedProperties: { held: ['Shape[rest-of].keys'] },
+  maxContains: { held: ['ArrayPart.contains'] },
+  minContains: { held: ['ArrayPart.contains'] },
+  contentSchema: { owed: 'no element' },
+  deprecated: { held: ['Said.deprecated'] },
+};
+
+export const DRAFT_07: Readonly<Record<string, Coverage>> = {
+  ...SHARED,
+  additionalItems: { held: ['ArrayPart.after'] },
+  definitions: { held: ['Definition', 'Step[named]'] },
+  dependencies: WHEN,
+};
+
+/** The values of `type`, the same seven in both drafts. */
+export const TYPE_VALUES: Readonly<Record<string, Coverage>> = {
+  array: { held: ['ByKind.array'] },
+  boolean: { held: ['ByKind.boolean'] },
+  integer: { held: ['ByKind.number', 'NumberPart.whole'] },
+  null: { held: ['ByKind.null'] },
+  number: { held: ['ByKind.number'] },
+  object: { held: ['ByKind.object'] },
+  string: { held: ['ByKind.string'] },
+};
+
+/** Names the 2020-12 dialect constrains that are keywords of none of its vocabularies. */
+export const DIALECT_2020_12_OWN_NAMES: Readonly<Record<string, Coverage>> = {
+  definitions: { held: ['Step[data]'] },
+  dependencies: { owed: 'a name that is not a keyword, with a value: no element for one' },
+  $recursiveAnchor: { owed: 'a name that is not a keyword, with a value: no element for one' },
+  $recursiveRef: { owed: 'a name that is not a keyword, with a value: no element for one' },
+};
