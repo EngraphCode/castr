@@ -12,8 +12,12 @@ Two kinds of case. Sections A to H are single documents. Section I is the equiva
 sets: one meaning written two or three ways, which the model holds as **one value**; and
 the pairs that look alike and are **not** one value.
 
-Every JSON document below parses, and every Zod fragment runs against Zod 4.6.7 and does
-what its case says; the seat checked both by program. The documents are fragments: an
+Every JSON document below parses, and every Zod fragment was run against Zod 4.6.7. A
+reader who knows each format then attacked the note: one for OpenAPI, who read the texts
+of 3.2.1 and 3.1.2; one for JSON Schema, who ran a validator; one for Zod, who ran every
+claim. Their corrections and the cases they found missing are in the note. The seat
+checked the OpenAPI reader's quotations against the texts and re-ran the Zod reader's
+findings. The documents are fragments: an
 OpenAPI case shows the part that matters and omits `openapi`, `info` and the rest.
 
 The cases come from the plan's first list, from the three hand-made lists of what the
@@ -688,6 +692,21 @@ The entry document, then `other.json`:
   it or holds two things read from one place; the design says which.
 - **A naive structure loses:** silently, if a thing's kind is decided by where it sits.
 
+### A20. Where a Zod schema's name comes from
+
+```ts
+const Name = z.string().meta({ id: 'Name' });
+z.object({ first: Name, last: Name });
+```
+
+- **Tests:** SPEC-PR-3; SPEC-AR-6, reading runtime data structures.
+- **Holds:** a definition named `Name`, referred to twice. In a running Zod schema the
+  only name is the `id` in the registry, and the only sign of a reference is the same
+  object met twice. The name of the constant is in the source text and not in the
+  running schema.
+- **A naive structure loses:** the name, if it reads the definition and not the
+  registry; and the sharing, if it does not compare objects.
+
 ## B. Evaluation that is not local to one schema object
 
 ### B1. Closing an object across a composition
@@ -870,6 +889,50 @@ z.object({ a: z.string() }).parse({ a: 'x', b: 1 }); // { a: 'x' }
 - **A naive structure loses:** one side. Zod's own JSON Schema writer writes this object
   closed for output and open for input.
 
+### C4. An intersection of two closed objects
+
+```ts
+const A = z.strictObject({ a: z.string() });
+const B = z.strictObject({ b: z.string() });
+z.intersection(A, B).parse({ a: 'x', b: 'y' }); // passes
+z.intersection(A, B).safeParse({ a: 'x', b: 'y', c: 1 }).success; // false
+```
+
+- **Tests:** SPEC-P-1; SPEC-AR-1.
+- **Holds:** an object closed over the keys of both sides together. In JSON Schema the
+  same meaning is `unevaluatedProperties: false` over an `allOf`, and not an `allOf` of
+  two schemas each with `additionalProperties: false`, which no value with both keys
+  satisfies (I1).
+- **A naive structure loses:** the meaning, if a Zod intersection is read as `allOf` of
+  its sides as they stand.
+
+### C5. A record
+
+```ts
+z.record(z.enum(['a', 'b']), z.number()); // both keys required, no others
+z.partialRecord(z.enum(['a', 'b']), z.number()); // neither required
+z.looseRecord(z.string().regex(/^x-/), z.number()); // other keys pass unchecked
+```
+
+- **Tests:** SPEC-P-1; Appendix A's rows for records.
+- **Holds:** for a finite set of keys, that every key is required unless the record is
+  partial; and whether a key the key schema does not match is refused or let through.
+- **A naive structure loses:** all of that, if a record is a key shape and a value shape.
+
+### C6. Three kinds of choice
+
+```ts
+z.union([A, AB]); // the first that matches
+z.xor([A, AB]); // exactly one must match
+z.discriminatedUnion('kind', [Cat, Dog]); // the key picks one
+```
+
+- **Tests:** SPEC-PR-2; SPEC-AR-5.
+- **Holds:** which of the three. Zod's definition calls all three a union and tells them
+  apart by other fields. JSON Schema's `anyOf` is the first on the accepted side, and
+  `oneOf` is the second.
+- **A naive structure loses:** two of them, if it reads the kind alone.
+
 ## D. The two sides
 
 ### D1. A default that inserts, a prefault that is validated, and an annotation
@@ -885,10 +948,17 @@ z.string().min(5).prefault('x'); // parse(undefined) throws: 'x' is validated
 
 - **Tests:** SPEC-P-6, a source `default` is an annotation; Appendix A's rows for
   `.default` and `.prefault`.
-- **Holds:** three different facts. Zod's default makes an absent value acceptable and
-  produces the default unvalidated. Zod's prefault produces it validated. JSON Schema's
-  `default` inserts nothing.
-- **A naive structure loses:** two of the three, if `default` is one field.
+- **Holds:** three different facts.
+  - Zod's default is a value of the produced side. Where the input is absent or
+    `undefined`, it is produced as it is: the inner schema is not run, so it is neither
+    validated nor transformed.
+  - Zod's prefault is a value of the accepted side. It is put in place of the absent
+    input and the inner schema is run on it, so it is validated and transformed.
+  - JSON Schema's `default` inserts nothing.
+  - Both Zod forms make a key optional on the accepted side and present on the produced
+    side. A default given as a function has no one value: each read calls it.
+- **A naive structure loses:** two of the three, if `default` is one field; and the side
+  each belongs to.
 
 ### D2. A union whose result depends on its order
 
@@ -902,6 +972,8 @@ z.union([AB, A]).parse({ a: 'x', b: 'y' }); // { a: 'x', b: 'y' }
 - **Tests:** section 3's produced set; SPEC-PR-2.
 - **Holds:** the order of the alternatives, where an alternative produces something other
   than what it accepts. The two unions accept the same values and produce different ones.
+  This is true of `z.union`, where the first match wins. It is not true of `z.xor`, which
+  fails when two match, nor of `z.discriminatedUnion`, where the key picks one (case C6).
 - **A naive structure loses:** the produced side, if it sorts or merges alternatives.
 
 ### D3. Read-only and write-only: two sides in OpenAPI itself
@@ -935,6 +1007,28 @@ z.union([AB, A]).parse({ a: 'x', b: 'y' }); // { a: 'x', b: 'y' }
   property in a request only.
 - **A naive structure loses:** one direction, if a shape has one list of required keys
   with no side.
+
+### D4. Values that are changed on the way through
+
+```ts
+z.string().trim().min(2).safeParse(' a ').success; // false: trimmed first
+z.coerce.number().parse('12'); // 12
+z.string().min(5).catch('x').parse(1); // 'x'
+z.string().default('x').nonoptional().parse(undefined); // 'x'
+z.tuple([z.string(), z.number().default(5)]).parse(['a']); // ['a', 5]
+```
+
+- **Tests:** section 3's two sides; SPEC-PR-2; section 2's declarative subset decides
+  which of these Castr reads at all.
+- **Holds:** where it reads them, each as a difference of sides.
+  - A check that overwrites (`trim`) changes what later checks see, so checks have an
+    order.
+  - A coercion accepts what `Number()` turns into a finite number.
+  - A catch accepts every value.
+  - `nonoptional` checks the produced value, not whether the input was present.
+  - A tuple's minimum length is one on the accepted side and two on the produced side.
+- **A naive structure loses:** the accepted side of each, if it takes Zod's own JSON
+  Schema for it: that says `minLength: 2`, `type: number`, and a string of five or more.
 
 ## E. Values held exactly
 
@@ -994,6 +1088,25 @@ z.union([AB, A]).parse({ a: 'x', b: 'y' }); // { a: 'x', b: 'y' }
 - **Holds:** the format's name as a fact, apart from what any one target does with it.
 - **A naive structure loses:** the name, if it is turned into a range of numbers on
   reading.
+
+### E6. Formats with parameters, and one meaning in two places
+
+```ts
+z.int(); // a safe integer: refuses 2 ** 53
+z.int64(); // a bigint: refuses the number 1
+z.url({ protocol: /^https$/ });
+z.string().regex(/a/i);
+z.email(); // the schema is the check
+z.string().email(); // the check is in the schema's list
+```
+
+- **Tests:** SPEC-P-3; SPEC-AR-1; SPEC-PR-2.
+- **Holds:** a format with its parameters (a protocol, a version, an offset, a
+  precision), a pattern with its flags, and that `z.int()` is bounded. The last two lines
+  are one value.
+- **A naive structure loses:** the parameters and the flags, if a format is a name and a
+  pattern is a string; and it makes JSON Schema's `format: int64` into a Zod schema that
+  refuses every JSON number, if it matches the names.
 
 ## F. Boundaries
 
@@ -1566,9 +1679,10 @@ z.union([AB, A]).parse({ a: 'x', b: 'y' }); // { a: 'x', b: 'y' }
 z.templateLiteral(['id-', z.number()]);
 z.object({ a: z.string().exactOptional(), b: z.string().optional() });
 z.object({ a: z.string() }).readonly();
-z.object({
-  get self() {
-    return z.string();
+const Node = z.object({
+  name: z.string(),
+  get next() {
+    return Node.optional();
   },
 });
 z.string().brand('Id');
@@ -1576,12 +1690,24 @@ z.string().meta({ title: 'A name' });
 ```
 
 - **Tests:** Appendix A's rows for each.
-- **Holds:** a template literal's parts in order; that an exact optional key may be absent
-  and may not be `undefined`, which differs from an optional only in Zod's class;
-  read-only as a fact of an object; a reference Zod writes as a getter. A brand leaves
-  nothing in the schema Zod builds. Metadata is held in a registry beside the schema.
-- **A naive structure loses:** the exact optional, if it reads Zod's definition alone; and
-  metadata, if it reads the schema and not the registry.
+- **Holds:**
+  - **A template literal:** its parts in order. What Zod accepts is a regular expression
+    it builds from the parts, which keeps a string's length and pattern and drops a
+    number's range: a part `z.number().positive()` accepts `-1`. The model holds the
+    parts; what Zod drops is for the report.
+  - **An exact optional key:** it may be absent and may not be `undefined`. It differs
+    from an optional only in Zod's class; the two definitions are the same.
+  - **Read-only:** a wrapper on any schema, not a fact of an object. It changes nothing
+    that is accepted and freezes what is produced. It is not JSON Schema's `readOnly`.
+  - **A cycle:** `Node` refers to itself. In the running schema that is the same object
+    met again; nothing of the getter is kept once it has been read. A getter is how the
+    Zod writer must write a cycle, not what a reference is.
+  - **A brand:** leaves nothing; `.brand()` returns the same schema.
+  - **Metadata:** held in a registry beside one node. It follows the node through a
+    check (`.min`) and not through a wrapper (`.optional()`).
+- **A naive structure loses:** the exact optional, if it reads Zod's definition alone;
+  metadata, if it reads the schema and not the registry; and the cycle, if it looks for a
+  getter.
 
 ## I. Equivalence sets: one meaning, one value
 
@@ -1591,7 +1717,7 @@ from, and what the source left unsaid, are held beside the value.
 ### I1. Closed
 
 ```ts
-z.strictObject({ a: z.string() });
+z.strictObject({ a: z.string().optional() });
 ```
 
 ```json
@@ -1678,7 +1804,8 @@ z.string().nullable();
 ```
 
 - **Tests:** SPEC-AR-1.
-- **One value:** string or null.
+- **One value:** string or null. Zod holds the third as a kind of its own (`nullable`) and a union
+  of the two as a union: two definitions, one value.
 
 ### I5. A constant and a one-member enumeration
 
@@ -1724,6 +1851,13 @@ Each pair looks alike. A design that makes them one value is wrong.
 - **A Reference Object and a schema, each a `$ref` with a `description` beside it**
   (A12).
 - **`x-a` under `components` and `x-a` under `components.schemas`** (G3).
+- **Zod's `.readonly()` and JSON Schema's `readOnly`** (H2, D3).
+- **`z.union`, `z.xor` and `z.discriminatedUnion`** over the same alternatives (C6).
+- **A Zod intersection of two closed objects and an `allOf` of two closed schemas**
+  (C4).
+- **`z.int64()` and `{"type": "integer", "format": "int64"}`** (E6).
+- **A Zod schema and what Zod's own `toJSONSchema` writes for it,** wherever a value is
+  changed on the way through (D4).
 - **An absent keyword and the keyword with a value that asserts nothing** (B7), wherever
   another keyword reads what it evaluated.
 - **An unknown keyword in 2020-12 and in Draft-07.** The first is an annotation; the
