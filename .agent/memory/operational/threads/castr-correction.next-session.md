@@ -97,6 +97,58 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
   with particular fields and has no interface of its own. Appendix A names constructs by
   method; the structure will be set against definitions, so M4 needs the map between
   the two.
+- 2026-11-24, M1, the reading of the texts, and what the readers returned. Four readers
+  (read-only, briefed separately) reported; their reports are kept whole under
+  `.agent/research/model-design-2026-11-24/`, each headed as a reader's account the seat
+  has not checked (pull request 199). **Nothing is taken from a report into a hand list
+  or a note until the seat has checked it at the source.** Checked so far, first-hand:
+  the 2020-12 dialect meta-schema constrains four deprecated names no vocabulary holds
+  (pull request 200 pins it and reads them); 2020-12 core 4.3.1 lets a schema hold
+  properties that are not keywords; validation Appendix A on `definitions` and
+  `dependencies`; Zod builds three checks only through a factory.
+  **Faults found, each with where it went:**
+  - _The seat's brief named OpenAPI 3.2.0; the specification names 3.2.1._ The same
+    error an earlier seat recorded on 22 November. A second reading compared 3.2.1 with
+    3.2.0: eleven items of the report change, and its second finding (the dialect's
+    address) is false of 3.2.1 and was already settled. The report's note says so. A
+    brief that names a version is checked against section 6 before it is sent.
+  - _The JSON Schema report's equivalence row 4 is wrong._ It calls `#/definitions/x`
+    and `#/$defs/x` two pointers to one definition. They are two locations that may hold
+    different schemas. For M2: same behaviour of the keyword, distinct targets, **not**
+    one value. Found by the hosted review of 199.
+  - _The seat's README called the four dialect names keywords, then said
+    `additionalItems` had no place in a 2020-12 document._ Both corrected in 200: a
+    name a document may carry, a name a meta-schema constrains, and a keyword a
+    vocabulary gives meaning to are three things, and the model has to hold all three.
+    **For the owner, not yet asked, to be checked first:** the JSON Schema report's F2,
+    that SPEC-P-3's "declares the format-assertion vocabulary" needs a meta-schema the
+    publisher does not serve and makes validators refuse formats they do not know.
+    **Routed to the references amendment's list (N7), not opened here:** six validity
+    rules the OpenAPI text states that SPEC-FV-2 does not hold, and the ambiguity of a
+    header's `allowReserved`, both holding for 3.2.1 by the comparison.
+    **Still owed for M1:** the hand lists, one per format, naming every section read.
+- 2026-11-24, M1, Zod set against Appendix A. **Step back, late and true:** the plan's
+  own todo says Zod is "set against Appendix A", and the seat had merged the list of
+  definitions and pushed the map from methods to definitions out to M4. The advisor
+  pointed at the todo. It is done here, computed (`rows/zod-builders.ts`): by type, the
+  146 exported functions and 24 methods of every schema that build a schema or a check,
+  and the methods each of 23 kinds has of its own; by running, what one example of each
+  construct Appendix A names leaves in a schema. **Found:** the four policies for
+  unknown keys are one field, `catchall` (absent, `never`, `unknown`, a schema), as the
+  survey of tools said of Zod; an exact optional differs from an optional in its class
+  alone; `.brand` leaves nothing; `.meta` and `.describe` leave nothing in the schema
+  and an entry in Zod's registry; `.nullish` is an optional of a nullable; `.transform`
+  is a pipe into a transform. **For the amendment, a silence in the specification
+  (SPEC-I-1):** Appendix A names 44 constructs, and 120 functions and methods are not
+  named. Most are plain kinds and checks the profiles cover elsewhere; some are
+  constructs of their own with no row: `z.discriminatedUnion`, `z.xor`, `z.json`,
+  `z.function`, `z.promise`, `z.success`, `z.nonoptional`, `z.keyof`, `z.stringFormat`,
+  and an object's `strict`, `loose`, `strip`, `passthrough`, `extend`, `pick`, `omit`
+  and `partial`. The design must give each an element or a cited refusal, and the
+  amendment must give the appendix rows for them. **Not done test-first:** the readings
+  were probed in a scratch file and the tests written from what the probe showed, then
+  seen to pass; the exact tables are what fail when Zod changes. **Lenses, short:** this
+  moves no sentence of "What this plan may not do"; nothing under `lib/src` is touched.
 
 - 2026-11-24, M0, the reviews. The assumptions reviewer and the four seats of the
   conscience panel read the first draft. All four seats judged the work on track; three

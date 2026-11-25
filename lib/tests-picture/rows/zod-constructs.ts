@@ -15,9 +15,18 @@
  */
 
 import { createRequire } from 'node:module';
-import { fileURLToPath } from 'node:url';
+import type { Node, Type } from 'ts-morph';
 
-import { Project, ts, type Node, type Symbol as MorphSymbol, type Type } from 'ts-morph';
+import {
+  byName,
+  compileZodProbe,
+  declaredInterface,
+  definitionOf,
+  literalValues,
+  membersOf,
+  propertyType,
+  type ZodProbe,
+} from './zod-types.js';
 
 /**
  * The version of Zod the lists were read at. A different installed version fails the
@@ -100,32 +109,10 @@ interface Defined {
   readonly definition: Type;
 }
 
-function byName(left: string, right: string): number {
-  return left.localeCompare(right);
-}
-
-function membersOf(type: Type): readonly Type[] {
-  return type.isUnion() ? type.getUnionTypes() : [type];
-}
-
-function literalValues(type: Type | undefined): readonly string[] {
-  if (type === undefined) {
-    return [];
-  }
-  return membersOf(type)
-    .map((member) => member.getLiteralValue())
-    .filter((value) => typeof value === 'string')
-    .sort(byName);
-}
-
 /** The one literal a type states, or nothing when it states none or several. */
 function oneLiteral(type: Type | undefined): string | undefined {
   const values = literalValues(type);
   return values.length === 1 ? values[0] : undefined;
-}
-
-function propertyType(type: Type | undefined, name: string, at: Node): Type | undefined {
-  return type?.getProperty(name)?.getTypeAtLocation(at);
 }
 
 function fieldNames(definition: Type, shared: ReadonlySet<string>): readonly string[] {
@@ -144,20 +131,10 @@ function namesIn(union: Type): ReadonlySet<string> {
   );
 }
 
-function isInterface(symbol: MorphSymbol): boolean {
-  return symbol
-    .getDeclarations()
-    .some((declaration) => declaration.getKind() === ts.SyntaxKind.InterfaceDeclaration);
-}
-
 /** Every interface the module exports that holds a definition. */
-function readDefined(exported: readonly MorphSymbol[], at: Node): readonly Defined[] {
-  return exported.flatMap((symbol) => {
-    const target = symbol.isAlias() ? symbol.getAliasedSymbolOrThrow() : symbol;
-    if (!isInterface(target)) {
-      return [];
-    }
-    const definition = propertyType(propertyType(target.getDeclaredType(), '_zod', at), 'def', at);
+function readDefined(probe: ZodProbe, at: Node): readonly Defined[] {
+  return probe.exported.flatMap((symbol) => {
+    const definition = definitionOf(declaredInterface(symbol), at);
     return definition === undefined ? [] : [{ name: symbol.getName(), definition }];
   });
 }
@@ -209,7 +186,7 @@ function readChecks(
 function readStringFormats(union: Type, at: Node): readonly ZodStringFormatConstruct[] {
   return membersOf(union)
     .flatMap((construct) => {
-      const definition = propertyType(propertyType(construct, '_zod', at), 'def', at);
+      const definition = definitionOf(construct, at);
       if (definition === undefined) {
         return [];
       }
@@ -239,33 +216,10 @@ function readInstalledVersion(): string {
  * Reads the installed Zod's constructs from its core types.
  */
 export function readZodConstructs(): ZodConstructs {
-  const project = new Project({
-    compilerOptions: {
-      strict: true,
-      module: ts.ModuleKind.NodeNext,
-      moduleResolution: ts.ModuleResolutionKind.NodeNext,
-      skipLibCheck: true,
-      noEmit: true,
-    },
-    skipAddingFilesFromTsConfig: true,
-  });
-  const probe = project.createSourceFile(
-    fileURLToPath(new URL('zod-constructs.probe.ts', import.meta.url)),
-    PROBE_SOURCE,
-    { overwrite: true },
-  );
-  const unresolved = project.getPreEmitDiagnostics();
-  if (unresolved.length > 0) {
-    throw new Error(`the probe of zod's types does not compile: ${String(unresolved.length)}`);
-  }
-
-  const at = probe.getTypeAliasOrThrow('Definition');
-  const core = probe
-    .getImportDeclarationOrThrow('zod/v4/core')
-    .getModuleSpecifierSourceFileOrThrow();
-  const exported = project.getTypeChecker().getExportsOfModule(core.getSymbolOrThrow());
-  const defined = readDefined(exported, at);
-  const aliasType = (name: string): Type => probe.getTypeAliasOrThrow(name).getType();
+  const probe = compileZodProbe('zod-constructs.probe.ts', 'zod/v4/core', PROBE_SOURCE);
+  const at = probe.file.getTypeAliasOrThrow('Definition');
+  const defined = readDefined(probe, at);
+  const aliasType = (name: string): Type => probe.file.getTypeAliasOrThrow(name).getType();
 
   return {
     version: readInstalledVersion(),

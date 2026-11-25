@@ -293,9 +293,8 @@ answered on the thread and taken into the next change.
   assumes nothing about the model. Exit: each computed list has a test that fails when
   its artefact changes, and each hand list names the text and the sections it was read
   from. A hand list is a floor and is called one: a kind found after approval gets an
-  element or a cited refusal by amendment, as a new Zod construct does. Three pull
-  requests, one for each part: the reading of the texts is a different kind of work
-  from a computed list, and is reviewed by different readers.
+  element or a cited refusal by amendment, as a new Zod construct does. Planned as three
+  pull requests, one for each part; it has taken more, counted under "Size".
 - **M2, the cases.** One note under `.agent/analysis-and-reports/`, with each case's
   document in a fence. A reader who knows OpenAPI, one who knows JSON Schema and one who knows Zod attack the
   list before it lands. One pull request, with M3.
@@ -316,9 +315,15 @@ answered on the thread and taken into the next change.
   returns the work to M4, and the pull request is closed, not patched.
 - **M6, the handoff.** One pull request to the course and the one statement of order.
 
-**Size.** Five merged pull requests before the amendment (this plan; three for M1; one for
-M2 with M3), one for the amendment, one for the handoff: seven. Each push runs the full
-check for about ten minutes. The items that are not frozen are outside the count. The
+**Size.** Planned as five merged pull requests before the amendment (this plan; three for
+M1; one for M2 with M3), one for the amendment, one for the handoff: seven. **M1 has
+taken more than its three, and the count is corrected here on 24 November:** five merged
+(Draft-07's keywords; Zod's definitions; the readers' reports; the 2020-12 dialect's own
+names, which corrected the first; a sixth open for Zod set against Appendix A), and one
+still to come for the hand lists. The causes are recorded in the thread record: a
+publisher's summary of its own constructs was taken as its whole, three times, and a
+reader was briefed with the wrong patch version. So the plan is nine or ten pull
+requests, not seven. Each push runs the full check for about ten minutes. The items that are not frozen are outside the count. The
 base rate is against a quick approval: an amendment of sixteen rows took three rounds,
 and two earlier ones were withdrawn, after four attacks and after three drafts.
 
