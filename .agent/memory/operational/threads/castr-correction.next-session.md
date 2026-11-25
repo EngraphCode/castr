@@ -261,7 +261,9 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
   not read each rewritten row against its section. **What changes for the work that
   uses the lists:** the header `allowReserved` row is no longer "undefined": 3.1
   forbids it and 3.2 limits the field to locations that do not include a header, so it
-  is a rule for reading and not a question for N7.
+  is a rule for reading and not a question for N7. The seat checked the published schemas for both lines: each closes
+  the Header Object and lists no such field, so a header that holds it is not valid
+  by either.
 
 - 2026-11-24, M0, the reviews. The assumptions reviewer and the four seats of the
   conscience panel read the first draft. All four seats judged the work on track; three
