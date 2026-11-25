@@ -2,7 +2,13 @@ import { createHash } from 'node:crypto';
 
 import { describe, it, expect } from 'vitest';
 
-import { checkTextPin, readTextPins, sectionNumbers, sectionsOfText } from './text-sections.js';
+import {
+  checkTextPin,
+  readTextPins,
+  sectionNumbers,
+  sectionsOfText,
+  unpinnedCitations,
+} from './text-sections.js';
 
 const PAGE = [
   '<nav><a href="#x"><bdi class="secno">1. </bdi>Introduction</a></nav>',
@@ -152,6 +158,21 @@ describe('reading pins', () => {
     expect(() => readTextPins({ texts: [{ ...pin }] })).toThrow(
       'the file of pinned texts has no note',
     );
+  });
+
+  it('finds no citation missing where every cited section is pinned', () => {
+    const pins = readTextPins({ note: 'Pins.', texts: [{ ...pin }] });
+
+    expect(unpinnedCitations(pins, 'a text', ['1', 'A.1'])).toEqual([]);
+  });
+
+  it('names each cited section the text does not have', () => {
+    const pins = readTextPins({ note: 'Pins.', texts: [{ ...pin }] });
+
+    expect(unpinnedCitations(pins, 'a text', ['1', '9', '1.1.1'])).toEqual([
+      'a text 9',
+      'a text 1.1.1',
+    ]);
   });
 
   it('refuses two pins of one name', () => {

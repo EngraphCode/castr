@@ -313,7 +313,7 @@ missing one.
 
 What the OpenAPI text defines beyond its schemas is a second list made by hand,
 [`__fixtures__/texts/openapi-text-constructs.json`](__fixtures__/texts/openapi-text-constructs.json),
-read and checked for shape by [`rows/openapi-text-constructs.ts`](rows/openapi-text-constructs.ts): 140 rows, read
+read and checked for shape by [`rows/openapi-text-constructs.ts`](rows/openapi-text-constructs.ts): 143 rows, read
 from versions 3.1.2 and 3.2.1, the latest patch of each line the publisher serves. A
 schema says what fields an object has. The text also says what an absent field means,
 which of two fields wins, what a name refers to and what a string's grammar is, and no
@@ -325,11 +325,18 @@ kinds:
 | ----------- | ---------------------------------------------------------------------- | ---- |
 | `holds`     | A fact a model of the document must hold, because no field states it   | 52   |
 | `default`   | What an absent field means                                             | 11   |
-| `reading`   | A rule for reading a document; the model holds the result              | 31   |
+| `reading`   | A rule for reading a document; the model holds the result              | 35   |
 | `runtime`   | What a field means when a request is made; the model holds the field   | 14   |
-| `validity`  | Which documents are valid; for the sweep of validity rules (SPEC-FV-2) | 9    |
-| `grammar`   | A string whose grammar a specification defines                         | 11   |
+| `validity`  | Which documents are valid; for the sweep of validity rules (SPEC-FV-2) | 10   |
+| `grammar`   | A string whose grammar a specification defines                         | 9    |
 | `undefined` | Something the text says is undefined or left to the implementation     | 12   |
+
+As in the list for JSON Schema, a row says how strongly the text speaks and to whom:
+"must", "should" and "may" are the text's own level, and "a tool" is the text's
+implementation. A reader read every row again against its sections for a statement stronger than the
+text and faulted 44. The seat checked that the reader's quotations are in the texts and
+applied its corrections: 39 rows rewritten, five given the sections they lacked, and
+three added. The seat did not itself read each rewritten row against its section.
 
 The list is a floor, and says so. Three things are proved by test and one is not:
 
@@ -362,8 +369,10 @@ validity rule, 18 a grammar, and 8 something a text leaves undefined.
 
 A row says how strongly the text speaks and to whom: "must", "should" and "may" in a
 row are the text's own level, and "a tool" is the text's implementation. After review
-found rows that turned a recommendation into a fact, every row was read again against
-its sections for that fault, and 48 were rewritten.
+found rows that turned a recommendation into a fact, a reader read every row again
+against its sections for that fault and faulted 50. The seat checked that the reader's
+quotations are in the texts and applied its corrections: 48 rows rewritten and one
+removed. The seat did not itself read each rewritten row against its section.
 
 A meta-schema says what keywords a schema may hold. The texts say what the model has to
 be able to state about them:

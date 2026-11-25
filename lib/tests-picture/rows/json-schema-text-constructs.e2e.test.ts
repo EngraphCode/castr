@@ -16,7 +16,7 @@ import {
   type JsonSchemaTextConstruct,
 } from './json-schema-text-constructs.js';
 import type { TextDisposition } from './text-constructs.js';
-import { readTextPinFile, sectionsOfText } from './text-sections.js';
+import { readTextPinFile, sectionsOfText, unpinnedCitations } from './text-sections.js';
 
 const constructs = readJsonSchemaTextConstructs();
 
@@ -91,12 +91,9 @@ describe('reading a hand list of the JSON Schema texts', () => {
 
 describe('the hand list of what the JSON Schema texts define', () => {
   it('cites only sections the text has, in the draft and the text each row is read from', () => {
-    const missing = constructs.flatMap((construct) => {
-      const sections = new Set(sectionsOfText(pins, citedTextOf(construct)));
-      return construct.sections
-        .filter((section) => !sections.has(section))
-        .map((section) => `${citedTextOf(construct)} ${section}`);
-    });
+    const missing = constructs.flatMap((construct) =>
+      unpinnedCitations(pins, citedTextOf(construct), construct.sections),
+    );
 
     expect(missing).toEqual([]);
   });

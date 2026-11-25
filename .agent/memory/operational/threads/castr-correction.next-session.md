@@ -248,6 +248,23 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
     reference inherits those faults. Hyperjump agreed with the texts wherever it was
     checked.
 
+  Pull request 204 merged (`8b235274`) after one round: the hosted review of its head
+  had no finding. **M2 and M3 are complete. M4, the design, is next.**
+
+- 2026-11-25, the sweep owed to the OpenAPI hand list. A reader checked all 140 rows
+  against their sections in 3.2.1, and every row true of both lines against 3.1.2, and
+  faulted 44. The seat checked by program that the reader's 84 quotations are in the
+  texts, rewrote 39 rows, gave five the sections they lacked, and added three (two rows
+  split, and one for what 3.1 says where a row had claimed `$self` for it): 143 rows.
+  The check of citations against the pins is now `unpinnedCitations` in
+  `rows/text-sections.ts`, with unit tests. Pull request 205. **Not done:** the seat did
+  not read each rewritten row against its section. **What changes for the work that
+  uses the lists:** the header `allowReserved` row is no longer "undefined": 3.1
+  forbids it and 3.2 limits the field to locations that do not include a header, so it
+  is a rule for reading and not a question for N7. The seat checked the published schemas for both lines: each closes
+  the Header Object and lists no such field, so a header that holds it is not valid
+  by either.
+
 - 2026-11-24, M0, the reviews. The assumptions reviewer and the four seats of the
   conscience panel read the first draft. All four seats judged the work on track; three
   judged the framing narrowed, each on a different point; the assumptions reviewer found

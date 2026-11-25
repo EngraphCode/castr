@@ -133,6 +133,18 @@ export function sectionsOfText(pins: readonly TextPin[], text: string): readonly
   return found.sections;
 }
 
+/**
+ * The sections a row cites that its text does not have, each with the text's name.
+ */
+export function unpinnedCitations(
+  pins: readonly TextPin[],
+  text: string,
+  cited: readonly string[],
+): readonly string[] {
+  const pinned = new Set(sectionsOfText(pins, text));
+  return cited.filter((section) => !pinned.has(section)).map((section) => `${text} ${section}`);
+}
+
 /** A section number in a ReSpec page: the content of a heading's `secno` element. */
 const RESPEC_SECTION = /<h[2-6][^>]*><bdi class="secno">([^<]+)<\/bdi>/g;
 

@@ -16,7 +16,7 @@ import {
   type TextConstruct,
 } from './openapi-text-constructs.js';
 import type { TextDisposition } from './text-constructs.js';
-import { readTextPinFile, sectionsOfText } from './text-sections.js';
+import { readTextPinFile, sectionsOfText, unpinnedCitations } from './text-sections.js';
 
 const list = readOpenApiTextConstructs();
 const OPENAPI_TEXT_CONSTRUCTS = list.constructs;
@@ -106,12 +106,9 @@ describe('the hand list of what the OpenAPI text defines', () => {
   });
 
   it('cites only sections the text has, in the version each row is read from', () => {
-    const missing = OPENAPI_TEXT_CONSTRUCTS.flatMap((construct) => {
-      const sections = new Set(sectionsOf(citedVersion(construct)));
-      return construct.sections
-        .filter((section) => !sections.has(section))
-        .map((section) => `${citedVersion(construct)} ${section}: ${construct.says}`);
-    });
+    const missing = OPENAPI_TEXT_CONSTRUCTS.flatMap((construct) =>
+      unpinnedCitations(pins, citedVersion(construct), construct.sections),
+    );
 
     expect(missing).toEqual([]);
   });
@@ -137,8 +134,10 @@ describe('the hand list of what the OpenAPI text defines', () => {
     expect(unaccounted).toEqual([]);
   });
 
-  it('names no section as holding nothing that a row cites', () => {
-    const cited = OPENAPI_TEXT_CONSTRUCTS.flatMap((construct) => construct.sections);
+  it('names no section of 3.2.1 as holding nothing that a row read from 3.2.1 cites', () => {
+    const cited = OPENAPI_TEXT_CONSTRUCTS.filter(
+      (construct) => construct.versions !== '3.1',
+    ).flatMap((construct) => construct.sections);
     const both = OPENAPI_TEXT_READ_WITH_NOTHING_TO_HOLD.filter((parent) =>
       cited.some((section) => isWithin(section, parent)),
     );
@@ -146,7 +145,7 @@ describe('the hand list of what the OpenAPI text defines', () => {
     expect(both).toEqual([]);
   });
 
-  it('counts its 140 rows by kind', () => {
+  it('counts its 143 rows by kind', () => {
     const count = (disposition: TextDisposition): number =>
       OPENAPI_TEXT_CONSTRUCTS.filter((construct) => construct.disposition === disposition).length;
 
@@ -161,10 +160,10 @@ describe('the hand list of what the OpenAPI text defines', () => {
     }).toEqual({
       holds: 52,
       default: 11,
-      reading: 31,
+      reading: 35,
       runtime: 14,
-      validity: 9,
-      grammar: 11,
+      validity: 10,
+      grammar: 9,
       undefined: 12,
     });
   });
