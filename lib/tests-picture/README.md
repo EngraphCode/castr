@@ -313,7 +313,7 @@ missing one.
 
 What the OpenAPI text defines beyond its schemas is a second list made by hand,
 [`__fixtures__/texts/openapi-text-constructs.json`](__fixtures__/texts/openapi-text-constructs.json),
-read and checked for shape by [`rows/openapi-text-constructs.ts`](rows/openapi-text-constructs.ts): 140 rows, read
+read and checked for shape by [`rows/openapi-text-constructs.ts`](rows/openapi-text-constructs.ts): 143 rows, read
 from versions 3.1.2 and 3.2.1, the latest patch of each line the publisher serves. A
 schema says what fields an object has. The text also says what an absent field means,
 which of two fields wins, what a name refers to and what a string's grammar is, and no
@@ -325,11 +325,17 @@ kinds:
 | ----------- | ---------------------------------------------------------------------- | ---- |
 | `holds`     | A fact a model of the document must hold, because no field states it   | 52   |
 | `default`   | What an absent field means                                             | 11   |
-| `reading`   | A rule for reading a document; the model holds the result              | 31   |
+| `reading`   | A rule for reading a document; the model holds the result              | 35   |
 | `runtime`   | What a field means when a request is made; the model holds the field   | 14   |
-| `validity`  | Which documents are valid; for the sweep of validity rules (SPEC-FV-2) | 9    |
-| `grammar`   | A string whose grammar a specification defines                         | 11   |
+| `validity`  | Which documents are valid; for the sweep of validity rules (SPEC-FV-2) | 10   |
+| `grammar`   | A string whose grammar a specification defines                         | 9    |
 | `undefined` | Something the text says is undefined or left to the implementation     | 12   |
+
+As in the list for JSON Schema, a row says how strongly the text speaks and to whom:
+"must", "should" and "may" are the text's own level, and "a tool" is the text's
+implementation. Every row was read again against its sections for a statement stronger
+than the text, and 39 were rewritten, five given the sections they lacked, and three
+split off as rows of their own.
 
 The list is a floor, and says so. Three things are proved by test and one is not:
 

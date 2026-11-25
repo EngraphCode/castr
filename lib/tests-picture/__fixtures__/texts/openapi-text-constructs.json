@@ -10,7 +10,7 @@
       "sections": ["2.1"],
       "versions": "both",
       "disposition": "reading",
-      "says": "The major and minor parts of `openapi` select the feature set; the patch part is ignored."
+      "says": "The major and minor parts of `openapi` designate the feature set. A tool should not consider the patch part, and should be compatible with every patch of a minor version it supports."
     },
     {
       "sections": ["2.1"],
@@ -37,7 +37,7 @@
       "says": "The bodies an API description describes need not be JSON or YAML."
     },
     {
-      "sections": ["3.2"],
+      "sections": ["3.2", "4.12.1", "4.20.3", "4.27.1"],
       "versions": "both",
       "disposition": "reading",
       "says": "A name or value that maps to an HTTP concept follows the case rules of HTTP: header names, an authentication scheme, the token of a runtime expression."
@@ -45,14 +45,14 @@
     {
       "sections": ["3.3"],
       "versions": "both",
-      "disposition": "grammar",
-      "says": "A `description` is CommonMark, at version 0.27 or later."
+      "disposition": "runtime",
+      "says": "A `description` supports CommonMark. A tool that renders rich text must support at least the syntax of CommonMark 0.27, and may ignore some features for security. Extensions beyond that are implementation-defined."
     },
     {
       "sections": ["4.1.2.2.3"],
       "versions": "both",
       "disposition": "reading",
-      "says": "A relative link inside CommonMark resolves where the text is rendered, not against the base of the document."
+      "says": "A relative link inside CommonMark resolves in the context where the text is rendered, which might differ from that of the API description."
     },
     {
       "sections": ["4.1.1"],
@@ -76,13 +76,13 @@
       "sections": ["4.1.1"],
       "versions": "both",
       "disposition": "holds",
-      "says": "The order of `tags` carries meaning; a tag an operation names need not be declared."
+      "says": "A tool may use the order of `tags` to order the tags. A tag an operation names need not be declared, and a tool may order undeclared tags as it chooses."
     },
     {
       "sections": ["4.1.1"],
       "versions": "both",
       "disposition": "holds",
-      "says": "A webhook describes a request the provider of the API makes, the reverse of a path; its key is a name unique among webhooks."
+      "says": "A webhook describes a request that the provider of the API may initiate other than in reply to an API call, and the responses expected. The consumer may choose to implement it. Its key is a string unique among webhooks."
     },
     {
       "sections": ["4.1.2", "G.3"],
@@ -92,15 +92,21 @@
     },
     {
       "sections": ["4.1.2.1"],
-      "versions": "both",
+      "versions": "3.2",
       "disposition": "reading",
-      "says": "A reference may target a document by `$self`, or a schema by `$id`, `$anchor` or `$dynamicAnchor`; it is unresolvable only after every document given has been parsed."
+      "says": "The fields that define the targets of references include a document's `$self` and a schema's `$id`, `$anchor` and `$dynamicAnchor`. A tool must not treat a reference as unresolvable before it has completely parsed every document given to it."
+    },
+    {
+      "sections": ["4.3.1"],
+      "versions": "3.1",
+      "disposition": "reading",
+      "says": "A tool parses complete documents before it deems a reference of a schema unresolvable, so that it finds the keywords that may give the target or change the base URI."
     },
     {
       "sections": ["4.1.2.2"],
       "versions": "both",
       "disposition": "holds",
-      "says": "There are two kinds of address: a URI that identifies part of the description, resolved against the base of the document, and a URL of the API, resolved against the server. Any field that holds a URI may hold a relative one."
+      "says": "There are two kinds of address. A URI identifies part of the description and resolves against the base URI, which for a schema is set by JSON Schema. Unless the text says otherwise, a relative URL of the API resolves against the URL of the server. Unless the text says otherwise, any field that holds a URI may hold a relative reference."
     },
     {
       "sections": ["4.1.2.2.1", "F"],
@@ -117,8 +123,8 @@
     {
       "sections": ["4.1.2.2.2"],
       "versions": "both",
-      "disposition": "grammar",
-      "says": "The fragment of a reference into a JSON or YAML document is a JSON Pointer (RFC 6901)."
+      "disposition": "reading",
+      "says": "A fragment should be resolved by the fragment rules of the document referred to. Where that document is JSON or YAML, a tool should interpret the fragment as a JSON Pointer (RFC 6901)."
     },
     {
       "sections": ["4.1.2.3", "G.3"],
@@ -135,8 +141,8 @@
     {
       "sections": ["G.2"],
       "versions": "both",
-      "disposition": "reading",
-      "says": "What kind of object a value is comes from where it is reached, so one value reached two ways may be read as two kinds."
+      "disposition": "undefined",
+      "says": "What kind of object a value is comes from its context. Where one value is reached in contexts that need two different kinds, the behaviour is implementation-defined and a tool may treat it as an error. Authors are recommended to avoid it."
     },
     {
       "sections": ["6.6"],
@@ -154,7 +160,7 @@
       "sections": ["4.5.2"],
       "versions": "both",
       "disposition": "reading",
-      "says": "A URL of the API resolves against the server URL; in 3.2 `$self` plays no part in it."
+      "says": "Unless the text says otherwise, a relative URL of the API resolves against the URL of the server. A server URL may itself be relative to where its document is served. In 3.2, `$self` plays no part in resolving a URL of the API."
     },
     {
       "sections": ["4.6.1"],
@@ -196,7 +202,7 @@
       "sections": ["4.8.2"],
       "versions": "both",
       "disposition": "reading",
-      "says": "Each template expression of a path is bound by name to a path parameter, of the path item or of each of its operations."
+      "says": "Each template expression of a path is bound by name to a path parameter of the path item or of each of its operations. A path item that is empty, for access control for example, needs no such parameters."
     },
     {
       "sections": ["4.8.2"],
@@ -214,7 +220,7 @@
       "sections": ["4.8.2"],
       "versions": "both",
       "disposition": "validity",
-      "says": "Each template expression corresponds to a path parameter; in 3.2 each appears at most once in a path."
+      "says": "Each template expression must correspond to a path parameter unless the path item is empty. In 3.2, each must appear at most once in a path."
     },
     {
       "sections": ["4.6"],
@@ -232,7 +238,7 @@
       "sections": ["4.9.1"],
       "versions": "both",
       "disposition": "reading",
-      "says": "The `summary` and `description` of a path item apply to every operation under it."
+      "says": "The `summary` and `description` of a path item are intended to apply to every operation under it."
     },
     {
       "sections": ["4.9.1", "4.10.1"],
@@ -277,10 +283,10 @@
       "says": "`security` on an operation replaces that of the document; an empty list removes it."
     },
     {
-      "sections": ["4.12.1"],
+      "sections": ["4.12.1", "4.12.2.1"],
       "versions": "3.2",
       "disposition": "holds",
-      "says": "A parameter in `querystring` is the whole query string as one value, described by `content`; its `name` is not used."
+      "says": "A parameter in `querystring` treats the whole query string as one value, and must be described by `content`. Its `name` is still required and is not used in serialising it."
     },
     {
       "sections": ["4.12.1"],
@@ -322,7 +328,7 @@
       "sections": ["4.12.2.1"],
       "versions": "both",
       "disposition": "holds",
-      "says": "`allowEmptyValue` says an empty value stands for a parameter that is not used. Absent means false. It applies to `query` only, and is ignored where the style cannot serialise the value."
+      "says": "If `allowEmptyValue` is true, a client may send an empty value in place of a parameter it would otherwise leave out, and a server should read that as the parameter being unused. Absent means false. It is valid only for `query` and is ignored where the style cannot serialise the value. How it interacts with the schema is implementation-defined, and its use is not recommended."
     },
     {
       "sections": ["4.12.2"],
@@ -334,7 +340,7 @@
       "sections": ["4.12.2.2"],
       "versions": "both",
       "disposition": "runtime",
-      "says": "The value of a header parameter or a cookie parameter is passed through with no percent-encoding."
+      "says": "When a header parameter with `schema` is serialised it must not be percent-encoded, and a tool must pass the value through unchanged. In 3.2 the same holds for a cookie parameter with `style: \"cookie\"`."
     },
     {
       "sections": ["4.12.2.2"],
@@ -373,7 +379,7 @@
       "says": "`allowReserved` selects the reserved expansion of RFC 6570; absent means false. In 3.2 it applies wherever the location or style percent-encodes; in 3.1 to `query` only."
     },
     {
-      "sections": ["4.8.12.2.2", "4.8.14"],
+      "sections": ["4.8.12.2.2", "4.8.14", "4.8.21.1.2"],
       "versions": "3.1",
       "disposition": "reading",
       "says": "An `example` or `examples` of a parameter, a header or a media type overrides the `example` of its schema."
@@ -382,13 +388,19 @@
       "sections": ["4.12.3"],
       "versions": "both",
       "disposition": "holds",
-      "says": "Each style is a function from a value, a primitive, an array or an object, to text, defined by RFC 6570 or by the specification."
+      "says": "Each style maps a value of the types the table lists for it (some styles take only an array or an object) to text, as RFC 6570 or the specification defines."
     },
     {
-      "sections": ["4.12.3", "4.12.6"],
+      "sections": ["4.12.3"],
       "versions": "3.2",
+      "disposition": "validity",
+      "says": "A combination of style, type and location that the table of style values does not list is not permitted."
+    },
+    {
+      "sections": ["4.12.6"],
+      "versions": "both",
       "disposition": "undefined",
-      "says": "A combination of style, explode and type outside the table is not permitted; a cell the table marks \"n/a\" is undefined."
+      "says": "A combination of style, explode and type that the table of examples marks \"n/a\" has undefined behaviour."
     },
     {
       "sections": ["4.12.3"],
@@ -406,13 +418,13 @@
       "sections": ["4.12.4"],
       "versions": "both",
       "disposition": "runtime",
-      "says": "Percent-encoding follows RFC 3986 for a URL; a form body follows the WHATWG URL standard in 3.2 and RFC 1866 in 3.1, with `+` for a space. A character used as a delimiter is never encoded."
+      "says": "A URL of the API must parse and percent-decode by the rules of RFC 3986. Form content, a query string included, must also decode by the WHATWG URL rules in 3.2 (RFC 1866 in 3.1), where an unencoded `+` is a space; a space may be encoded as `+` or as `%20`. A reserved character used for its reserved purpose, such as a delimiter, must not be percent-encoded."
     },
     {
       "sections": ["4.12.5"],
       "versions": "both",
-      "disposition": "runtime",
-      "says": "What a serialised value includes: the name for the `form` style, the leading delimiter for `matrix` and `label`, and never the `?`, the `&` or a header's name."
+      "disposition": "reading",
+      "says": "A serialised example must include the parameter's name where the name is an inherent part of the serialisation, and the leading delimiter of `matrix` and `label`. It must not include the leading `?` or `&` of `form`, nor a header's name."
     },
     {
       "sections": ["4.12.6"],
@@ -466,7 +478,13 @@
       "sections": ["4.8.14.1"],
       "versions": "3.1",
       "disposition": "validity",
-      "says": "A key of `encoding` must be a property of the schema, and `encoding` applies to request bodies only."
+      "says": "A key of `encoding` must be a property of the schema."
+    },
+    {
+      "sections": ["4.8.14.1"],
+      "versions": "3.1",
+      "disposition": "reading",
+      "says": "`encoding` applies only in a request body whose media type is multipart or `application/x-www-form-urlencoded`."
     },
     {
       "sections": ["4.14.5.2"],
@@ -490,7 +508,7 @@
       "sections": ["4.15.1.1"],
       "versions": "both",
       "disposition": "default",
-      "says": "An absent `contentType` of an encoding is taken from the type of the property and its `contentEncoding`, by a table. For an array it is `application/json` in 3.2 and that of the items in 3.1."
+      "says": "An absent `contentType` of an encoding is taken, by a table, from the type and `contentEncoding` of the value the encoding applies to. For an array property encoded by name, the default follows the type of its items in both versions: in 3.2 because the encoding applies to each item, in 3.1 by the table's row for an array. In 3.2 an array inside a top-level array defaults to `application/json`."
     },
     {
       "sections": ["4.15.1.1"],
@@ -511,10 +529,10 @@
       "says": "Giving any of `style`, `explode` or `allowReserved` on an encoding selects serialising by style, and `contentType` is then ignored. It applies to form bodies only."
     },
     {
-      "sections": ["4.15.1.2"],
+      "sections": ["4.15.1.2", "E.3"],
       "versions": "both",
       "disposition": "runtime",
-      "says": "In `multipart/form-data` nothing is percent-encoded and `allowReserved` has no effect."
+      "says": "In `multipart/form-data` a tool applies no percent-encoding, whatever fields of the Encoding Object are used, and `allowReserved` has no effect. Data a user wants percent-encoded must be given already encoded."
     },
     {
       "sections": ["4.15.2"],
@@ -550,7 +568,7 @@
       "sections": ["4.16.2"],
       "versions": "both",
       "disposition": "grammar",
-      "says": "A key of the Responses Object is a status code, or a range written as a digit and `XX`."
+      "says": "A patterned key of the Responses Object is an HTTP status code written as a string, or one of the five ranges `1XX` to `5XX`, with an uppercase `X`."
     },
     {
       "sections": ["4.17.1"],
@@ -568,13 +586,13 @@
       "sections": ["4.19.1", "4.19.2"],
       "versions": "3.2",
       "disposition": "holds",
-      "says": "An example is given as data (`dataValue`) or as it is serialised (`serializedValue`, `externalValue`). `value` and the short `example` mean the serialised form, and stand for the data where the two are the same in JSON."
+      "says": "An example is given as data (`dataValue`) or as it is serialised (`serializedValue`, `externalValue`). `value` and the shorthand `example` are intended to mean the serialised form and act as data for JSON media types. For targets that are not JSON their behaviour is implementation-defined, and authors should use the other fields."
     },
     {
       "sections": ["4.19.2.3"],
       "versions": "3.2",
       "disposition": "default",
-      "says": "The characters of an `externalValue` are read as UTF-8 where nothing says otherwise."
+      "says": "Where neither the content nor its format or media type sets the character set of an `externalValue`, a tool should assume UTF-8."
     },
     {
       "sections": ["4.20.1", "4.20.2.1"],
@@ -628,7 +646,7 @@
       "sections": ["4.21.3"],
       "versions": "3.2",
       "disposition": "holds",
-      "says": "For `Set-Cookie`, each value is on a line of its own, without the name."
+      "says": "In an example, and in a value modelled with `content`, each `Set-Cookie` value must be on a line of its own, without the header's name or the colon."
     },
     {
       "sections": ["4.21.2"],
@@ -637,10 +655,10 @@
       "says": "The `application/linkset` media type is described by a schema written for its JSON form."
     },
     {
-      "sections": ["4.21"],
-      "versions": "3.2",
-      "disposition": "undefined",
-      "says": "Whether `allowReserved` may be given on a header: 3.1.2 forbids it; 3.2 no longer says so and lists no such field."
+      "sections": ["4.21", "4.12.2.2"],
+      "versions": "both",
+      "disposition": "reading",
+      "says": "In 3.1, `allowReserved` must not be used on a header. In 3.2 the Header Object lists no such field, every trait that depends on location must be applicable to `header`, and `allowReserved` applies only to `path`, `query`, and `cookie` with `form`."
     },
     {
       "sections": ["4.22.1"],
@@ -658,7 +676,7 @@
       "sections": ["4.23.1"],
       "versions": "both",
       "disposition": "reading",
-      "says": "The `summary` and `description` of a Reference Object replace those of its target, and do nothing where the target has no such field. Any other field beside the reference is ignored, unlike beside a `$ref` in a schema."
+      "says": "By default, the `summary` and `description` of a Reference Object should override those of its target. They have no effect where the target's type has no such field. Any other field beside the reference is ignored, unlike beside a `$ref` in a schema."
     },
     {
       "sections": ["4.24.1", "4.24.7"],
@@ -667,7 +685,7 @@
       "says": "The dialect of a schema is settled in order: `$schema` at the root of a schema resource, then `jsonSchemaDialect`, then the dialect of the version. 3.2.1 names that dialect by a dated address."
     },
     {
-      "sections": ["4.24.2"],
+      "sections": ["4.24.1", "4.24.2"],
       "versions": "both",
       "disposition": "holds",
       "says": "A schema may hold a keyword of any vocabulary, or any property at all; the `x-` prefix is not needed inside a schema."
@@ -676,7 +694,7 @@
       "sections": ["4.24.3.1"],
       "versions": "both",
       "disposition": "reading",
-      "says": "A `format` a tool does not recognise is treated as though it were absent."
+      "says": "A tool that does not recognise a `format` may fall back to the `type` alone, as though the `format` were absent."
     },
     {
       "sections": ["4.24.3"],
@@ -688,7 +706,7 @@
       "sections": ["4.24.4"],
       "versions": "3.2",
       "disposition": "holds",
-      "says": "Data has three forms: as serialised, as data, and as the application holds it. For content that is not JSON, the type of a property is found by following only `$ref` and `allOf`; a schema that gives no type allows every type."
+      "says": "Data has three forms: as serialised, as data, and as the application holds it. To work with content that is not JSON, a serialiser that has validated data must inspect the data if it can. A tool that inspects schemas must examine every schema reached by `$ref` and `allOf`; it may look further and must not resolve ambiguities. A schema with no `type` must be taken to allow every type."
     },
     {
       "sections": ["4.24.4.3"],
@@ -724,13 +742,13 @@
       "sections": ["4.25.3"],
       "versions": "both",
       "disposition": "reading",
-      "says": "With no mapping, the discriminating value is the name of a schema component. A mapped value is a name or a URI reference: where it could be either it is a name, and a leading `./` makes it a reference. A schema written in line is not a candidate."
+      "says": "With no mapping, the discriminating value is the name of a schema component. A mapped value is a name or a URI reference. Where it could be either, the behaviour is implementation-defined and it is recommended to treat it as a name; a leading `./` makes it a reference. When names are used, inline subschemas are not candidates."
     },
     {
       "sections": ["4.25.2"],
       "versions": "both",
       "disposition": "holds",
-      "says": "A discriminator on a parent schema makes every schema that builds on the parent by `allOf` an alternative: the relation is read from the children."
+      "says": "A discriminator may be put on a parent schema, and then every schema that builds on the parent by `allOf` may be used as an alternative. This form serves only purposes other than validation: validating against the parent never looks for its children."
     },
     {
       "sections": ["4.25.1", "4.25.4"],
@@ -766,13 +784,13 @@
       "sections": ["4.26.3"],
       "versions": "both",
       "disposition": "default",
-      "says": "An absent XML `name` is taken from the name of the component or of the property."
+      "says": "An absent XML `name` is taken from the component's name, or from the property's name for a property schema and for the items of an array property. In 3.2, where neither applies (an inline schema of a media type, for example), an element or attribute must have an XML Object with a `name`."
     },
     {
-      "sections": ["4.26.1", "4.26.2.2"],
-      "versions": "both",
+      "sections": ["4.26.1"],
+      "versions": "3.2",
       "disposition": "undefined",
-      "says": "The order of nodes written from an object."
+      "says": "The order of the XML nodes written from object data is undefined; `prefixItems` can fix it."
     },
     {
       "sections": ["4.26.2.2"],
@@ -784,7 +802,7 @@
       "sections": ["4.26.5"],
       "versions": "both",
       "disposition": "runtime",
-      "says": "A null is written as an element marked `xsi:nil`, and as an attribute left out."
+      "says": "How a null is written in XML is implementation-defined. A tool should write it as an empty element marked `xsi:nil=\"true\"`, and should leave out an attribute."
     },
     {
       "sections": ["4.26.4"],
@@ -802,22 +820,22 @@
       "sections": ["4.30"],
       "versions": "3.2",
       "disposition": "reading",
-      "says": "A key of a security requirement is the name of a security scheme component or a URI; where it could be either it is a name, and a leading `./` makes it a URI."
+      "says": "A key of a security requirement is the name of a security scheme component or the URI of a Security Scheme Object. A key identical to a component's name must be treated as that name; a leading `./` makes a colliding key a URI."
     },
     {
       "sections": ["4.30.1"],
       "versions": "both",
       "disposition": "holds",
-      "says": "The values of a security requirement are scopes for OAuth2 and OpenID Connect, and names of roles for every other kind."
+      "says": "For OAuth2 and OpenID Connect, the value of a security requirement is a list of required scope names, which may be empty. For every other kind, it may hold a list of required role names that are defined nowhere else in the API."
     },
     {
       "sections": ["4.30"],
       "versions": "both",
       "disposition": "validity",
-      "says": "A key of a security requirement names a security scheme that is declared."
+      "says": "A key of a security requirement must name a security scheme declared under the components. In 3.2 it may instead be the URI of a Security Scheme Object."
     },
     {
-      "sections": ["5"],
+      "sections": ["5", "4.23.1"],
       "versions": "both",
       "disposition": "holds",
       "says": "The value of an `x-` field may be any JSON value. Names beginning `x-oai-` and `x-oas-` are reserved. A Reference Object takes no extension."
@@ -838,7 +856,7 @@
       "sections": ["C"],
       "versions": "both",
       "disposition": "runtime",
-      "says": "Each style corresponds to an operator of RFC 6570; several form parameters make one list of variables; a name RFC 6570 does not allow is percent-encoded first."
+      "says": "The styles `matrix`, `label` and `form` correspond to prefix operators of RFC 6570, and `simple` to expansion with no operator. `pipeDelimited`, `spaceDelimited` and `deepObject` have no equivalent and should still be handled according to RFC 6570. Several `form` parameters make one variable list, and a name RFC 6570 does not allow must be percent-encoded first."
     },
     {
       "sections": ["E"],
