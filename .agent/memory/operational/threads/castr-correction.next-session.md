@@ -345,7 +345,7 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
 - 2026-11-25, M4, the third trial, run. **Where:** the trial is
   `.agent/research/model-design-2026-11-24/core-proposal-third-trial.md`; what it does
   with each of the readers' 62 findings is `third-trial-dispositions.md` beside it; its
-  shapes are a prototype on the branch `design/model-prototype`, pushed, under
+  shapes are a prototype on the branch `design/model-prototype`, under
   `lib/tests-picture/design/`, which stays off main until M5.
   **Choices, each with what decided it:**
   - **The profile's closure is by value, in two layers** (the adverse cases; the
