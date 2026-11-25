@@ -342,6 +342,40 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
     **A false statement the seat put on main and has corrected:** case D3 of the cases
     note gave OpenAPI 3.0's rule for read-only as the rule of 3.1 and 3.2.
 
+- 2026-11-25, M4, the third trial, run. **Where:** the trial is
+  `.agent/research/model-design-2026-11-24/core-proposal-third-trial.md`; what it does
+  with each of the readers' 62 findings is `third-trial-dispositions.md` beside it; its
+  shapes are a prototype on the branch `design/model-prototype`, under
+  `lib/tests-picture/design/`, which stays off main until M5.
+  **Choices, each with what decided it:**
+  - **The profile's closure is by value, in two layers** (the adverse cases; the
+    specification's own writing clause, which names `unevaluatedProperties` for
+    composition). The first layer is the shape as stated and notes which keys the
+    shapes applied at each place accounted for. The second refuses a key nothing
+    accounted for, where an object part that describes the value accepted it. A shape
+    used as a test never triggers it. Run: the reader's six adverse cases are tests.
+  - **An object part exists only where the source said something of objects** (what
+    makes sense: `{}` and `{"minLength": 3}` must not close an object). So
+    `{"type": "object"}` alone accepts only `{}`, and an object that requires a key it
+    has no field for accepts none. Both are for the owner to see at the amendment.
+  - **An object closed by its author and one closed by the profile are not one value**
+    (case B1: they differ wherever another shape builds on them).
+  - **A Zod intersection is an `all` whose sides reckon unknown keys together** (run
+    against Zod: sixteen pairings, accepted and produced).
+  - **A first-match choice is an unordered one** only where its branches cannot both
+    accept, or where nothing is changed and every branch states its rest (the JSON
+    Schema reader's sixth break was about accounting, not production).
+
+  **Run on the branch:** every one of the note's 123 statements about a JSON Schema
+  document holds against a hand-written value; the canonical rules are a function with
+  tests. **Not done:** the half that holds boundaries (stated in the trial, not in the
+  prototype); the Zod documents of the cases as values; the coverage map against the
+  hand lists; proofs 4 and 5; a reader round on this trial.
+  **For the owner, told in the session and to be asked at M5:** the by-value reading of
+  SPEC-P-1 and its two consequences; `z.url()` (SPEC-P-2 excludes it, SPEC-P-8 writes
+  it); a regular expression kept as text with its dialect and flags, the one
+  grammar-defined string the seat does not intend to model.
+
 - 2026-11-24, M0, the reviews. The assumptions reviewer and the four seats of the
   conscience panel read the first draft. All four seats judged the work on track; three
   judged the framing narrowed, each on a different point; the assumptions reviewer found
