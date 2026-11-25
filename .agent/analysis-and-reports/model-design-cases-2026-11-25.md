@@ -12,12 +12,16 @@ Two kinds of case. Sections A to H are single documents. Section I is the equiva
 sets: one meaning written two or three ways, which the model holds as **one value**; and
 the pairs that look alike and are **not** one value.
 
-Every JSON document below parses, and every Zod fragment was run against Zod 4.6.7. A
-reader who knows each format then attacked the note: one for OpenAPI, who read the texts
-of 3.2.1 and 3.1.2; one for JSON Schema, who ran a validator; one for Zod, who ran every
-claim. Their corrections and the cases they found missing are in the note. The seat
-checked the OpenAPI reader's quotations against the texts and re-ran the Zod reader's
-findings. The documents are fragments: an
+Every JSON document below parses, and every Zod fragment was run against Zod 4.6.7. A reader who knows each format then attacked the note: one for OpenAPI, who read the texts
+of 3.2.1 and 3.1.2; one for JSON Schema, who ran two validators and read the four texts;
+one for Zod, who ran every claim. Their corrections and the cases they found missing are in the note. The seat
+checked the OpenAPI reader's quotations against the texts, re-ran the Zod reader's
+findings, and re-ran the JSON Schema reader's script for the cases it found missing.
+
+What a JSON Schema case says a schema accepts is what the Hyperjump validator does. Ajv
+departs from the texts in several of these cases (a Draft-07 `$ref` with a keyword
+beside it, a lone `if`, `contains` with `unevaluatedItems`, a decimal `multipleOf`) and
+is not the authority. The documents are fragments: an
 OpenAPI case shows the part that matters and omits `openapi`, `info` and the rest.
 
 The cases come from the plan's first list, from the three hand-made lists of what the
@@ -125,14 +129,24 @@ floor.
 
 ```json
 {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
-    "Node": { "type": "object", "properties": { "next": { "$ref": "#/$defs/Node" } } }
+    "Node": {
+      "type": "object",
+      "properties": {
+        "next": {
+          "$ref": "#/$defs/Node"
+        }
+      }
+    }
   },
   "$ref": "#/$defs/Node"
 }
 ```
 
-- **Tests:** SPEC-PR-3. The OpenAPI text says references may form a cycle.
+- **Tests:** SPEC-PR-3. The 2020-12 core text forbids only running a schema into an
+  endless loop against an instance (section 9.4.1); this cycle passes through a property,
+  so each turn uses up part of the value.
 - **Holds:** a definition that refers to itself, as an edge, with no expansion.
 - **A naive structure loses:** termination, if it inlines; or the Zod writer's knowledge
   that this edge needs a getter, if cycles are not a fact the model can be asked for.
@@ -293,8 +307,11 @@ floor.
 
 - **Tests:** SPEC-PR-3.
 - **Holds:** two definitions. The 2020-12 dialect's meta-schema still constrains
-  `definitions`, and the text says to treat it as behaving like `$defs`; that makes both
-  places hold schemas, and does not make `#/definitions/x` and `#/$defs/x` one target.
+  `definitions`, and the validation text says an implementation should assume it behaves
+  as `$defs` under that meta-schema. That makes both places hold schemas; it does not
+  make `#/definitions/x` and `#/$defs/x` one target. Under another meta-schema
+  `definitions` is an unknown keyword, and the core text calls a reference into one
+  undefined.
 - **A naive structure loses:** one of them, if it merges the two keywords into one table
   keyed by the last path segment.
 
@@ -707,6 +724,94 @@ z.object({ first: Name, last: Name });
 - **A naive structure loses:** the name, if it reads the definition and not the
   registry; and the sharing, if it does not compare objects.
 
+### A21. A JSON Schema reference to a place with no name
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "a": {
+      "type": "string",
+      "maxLength": 2
+    },
+    "b": {
+      "$ref": "#/properties/a"
+    },
+    "self": {
+      "$ref": "#"
+    }
+  }
+}
+```
+
+- **Tests:** SPEC-PR-3.
+- **Holds:** an edge to a property's schema, and an edge to the whole document, neither
+  of which is a named definition (case A13 is the same in OpenAPI).
+- **A naive structure loses:** both, if a reference can only point into `$defs`.
+
+### A22. A keyword of another draft
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "prefixItems": [
+    {
+      "type": "string"
+    }
+  ],
+  "additionalItems": false,
+  "dependencies": {
+    "a": ["b"]
+  }
+}
+```
+
+- **Tests:** SPEC-PR-2.
+- **Holds:** for a 2020-12 document, that `additionalItems` and `dependencies` constrain
+  nothing: `["s", 1, 2]` and `{"a": 1}` pass. They are names the dialect does not give
+  meaning to.
+- **A naive structure loses:** the meaning, if it reads a keyword by its name whatever
+  the dialect.
+
+### A23. A dialect without a vocabulary, and Draft-07's anchors
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "a": {
+      "$id": "#here",
+      "type": "string"
+    },
+    "b": {
+      "$id": "sub/other.json",
+      "definitions": {
+        "c": {
+          "$id": "#here",
+          "type": "number"
+        }
+      }
+    }
+  },
+  "properties": {
+    "x": {
+      "$ref": "#here"
+    },
+    "y": {
+      "$ref": "sub/other.json#here"
+    }
+  }
+}
+```
+
+- **Tests:** SPEC-PR-3; the definition of "document" in section 3.
+- **Holds:** in Draft-07, an anchor and a new base are both made by `$id`: the two
+  `here` are different targets, as in case A6. And for 2020-12, that a dialect is the
+  set of vocabularies its meta-schema declares: under one that leaves out validation,
+  `type` and `maxLength` constrain nothing.
+- **A naive structure loses:** the Draft-07 anchors, if it looks for `$anchor`; and the
+  dialect, if 2020-12 is one fixed set of keywords.
+
 ## B. Evaluation that is not local to one schema object
 
 ### B1. Closing an object across a composition
@@ -778,8 +883,8 @@ z.object({ first: Name, last: Name });
 ```
 
 - **Tests:** SPEC-P-1's sibling for arrays; SPEC-PR-2.
-- **Holds:** a tuple of two, closed, whose second position is constrained inside the
-  `allOf`.
+- **Holds:** an array of at most two items: a string, then a number where there is one.
+  Nothing here sets a least length, and a value that is not an array passes.
 - **A naive structure loses:** the second position, if it reads the outer `prefixItems`
   alone and takes `unevaluatedItems` as `items`.
 
@@ -803,7 +908,8 @@ z.object({ first: Name, last: Name });
 }
 ```
 
-- **Tests:** SPEC-PR-3; SPEC-PR-2. This is the worked example of the 2020-12 core text.
+- **Tests:** SPEC-PR-3; SPEC-PR-2. Adapted from Appendix C of the 2020-12 core text; the rule
+  is its section 8.2.3.2.
 - **Holds:** that the items of `children` are whatever the outermost resource in the
   current evaluation names `node`: here the strict tree, so every level is closed.
   Reached another way, the same `tree` definition is open.
@@ -848,6 +954,171 @@ z.object({ first: Name, last: Name });
 - **A naive structure loses:** the difference, if it normalises `additionalProperties: {}`
   to "not stated".
 
+### B8. A keyword says nothing of a value of another type
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "a": {
+      "type": "string"
+    }
+  },
+  "required": ["a"]
+}
+```
+
+- **Tests:** SPEC-PR-2; SPEC-PR-7.
+- **Holds:** a constraint on objects, and nothing about anything else: this schema
+  accepts `5`, `"x"`, `[]` and `null`. Cases B2 to B7 state no `type` either.
+- **A naive structure loses:** those values, if `properties` makes a schema an object.
+
+### B9. What an unevaluated keyword cannot see
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [
+    {
+      "properties": {
+        "a": true
+      }
+    },
+    {
+      "unevaluatedProperties": false
+    }
+  ]
+}
+```
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/C",
+  "properties": {
+    "b": true
+  },
+  "$defs": {
+    "C": {
+      "properties": {
+        "a": true
+      },
+      "unevaluatedProperties": false
+    }
+  }
+}
+```
+
+- **Tests:** SPEC-P-1.
+- **Holds:** that the keyword sees what its own schema object and the schemas under it
+  evaluated, and no more. The first refuses `{a}`: `a` was evaluated in a sibling branch.
+  The second refuses `{a, b}`: `b` was evaluated by the schema that refers to `C`.
+- **A naive structure loses:** the direction, if "closed across composition" means
+  closed over every key in sight.
+
+### B10. Keys allowed by pattern
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    }
+  },
+  "patternProperties": {
+    "^x-": {
+      "type": "string"
+    },
+    "y": {
+      "maxLength": 2
+    }
+  },
+  "additionalProperties": false
+}
+```
+
+- **Tests:** SPEC-P-1; SPEC-AR-3.
+- **Holds:** a closed object whose allowed keys are a set of names and two patterns. A
+  key that matches both patterns must satisfy both schemas: `x-y` with a value of three
+  characters fails. The patterns are not anchored: `xy` is allowed.
+- **A naive structure loses:** the patterns, if "closed" is a list of key names.
+
+### B11. Negation
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "not": {
+    "required": ["a"]
+  }
+}
+```
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "not": {
+    "not": {
+      "properties": {
+        "a": true
+      }
+    }
+  },
+  "unevaluatedProperties": false
+}
+```
+
+- **Tests:** SPEC-PR-1; SPEC-AR-5.
+- **Holds:** negation of a shape. The first forbids a key. The second refuses `{a}`:
+  nothing under a `not` counts as evaluated, though a double negation accepts the same
+  values as its inside.
+- **A naive structure loses:** the first, if it has no negation; and the second, if it
+  simplifies a double negation away.
+
+### B12. Items found by `contains`
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "array",
+  "contains": {
+    "type": "string"
+  },
+  "unevaluatedItems": {
+    "type": "number"
+  }
+}
+```
+
+- **Tests:** SPEC-PR-2.
+- **Holds:** an array with at least one string, in which every item that is not a string
+  is a number: `["s", true]` fails. `minContains` and `maxContains` count the matches.
+- **A naive structure loses:** this, if an array is positions and a shape for the rest.
+
+### B13. An `if` with nothing after it
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "if": {
+    "properties": {
+      "a": {
+        "type": "string"
+      }
+    }
+  },
+  "unevaluatedProperties": false
+}
+```
+
+- **Tests:** SPEC-P-1.
+- **Holds:** that `{"a": "s"}` passes: an `if` that holds counts what it evaluated, with
+  no `then` or `else`. `{"a": 1}` fails.
+- **A naive structure loses:** this, if it drops an `if` that has no consequence.
+
 ## C. The four policies for unknown keys
 
 ### C1. Each policy, stated
@@ -873,9 +1144,16 @@ z.object({ a: z.string() }); // stripped
 
 - **Tests:** SPEC-P-1's reading and reporting: an object that does not state its policy
   is read as closed, and every object whose policy Castr supplied is listed in the report.
-- **Holds:** closed, **and that Castr supplied it**. The two are different facts from
+- **Holds:** two facts, kept apart: that the source stated no policy, which in JSON
+  Schema and OpenAPI means open; and that Castr supplied closed. Both differ from
   `additionalProperties: false` written by the author.
 - **A naive structure loses:** the report, if "closed" is all the model can say.
+- **What the specification does not yet say:** which schema object the supplied closure
+  lands on. Case B1's `Base` states no policy. Closed in place, it refuses `extra`, and
+  B1 has no value with both keys; the same is true of each branch of B2 and of B6's
+  dependent schema. So the closure cannot land on every schema object that states none.
+  SPEC-P-1's rule for writing points at the composed object, closed across composition.
+  This is a row for the amendment.
 
 ### C3. Stripped is a difference of sides
 
@@ -1035,7 +1313,12 @@ z.tuple([z.string(), z.number().default(5)]).parse(['a']); // ['a', 5]
 ### E1. Numbers beyond a double
 
 ```json
-{ "type": "integer", "minimum": 0, "maximum": 18446744073709551615, "multipleOf": 0.01 }
+{
+  "type": "number",
+  "minimum": 0,
+  "maximum": 18446744073709551615,
+  "multipleOf": 0.01
+}
 ```
 
 - **Tests:** section 3's value: numbers are exact, arbitrary-precision decimals.
@@ -1047,11 +1330,15 @@ z.tuple([z.string(), z.number().default(5)]).parse(['a']); // ['a', 5]
 ### E2. One number, written two ways
 
 ```json
-{ "enum": [1, 1.0, 1] }
+{ "const": 1.0 }
+```
+
+```json
+{ "enum": [1] }
 ```
 
 - **Tests:** section 3: `1.0` and `1` are one value.
-- **Holds:** a set of one member.
+- **Holds:** one value, the number one, from both.
 - **A naive structure loses:** nothing here by accident, since a double happens to merge
   them; a model that keeps the source text of a number to stay exact has to merge them on
   purpose.
@@ -1084,8 +1371,11 @@ z.tuple([z.string(), z.number().default(5)]).parse(['a']); // ['a', 5]
 { "type": "integer", "format": "int64" }
 ```
 
-- **Tests:** SPEC-P-3, `format` asserts.
-- **Holds:** the format's name as a fact, apart from what any one target does with it.
+- **Tests:** SPEC-P-3, `format` asserts. That is Castr's rule. The 2020-12 text makes
+  `format` an annotation unless the dialect declares the assertion vocabulary.
+- **Holds:** the format's name as a fact, apart from what any one target does with it;
+  and whether the source's dialect made it an annotation or an assertion. `int64` is
+  named in none of the JSON Schema texts.
 - **A naive structure loses:** the name, if it is turned into a range of numbers on
   reading.
 
@@ -1733,11 +2023,11 @@ z.strictObject({ a: z.string().optional() });
 ```
 
 - **Tests:** SPEC-AR-1; SPEC-P-1.
-- **One value:** an object of one optional string, closed. The third is the same value
-  because its composition has one branch that every value takes.
+- **One value:** an object of one optional string, closed. The three accept and
+  refuse the same values: in each, the only key a passing value may hold is `a`.
 - **Not the same value:** `additionalProperties: false` written inside one branch of an
-  `allOf` of two. That closes the branch over its own keys only, which makes the whole
-  unsatisfiable for any key of the other branch.
+  `allOf` of two. That closes the branch over its own keys only, so the whole refuses
+  every key of the other branch.
 
 ### I2. A tuple
 
@@ -1825,7 +2115,21 @@ z.literal('a');
   of one value.
 - **One value:** the value `a`.
 
-### I6. Sets with an OpenAPI member
+### I6. A boolean schema and its object form
+
+```json
+true
+```
+
+```json
+{}
+```
+
+- **Tests:** SPEC-AR-1. The 2020-12 core text, section 4.3.2.
+- **One value:** every value. Likewise `false` and `{"not": {}}` are one value, no
+  value.
+
+### I7. Sets with an OpenAPI member
 
 The first three are one value with the fact that the source was silent held beside it.
 
@@ -1836,12 +2140,13 @@ The first three are one value with the fact that the source was silent held besi
   an alternative named `Cat`.
 - **A header's name.** `X-Rate` and `x-rate` in a response's `headers`.
 
-### I7. Pairs that are not one value
+### I8. Pairs that are not one value
 
 Each pair looks alike. A design that makes them one value is wrong.
 
 - **A1 against a schema written in line.** `{"$ref": "#/$defs/Name"}` and the body of
-  `Name` accept the same values. The name is part of meaning (SPEC-PR-3), so they differ.
+  `Name` often accept the same values, and not always: the core text says removing a reference
+  is not always safe. The name is part of meaning (SPEC-PR-3), so they differ either way.
 - **A11.** `#/definitions/x` and `#/$defs/x`.
 - **C2.** Closed because the author wrote it, and closed because Castr supplied it.
 - **D1.** A Zod `.default`, a Zod `.prefault` and a JSON Schema `default`.
@@ -1860,8 +2165,8 @@ Each pair looks alike. A design that makes them one value is wrong.
   changed on the way through (D4).
 - **An absent keyword and the keyword with a value that asserts nothing** (B7), wherever
   another keyword reads what it evaluated.
-- **An unknown keyword in 2020-12 and in Draft-07.** The first is an annotation; the
-  second is ignored.
+- **An unknown keyword in 2020-12 and in Draft-07.** The first should be collected as an
+  annotation; the second should be ignored. The values accepted are the same.
 - **A Draft-07 `$ref` with a keyword beside it and a 2020-12 one** (A4).
 
 ## What these cases do not cover
