@@ -78,6 +78,26 @@ describe('recomputing a pin from the bytes of its text', () => {
     expect(differences[2]).toBe('sections not pinned: 3');
   });
 
+  it('reports the same sections pinned in another order', () => {
+    const { pin, bytes } = pinOf(PAGE, 'respec-html');
+
+    const { differences } = checkTextPin({ ...pin, sections: [...pin.sections].reverse() }, bytes);
+
+    expect(differences).toEqual([
+      'the same sections, in another order or a different number of times',
+    ]);
+  });
+
+  it('reports a section pinned twice', () => {
+    const { pin, bytes } = pinOf(PAGE, 'respec-html');
+
+    const { differences } = checkTextPin({ ...pin, sections: [...pin.sections, '1'] }, bytes);
+
+    expect(differences).toEqual([
+      'the same sections, in another order or a different number of times',
+    ]);
+  });
+
   it('reports a pinned section the text no longer has', () => {
     const { pin, bytes } = pinOf(PAGE, 'respec-html');
 
@@ -102,6 +122,18 @@ describe('reading pins', () => {
 
   it('refuses a pin with no digest', () => {
     expect(() => readTextPins({ texts: [{ ...pin, sha256: '' }] })).toThrow('has no sha256');
+  });
+
+  it('refuses a pin with a key a pin does not have', () => {
+    expect(() => readTextPins({ texts: [{ ...pin, version: '1' }] })).toThrow(
+      'holds a key a pin does not have: version',
+    );
+  });
+
+  it('refuses a file with a key the file does not have', () => {
+    expect(() => readTextPins({ texts: [{ ...pin }], extra: true })).toThrow(
+      'the file of pinned texts holds a key a pin does not have: extra',
+    );
   });
 
   it('refuses a markup it cannot read', () => {

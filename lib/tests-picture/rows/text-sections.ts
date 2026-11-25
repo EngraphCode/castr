@@ -39,6 +39,16 @@ export interface TextPinDrift {
   readonly differences: readonly string[];
 }
 
+const FILE_KEYS = ['note', 'texts'];
+const PIN_KEYS = ['text', 'markup', 'url', 'fetchedAt', 'bytes', 'sha256', 'sections'];
+
+function refuseOtherKeys(entry: JsonObject, allowed: readonly string[], what: string): void {
+  const others = Object.keys(entry).filter((key) => !allowed.includes(key));
+  if (others.length > 0) {
+    throw new TypeError(`${what} holds a key a pin does not have: ${others.join(', ')}`);
+  }
+}
+
 function requireString(entry: JsonObject, key: string, what: string): string {
   const value = entry[key];
   if (typeof value !== 'string' || value.length === 0) {
@@ -52,6 +62,7 @@ function readPin(entry: unknown, index: number): TextPin {
   if (!isJsonObject(entry)) {
     throw new TypeError(`${what} is not an object`);
   }
+  refuseOtherKeys(entry, PIN_KEYS, what);
   const { bytes, sections } = entry;
   const markup = MARKUPS.find((candidate) => candidate === entry['markup']);
   if (markup === undefined) {
@@ -81,6 +92,7 @@ function readPin(entry: unknown, index: number): TextPin {
  * Reads pins from a parsed file, refusing anything that is not of their shape.
  */
 export function readTextPins(parsed: JsonObject): readonly TextPin[] {
+  refuseOtherKeys(parsed, FILE_KEYS, 'the file of pinned texts');
   const { texts } = parsed;
   if (!Array.isArray(texts)) {
     throw new TypeError('the file of pinned texts holds no list of texts');
@@ -163,6 +175,12 @@ export function checkTextPin(pin: TextPin, bytes: Uint8Array): TextPinDrift {
   }
   if (removed.length > 0) {
     differences.push(`pinned sections not found: ${removed.join(', ')}`);
+  }
+  const sameList =
+    sections.length === pin.sections.length &&
+    sections.every((section, index) => section === pin.sections[index]);
+  if (added.length === 0 && removed.length === 0 && !sameList) {
+    differences.push('the same sections, in another order or a different number of times');
   }
   return { text: pin.text, differences };
 }
