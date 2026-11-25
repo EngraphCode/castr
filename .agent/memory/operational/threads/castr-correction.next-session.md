@@ -422,6 +422,32 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
     **Not done:** the kinds owed; the OpenAPI fragments as values; a reader round on the
     trial; the amendment.
 
+- 2026-11-25, M4, three answers from the owner, by question prompt. They direct the
+  amendment's draft. They are not its approval: the amendment is approved only in the
+  owner's own words naming its version (SPEC-CC-2).
+  - **The closed reading under a choice.** Asked because a run against Zod showed the
+    approved text does not settle it: for `anyOf` over `{a?}` and `{b?}`, the by-value
+    reading accepts `{a, b}` and a Zod union of two strict objects refuses it; for
+    `oneOf` over a cat and a dog that share an optional name, by value refuses
+    `{name, meow}`, as the source does, and a Zod exclusive union of strict objects
+    accepts it. SPEC-G-4 proves the closed reading by a transformation of the source,
+    which closes each branch, and which cannot be placed for `allOf` or for two shapes
+    at one nested place. The owner chose **"A: by value (Recommended)"**: evaluate the
+    schema as its source states it, then refuse any key that no shape applied at that
+    place accounts for. Its costs, stated in the option: Zod cannot state it where two
+    branches of a choice can both accept one value, so the Zod writer restructures or
+    gives a located rejection there; and SPEC-G-4's proof method needs amending. This
+    replaces the seat's earlier entry that the question need not be asked.
+  - **`z.url()`.** The owner chose **"Declare it (Recommended)"**: Castr keeps writing
+    `z.url()` for `format: uri`; SPEC-P-8 also declares that the written validator
+    trims; reading `z.url()` from a Zod source stays rejected under SPEC-P-2; Appendix
+    A's row for string formats is corrected.
+  - **Strings kept as text in a defined grammar.** The owner chose **"All four classes
+    (Recommended)"** as the exceptions the amendment asks for: addresses kept for a
+    person or a client to follow; regular expressions, with dialect and flags as data;
+    single tokens with no parts; and a resource's URI with a reference as its source
+    spelt it. The amendment enters each as an exception under SPEC-AR-3.
+
 - 2026-11-24, M0, the reviews. The assumptions reviewer and the four seats of the
   conscience panel read the first draft. All four seats judged the work on track; three
   judged the framing narrowed, each on a different point; the assumptions reviewer found
