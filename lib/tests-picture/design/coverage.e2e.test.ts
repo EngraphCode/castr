@@ -8,8 +8,11 @@
 import { describe, it, expect } from 'vitest';
 
 import { loadDefinition } from '../rows/definitions.js';
+import type { Inventory } from '../rows/inventory.js';
 import {
   dialect2020OwnNames,
+  openApi31Objects,
+  openApi32Objects,
   draft07Keywords,
   draft07TypeValues,
   schemaKeywords,
@@ -23,6 +26,7 @@ import {
   DRAFT_07,
   DRAFT_2020_12,
   JSON_SCHEMA_TEXT,
+  OPENAPI,
   TYPE_VALUES,
   ZOD_CHECKS,
   ZOD_SCHEMAS,
@@ -31,6 +35,18 @@ import {
 import { elements } from './elements.js';
 
 const ZOD = readZodConstructs();
+
+/** The kinds of an inventory: each field, each object's keys, and each object's extensions. */
+function kindsOf(inventory: Inventory): readonly string[] {
+  return inventory.objects.flatMap((object) => [
+    ...object.fields.map((field) => `${object.name}.${field.name}`),
+    ...(object.keyedBy.length > 0 ? [`${object.name}[key]`] : []),
+    ...(object.extensible ? [`${object.name}[x-]`] : []),
+  ]);
+}
+
+const OPENAPI_32 = kindsOf(openApi32Objects(loadDefinition));
+const OPENAPI_31 = kindsOf(openApi31Objects(loadDefinition));
 
 const LISTS: readonly (readonly [string, readonly string[], Readonly<Record<string, Coverage>>])[] =
   [
@@ -47,6 +63,7 @@ const LISTS: readonly (readonly [string, readonly string[], Readonly<Record<stri
       dialect2020OwnNames(loadDefinition).map((one) => one.name),
       DIALECT_2020_12_OWN_NAMES,
     ],
+    ['OpenAPI 3.2', OPENAPI_32, OPENAPI],
     ['Zod schema', ZOD.schemas.map((one) => one.name), ZOD_SCHEMAS],
     ['Zod check', ZOD.checks.map((one) => one.name), ZOD_CHECKS],
     [
@@ -99,6 +116,10 @@ describe('the coverage map', () => {
     expect([...new Set(unknown)]).toEqual([]);
   });
 
+  it('has every kind of OpenAPI 3.1 among those of 3.2', () => {
+    expect(OPENAPI_31.filter((kind) => !OPENAPI_32.includes(kind))).toEqual([]);
+  });
+
   it('cites a clause of the specification for every kind it puts outside the model', () => {
     const uncited = LISTS.flatMap(([list, , map]) =>
       Object.entries(map)
@@ -131,6 +152,23 @@ describe('the coverage map', () => {
       'Draft 2020-12 name outside its vocabularies dependencies',
       'Draft 2020-12 name outside its vocabularies $recursiveAnchor',
       'Draft 2020-12 name outside its vocabularies $recursiveRef',
+      'OpenAPI 3.2 info[x-]',
+      'OpenAPI 3.2 contact[x-]',
+      'OpenAPI 3.2 license[x-]',
+      'OpenAPI 3.2 server-variable[x-]',
+      'OpenAPI 3.2 components[x-]',
+      'OpenAPI 3.2 paths[x-]',
+      'OpenAPI 3.2 external-documentation[x-]',
+      'OpenAPI 3.2 parameter.example',
+      'OpenAPI 3.2 media-type.example',
+      'OpenAPI 3.2 responses[x-]',
+      'OpenAPI 3.2 header.example',
+      'OpenAPI 3.2 oauth-flows[x-]',
+      'OpenAPI 3.2 oauth-flows/implicit[x-]',
+      'OpenAPI 3.2 oauth-flows/password[x-]',
+      'OpenAPI 3.2 oauth-flows/client-credentials[x-]',
+      'OpenAPI 3.2 oauth-flows/authorization-code[x-]',
+      'OpenAPI 3.2 oauth-flows/device-authorization[x-]',
       'Zod schema $ZodDiscriminatedUnion',
       'Zod schema $ZodEnum',
       'Zod schema $ZodExactOptional',
