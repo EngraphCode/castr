@@ -18,11 +18,17 @@ one for Zod, who ran every claim. Their corrections and the cases they found mis
 checked the OpenAPI reader's quotations against the texts, re-ran the Zod reader's
 findings, and re-ran the JSON Schema reader's script for the cases it found missing.
 
-What a JSON Schema case says a schema accepts is what the Hyperjump validator does. Ajv
-departs from the texts in several of these cases (a Draft-07 `$ref` with a keyword
-beside it, a lone `if`, `contains` with `unevaluatedItems`, a decimal `multipleOf`) and
-is not the authority. The documents are fragments: an
-OpenAPI case shows the part that matters and omits `openapi`, `info` and the rest.
+The texts decide what a schema accepts. Each JSON Schema case's stated passes and
+failures were run under the Hyperjump validator, which agreed with the texts wherever it
+was checked. Ajv 8 departs from them in two cases the seat ran (a lone `if`, and
+`contains` with `unevaluatedItems`) and, the reader says, in two more (a Draft-07 `$ref`
+with a keyword beside it, and a decimal `multipleOf`). Neither Ajv nor Zod's own
+`toJSONSchema` is an oracle.
+
+The documents are fragments: an OpenAPI case shows the part that matters and omits
+`openapi`, `info` and the rest. With `openapi` and `info` added, every OpenAPI fragment
+is valid under the schema published for 3.2, checked with Hyperjump; cases A18, F6, F8
+and F9 use fields 3.2 added and are not valid under the one for 3.1.
 
 The cases come from the plan's first list, from the three hand-made lists of what the
 texts and Zod define (`lib/tests-picture/`), and from the two surveys. The list is a
@@ -773,7 +779,7 @@ z.object({ first: Name, last: Name });
 - **A naive structure loses:** the meaning, if it reads a keyword by its name whatever
   the dialect.
 
-### A23. A dialect without a vocabulary, and Draft-07's anchors
+### A23. Draft-07's anchors
 
 ```json
 {
@@ -806,11 +812,51 @@ z.object({ first: Name, last: Name });
 
 - **Tests:** SPEC-PR-3; the definition of "document" in section 3.
 - **Holds:** in Draft-07, an anchor and a new base are both made by `$id`: the two
-  `here` are different targets, as in case A6. And for 2020-12, that a dialect is the
-  set of vocabularies its meta-schema declares: under one that leaves out validation,
-  `type` and `maxLength` constrain nothing.
-- **A naive structure loses:** the Draft-07 anchors, if it looks for `$anchor`; and the
-  dialect, if 2020-12 is one fixed set of keywords.
+  `here` are different targets, as in case A6.
+- **A naive structure loses:** the anchors, if it looks for `$anchor`.
+
+### A24. A dialect that leaves out a vocabulary
+
+A meta-schema, then a schema that names it:
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/meta/no-validation",
+  "$vocabulary": {
+    "https://json-schema.org/draft/2020-12/vocab/core": true,
+    "https://json-schema.org/draft/2020-12/vocab/applicator": true
+  },
+  "$dynamicAnchor": "meta",
+  "allOf": [
+    {
+      "$ref": "https://json-schema.org/draft/2020-12/meta/core"
+    },
+    {
+      "$ref": "https://json-schema.org/draft/2020-12/meta/applicator"
+    }
+  ]
+}
+```
+
+```json
+{
+  "$schema": "https://example.com/meta/no-validation",
+  "$id": "https://example.com/s",
+  "type": "string",
+  "properties": {
+    "a": {
+      "maxLength": 1
+    }
+  }
+}
+```
+
+- **Tests:** SPEC-PR-2; section 6, the dialects Castr reads.
+- **Holds:** that a 2020-12 dialect is the set of vocabularies its meta-schema declares.
+  This one leaves out validation, so `type` and `maxLength` constrain nothing: `5` and
+  `{"a": "long"}` pass.
+- **A naive structure loses:** the dialect, if 2020-12 is one fixed set of keywords.
 
 ## B. Evaluation that is not local to one schema object
 
@@ -1119,6 +1165,38 @@ z.object({ first: Name, last: Name });
   no `then` or `else`. `{"a": 1}` fails.
 - **A naive structure loses:** this, if it drops an `if` that has no consequence.
 
+### B14. The same keyword over `oneOf`
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "properties": {
+        "a": {
+          "type": "string"
+        }
+      },
+      "required": ["a"]
+    },
+    {
+      "properties": {
+        "b": {
+          "type": "string"
+        }
+      },
+      "required": ["b"]
+    }
+  ],
+  "unevaluatedProperties": false
+}
+```
+
+- **Tests:** SPEC-P-1; SPEC-PR-2.
+- **Holds:** exactly one branch, closed over that branch's keys: `{a}` and `{b}` pass,
+  and `{a, b}` fails, where under `anyOf` (case B2) it passes.
+- **A naive structure loses:** the difference from B2, if `oneOf` is read as `anyOf`.
+
 ## C. The four policies for unknown keys
 
 ### C1. Each policy, stated
@@ -1192,7 +1270,7 @@ z.partialRecord(z.enum(['a', 'b']), z.number()); // neither required
 z.looseRecord(z.string().regex(/^x-/), z.number()); // other keys pass unchecked
 ```
 
-- **Tests:** SPEC-P-1; Appendix A's rows for records.
+- **Tests:** SPEC-P-1. Appendix A has no row for a record: a row for the amendment.
 - **Holds:** for a finite set of keys, that every key is required unless the record is
   partial; and whether a key the key schema does not match is refused or let through.
 - **A naive structure loses:** all of that, if a record is a key shape and a value shape.
@@ -1296,8 +1374,8 @@ z.string().default('x').nonoptional().parse(undefined); // 'x'
 z.tuple([z.string(), z.number().default(5)]).parse(['a']); // ['a', 5]
 ```
 
-- **Tests:** section 3's two sides; SPEC-PR-2; section 2's declarative subset decides
-  which of these Castr reads at all.
+- **Tests:** section 3's two sides; SPEC-PR-2; SPEC-P-2, the declarative subset, decides which
+  of these Castr reads at all.
 - **Holds:** where it reads them, each as a difference of sides.
   - A check that overwrites (`trim`) changes what later checks see, so checks have an
     order.
@@ -1728,6 +1806,47 @@ z.string().email(); // the check is in the schema's list
   sequential media type and not the whole body.
 - **A naive structure loses:** all four, if a body is one schema.
 
+### F9. The whole query string as one parameter
+
+```json
+{
+  "paths": {
+    "/search": {
+      "get": {
+        "parameters": [
+          {
+            "name": "q",
+            "in": "querystring",
+            "content": {
+              "application/x-www-form-urlencoded": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "term": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+- **Tests:** SPEC-P-5; section 6, OpenAPI 3.2.x is read.
+- **Holds:** a parameter whose location is the whole query string, described by a media
+  type (case F2 says the rest).
+- **A naive structure loses:** it, if a parameter's location is one of four.
+
 ## G. Document content
 
 ### G1. Servers, security and their cascades
@@ -1947,6 +2066,55 @@ z.string().email(); // the check is in the schema's list
   requirement, which the text calls making security optional. `/c` needs both schemes.
 - **A naive structure loses:** the difference between `/a` and `/b`, or the "all of" in
   `/c`, if security is a flat list of scheme names.
+
+### G5. What a document says about itself
+
+```json
+{
+  "info": {
+    "title": "Pets",
+    "version": "1.2.0",
+    "summary": "A pet shop",
+    "license": {
+      "name": "MIT",
+      "identifier": "MIT"
+    }
+  },
+  "externalDocs": {
+    "url": "https://example.com/docs"
+  },
+  "tags": [
+    {
+      "name": "pets",
+      "description": "Pets",
+      "externalDocs": {
+        "url": "https://example.com/docs/pets"
+      }
+    }
+  ],
+  "paths": {
+    "/pets": {
+      "get": {
+        "tags": ["pets"],
+        "externalDocs": {
+          "url": "https://example.com/docs/list"
+        },
+        "responses": {
+          "200": {
+            "description": "ok"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+- **Tests:** SPEC-PR-1; section 3's document content.
+- **Holds:** the document's title, version and licence, and external documentation at
+  each of the places it may stand: the document, a tag, an operation and a schema.
+- **A naive structure loses:** whatever no generated type or validator uses, if the
+  model is built from what the writers need.
 
 ## H. What a report needs, and what Zod alone can say
 

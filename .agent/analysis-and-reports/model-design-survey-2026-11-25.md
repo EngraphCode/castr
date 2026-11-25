@@ -168,8 +168,7 @@ design does not discover them late.
 
 ## What would show this finding wrong
 
-A system that does all eight rows of the table above. The survey of tools covers
-twenty-five systems and found none. A candidate would have to hold evaluation across schema objects as a
+A system that does all eight rows of the table above. Neither survey found one. A candidate would have to hold evaluation across schema objects as a
 fact, key definitions by source identity, and be one value for one meaning, together: the
 tool survey's fourth candidate, a table of declarations over a kernel, which no surveyed
 system implements.
