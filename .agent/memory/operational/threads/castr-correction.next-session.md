@@ -399,8 +399,8 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
     or by media type) is meaning. Four functions say what a writer reads at one
     boundary from the model alone: the boundaries, and the parameters, security and
     servers in force.
-    **The proofs, as they stand on the branch:**
-  - **1, whole:** a coverage map with a check that recomputes every list. In it: the
+    **The proofs, as they stand on the branch. None of 1 to 6 is met:**
+  - **1, whole: not met.** A coverage map with a check that recomputes every list. In it: the
     keywords and type values of both JSON Schema drafts, Zod's 48 schema definitions and
     16 checks, the 207 fields, keys and extension points of an OpenAPI document, and the
     152 rows of the two hand lists that say the model holds something. Each entry names
@@ -408,19 +408,23 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
     cites a clause that refuses it, or is owed. **81 kinds are owed, each by name in the
     check**; Zod's formats are not in the map. Proof 1 passes when that
     list is empty.
-  - **2:** the canonical rules are a function with tests, run, not type-level.
-  - **4:** the canonical function names every kind of shape. No removed branch has been
-    shown to fail to compile.
-  - **5:** a check finds every string of both halves through the compiler and fails on
+  - **2, one meaning one value: not met.** The plan asks for a type-level test that the
+    members of an equivalence set are the same value, with a set that fails shown once.
+    What exists is run, not type-level: the canonical rules as a function with tests.
+  - **4, closed: not met.** The canonical function names every kind of shape. The plan
+    asks for a removed branch shown to be a compile error, and none has been shown.
+  - **5, no text where a grammar is defined: not met** until the owner approves the
+    exceptions with the amendment. A check finds every string of both halves through the compiler and fails on
     one not listed: 94, of which 32 are text in a grammar a specification defines, most
     of them addresses kept for a person to follow. Each is a request to the owner that
     the amendment must carry. The owner was told six by name in the session before the
     boundary half existed; the other 26 have not been named to the owner.
-  - **6:** every statement of the cases note about a JSON Schema document holds against
+  - **6, the cases: not met.** Every statement of the cases note about a JSON Schema document holds against
     a hand-written value; sixteen Zod schemas and sixteen pairings of an intersection
     are held to Zod. The OpenAPI fragments of the cases are not yet values.
-    **Not done:** the kinds owed; the OpenAPI fragments as values; a reader round on the
-    trial; the amendment.
+    **Not done:** proofs 1 to 6, as above (3 has not been started: the list of which
+    formats can state each element); the kinds owed; the OpenAPI fragments as values; a
+    reader round on the trial; the amendment.
 
 - 2026-11-25, M4, three answers from the owner, by question prompt. They direct the
   amendment's draft. They are not its approval: the amendment is approved only in the
