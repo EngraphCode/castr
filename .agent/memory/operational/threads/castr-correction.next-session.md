@@ -376,6 +376,82 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
   it); a regular expression kept as text with its dialect and flags, the one
   grammar-defined string the seat does not intend to model.
 
+- 2026-11-25, M4, the prototype made whole enough to count what is owed. **Where:**
+  the branch `design/model-prototype`, `lib/tests-picture/design/`, 80 tests. Still off
+  main until M5.
+  **Choices since the last entry, each with what decided it:**
+  - **The profile only narrows** (SPEC-P-1's own sentence: the closed reading "narrows
+    the source's accepted set"). Closing each branch of a `oneOf` where it is written
+    would accept a value the source refuses: two objects that state no policy and share
+    an optional key both accept the value, so the source's choice refuses it. So the
+    by-value reading, which can only refuse, is the strict one, and it was not put to
+    the owner as a question. Its consequence is for the owner to see at M5: a `oneOf`
+    over objects that state no policy is not disambiguated by closure.
+  - **How a source spelt a reference is in the record, not in the edge** (review of pull
+    request 210: inside the edge it made two spellings of one reference two values,
+    against the trial's own rule that the record is outside equality).
+  - **An exact number's exponent is unbounded, and zero has one form** (the same review).
+  - **The boundary half:** everything a description can state once and use twice is a
+    part with an identity, and whatever uses one holds an edge with, optionally, words
+    that replace the part's own. A path's item and an operation are parts; boundaries
+    are derived by a function. An address is a list of text and variables; a media
+    range, a status and a value read at run time are data. An encoding's mode (styled,
+    or by media type) is meaning. Four functions say what a writer reads at one
+    boundary from the model alone: the boundaries, and the parameters, security and
+    servers in force.
+    **The proofs, as they stand on the branch. None of 1 to 6 is met:**
+  - **1, whole: not met.** A coverage map with a check that recomputes every list. In it: the
+    keywords and type values of both JSON Schema drafts, Zod's 48 schema definitions and
+    16 checks, the 207 fields, keys and extension points of an OpenAPI document, and the
+    152 rows of the two hand lists that say the model holds something. Each entry names
+    elements the compiler confirms exist, says the kind decides how a document is read,
+    cites a clause that refuses it, or is owed. **81 kinds are owed, each by name in the
+    check**; Zod's formats are not in the map. Proof 1 passes when that
+    list is empty.
+  - **2, one meaning one value: not met.** The plan asks for a type-level test that the
+    members of an equivalence set are the same value, with a set that fails shown once.
+    What exists is run, not type-level: the canonical rules as a function with tests.
+  - **4, closed: not met.** The canonical function names every kind of shape. The plan
+    asks for a removed branch shown to be a compile error, and none has been shown.
+  - **5, no text where a grammar is defined: not met** until the owner approves the
+    exceptions with the amendment. A check finds every string of both halves through the compiler and fails on
+    one not listed: 94, of which 32 are text in a grammar a specification defines, most
+    of them addresses kept for a person to follow. Each is a request to the owner that
+    the amendment must carry. The owner was told six by name in the session before the
+    boundary half existed; the other 26 have not been named to the owner.
+  - **6, the cases: not met.** Every statement of the cases note about a JSON Schema document holds against
+    a hand-written value; sixteen Zod schemas and sixteen pairings of an intersection
+    are held to Zod. The OpenAPI fragments of the cases are not yet values.
+    **Not done:** proofs 1 to 6, as above (3 has not been started: the list of which
+    formats can state each element); the kinds owed; the OpenAPI fragments as values; a
+    reader round on the trial; the amendment.
+
+- 2026-11-25, M4, three answers from the owner, by question prompt. They direct the
+  amendment's draft. They are not its approval: the amendment is approved only in the
+  owner's own words naming its version (SPEC-CC-2).
+  - **The closed reading under a choice.** Asked because a run against Zod showed the
+    approved text does not settle it: for `anyOf` over `{a?}` and `{b?}`, the by-value
+    reading accepts `{a, b}` and a Zod union of two strict objects refuses it; for
+    `oneOf` over a cat and a dog that share an optional name, by value refuses
+    `{name, meow}`, as the source does, and a Zod exclusive union of strict objects
+    accepts it. SPEC-G-4 proves the closed reading by a transformation of the source,
+    which closes each branch, and which cannot be placed for `allOf` or for two shapes
+    at one nested place. The owner chose **"A: by value (Recommended)"**: evaluate the
+    schema as its source states it, then refuse any key that no shape applied at that
+    place accounts for. Its costs, stated in the option: Zod cannot state it where two
+    branches of a choice can both accept one value, so the Zod writer restructures or
+    gives a located rejection there; and SPEC-G-4's proof method needs amending. This
+    replaces the seat's earlier entry that the question need not be asked.
+  - **`z.url()`.** The owner chose **"Declare it (Recommended)"**: Castr keeps writing
+    `z.url()` for `format: uri`; SPEC-P-8 also declares that the written validator
+    trims; reading `z.url()` from a Zod source stays rejected under SPEC-P-2; Appendix
+    A's row for string formats is corrected.
+  - **Strings kept as text in a defined grammar.** The owner chose **"All four classes
+    (Recommended)"** as the exceptions the amendment asks for: addresses kept for a
+    person or a client to follow; regular expressions, with dialect and flags as data;
+    single tokens with no parts; and a resource's URI with a reference as its source
+    spelt it. The amendment enters each as an exception under SPEC-AR-3.
+
 - 2026-11-24, M0, the reviews. The assumptions reviewer and the four seats of the
   conscience panel read the first draft. All four seats judged the work on track; three
   judged the framing narrowed, each on a different point; the assumptions reviewer found
