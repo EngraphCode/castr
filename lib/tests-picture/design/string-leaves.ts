@@ -5,7 +5,7 @@
  * grammar some specification defines. The last kind is what the specification forbids
  * without an exception its owner approves, so each string must be listed with its
  * reason, and a string nobody listed must fail a check. This module finds them: it reads
- * the types of `model.ts` through the compiler and names each property that can hold a
+ * the types of `model.ts` and `boundary.ts` through the compiler and names each property that can hold a
  * string, as text itself or as the key or member of a list, set or map.
  */
 
@@ -62,9 +62,9 @@ function nameOf(property: PropertySignature): string {
  */
 export function stringLeaves(): readonly string[] {
   const project = new Project({ compilerOptions: { strict: true } });
-  const file = project.addSourceFileAtPath(fileURLToPath(new URL('model.ts', import.meta.url)));
-  const names = file
-    .getDescendants()
+  const names = ['model.ts', 'boundary.ts']
+    .map((name) => project.addSourceFileAtPath(fileURLToPath(new URL(name, import.meta.url))))
+    .flatMap((file) => file.getDescendants())
     .filter((node) => Node.isPropertySignature(node))
     .filter((property) => holdsString(property.getType()))
     .map((property) => nameOf(property));

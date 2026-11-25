@@ -1,7 +1,7 @@
 /**
  * The elements of the prototype, named, found by the compiler.
  *
- * An element is a type of `model.ts`, one of its properties, or one member of a union of
+ * An element is a type of `model.ts` or `boundary.ts`, one of its properties, or one member of a union of
  * objects told apart by a literal: `ObjectPart`, `ObjectPart.rest`, `Shape[when]`,
  * `Shape[rest-of].keys`. The coverage map names elements, and this is how a name in it
  * is known to be real.
@@ -39,16 +39,18 @@ function ofUnion(owner: string, type: TypeNode): readonly string[] {
  */
 export function elements(): ReadonlySet<string> {
   const project = new Project({ compilerOptions: { strict: true } });
-  const file = project.addSourceFileAtPath(fileURLToPath(new URL('model.ts', import.meta.url)));
+  const files = ['model.ts', 'boundary.ts'].map((name) =>
+    project.addSourceFileAtPath(fileURLToPath(new URL(name, import.meta.url))),
+  );
   const names = [
-    ...file
-      .getInterfaces()
+    ...files
+      .flatMap((file) => file.getInterfaces())
       .flatMap((one) => [
         one.getName(),
         ...one.getProperties().map((property) => `${one.getName()}.${property.getName()}`),
       ]),
-    ...file
-      .getTypeAliases()
+    ...files
+      .flatMap((file) => file.getTypeAliases())
       .flatMap((one) => [one.getName(), ...ofUnion(one.getName(), one.getTypeNodeOrThrow())]),
   ];
   return new Set(names);
