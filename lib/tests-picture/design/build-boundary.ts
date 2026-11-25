@@ -149,6 +149,7 @@ export function described(
       ...api,
     },
     parts: parts.map(([id, part]) => ({ id, aliases: [], part })),
+    record: { unsaid: [] },
   };
 }
 

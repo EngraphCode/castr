@@ -105,6 +105,7 @@ function description(
       ...api,
     },
     parts: Object.entries(parts).map(([name, part]) => ({ id: at(name), aliases: [name], part })),
+    record: { unsaid: [] },
   };
 }
 
@@ -176,6 +177,20 @@ describe('what is in force at a boundary', () => {
   it('is the operation’s servers, else its path’s, else the API’s', () => {
     expect(read && serversInForce(model, read)).toEqual([server('https://path.example')]);
     expect(remove && serversInForce(model, remove)).toEqual([server('https://remove.example')]);
+  });
+});
+
+describe('what a source left unsaid', () => {
+  it('is in the record, so a style stated and the same style supplied are one value', () => {
+    const parts = { things: item(), id: parameter('id', 'path', 'which thing') };
+    const stated = description([{ path: path('/things'), item: use('things') }], parts);
+    const supplied: Boundaries = {
+      ...stated,
+      record: { unsaid: [{ of: at('id'), fact: 'style', from: 'the text' }] },
+    };
+
+    expect([supplied.api, supplied.parts]).toEqual([stated.api, stated.parts]);
+    expect(supplied.record).not.toEqual(stated.record);
   });
 });
 

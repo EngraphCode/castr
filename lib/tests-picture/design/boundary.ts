@@ -315,8 +315,32 @@ export interface Api extends Words {
   readonly extensions: Extensions;
 }
 
+/**
+ * A fact the model holds that its source left unsaid, and how the reader came by it: the
+ * text gives it outright, it follows from another fact of the same part, or it is read
+ * from the shape the part applies to.
+ */
+interface Unsaid {
+  readonly of: DefinitionId;
+  readonly fact:
+    | 'servers'
+    | 'required'
+    | 'deprecated'
+    | 'may-be-empty'
+    | 'style'
+    | 'explode'
+    | 'reserved'
+    | 'media-ranges';
+  readonly from: 'the text' | 'another fact of the part' | 'the shape it applies to';
+}
+
 /** The boundary half of a model. */
 export interface Boundaries {
   readonly api: Api;
   readonly parts: readonly PartDefinition[];
+  /**
+   * What was read beside the meaning. Two descriptions whose API and parts are equal are
+   * one value, whatever their records say.
+   */
+  readonly record: { readonly unsaid: readonly Unsaid[] };
 }

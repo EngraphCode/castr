@@ -2,7 +2,7 @@
  * OpenAPI fragments of the cases, written by hand as values of the boundary half.
  *
  * Each value is what a reader of the fragment would build. A part written in line has
- * its identity by where it is: under which path, which method, which response. Six
+ * its identity by where it is: under which path, which method, which response. Nine
  * fragments are here, the ones that reach furthest into the boundary types; the rest
  * are owed.
  */
@@ -24,7 +24,7 @@ import {
   response,
   use,
 } from './build-boundary.js';
-import type { Boundaries } from './boundary.js';
+import type { Boundaries, Part, Security } from './boundary.js';
 import type { DefinitionId, Method, Shape, Status, Step } from './model.js';
 
 const STRING: Shape = { kind: 'by-kind', kinds: { string: 'any' } };
@@ -350,5 +350,160 @@ export const F9: Boundaries = described(
       }),
     ],
     okAt(...FIND),
+  ],
+);
+
+/** A14. One path item, referenced from two paths. */
+const P = placed({ step: 'part', kind: 'path-item', name: 'P' });
+const P_GET = [{ step: 'part', kind: 'path-item', name: 'P' } as const, via(method('get'))];
+const AGAIN = placed(...P_GET, answer(on(200)), { step: 'follow', name: 'again' });
+
+export const A14: Boundaries = described(
+  {
+    paths: [
+      { path: address('/a'), item: use(P) },
+      { path: address('/b'), item: use(P) },
+    ],
+  },
+  [
+    [P, item({ operations: [{ method: method('get'), operation: use(placed(...P_GET)) }] })],
+    [
+      placed(...P_GET),
+      operation({
+        name: 'op',
+        responses: [{ on: on(200), response: use(placed(...P_GET, answer(on(200)))) }],
+      }),
+    ],
+    [
+      placed(...P_GET, answer(on(200))),
+      response('ok', { follows: new Map([['again', use(AGAIN)]]) }),
+    ],
+    [
+      AGAIN,
+      {
+        part: 'follow',
+        is: {
+          // Named by the operation's name; it resolves to the one operation, used at two paths.
+          operation: { target: { state: 'resolved', to: placed(...P_GET) } },
+          parameters: [],
+          extensions: NOTHING,
+        },
+      },
+    ],
+  ],
+);
+
+/** F1. A path with no operation, and parameters at two levels. */
+const ONE = { step: 'path', path: address('/pets/', { variable: 'id' }) } as const;
+const WHOLE_NUMBER: Shape = { kind: 'by-kind', kinds: { number: { whole: true } } };
+const ofItem = placed(ONE, { step: 'parameter', name: 'id', location: 'path' });
+const ofGet = placed(ONE, via(method('get')), { step: 'parameter', name: 'id', location: 'path' });
+
+export const F1: Boundaries = described(
+  {
+    paths: [
+      { path: address('/empty'), item: use(placed(at('/empty'))) },
+      { path: address('/pets/', { variable: 'id' }), item: use(placed(ONE)) },
+    ],
+  },
+  [
+    [placed(at('/empty')), item()],
+    [
+      placed(ONE),
+      item({
+        parameters: [use(ofItem)],
+        operations: [
+          { method: method('get'), operation: use(placed(ONE, via(method('get')))) },
+          { method: method('delete'), operation: use(placed(ONE, via(method('delete')))) },
+        ],
+      }),
+    ],
+    [ofItem, parameter('id', 'path', byShape(STRING, 'path'))],
+    [
+      placed(ONE, via(method('get'))),
+      operation({
+        parameters: [use(ofGet)],
+        responses: [
+          { on: on(200), response: use(placed(ONE, via(method('get')), answer(on(200)))) },
+        ],
+      }),
+    ],
+    [ofGet, parameter('id', 'path', byShape(WHOLE_NUMBER, 'path'))],
+    okAt(ONE, via(method('get'))),
+    [
+      placed(ONE, via(method('delete'))),
+      operation({
+        responses: [
+          { on: on(204), response: use(placed(ONE, via(method('delete')), answer(on(204)))) },
+        ],
+      }),
+    ],
+    [placed(ONE, via(method('delete')), answer(on(204))), response('gone')],
+  ],
+);
+
+/** G4. No security, optional security, and two schemes at once. */
+const KEY = placed({ step: 'part', kind: 'scheme', name: 'key' });
+const OAUTH = placed({ step: 'part', kind: 'scheme', name: 'oauth' });
+const needs = (to: DefinitionId, ...asks: string[]): Security[number][number] => ({
+  scheme: { target: { state: 'resolved', to } },
+  asks,
+});
+const guarded = (path: string, security: Security): readonly (readonly [DefinitionId, Part])[] => [
+  [
+    placed(at(path)),
+    item({
+      operations: [{ method: method('get'), operation: use(placed(at(path), via(method('get')))) }],
+    }),
+  ],
+  [
+    placed(at(path), via(method('get'))),
+    operation({
+      security,
+      responses: [
+        { on: on(200), response: use(placed(at(path), via(method('get')), answer(on(200)))) },
+      ],
+    }),
+  ],
+  okAt(at(path), via(method('get'))),
+];
+
+export const G4: Boundaries = described(
+  {
+    security: [[needs(KEY)]],
+    paths: ['/a', '/b', '/c'].map((path) => ({ path: address(path), item: use(placed(at(path))) })),
+  },
+  [
+    ...guarded('/a', []),
+    ...guarded('/b', [[]]),
+    ...guarded('/c', [[needs(KEY), needs(OAUTH, 'read')]]),
+    [
+      KEY,
+      {
+        part: 'scheme',
+        is: {
+          deprecated: false,
+          by: { scheme: 'key', name: 'k', location: 'header' },
+          extensions: NOTHING,
+        },
+      },
+    ],
+    [
+      OAUTH,
+      {
+        part: 'scheme',
+        is: {
+          deprecated: false,
+          by: {
+            scheme: 'oauth2',
+            clientCredentials: {
+              token: 'https://example.com/token',
+              scopes: new Map([['read', 'read things']]),
+            },
+          },
+          extensions: NOTHING,
+        },
+      },
+    ],
   ],
 );

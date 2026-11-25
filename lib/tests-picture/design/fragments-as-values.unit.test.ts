@@ -9,12 +9,12 @@ import { describe, it, expect } from 'vitest';
 
 import { isJsonObject } from '../rows/json.js';
 
-import { boundariesOf, parametersInForce } from './boundaries.js';
+import { boundariesOf, parametersInForce, securityInForce } from './boundaries.js';
 import type { Boundaries } from './boundary.js';
-import { F2, F4, F6, F7, F8, F9 } from './fragments-as-values.js';
+import { A14, F1, F2, F4, F6, F7, F8, F9, G4 } from './fragments-as-values.js';
 import type { DefinitionId } from './model.js';
 
-const VALUES: Readonly<Record<string, Boundaries>> = { F2, F4, F6, F7, F8, F9 };
+const VALUES: Readonly<Record<string, Boundaries>> = { A14, F1, F2, F4, F6, F7, F8, F9, G4 };
 
 /** Every identity a resolved edge anywhere in a value points at. */
 function targets(value: unknown): readonly unknown[] {
@@ -95,5 +95,33 @@ describe('the fragments as values', () => {
 
   it('F4 and F8 and F9 each have one boundary', () => {
     expect([F4, F8, F9].map((model) => boundariesOf(model).length)).toEqual([1, 1, 1]);
+  });
+
+  it('A14 has two boundaries with one operation, which a link reaches by its name', () => {
+    const found = boundariesOf(A14);
+
+    expect(found).toHaveLength(2);
+    expect(found[0]?.operation).toEqual(found[1]?.operation);
+  });
+
+  it('F1 holds a path with nothing at it, and lets an operation replace its path’s parameter', () => {
+    const [get, remove] = boundariesOf(F1);
+    const shapes = [get, remove].map((one) =>
+      one === undefined ? [] : parametersInForce(F1, one).map((parameter) => parameter.carried),
+    );
+
+    expect(F1.api.paths).toHaveLength(2);
+    expect(shapes.map((carried) => carried.length)).toEqual([1, 1]);
+    expect(shapes[0]).not.toEqual(shapes[1]);
+  });
+
+  it('G4 tells none needed, anything accepted, and two schemes needed together', () => {
+    const inForce = boundariesOf(G4).map((one) => securityInForce(G4, one));
+
+    expect(inForce.map((security) => security.map((requirement) => requirement.length))).toEqual([
+      [],
+      [0],
+      [2],
+    ]);
   });
 });
