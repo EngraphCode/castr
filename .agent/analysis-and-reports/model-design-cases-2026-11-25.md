@@ -1232,16 +1232,17 @@ check(stripped.parse(value), { a: 'x' });
 
 - **Tests:** SPEC-P-1's reading and reporting: an object that does not state its policy
   is read as closed, and every object whose policy Castr supplied is listed in the report.
-- **Holds:** two facts, kept apart: that the source stated no policy, which in JSON
-  Schema and OpenAPI means open; and that Castr supplied closed. Both differ from
-  `additionalProperties: false` written by the author.
-- **A naive structure loses:** the report, if "closed" is all the model can say.
-- **What the specification does not yet say:** which schema object the supplied closure
-  lands on. Case B1's `Base` states no policy. Closed in place, it refuses `extra`, and
-  B1 has no value with both keys; the same is true of each branch of B2 and of B6's
-  dependent schema. So the closure cannot land on every schema object that states none.
-  SPEC-P-1's rule for writing points at the composed object, closed across composition.
-  This is a row for the amendment.
+- **Holds:** closed, as a meaning; and beside the meaning, in the record of the reading,
+  that the source stated no policy and Castr's profile supplied one. The record is not
+  part of the value: this is the same value as an object the author closed, with a
+  different record (section I).
+- **A naive structure loses:** the report, if nothing records what was supplied; or the
+  sameness, if "supplied" is part of the value.
+- **What the specification does not yet say:** where a supplied closure lands. Case B1's
+  `Base` states no policy. Closed in place, it refuses `extra`, and B1 has no value with
+  both keys; the same is true of each branch of B2 and of B6's dependent schema. And one
+  place in a value is often reached from several places in a schema, so that no place in
+  the schema is the right one. This is a row for the amendment.
 
 ### C3. Stripped is a difference of sides
 
@@ -1354,7 +1355,7 @@ check(z.union([AB, A]).parse({ a: 'x', b: 'y' }), { a: 'x', b: 'y' });
   fails when two match, nor of `z.discriminatedUnion`, where the key picks one (case C6).
 - **A naive structure loses:** the produced side, if it sorts or merges alternatives.
 
-### D3. Read-only and write-only: two sides in OpenAPI itself
+### D3. Read-only and write-only
 
 ```json
 {
@@ -1380,11 +1381,14 @@ check(z.union([AB, A]).parse({ a: 'x', b: 'y' }), { a: 'x', b: 'y' });
 ```
 
 - **Tests:** SPEC-PR-1; section 3's meaning includes read-only and write-only.
-- **Holds:** one schema with a fact on each of two properties. The OpenAPI text says a
-  required read-only property is required in a response only, and a required write-only
-  property in a request only.
-- **A naive structure loses:** one direction, if a shape has one list of required keys
-  with no side.
+- **Holds:** an annotation of direction on each of two properties, which may stand on
+  any schema. In OpenAPI 3.1 and 3.2 it changes nothing a schema accepts: the text says
+  a tool may check it against the direction of a message, and that the owner of the API
+  may ignore a read-only value sent to it or treat it as an error. Both properties are
+  required in both directions.
+- **A naive structure loses:** the annotation, if it holds only what validates; or the
+  meaning, if it makes `required` differ by direction. That was OpenAPI 3.0's rule, and
+  the text of 3.1 and 3.2 says its behaviour differs from 3.0's.
 
 ### D4. Values that are changed on the way through
 
@@ -1393,6 +1397,9 @@ check(z.string().trim().min(2).safeParse(' a ').success, false); // trimmed firs
 check(z.coerce.number().parse('12'), 12);
 check(z.string().min(5).catch('x').parse(1), 'x');
 check(z.string().default('x').nonoptional().parse(undefined), 'x');
+const keyed = z.object({ a: z.string().default('x').nonoptional() });
+check(keyed.safeParse({}).success, false); // at a key, absent is refused
+check(keyed.parse({ a: undefined }), { a: 'x' }); // and `undefined` is defaulted
 check(z.tuple([z.string(), z.number().default(5)]).parse(['a']), ['a', 5]);
 ```
 
@@ -1403,7 +1410,9 @@ check(z.tuple([z.string(), z.number().default(5)]).parse(['a']), ['a', 5]);
     order.
   - A coercion accepts what `Number()` turns into a finite number.
   - A catch accepts every value.
-  - `nonoptional` checks the produced value, not whether the input was present.
+  - `nonoptional` checks the produced value. At the top that lets a default stand in for
+    `undefined`; at a key, an absent key is refused and a key set to `undefined` is
+    defaulted.
   - A tuple's minimum length is one on the accepted side and two on the produced side.
 - **A naive structure loses:** the accepted side of each, if it takes Zod's own JSON
   Schema for it: that says `minLength: 2`, `type: number`, and a string of five or more.
@@ -2200,7 +2209,7 @@ check(said.get(named.optional()), undefined);
     Zod writer must write a cycle, not what a reference is.
   - **A brand:** leaves nothing; `.brand()` returns the same schema.
   - **Metadata:** held in a registry beside one node. It follows the node through a
-    check (`.min`) and not through a wrapper (`.optional()`).
+    check (`.min`), all but its `id`, and not through a wrapper (`.optional()`).
 - **A naive structure loses:** the exact optional, if it reads Zod's definition alone;
   metadata, if it reads the schema and not the registry; and the cycle, if it looks for a
   getter.
@@ -2215,7 +2224,9 @@ from, and what the source left unsaid, are held beside the value.
 ```ts
 const closed = z.strictObject({ a: z.string().optional() });
 check(closed.safeParse({}).success, true);
+check(closed.safeParse({ a: 's' }).success, true);
 check(closed.safeParse({ a: 's', b: 1 }).success, false);
+check(closed.safeParse({ a: 1 }).success, false);
 ```
 
 ```json
@@ -2379,7 +2390,6 @@ Each pair looks alike. A design that makes them one value is wrong.
   `Name` often accept the same values, and not always: the core text says removing a reference
   is not always safe. The name is part of meaning (SPEC-PR-3), so they differ either way.
 - **A11.** `#/definitions/x` and `#/$defs/x`.
-- **C2.** Closed because the author wrote it, and closed because Castr supplied it.
 - **D1.** A Zod `.default`, a Zod `.prefault` and a JSON Schema `default`.
 - **D2.** A union and the same union in another order, where an alternative strips.
 - **`oneOf` and `anyOf`** over alternatives that can overlap.
