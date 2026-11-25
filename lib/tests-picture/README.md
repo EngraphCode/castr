@@ -311,6 +311,43 @@ be computed. They are listed by hand in [`rows/schema-proposals.ts`](rows/schema
 each with the section that defines it, and are the part of the rows most likely to be
 missing one.
 
+What the OpenAPI text defines beyond its schemas is a second list made by hand,
+[`__fixtures__/texts/openapi-text-constructs.json`](__fixtures__/texts/openapi-text-constructs.json),
+read and checked for shape by [`rows/openapi-text-constructs.ts`](rows/openapi-text-constructs.ts): 140 rows, read
+from versions 3.1.2 and 3.2.1, the latest patch of each line the publisher serves. A
+schema says what fields an object has. The text also says what an absent field means,
+which of two fields wins, what a name refers to and what a string's grammar is, and no
+schema holds those. Each row gives the sections it was read from, the version lines it
+is true of, what the text defines in this repository's own words, and one of seven
+kinds:
+
+| Kind        | What the row is                                                        | Rows |
+| ----------- | ---------------------------------------------------------------------- | ---- |
+| `holds`     | A fact a model of the document must hold, because no field states it   | 52   |
+| `default`   | What an absent field means                                             | 11   |
+| `reading`   | A rule for reading a document; the model holds the result              | 31   |
+| `runtime`   | What a field means when a request is made; the model holds the field   | 14   |
+| `validity`  | Which documents are valid; for the sweep of validity rules (SPEC-FV-2) | 9    |
+| `grammar`   | A string whose grammar a specification defines                         | 11   |
+| `undefined` | Something the text says is undefined or left to the implementation     | 12   |
+
+The list is a floor, and says so. Three things are proved by test and one is not:
+
+- **Proved:** every section a row cites exists in the version it was read from. The
+  section numbers of both texts are pinned in
+  [`__fixtures__/texts/openapi-sections.json`](__fixtures__/texts/openapi-sections.json),
+  with each page's address and digest; numbers only, so no text of the specification is
+  reproduced.
+- **Proved:** each of the thirty objects of chapter 4 of 3.2.1 is cited by a row or is
+  named as read with nothing to hold, and none is both.
+- **Proved, once, by program:** every quotation in the readers' reports the list was
+  made from is in the text it cites (`.agent/research/model-design-2026-11-24/`).
+- **Not proved:** that a row says what its section says. That was read, row by row
+  against its quotation, and a reader can be wrong.
+
+Versions 3.1.0 and 3.1.1 were not read apart from 3.1.2. The specification's format
+registry was not read.
+
 The rows are read from the latest revisions the publisher listed on 22 November 2026: for
 OpenAPI 3.1, the document schema of 2026-11-05 and the vocabulary of 2024-11-10; for 3.2,
 the document schema of 2026-11-12 and the vocabulary of 2026-02-26.

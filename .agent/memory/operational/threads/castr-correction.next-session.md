@@ -149,6 +149,30 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
   were probed in a scratch file and the tests written from what the probe showed, then
   seen to pass; the exact tables are what fail when Zod changes. **Lenses, short:** this
   moves no sentence of "What this plan may not do"; nothing under `lib/src` is touched.
+- 2026-11-25, M1, the hand list for OpenAPI. **Step back.** The list is a different
+  kind of work from a computed one and is a floor; what a test can prove of it is
+  proved, and what it cannot is said. **Done:** `rows/openapi-text-constructs.ts`, 140
+  rows from 3.1.2 and 3.2.1, each with its sections, its version lines and one of seven
+  kinds (52 hold a fact, 11 a default, 31 a reading rule, 14 a runtime rule, 9 a
+  validity rule for N7, 11 a grammar, 12 something the text leaves undefined). Section
+  numbers of both texts are pinned, numbers only, and tests prove each cited section
+  exists and each object of chapter 4 is accounted for. **The seat's own check of the
+  readers:** every quotation in the three reports is in the text it cites, checked by
+  program against texts the seat fetched (OpenAPI 139 of 139; the 3.2.1 comparison 105;
+  JSON Schema 340); the cells that failed the check are prose or example rows, read by
+  eye. **Versions:** 3.1.0, 3.1.1, 3.1.2, 3.2.0 and 3.2.1 are served; 3.1.3 and 3.2.2
+  are not. **For M2 and M4, what the list shows the model must hold that no schema
+  states:** defaults for absent fields; three cascades (servers, security, parameters by
+  name and location); two kinds of address (of the description, of the API); four
+  connections made by name; the entry document; a status of "undefined". **A reader's
+  finding settled by running Zod:** the JSON Schema report's F4 said the `maxLength`
+  note in `schema-proposals.ts` ("both count characters") disagreed with the picture's
+  report of 20 November ("Zod counts UTF-16 units"). At 4.6.7 a string of one astral
+  character passes `.max(1)`, so Zod counts characters and the note in the code is
+  right; the report of 20 November is wrong on this at this version. `z.int()` refuses
+  2 to the power 53, so the `integer` note ("a safe integer") describes what Zod
+  enforces, not what the keyword means; that difference is a row for the amendment,
+  not changed here. **Still owed for M1:** the hand list for JSON Schema, both drafts.
 
 - 2026-11-24, M0, the reviews. The assumptions reviewer and the four seats of the
   conscience panel read the first draft. All four seats judged the work on track; three
