@@ -333,9 +333,10 @@ kinds:
 
 As in the list for JSON Schema, a row says how strongly the text speaks and to whom:
 "must", "should" and "may" are the text's own level, and "a tool" is the text's
-implementation. Every row was read again against its sections for a statement stronger
-than the text, and 39 were rewritten, five given the sections they lacked, and three
-split off as rows of their own.
+implementation. A reader read every row again against its sections for a statement stronger than the
+text and faulted 44. The seat checked that the reader's quotations are in the texts and
+applied its corrections: 39 rows rewritten, five given the sections they lacked, and
+three added. The seat did not itself read each rewritten row against its section.
 
 The list is a floor, and says so. Three things are proved by test and one is not:
 
@@ -368,8 +369,10 @@ validity rule, 18 a grammar, and 8 something a text leaves undefined.
 
 A row says how strongly the text speaks and to whom: "must", "should" and "may" in a
 row are the text's own level, and "a tool" is the text's implementation. After review
-found rows that turned a recommendation into a fact, every row was read again against
-its sections for that fault, and 48 were rewritten.
+found rows that turned a recommendation into a fact, a reader read every row again
+against its sections for that fault and faulted 50. The seat checked that the reader's
+quotations are in the texts and applied its corrections: 48 rows rewritten and one
+removed. The seat did not itself read each rewritten row against its section.
 
 A meta-schema says what keywords a schema may hold. The texts say what the model has to
 be able to state about them:

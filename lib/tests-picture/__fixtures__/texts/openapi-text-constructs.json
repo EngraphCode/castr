@@ -532,7 +532,7 @@
       "sections": ["4.15.1.2", "E.3"],
       "versions": "both",
       "disposition": "runtime",
-      "says": "In `multipart/form-data` a tool applies no percent-encoding, whatever fields of the Encoding Object are used, and `allowReserved` has no effect. Data a user wants percent-encoded must be given already encoded."
+      "says": "Where `multipart/form-data` is serialised in the style of RFC 6570, percent-encoding must not be applied and `allowReserved` has no effect. Appendix E adds that percent-encoding is never applied automatically for this media type, whatever fields of the Encoding Object are used: data a user wants percent-encoded must be given already encoded."
     },
     {
       "sections": ["4.15.2"],
@@ -856,7 +856,7 @@
       "sections": ["C"],
       "versions": "both",
       "disposition": "runtime",
-      "says": "The styles `matrix`, `label` and `form` correspond to prefix operators of RFC 6570, and `simple` to expansion with no operator. `pipeDelimited`, `spaceDelimited` and `deepObject` have no equivalent and should still be handled according to RFC 6570. Several `form` parameters make one variable list, and a name RFC 6570 does not allow must be percent-encoded first."
+      "says": "The styles `matrix`, `label` and `form` correspond to prefix operators of RFC 6570, and `simple` to expansion with no operator. `pipeDelimited`, `spaceDelimited` and `deepObject` have no equivalent; the text says they should still be handled according to RFC 6570, and that a tool may do so by building a template of the individual names and values. Several `form` parameters make one variable list, and a name RFC 6570 does not allow must be percent-encoded first."
     },
     {
       "sections": ["E"],
