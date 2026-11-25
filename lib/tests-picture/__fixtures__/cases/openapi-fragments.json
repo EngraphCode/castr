@@ -1,0 +1,129 @@
+{
+  "note": "The JSON documents of the cases note that are fragments of OpenAPI documents, each named by its case and its number among the JSON documents of that case, from 0. Every other JSON document of the note is a JSON Schema. The kind is stated here and never inferred from a document's keys.",
+  "fragments": [
+    {
+      "case": "A1",
+      "document": 0
+    },
+    {
+      "case": "A2",
+      "document": 0
+    },
+    {
+      "case": "A3",
+      "document": 0
+    },
+    {
+      "case": "A7",
+      "document": 0
+    },
+    {
+      "case": "A8",
+      "document": 0
+    },
+    {
+      "case": "A9",
+      "document": 0
+    },
+    {
+      "case": "A10",
+      "document": 0
+    },
+    {
+      "case": "A12",
+      "document": 0
+    },
+    {
+      "case": "A13",
+      "document": 0
+    },
+    {
+      "case": "A14",
+      "document": 0
+    },
+    {
+      "case": "A15",
+      "document": 0
+    },
+    {
+      "case": "A16",
+      "document": 0
+    },
+    {
+      "case": "A17",
+      "document": 0
+    },
+    {
+      "case": "A17",
+      "document": 1
+    },
+    {
+      "case": "A18",
+      "document": 0
+    },
+    {
+      "case": "A19",
+      "document": 0
+    },
+    {
+      "case": "D3",
+      "document": 0
+    },
+    {
+      "case": "F1",
+      "document": 0
+    },
+    {
+      "case": "F2",
+      "document": 0
+    },
+    {
+      "case": "F3",
+      "document": 0
+    },
+    {
+      "case": "F4",
+      "document": 0
+    },
+    {
+      "case": "F5",
+      "document": 0
+    },
+    {
+      "case": "F6",
+      "document": 0
+    },
+    {
+      "case": "F7",
+      "document": 0
+    },
+    {
+      "case": "F8",
+      "document": 0
+    },
+    {
+      "case": "F9",
+      "document": 0
+    },
+    {
+      "case": "G1",
+      "document": 0
+    },
+    {
+      "case": "G2",
+      "document": 0
+    },
+    {
+      "case": "G3",
+      "document": 0
+    },
+    {
+      "case": "G4",
+      "document": 0
+    },
+    {
+      "case": "G5",
+      "document": 0
+    }
+  ]
+}

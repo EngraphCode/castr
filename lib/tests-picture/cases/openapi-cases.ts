@@ -9,13 +9,13 @@
 
 import { judgeDocument, type JsonValue } from '../refusals/judge.js';
 
-import type { CaseDocuments } from './case-documents.js';
-import { kindOfDocument } from './json-schema-cases.js';
+import { caseOf, type CaseDocuments } from './case-documents.js';
+import type { DocumentName } from './json-schema-cases.js';
 
 /** The pinned schema of each version line, and a version to state in `openapi`. */
 const OPENAPI_LINES = {
   '3.1': { schema: 'https://spec.openapis.org/oas/3.1/schema/2026-11-05', version: '3.1.2' },
-  '3.2': { schema: 'https://spec.openapis.org/oas/3.2/schema/2026-11-12', version: '3.2.0' },
+  '3.2': { schema: 'https://spec.openapis.org/oas/3.2/schema/2026-11-12', version: '3.2.1' },
 } as const;
 
 type OpenApiLine = keyof typeof OPENAPI_LINES;
@@ -33,32 +33,25 @@ export function wholeDocument(fragment: JsonValue, version: string): JsonValue {
 
 /**
  * Names each case that holds a fragment the schema of a version line refuses.
+ *
+ * @throws when a fragment names a document its case does not have
  */
 export async function casesRefused(
   cases: readonly CaseDocuments[],
+  fragments: readonly DocumentName[],
   line: OpenApiLine,
 ): Promise<readonly string[]> {
   const refused: string[] = [];
-  for (const entry of cases) {
-    for (const document of entry.json) {
-      if (kindOfDocument(document) !== 'openapi') {
-        continue;
-      }
-      const { schema, version } = OPENAPI_LINES[line];
-      const judgement = await judgeDocument(schema, wholeDocument(document, version));
-      if (!judgement.passes && !refused.includes(entry.id)) {
-        refused.push(entry.id);
-      }
+  const { schema, version } = OPENAPI_LINES[line];
+  for (const fragment of fragments) {
+    const document = caseOf(cases, fragment.case).json[fragment.document];
+    if (document === undefined) {
+      throw new Error(`case ${fragment.case} has no document ${String(fragment.document)}`);
+    }
+    const judgement = await judgeDocument(schema, wholeDocument(document, version));
+    if (!judgement.passes && !refused.includes(fragment.case)) {
+      refused.push(fragment.case);
     }
   }
   return refused;
-}
-
-/**
- * Counts the fragments of OpenAPI documents among the cases.
- */
-export function countOpenApiFragments(cases: readonly CaseDocuments[]): number {
-  return cases
-    .flatMap((entry) => entry.json)
-    .filter((document) => kindOfDocument(document) === 'openapi').length;
 }

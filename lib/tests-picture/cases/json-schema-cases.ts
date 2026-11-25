@@ -60,7 +60,7 @@ function readExpectation(entry: unknown, index: number): JsonSchemaExpectation {
   }
   onlyKeys(entry, ['case', 'document', 'draft', 'with', 'instance', 'accepts'], what);
   const { instance, accepts } = entry;
-  const others: unknown = entry['with'] ?? [];
+  const others: unknown = entry['with'] === undefined ? [] : entry['with'];
   if (!isJsonValue(instance)) {
     throw new TypeError(`${what} has no instance`);
   }
@@ -149,18 +149,17 @@ export async function accepts(
   documents: readonly JsonValue[],
   expectation: Pick<JsonSchemaExpectation, 'document' | 'draft' | 'with' | 'instance'>,
 ): Promise<boolean> {
-  const addresses = expectation.with.map((other) =>
-    register(schemaOf(documents[other], `document ${String(other)}`), expectation.draft),
-  );
-  const address = register(
-    schemaOf(documents[expectation.document], `document ${String(expectation.document)}`),
-    expectation.draft,
-  );
+  const addresses: string[] = [];
   try {
-    const output = await validate(address, expectation.instance);
+    for (const other of [...expectation.with, expectation.document]) {
+      addresses.push(
+        register(schemaOf(documents[other], `document ${String(other)}`), expectation.draft),
+      );
+    }
+    const output = await validate(addresses.at(-1) ?? '', expectation.instance);
     return output.valid;
   } finally {
-    for (const used of [...addresses, address]) {
+    for (const used of addresses) {
       unregisterSchema(used);
     }
   }
@@ -186,41 +185,81 @@ export async function contradictions(
   return found;
 }
 
-const OPENAPI_FIELDS = ['paths', 'components', 'webhooks', 'security', 'servers', 'tags', 'info'];
+/** One JSON document of a case, named by its case and its number among the case's JSON documents. */
+export interface DocumentName {
+  readonly case: string;
+  readonly document: number;
+}
 
-/**
- * Says whether a JSON document of a case is a fragment of an OpenAPI document or a schema.
- * A fragment of an OpenAPI document holds a field of the OpenAPI Object and no `$schema`.
- */
-export function kindOfDocument(document: JsonValue): 'openapi' | 'json-schema' {
-  if (document === null || typeof document !== 'object' || Array.isArray(document)) {
-    return 'json-schema';
-  }
-  const keys = Object.keys(document);
-  return !keys.includes('$schema') && keys.some((key) => OPENAPI_FIELDS.includes(key))
-    ? 'openapi'
-    : 'json-schema';
+function nameOf(name: DocumentName): string {
+  return `${name.case} document ${String(name.document)}`;
 }
 
 /**
- * Names each JSON Schema document of the cases that no expectation runs.
+ * Reads the list of the JSON documents of the cases that are fragments of OpenAPI
+ * documents. The kind of a document is stated in that list, never inferred from its
+ * keys: a schema may hold any key, and a fragment may hold few.
  */
-export function documentsNotRun(
+export function readOpenApiFragmentList(parsed: JsonObject): readonly DocumentName[] {
+  onlyKeys(parsed, ['note', 'fragments'], 'the list of fragments');
+  text(parsed['note'], 'the note of the list of fragments');
+  const { fragments } = parsed;
+  if (!Array.isArray(fragments)) {
+    throw new TypeError('the list of fragments holds no list');
+  }
+  return fragments.map((entry: unknown, index) => {
+    const what = `fragment ${String(index + 1)}`;
+    if (!isJsonObject(entry)) {
+      throw new TypeError(`${what} is not an object`);
+    }
+    onlyKeys(entry, ['case', 'document'], what);
+    return {
+      case: text(entry['case'], `${what}: case`),
+      document: wholeNumber(entry['document'], `${what}: document`),
+    };
+  });
+}
+
+/**
+ * Reads the list of OpenAPI fragments among the cases.
+ */
+export function readOpenApiFragments(): readonly DocumentName[] {
+  const parsed: unknown = JSON.parse(
+    readFileSync(new URL('../__fixtures__/cases/openapi-fragments.json', import.meta.url), 'utf8'),
+  );
+  if (!isJsonObject(parsed)) {
+    throw new TypeError('the list of fragments is not an object');
+  }
+  return readOpenApiFragmentList(parsed);
+}
+
+/**
+ * Says how the JSON documents of the cases are accounted for: each must be a fragment of
+ * an OpenAPI document or a schema that an expectation runs, and never both.
+ */
+export function accountOfDocuments(
   cases: readonly CaseDocuments[],
   expectations: readonly JsonSchemaExpectation[],
-): readonly string[] {
+  fragments: readonly DocumentName[],
+): {
+  readonly neither: readonly string[];
+  readonly both: readonly string[];
+  readonly absent: readonly string[];
+} {
   const run = new Set(
     expectations.flatMap((expectation) =>
-      [expectation.document, ...expectation.with].map(
-        (document) => `${expectation.case} document ${String(document)}`,
+      [expectation.document, ...expectation.with].map((document) =>
+        nameOf({ case: expectation.case, document }),
       ),
     ),
   );
-  return cases
-    .flatMap((entry) =>
-      entry.json.flatMap((document, index) =>
-        kindOfDocument(document) === 'json-schema' ? [`${entry.id} document ${String(index)}`] : [],
-      ),
-    )
-    .filter((name) => !run.has(name));
+  const openapi = new Set(fragments.map((fragment) => nameOf(fragment)));
+  const held = cases.flatMap((entry) =>
+    entry.json.map((_document, document) => nameOf({ case: entry.id, document })),
+  );
+  return {
+    neither: held.filter((name) => !run.has(name) && !openapi.has(name)),
+    both: held.filter((name) => run.has(name) && openapi.has(name)),
+    absent: [...run, ...openapi].filter((name) => !held.includes(name)),
+  };
 }

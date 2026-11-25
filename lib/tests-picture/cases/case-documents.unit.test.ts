@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { caseOf, readCaseDocuments } from './case-documents.js';
+import { caseOf, readCaseDocuments, zodDocumentDigests } from './case-documents.js';
 
 const NOTE = [
   '## A. A section',
@@ -40,6 +40,15 @@ describe('reading the documents of the cases out of a note', () => {
     expect(caseOf(readCaseDocuments(NOTE), 'A2').title).toBe('A second case');
   });
 
+  it('gives a digest for each case that holds a Zod document, which changes with its text', () => {
+    const changed = NOTE.replace('z.string();', 'z.number();');
+    const before = zodDocumentDigests(readCaseDocuments(NOTE));
+    const after = zodDocumentDigests(readCaseDocuments(changed));
+
+    expect(Object.keys(before)).toEqual(['A2']);
+    expect(after['A2']).not.toBe(before['A2']);
+  });
+
   it('refuses to find a case the note does not have', () => {
     expect(() => caseOf(readCaseDocuments(NOTE), 'Z9')).toThrow('the note has no case Z9');
   });
@@ -48,6 +57,14 @@ describe('reading the documents of the cases out of a note', () => {
     const broken = ['### A1. A case', '```json', '{ "type": ', '```'].join('\n');
 
     expect(() => readCaseDocuments(broken)).toThrow('a JSON document of case A1 does not parse');
+  });
+
+  it('refuses a note that ends inside a fence', () => {
+    const open = ['### A1. A case', '```json', '{ "type": "string" }'].join('\n');
+
+    expect(() => readCaseDocuments(open)).toThrow(
+      'the note ends inside a fence that is not closed',
+    );
   });
 
   it('refuses two cases of one key', () => {

@@ -420,16 +420,20 @@ documents out of the note and runs them:
 
 - **JSON Schema.** What the note says each schema accepts and refuses is data,
   [`__fixtures__/cases/json-schema-expectations.json`](__fixtures__/cases/json-schema-expectations.json),
-  123 statements. Each is run under `@hyperjump/json-schema`, in the draft it names, and
-  a test fails for a schema of the note that no statement runs. The texts decide what a
+  123 statements. Each is run under `@hyperjump/json-schema`, in the draft it names.
+  Which JSON documents of the note are fragments of OpenAPI documents is stated in
+  [`__fixtures__/cases/openapi-fragments.json`](__fixtures__/cases/openapi-fragments.json),
+  never inferred from a document's keys, and a test fails for a JSON document that is
+  neither listed there nor run by a statement, or is both. The texts decide what a
   schema accepts; this validator agreed with them wherever the cases were checked, and
   Ajv does not.
 - **OpenAPI.** Each of the 31 fragments, with `openapi` and `info` supplied, is judged
   against the pinned schema published for 3.2 and admitted by it. Four use what 3.2
   added and are refused by the schema for 3.1; the test names them.
-- **Zod.** Each case that holds a Zod document has a test that builds it against the
-  installed Zod and proves what the note says it does. A test fails when the note gains
-  a Zod document with no test.
+- **Zod.** Each case that holds a Zod document has a test that builds the same schema in
+  code against the installed Zod and proves what the note says it does. The note's text
+  is not executed. Each test is tied to the text it was written against by a digest: a
+  test fails when a case's Zod text changes, or a case gains or loses a Zod document.
 
 What this does not prove: that a document means what the note says beyond what a
 validator can show. A reference kept as a reference, a name, where a default came from:

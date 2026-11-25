@@ -2,33 +2,38 @@
  * The Zod documents of the cases, run against the installed Zod.
  *
  * Each case of the note that holds a Zod document has a test here that builds it and
- * proves what the note says it does. The last test reads the note from the repository, so
- * this is an end-to-end test: it fails when the note gains a Zod document with no test.
+ * proves what the note says it does. The tests build each schema in code; they do not
+ * execute the note's text. The last test reads the note from the repository, so this is an
+ * end-to-end test: it fails when a case's Zod text changes, or a case gains or loses one.
  */
 
 import { describe, it, expect } from 'vitest';
 import * as z from 'zod';
 
-import { readCasesNote } from './case-documents.js';
+import { readCasesNote, zodDocumentDigests } from './case-documents.js';
 
-/** The cases this file runs: every case of the note that holds a Zod document. */
-const RUN = [
-  'A20',
-  'C1',
-  'C3',
-  'C4',
-  'C5',
-  'C6',
-  'D1',
-  'D2',
-  'D4',
-  'E6',
-  'H2',
-  'I1',
-  'I2',
-  'I4',
-  'I5',
-];
+/**
+ * The cases this file runs, each with the digest of its Zod text in the note as it was
+ * when the test was written against it. A case's text that changes fails the last test,
+ * and so does a case that gains or loses a Zod document.
+ */
+const RUN = {
+  A20: 'b7e3945e5d715e6b',
+  C1: 'da9bf0c0271cc747',
+  C3: 'e3777b3254697857',
+  C4: '05d9c4cd863d968b',
+  C5: '0c62b93b9d442201',
+  C6: '0526f55fe102850b',
+  D1: 'e49200e20a90774a',
+  D2: '889a623f81bc7732',
+  D4: '94f60153ecca366e',
+  E6: 'bf06ea85fe78e5ad',
+  H2: '1f757259ca6d3e52',
+  I1: '3bc5c56412555b62',
+  I2: '9466cae24ee96ce9',
+  I4: '870e9cc92ca70586',
+  I5: 'a6d65eb5193787b8',
+};
 
 const A = z.object({ a: z.string() });
 const AB = z.object({ a: z.string(), b: z.string() });
@@ -201,11 +206,7 @@ describe('the Zod documents of the cases', () => {
 });
 
 describe('the cases note', () => {
-  it('holds a Zod document in exactly the cases run here', () => {
-    const held = readCasesNote()
-      .filter((entry) => entry.zod.length > 0)
-      .map((entry) => entry.id);
-
-    expect([...held].sort()).toEqual([...RUN].sort());
+  it('holds, in exactly the cases run here, the Zod text each test was written against', () => {
+    expect(zodDocumentDigests(readCasesNote())).toEqual(RUN);
   });
 });

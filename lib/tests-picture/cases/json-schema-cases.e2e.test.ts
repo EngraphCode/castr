@@ -13,10 +13,11 @@ import { readCaseDocuments, readCasesNote } from './case-documents.js';
 import {
   accepts,
   contradictions,
-  documentsNotRun,
-  kindOfDocument,
+  accountOfDocuments,
   readJsonSchemaExpectationList,
   readJsonSchemaExpectations,
+  readOpenApiFragmentList,
+  readOpenApiFragments,
 } from './json-schema-cases.js';
 
 describe('running one document against one value', () => {
@@ -79,6 +80,26 @@ describe('running one document against one value', () => {
     expect(result).toBe(true);
   });
 
+  it('leaves nothing registered when a later document cannot be read', async () => {
+    const withOwnAddress = [{ $id: 'https://cases.invalid/own', type: 'string' }];
+    const failing = accepts(withOwnAddress, {
+      document: 5,
+      draft: '2020-12',
+      with: [0],
+      instance: 's',
+    });
+    await expect(failing).rejects.toThrow('document 5 is not a schema');
+
+    const again = await accepts(withOwnAddress, {
+      document: 0,
+      draft: '2020-12',
+      with: [],
+      instance: 's',
+    });
+
+    expect(again).toBe(true);
+  });
+
   it('refuses a document the case does not have', async () => {
     await expect(
       accepts(documents, { document: 7, draft: '2020-12', with: [], instance: 5 }),
@@ -115,15 +136,46 @@ describe('finding what the validator contradicts, and what is not run', () => {
     ]);
   });
 
-  it('names a JSON Schema document no expectation runs, and no fragment of OpenAPI', () => {
-    expect(documentsNotRun(cases, expectations)).toEqual(['A1 document 2']);
+  it('names a document that is neither run nor listed as a fragment', () => {
+    const fragments = [{ case: 'A1', document: 1 }];
+
+    expect(accountOfDocuments(cases, expectations, fragments)).toEqual({
+      neither: ['A1 document 2'],
+      both: [],
+      absent: [],
+    });
   });
 
-  it('takes a document with a field of the OpenAPI Object and no `$schema` as OpenAPI', () => {
-    expect(kindOfDocument({ components: {} })).toBe('openapi');
-    expect(kindOfDocument({ $schema: 'x', components: {} })).toBe('json-schema');
-    expect(kindOfDocument({ properties: {} })).toBe('json-schema');
-    expect(kindOfDocument(true)).toBe('json-schema');
+  it('names a document that is both run and listed as a fragment, and one the note lacks', () => {
+    const fragments = [
+      { case: 'A1', document: 0 },
+      { case: 'A1', document: 1 },
+      { case: 'A1', document: 2 },
+      { case: 'A1', document: 9 },
+    ];
+
+    expect(accountOfDocuments(cases, expectations, fragments)).toEqual({
+      neither: [],
+      both: ['A1 document 0'],
+      absent: ['A1 document 9'],
+    });
+  });
+
+  it('refuses an expectation whose `with` is not a list', () => {
+    const wrong = {
+      note: 'Expectations.',
+      expectations: [
+        { case: 'A1', document: 0, draft: '2020-12', with: null, instance: 5, accepts: true },
+      ],
+    };
+
+    expect(() => readJsonSchemaExpectationList(wrong)).toThrow('expectation 1: with is not a list');
+  });
+
+  it('refuses a list of fragments with a key it does not have', () => {
+    const wrong = { note: 'Fragments.', fragments: [{ case: 'A1', document: 0, kind: 'x' }] };
+
+    expect(() => readOpenApiFragmentList(wrong)).toThrow('fragment 1');
   });
 
   it('refuses an expectation that does not say whether the value is accepted', () => {
@@ -155,8 +207,12 @@ describe('the JSON Schema documents of the cases note', () => {
     expect(await contradictions(cases, expectations)).toEqual([]);
   });
 
-  it('are each run by at least one expectation', () => {
-    expect(documentsNotRun(cases, expectations)).toEqual([]);
+  it('are each run by an expectation, and every other JSON document is listed as OpenAPI', () => {
+    expect(accountOfDocuments(cases, expectations, readOpenApiFragments())).toEqual({
+      neither: [],
+      both: [],
+      absent: [],
+    });
   });
 
   it('are stated by 123 expectations', () => {
