@@ -107,15 +107,15 @@ describe('the hand list of what the JSON Schema texts define', () => {
     expect(new Set(said).size).toBe(said.length);
   });
 
-  it('counts its 135 rows by the drafts they are true of', () => {
+  it('counts its 134 rows by the drafts they are true of', () => {
     const count = (drafts: JsonSchemaTextConstruct['drafts']): number =>
       constructs.filter((construct) => construct.drafts === drafts).length;
 
-    expect(constructs).toHaveLength(135);
+    expect(constructs).toHaveLength(134);
     expect({ both: count('both'), new: count('2020-12'), old: count('draft-07') }).toEqual({
-      both: 36,
-      new: 66,
-      old: 33,
+      both: 34,
+      new: 68,
+      old: 32,
     });
   });
 
@@ -132,13 +132,13 @@ describe('the hand list of what the JSON Schema texts define', () => {
       grammar: count('grammar'),
       undefined: count('undefined'),
     }).toEqual({
-      holds: 88,
+      holds: 86,
       default: 3,
-      reading: 13,
-      runtime: 3,
-      validity: 1,
+      reading: 12,
+      runtime: 4,
+      validity: 3,
       grammar: 18,
-      undefined: 9,
+      undefined: 8,
     });
   });
 });

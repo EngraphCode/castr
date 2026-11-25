@@ -119,44 +119,56 @@ describe('reading pins', () => {
   const { pin } = pinOf(PAGE, 'respec-html', PAGE_SECTIONS);
 
   it('reads a pin of the right shape and finds its sections by name', () => {
-    const pins = readTextPins({ texts: [{ ...pin }] });
+    const pins = readTextPins({ note: 'Pins.', texts: [{ ...pin }] });
 
     expect(sectionsOfText(pins, 'a text')).toEqual(['1', '1.1', 'A', 'A.1']);
   });
 
   it('refuses a pin with no sections', () => {
-    expect(() => readTextPins({ texts: [{ ...pin, sections: [] }] })).toThrow('has no sections');
+    expect(() => readTextPins({ note: 'Pins.', texts: [{ ...pin, sections: [] }] })).toThrow(
+      'has no sections',
+    );
   });
 
   it('refuses a pin with no digest', () => {
-    expect(() => readTextPins({ texts: [{ ...pin, sha256: '' }] })).toThrow('has no sha256');
+    expect(() => readTextPins({ note: 'Pins.', texts: [{ ...pin, sha256: '' }] })).toThrow(
+      'has no sha256',
+    );
   });
 
   it('refuses a pin with a key a pin does not have', () => {
-    expect(() => readTextPins({ texts: [{ ...pin, version: '1' }] })).toThrow(
+    expect(() => readTextPins({ note: 'Pins.', texts: [{ ...pin, version: '1' }] })).toThrow(
       'holds a key a pin does not have: version',
     );
   });
 
   it('refuses a file with a key the file does not have', () => {
-    expect(() => readTextPins({ texts: [{ ...pin }], extra: true })).toThrow(
+    expect(() => readTextPins({ note: 'Pins.', texts: [{ ...pin }], extra: true })).toThrow(
       'the file of pinned texts holds a key a pin does not have: extra',
     );
   });
 
+  it('refuses a file with no note', () => {
+    expect(() => readTextPins({ texts: [{ ...pin }] })).toThrow(
+      'the file of pinned texts has no note',
+    );
+  });
+
   it('refuses two pins of one name', () => {
-    expect(() => readTextPins({ texts: [{ ...pin }, { ...pin }] })).toThrow(
+    expect(() => readTextPins({ note: 'Pins.', texts: [{ ...pin }, { ...pin }] })).toThrow(
       'more than one text is pinned as a text',
     );
   });
 
   it('refuses a markup it cannot read', () => {
-    expect(() => readTextPins({ texts: [{ ...pin, markup: 'pdf' }] })).toThrow('markup');
+    expect(() => readTextPins({ note: 'Pins.', texts: [{ ...pin, markup: 'pdf' }] })).toThrow(
+      'markup',
+    );
   });
 
   it('refuses to find a text that is not pinned', () => {
-    expect(() => sectionsOfText(readTextPins({ texts: [{ ...pin }] }), 'another')).toThrow(
-      'no text is pinned as another',
-    );
+    expect(() =>
+      sectionsOfText(readTextPins({ note: 'Pins.', texts: [{ ...pin }] }), 'another'),
+    ).toThrow('no text is pinned as another');
   });
 });

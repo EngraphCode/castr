@@ -93,6 +93,7 @@ function readPin(entry: unknown, index: number): TextPin {
  */
 export function readTextPins(parsed: JsonObject): readonly TextPin[] {
   refuseOtherKeys(parsed, FILE_KEYS, 'the file of pinned texts');
+  requireString(parsed, 'note', 'the file of pinned texts');
   const { texts } = parsed;
   if (!Array.isArray(texts)) {
     throw new TypeError('the file of pinned texts holds no list of texts');

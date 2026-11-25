@@ -354,11 +354,16 @@ registry was not read.
 What the JSON Schema texts define beyond their meta-schemas is a third list made by hand,
 [`__fixtures__/texts/json-schema-text-constructs.json`](__fixtures__/texts/json-schema-text-constructs.json),
 read and checked for shape by
-[`rows/json-schema-text-constructs.ts`](rows/json-schema-text-constructs.ts): 135 rows
-from the core and the validation text of Draft 2020-12 and of Draft-07. 36 are true of
-both drafts, 66 of 2020-12 alone and 33 of Draft-07 alone. The kinds are the same seven:
-88 hold a fact, 3 a default, 13 a rule for reading, 3 a rule for a tool at run time, 1 a
-validity rule, 18 a grammar, and 9 something a text leaves undefined.
+[`rows/json-schema-text-constructs.ts`](rows/json-schema-text-constructs.ts): 134 rows
+from the core and the validation text of Draft 2020-12 and of Draft-07. 34 are true of
+both drafts, 68 of 2020-12 alone and 32 of Draft-07 alone. The kinds are the same seven:
+86 hold a fact, 3 a default, 12 a rule for reading, 4 a rule for a tool at run time, 3 a
+validity rule, 18 a grammar, and 8 something a text leaves undefined.
+
+A row says how strongly the text speaks and to whom: "must", "should" and "may" in a
+row are the text's own level, and "a tool" is the text's implementation. After review
+found rows that turned a recommendation into a fact, every row was read again against
+its sections for that fault, and 48 were rewritten.
 
 A meta-schema says what keywords a schema may hold. The texts say what the model has to
 be able to state about them:
