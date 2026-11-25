@@ -144,6 +144,12 @@ describe('reading pins', () => {
     );
   });
 
+  it('refuses two pins of one name', () => {
+    expect(() => readTextPins({ texts: [{ ...pin }, { ...pin }] })).toThrow(
+      'more than one text is pinned as a text',
+    );
+  });
+
   it('refuses a markup it cannot read', () => {
     expect(() => readTextPins({ texts: [{ ...pin, markup: 'pdf' }] })).toThrow('markup');
   });

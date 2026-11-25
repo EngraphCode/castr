@@ -97,7 +97,13 @@ export function readTextPins(parsed: JsonObject): readonly TextPin[] {
   if (!Array.isArray(texts)) {
     throw new TypeError('the file of pinned texts holds no list of texts');
   }
-  return texts.map((entry: unknown, index) => readPin(entry, index));
+  const pins = texts.map((entry: unknown, index) => readPin(entry, index));
+  const names = pins.map((pin) => pin.text);
+  const twice = names.filter((name, index) => names.indexOf(name) !== index);
+  if (twice.length > 0) {
+    throw new TypeError(`more than one text is pinned as ${twice.join(', ')}`);
+  }
+  return pins;
 }
 
 /**

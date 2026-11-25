@@ -77,13 +77,15 @@ describe('reading a hand list of the JSON Schema texts', () => {
   });
 
   it('cites the 2020-12 text for a row true of both drafts, and Draft-07 for one true of it alone', () => {
-    const [both, old] = readJsonSchemaTextConstructList({
+    const read = readJsonSchemaTextConstructList({
       note: 'A list.',
       constructs: [row, { ...row, drafts: 'draft-07', document: 'validation' }],
     });
 
-    expect(both === undefined ? '' : citedTextOf(both)).toBe('2020-12 core');
-    expect(old === undefined ? '' : citedTextOf(old)).toBe('draft-07 validation');
+    expect(read.map((construct) => citedTextOf(construct))).toEqual([
+      '2020-12 core',
+      'draft-07 validation',
+    ]);
   });
 });
 
