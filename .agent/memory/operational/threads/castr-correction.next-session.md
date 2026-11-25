@@ -204,6 +204,49 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
   OpenAPI hand list, merged earlier, was written the same way and has not had this
   sweep: it is owed, as its own pull request.** A hand list of what a text says needs
   this sweep before its first push, not after its fifth review.
+  Pull request 203 merged (`43af051b`) after six rounds; the sixth point, that the check
+  of citations against the pins is logic in a test, was answered on its thread and is
+  owed in the pull request that sweeps the OpenAPI list, for both tests at once. One
+  point was declined: a reviewer says a test that reads files in its own process is not
+  end to end. All eleven test files of the picture name a test that reads the pinned
+  files `.e2e.test.ts`; whether that name is right is a question for the directory as a
+  whole and is not settled. **M1 is complete.**
+- 2026-11-25, M2 and M3, the cases and the survey. **Step back.** (1) Neither note
+  changes anything for Oak's document; the owner was told at M0's close that the design
+  steps would not. (2) The step is larger than the plan gave it: the cases note has 70
+  cases and seven equivalence sets where the plan's first list had about forty. That is the attack doing its work
+  and no drift: every added case is a document a reader showed the first list could not
+  hold. (3) Lens used for what to add: the longest view. A case left out now is a fault
+  found in the structure after the amendment. **Done:** two notes under
+  `.agent/analysis-and-reports/`, `model-design-survey-2026-11-25.md` and
+  `model-design-cases-2026-11-25.md`, and the three readers' attacks kept whole under
+  `.agent/research/model-design-2026-11-24/attack-on-cases-*.md`. **The survey's
+  finding:** no surveyed system holds all the specification asks, so none is taken
+  whole; four ideas recur where meaning survives (a definition keyed by its source's
+  identity; evaluation as a result and the set of what was evaluated; the two sides as
+  views of one node; exact numbers). **What the attack found in the seat's draft:** four
+  false claims (one in OpenAPI, one in JSON Schema, two in Zod) and seventeen that said
+  more than the source, the same fault as in the
+  hand lists. The seat had checked that each Zod fragment ran, not that it matched the
+  other members of its set. **What the seat checked of the finished note:** 116 stated
+  passes and failures hold under Hyperjump; all 31 OpenAPI fragments are valid under the
+  schema published for 3.2 (four use fields 3.2 added); the OpenAPI reader's quotations
+  are in the texts; each of the Zod reader's findings was run again. **Not checked:**
+  that every sentence of each added OpenAPI case follows from the text; the papers'
+  proofs. **For the amendment (M5), found here:**
+  - SPEC-P-1 does not say which schema object a supplied closure lands on. Closed in
+    place, the base of a composition refuses the keys the composition adds (cases B1,
+    B2, B6 and C2). Its rule for writing points at the composed object.
+  - Appendix A has no row for a record, an intersection, `z.xor`, or a discriminated
+    union, beside those found at M1.
+  - `z.int64()` accepts only a bigint, so matching it to `format: int64` by name makes a
+    validator that refuses every JSON number.
+    **For the design (M4):** neither Ajv nor Zod's own `toJSONSchema` is an oracle. Ajv 8
+    departs from the texts on a lone `if` and on `contains` with `unevaluatedItems` (the
+    seat ran both); Zod's writer states the wrong accepted set for `coerce`, `catch`,
+    `trim`, a URL's parameters and a pattern's flags. A proof that uses either as its
+    reference inherits those faults. Hyperjump agreed with the texts wherever it was
+    checked.
 
 - 2026-11-24, M0, the reviews. The assumptions reviewer and the four seats of the
   conscience panel read the first draft. All four seats judged the work on track; three

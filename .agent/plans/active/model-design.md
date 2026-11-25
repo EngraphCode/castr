@@ -19,15 +19,15 @@ todos:
     depends_on: []
   - id: M1-SURFACE
     content: 'The construct kinds of the formats in section 6 that the picture does not already list are listed beside its rows: JSON Schema Draft-07 computed from its meta-schema, Zod 4 computed from the installed package at a pinned version and set against Appendix A, and, for each format, the kinds no machine-readable file holds, listed by hand and marked so. A test recomputes each computed list.'
-    status: in_progress
+    status: completed
     depends_on: [M0-PLAN]
   - id: M2-CASES
     content: 'The hard cases and the equivalence sets are written as small valid documents, each with the sentence of the specification it tests and what a naive structure loses, attacked before the note lands by a reader who knows each format read: OpenAPI, JSON Schema and Zod.'
-    status: pending
+    status: completed
     depends_on: [M0-PLAN]
   - id: M3-SURVEY
     content: 'One bounded survey of how other compilers of data definitions hold shapes, references and evaluation that is not local, saved as a research note that says for each what it would cost Castr and what it loses. Budget: one pass of overlapping readers, synthesised by the seat.'
-    status: pending
+    status: completed
     depends_on: [M0-PLAN]
   - id: M4-DESIGN
     content: 'The structure is chosen, by the lenses, from the definitions of section 3 and the cases, never from the present model. It is held as a prototype of types on a branch nothing in src reads, on which acceptance proofs 1 to 6 pass. The owner is told the core of it in a few lines when it is chosen.'
