@@ -65,9 +65,11 @@ floor.
 ```
 
 - **Tests:** SPEC-PR-3; SPEC-AR-1, the model is format-agnostic.
-- **Holds:** a reference to a parameter and to a response in the same way as to a schema:
-  an edge to a thing with an identity. Likewise a request body, a header, an example, a
-  link, a callback, a path item, a security scheme and, in 3.2, a media type.
+- **Holds:** a reference to a parameter and to a response as an edge to a thing with an
+  identity, as for a schema. Likewise a request body, a header, an example, a link, a
+  callback, a path item, a security scheme and, in 3.2, a media type. What stands beside
+  the reference is read by a different rule for each of three kinds of reference
+  (case A12).
 - **A naive structure loses:** the kinds other than schema, if "reference" is a kind of
   schema node.
 
@@ -83,7 +85,9 @@ floor.
 ```
 
 - **Tests:** SPEC-PR-3; Appendix B.4's rows for a path.
-- **Holds:** that the path is given by reference, and to what.
+- **Holds:** that the path is given by reference, and to what. Where a field stands both
+  beside the reference and in the path item referred to, the text leaves the behaviour
+  undefined, and the model holds that both were stated.
 - **A naive structure loses:** the name, if the reader resolves the reference and keeps
   only the operations.
 
@@ -178,8 +182,10 @@ floor.
 
 - **Tests:** SPEC-PR-3; SPEC-FV-1, what the reader refuses.
 - **Holds:** an edge to a thing in another document, with which document. The OpenAPI text
-  says only the entry document's paths add to the API, and leaves how a name is resolved
-  from another document to the implementation.
+  says only the entry document's paths contribute URLs to the API; a path item of another
+  document still enters by reference. For a connection made by name it recommends
+  resolving from the entry document and leaves the choice to the implementation (case
+  A17).
 - **A naive structure loses:** the boundary between documents, if the reader bundles
   everything into one before the model sees it.
 
@@ -207,9 +213,14 @@ floor.
 ```
 
 - **Tests:** SPEC-PR-3; SPEC-AR-3, semantic operations only.
-- **Holds:** four edges that the source writes as a bare name: a security requirement to
-  its scheme, an operation to its tag, a link to its operation, and (case A9) a
-  discriminator value to a schema.
+- **Holds:** edges that the source writes as a bare name: a security requirement to its
+  scheme, an operation to its tag, a link to its operation, and (case A9) a discriminator
+  value to a schema. Three things a design must not assume of them:
+  - a tag an operation names need not be declared, so that edge may have no target, and
+    the tag is still a tag;
+  - in 3.2 the key of a security requirement is the name of a declared scheme or the URI
+    of one, and a name wins;
+  - 3.2 adds an edge from a tag to its `parent` tag, which must exist.
 - **A naive structure loses:** the edges. They are strings in the source, and a model
   that keeps them as strings makes every writer look the name up again by matching text.
 
@@ -282,6 +293,400 @@ floor.
   places hold schemas, and does not make `#/definitions/x` and `#/$defs/x` one target.
 - **A naive structure loses:** one of them, if it merges the two keywords into one table
   keyed by the last path segment.
+
+### A12. Three kinds of reference, and what stands beside each
+
+```json
+{
+  "paths": {
+    "/pets": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Limit",
+            "description": "Page size for this list",
+            "x-a": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/T",
+                  "description": "here",
+                  "x-a": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "Limit": {
+        "name": "limit",
+        "in": "query",
+        "description": "Page size",
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
+    "schemas": {
+      "T": {
+        "type": "string",
+        "description": "there"
+      }
+    }
+  }
+}
+```
+
+- **Tests:** SPEC-PR-1; SPEC-PR-2.
+- **Holds:** three rules. Beside a Reference Object, `summary` and `description` replace
+  the target's and any other key is ignored: here the parameter's description is the new
+  one and `x-a` states nothing. Beside a schema's `$ref`, every keyword applies: both
+  descriptions stand and `x-a` is kept. Beside a path item's `$ref`, the behaviour is
+  undefined (case A3).
+- **A naive structure loses:** the override, if an edge carries nothing; or the
+  difference, if one node shape is "a reference and its siblings".
+
+### A13. A reference to a place that has no name
+
+```json
+{
+  "paths": {
+    "/pets/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "links": {
+              "self": {
+                "operationRef": "#/paths/~1pets~1%7Bid%7D/get"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet/properties/owner"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Pet": {
+        "type": "object",
+        "properties": {
+          "owner": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+- **Tests:** SPEC-PR-3; SPEC-AR-3.
+- **Holds:** an edge to a thing that is not a named definition: an operation, found by
+  its path and method, and a property's schema inside another definition. The source
+  writes each as a JSON Pointer, with `~1` for a slash and percent-escapes for the
+  braces.
+- **A naive structure loses:** these edges, if a reference can only point at an entry of
+  a table of names; or their target, if the pointer stays text for a writer to decode.
+
+### A14. One path item, referenced from two paths
+
+```json
+{
+  "paths": {
+    "/a": {
+      "$ref": "#/components/pathItems/P"
+    },
+    "/b": {
+      "$ref": "#/components/pathItems/P"
+    }
+  },
+  "components": {
+    "pathItems": {
+      "P": {
+        "get": {
+          "operationId": "op",
+          "responses": {
+            "200": {
+              "description": "ok",
+              "links": {
+                "again": {
+                  "operationId": "op"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+- **Tests:** SPEC-PR-3; SPEC-PR-2.
+- **Holds:** one definition used at two paths, which is two operations stated once. The
+  text says an `operationId` in a path item referenced more than once cannot be resolved
+  unambiguously and leaves the outcome to the implementation; the model holds what was
+  stated and that the link's target is ambiguous.
+- **A naive structure loses:** one of the two operations, if an operation's identity is
+  its object or its `operationId`; or the sharing, if the reader copies the path item.
+
+### A15. A schema that is its own resource inside an OpenAPI document
+
+```json
+{
+  "components": {
+    "schemas": {
+      "Legacy": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "$id": "https://example.com/legacy",
+        "definitions": {
+          "N": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "n": {
+            "$ref": "#/definitions/N",
+            "maxLength": 3
+          },
+          "o": {
+            "$ref": "owner"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+- **Tests:** SPEC-PR-3; the definition of "document" in section 3.
+- **Holds:** a resource with its own dialect and its own base. The OpenAPI text says a
+  `$schema` in a resource root always overrides any default. So here `maxLength` beside
+  the `$ref` states nothing (case A4), `#/definitions/N` is found inside `Legacy` and not
+  at the root of the OpenAPI document, and `owner` is `https://example.com/owner`.
+- **A naive structure loses:** all three, if a document has one dialect and one base.
+
+### A16. A discriminator on a parent, with a default
+
+```json
+{
+  "components": {
+    "schemas": {
+      "Pet": {
+        "type": "object",
+        "properties": {
+          "petType": {
+            "type": "string"
+          }
+        },
+        "discriminator": {
+          "propertyName": "petType",
+          "defaultMapping": "OtherPet"
+        }
+      },
+      "Cat": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Pet"
+          },
+          {
+            "properties": {
+              "petType": {
+                "const": "Cat"
+              }
+            },
+            "required": ["petType"]
+          }
+        ]
+      },
+      "OtherPet": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Pet"
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+- **Tests:** SPEC-PR-3; SPEC-PR-7.
+- **Holds:** a discriminator on a schema that lists no alternatives. The alternatives are
+  the schemas that build on it through `allOf`, so the edges run from child to parent.
+  3.2's `defaultMapping` names the schema for a value no mapping covers. The text says
+  validation does not search for child schemas, so none of this changes what validates.
+- **A naive structure loses:** the alternatives, if it holds only those listed under
+  `oneOf` or `anyOf`; or the meaning, if it builds a `oneOf` from the children.
+
+### A17. A name resolved from the entry document
+
+The entry document, then `other.json`:
+
+```json
+{
+  "components": {
+    "securitySchemes": {
+      "S": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "paths": {
+    "/foo": {
+      "$ref": "other.json#/components/pathItems/Foo"
+    }
+  }
+}
+```
+
+```json
+{
+  "components": {
+    "securitySchemes": {
+      "S": {
+        "type": "http",
+        "scheme": "basic"
+      }
+    },
+    "pathItems": {
+      "Foo": {
+        "get": {
+          "security": [
+            {
+              "S": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "ok"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+- **Tests:** SPEC-PR-3; SPEC-PR-7.
+- **Holds:** that the requirement names `S`, in which document it was written, and that
+  the text recommends the entry document's `S` (bearer) and allows an implementation the
+  other (basic).
+- **A naive structure loses:** the choice, if a name is resolved in the document it was
+  written in before the model sees it.
+
+### A18. More connections made by name
+
+```json
+{
+  "tags": [
+    {
+      "name": "cats",
+      "parent": "pets"
+    },
+    {
+      "name": "pets"
+    }
+  ],
+  "paths": {
+    "/files/{name}.{ext}": {
+      "get": {
+        "operationId": "getFile",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ext",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "links": {
+              "same": {
+                "operationId": "getFile",
+                "parameters": {
+                  "path.name": "$request.path.name"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+- **Tests:** SPEC-PR-3; SPEC-AR-3.
+- **Holds:** a path as a template whose expressions are edges to path parameters, two of
+  them in one segment here; a link's parameter key as an edge to a parameter of the
+  target operation, by location and name; a tag's parent. An `encoding` key is a fourth
+  (case F8).
+- **A naive structure loses:** each, if the path, the key and the name stay text.
+
+### A19. One value read as two kinds
+
+```json
+{
+  "paths": {
+    "/x": {
+      "$ref": "#/components/schemas/E"
+    }
+  },
+  "components": {
+    "schemas": {
+      "E": {}
+    }
+  }
+}
+```
+
+- **Tests:** SPEC-PR-2; SPEC-FV-1.
+- **Holds:** nothing by guessing. The text's own example: one `{}` reached as a schema
+  and as a path item, with the behaviour left to the implementation. Castr either refuses
+  it or holds two things read from one place; the design says which.
+- **A naive structure loses:** silently, if a thing's kind is decided by where it sits.
 
 ## B. Evaluation that is not local to one schema object
 
@@ -499,6 +904,38 @@ z.union([AB, A]).parse({ a: 'x', b: 'y' }); // { a: 'x', b: 'y' }
   than what it accepts. The two unions accept the same values and produce different ones.
 - **A naive structure loses:** the produced side, if it sorts or merges alternatives.
 
+### D3. Read-only and write-only: two sides in OpenAPI itself
+
+```json
+{
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "required": ["id", "password"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "password": {
+            "type": "string",
+            "writeOnly": true
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+- **Tests:** SPEC-PR-1; section 3's meaning includes read-only and write-only.
+- **Holds:** one schema with a fact on each of two properties. The OpenAPI text says a
+  required read-only property is required in a response only, and a required write-only
+  property in a request only.
+- **A naive structure loses:** one direction, if a shape has one list of required keys
+  with no side.
+
 ## E. Values held exactly
 
 ### E1. Numbers beyond a double
@@ -593,39 +1030,99 @@ z.union([AB, A]).parse({ a: 'x', b: 'y' }); // { a: 'x', b: 'y' }
 
 ```json
 {
-  "parameters": [
-    { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
-    {
-      "name": "q",
-      "in": "query",
-      "style": "deepObject",
-      "explode": true,
-      "schema": { "type": "object" }
-    },
-    { "name": "X-Trace", "in": "header", "schema": { "type": "string" } },
-    { "name": "session", "in": "cookie", "schema": { "type": "string" } },
-    {
-      "name": "filter",
-      "in": "query",
-      "content": { "application/json": { "schema": { "type": "object" } } }
+  "paths": {
+    "/pets/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object"
+            }
+          },
+          {
+            "name": "X-Trace",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          }
+        }
+      }
     }
-  ]
+  }
 }
 ```
 
 - **Tests:** SPEC-P-5, anything in a closed OpenAPI specification can be carried.
 - **Holds:** the location; and that a parameter is described either by a schema and a
   style or by a media type, never both. In 3.2 a fifth location, `querystring`, takes the
-  whole query string as one value and has no use for a name.
+  whole query string as one value. It still has a name, which with its location is its
+  identity and is not used when the value is serialised; it is described by `content`
+  only, and does not stand beside a `query` parameter.
 - **A naive structure loses:** `content`, if a parameter always has a schema.
 
 ### F3. Defaults the text supplies
 
 ```json
 {
-  "parameters": [
-    { "name": "ids", "in": "query", "schema": { "type": "array", "items": { "type": "string" } } }
-  ]
+  "paths": {
+    "/pets": {
+      "get": {
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          }
+        }
+      }
+    }
+  }
 }
 ```
 
@@ -640,14 +1137,32 @@ z.union([AB, A]).parse({ a: 'x', b: 'y' }); // { a: 'x', b: 'y' }
 
 ```json
 {
-  "responses": {
-    "200": {
-      "description": "ok",
-      "content": { "application/json": { "schema": { "type": "object" } } }
-    },
-    "204": { "description": "nothing" },
-    "4XX": { "description": "your fault" },
-    "default": { "description": "anything else" }
+  "paths": {
+    "/pets": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "nothing"
+          },
+          "4XX": {
+            "description": "your fault"
+          },
+          "default": {
+            "description": "anything else"
+          }
+        }
+      }
+    }
   }
 }
 ```
@@ -662,11 +1177,31 @@ z.union([AB, A]).parse({ a: 'x', b: 'y' }); // { a: 'x', b: 'y' }
 
 ```json
 {
-  "parameters": [{ "name": "Content-Type", "in": "header", "schema": { "type": "string" } }],
-  "responses": {
-    "200": {
-      "description": "ok",
-      "headers": { "content-type": { "schema": { "type": "string" } } }
+  "paths": {
+    "/pets": {
+      "get": {
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "headers": {
+              "content-type": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -693,7 +1228,10 @@ z.union([AB, A]).parse({ a: 'x', b: 'y' }); // { a: 'x', b: 'y' }
 
 - **Tests:** SPEC-P-5; section 6, OpenAPI 3.2.x is read.
 - **Holds:** a method as a value that is not from a fixed list, with its capitals as sent.
-- **A naive structure loses:** `PURGE`, if a method is one of eight field names.
+  A path item has eight fixed method fields in 3.1 and nine in 3.2, where `query` is the
+  ninth.
+- **A naive structure loses:** `PURGE`, and `query` too, if a method is one of 3.1's eight
+  field names.
 
 ### F7. Webhooks and callbacks
 
@@ -716,9 +1254,76 @@ z.union([AB, A]).parse({ a: 'x', b: 'y' }); // { a: 'x', b: 'y' }
 ```
 
 - **Tests:** SPEC-C-1's five types include `webhooks`; SPEC-AR-3.
-- **Holds:** requests the provider makes. A webhook is keyed by a name. A callback is
-  keyed by a runtime expression, which has a grammar.
-- **A naive structure loses:** the expression's structure, if the key stays text.
+- **Holds:** requests the provider makes. A webhook is keyed by a name. A callback has
+  two keys: the operation's `callbacks` map is keyed by a name, and inside the callback
+  each key is a URL template, literal text with one or more runtime expressions in it.
+  The expression has a grammar; the template around it is the text and the expressions in
+  order. A key there that begins `x-` is an extension.
+- **A naive structure loses:** the template's structure, if the key stays text.
+
+### F8. A request body
+
+```json
+{
+  "paths": {
+    "/up": {
+      "post": {
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "contentMediaType": "image/png"
+                  },
+                  "meta": {
+                    "type": "object"
+                  }
+                }
+              },
+              "encoding": {
+                "meta": {
+                  "contentType": "application/json"
+                }
+              }
+            },
+            "text/*": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "text/plain": {
+              "schema": {
+                "type": "string",
+                "maxLength": 10
+              }
+            },
+            "application/jsonl": {
+              "itemSchema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "ok"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+- **Tests:** SPEC-P-5; SPEC-AR-3.
+- **Holds:** a body that may be required; a media type key that is an exact type or a
+  range, of which only the most specific applies; an `encoding` key as an edge to a
+  property of the schema; and, in 3.2, `itemSchema`, which describes each item of a
+  sequential media type and not the whole body.
+- **A naive structure loses:** all four, if a body is one schema.
 
 ## G. Document content
 
@@ -729,14 +1334,50 @@ z.union([AB, A]).parse({ a: 'x', b: 'y' }); // { a: 'x', b: 'y' }
   "servers": [
     {
       "url": "https://{region}.example.com",
-      "variables": { "region": { "default": "eu", "enum": ["eu", "us"] } }
+      "variables": {
+        "region": {
+          "default": "eu",
+          "enum": ["eu", "us"]
+        }
+      }
     }
   ],
-  "security": [{ "oauth": ["read"] }, {}],
+  "security": [
+    {
+      "oauth": ["read"]
+    },
+    {}
+  ],
   "paths": {
     "/pets": {
-      "servers": [{ "url": "https://pets.example.com" }],
-      "get": { "security": [], "responses": { "200": { "description": "ok" } } }
+      "servers": [
+        {
+          "url": "https://pets.example.com"
+        }
+      ],
+      "get": {
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "ok"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "oauth": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://example.com/token",
+            "scopes": {
+              "read": "read things"
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -771,6 +1412,138 @@ z.union([AB, A]).parse({ a: 'x', b: 'y' }); // { a: 'x', b: 'y' }
 - **Holds:** an extension with any JSON value, on every kind of object that takes one; and
   inside a schema, any property at all, where the `x-` prefix is not needed.
 - **A naive structure loses:** extensions on the kinds it forgot.
+
+### G3. A key that begins `x-`, by where it stands
+
+```json
+{
+  "components": {
+    "x-a": 1,
+    "schemas": {
+      "x-a": {
+        "type": "string"
+      }
+    },
+    "securitySchemes": {
+      "x-a": {
+        "type": "apiKey",
+        "name": "k",
+        "in": "header"
+      }
+    },
+    "responses": {
+      "R": {
+        "description": "ok",
+        "headers": {
+          "x-a": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "x-a": []
+    }
+  ],
+  "webhooks": {
+    "x-a": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "ok"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+- **Tests:** SPEC-PR-1; SPEC-AR-3.
+- **Holds:** one extension, directly under `components`. The other five are a schema, a
+  security scheme, a header, a requirement's key and a webhook, each named `x-a`.
+- **A naive structure loses:** five things, if the reader takes every key that begins
+  `x-` as an extension.
+
+### G4. No security, optional security, and two schemes at once
+
+```json
+{
+  "security": [
+    {
+      "key": []
+    }
+  ],
+  "paths": {
+    "/a": {
+      "get": {
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "ok"
+          }
+        }
+      }
+    },
+    "/b": {
+      "get": {
+        "security": [{}],
+        "responses": {
+          "200": {
+            "description": "ok"
+          }
+        }
+      }
+    },
+    "/c": {
+      "get": {
+        "security": [
+          {
+            "key": [],
+            "oauth": ["read"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "key": {
+        "type": "apiKey",
+        "name": "k",
+        "in": "header"
+      },
+      "oauth": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://example.com/token",
+            "scopes": {
+              "read": "read things"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+- **Tests:** SPEC-PR-1; SPEC-PR-2.
+- **Holds:** a list of alternatives, each a set of schemes all required together. `/a`
+  removes the document's requirement with an empty list. `/b` states one empty
+  requirement, which the text calls making security optional. `/c` needs both schemes.
+- **A naive structure loses:** the difference between `/a` and `/b`, or the "all of" in
+  `/c`, if security is a flat list of scheme names.
 
 ## H. What a report needs, and what Zod alone can say
 
@@ -925,7 +1698,18 @@ z.literal('a');
   of one value.
 - **One value:** the value `a`.
 
-### I6. Pairs that are not one value
+### I6. Sets with an OpenAPI member
+
+The first three are one value with the fact that the source was silent held beside it.
+
+- **Servers.** `servers` absent, `[]`, and `[{"url": "/"}]` (3.2.1, section 4.1.1).
+- **A query parameter's style.** No `style` or `explode`, and `"style": "form",
+"explode": true`.
+- **A discriminator's implicit value.** No mapping, and `"mapping": {"Cat": "Cat"}` for
+  an alternative named `Cat`.
+- **A header's name.** `X-Rate` and `x-rate` in a response's `headers`.
+
+### I7. Pairs that are not one value
 
 Each pair looks alike. A design that makes them one value is wrong.
 
@@ -936,6 +1720,10 @@ Each pair looks alike. A design that makes them one value is wrong.
 - **D1.** A Zod `.default`, a Zod `.prefault` and a JSON Schema `default`.
 - **D2.** A union and the same union in another order, where an alternative strips.
 - **`oneOf` and `anyOf`** over alternatives that can overlap.
+- **An operation's `security` absent, `[]`, and `[{}]`** (G4).
+- **A Reference Object and a schema, each a `$ref` with a `description` beside it**
+  (A12).
+- **`x-a` under `components` and `x-a` under `components.schemas`** (G3).
 - **An absent keyword and the keyword with a value that asserts nothing** (B7), wherever
   another keyword reads what it evaluated.
 - **An unknown keyword in 2020-12 and in Draft-07.** The first is an annotation; the
