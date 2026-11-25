@@ -1234,15 +1234,17 @@ check(stripped.parse(value), { a: 'x' });
   is read as closed, and every object whose policy Castr supplied is listed in the report.
 - **Holds:** closed, as a meaning; and beside the meaning, in the record of the reading,
   that the source stated no policy and Castr's profile supplied one. The record is not
-  part of the value: this is the same value as an object the author closed, with a
-  different record (section I).
-- **A naive structure loses:** the report, if nothing records what was supplied; or the
-  sameness, if "supplied" is part of the value.
-- **What the specification does not yet say:** where a supplied closure lands. Case B1's
-  `Base` states no policy. Closed in place, it refuses `extra`, and B1 has no value with
-  both keys; the same is true of each branch of B2 and of B6's dependent schema. And one
-  place in a value is often reached from several places in a schema, so that no place in
-  the schema is the right one. This is a row for the amendment.
+  part of the value.
+- **A naive structure loses:** the report, if nothing records what was supplied.
+- **Whether this is the same value as an object the author closed is not settled.**
+  Standing alone, the two accept the same values. Built on, they need not: case B1's
+  `Base` states no policy, and if it is closed where it is written, as an author's
+  `additionalProperties: false` would close it, it refuses `extra` and B1 has no value
+  with both keys. The same is true of each branch of B2 and of B6's dependent schema.
+- **What the specification does not yet say:** where a supplied closure lands. One place
+  in a value is often reached from several places in a schema, so that no place in the
+  schema is the right one. This is a row for the amendment, and it decides the point
+  above.
 
 ### C3. Stripped is a difference of sides
 
@@ -2189,9 +2191,10 @@ const plain = z.string();
 check(plain.brand('Id') === plain, true);
 
 const said = z.registry();
-const named = z.string().register(said, { title: 'A name' });
-check(said.get(named.min(3)), { title: 'A name' });
-check(said.get(named.optional()), undefined);
+const named = z.string().register(said, { id: 'N', title: 'A name' });
+check(said.get(named), { id: 'N', title: 'A name' });
+check(said.get(named.min(3)), { title: 'A name' }); // through a check, all but the id
+check(said.get(named.optional()), undefined); // through a wrapper, nothing
 ```
 
 - **Tests:** Appendix A's rows for each.
@@ -2390,6 +2393,9 @@ Each pair looks alike. A design that makes them one value is wrong.
   `Name` often accept the same values, and not always: the core text says removing a reference
   is not always safe. The name is part of meaning (SPEC-PR-3), so they differ either way.
 - **A11.** `#/definitions/x` and `#/$defs/x`.
+- **C2 against the same object with `additionalProperties: false`,** wherever another
+  schema builds on it (B1). Whether they are one value where nothing does is not settled
+  (C2).
 - **D1.** A Zod `.default`, a Zod `.prefault` and a JSON Schema `default`.
 - **D2.** A union and the same union in another order, where an alternative strips.
 - **`oneOf` and `anyOf`** over alternatives that can overlap.
