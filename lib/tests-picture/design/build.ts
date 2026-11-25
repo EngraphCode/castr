@@ -45,8 +45,8 @@ export const ANY: ByKind = {
 export const STRING: Shape = { kind: 'by-kind', kinds: { string: 'any' } };
 export const NUMBER: Shape = { kind: 'by-kind', kinds: { number: 'any' } };
 
-export function ref(written: string, to: DefinitionId): Shape {
-  return { kind: 'reference', edge: { written, target: { state: 'resolved', to } } };
+export function ref(to: DefinitionId): Shape {
+  return { kind: 'reference', edge: { target: { state: 'resolved', to } } };
 }
 
 export function fields(
@@ -101,6 +101,7 @@ export function model(
   return {
     entry: ROOT,
     resources,
+    record: { written: [] },
     definitions: [
       { id: ROOT, aliases: [], shape: root },
       ...others.map(([id, shape, ...aliases]) => ({ id, aliases, shape })),

@@ -9,10 +9,13 @@
  * shapes, definitions and the edges between them.
  */
 
-/** A number held exactly: `coefficient × 10^exponent`, the coefficient not ending in 0. */
+/**
+ * A number held exactly: `coefficient × 10^exponent`. One number has one form: the
+ * coefficient does not end in 0, and zero is coefficient 0 with exponent 0.
+ */
 export interface Exact {
   readonly coefficient: bigint;
-  readonly exponent: number;
+  readonly exponent: bigint;
 }
 
 /** A value a schema states: a JSON value whose numbers are exact. */
@@ -131,10 +134,11 @@ export interface DefinitionId {
   readonly place: readonly Step[];
 }
 
-/** A reference, as written and as resolved. */
+/**
+ * A reference, as resolved. How its source spelt it is not here: two spellings of one
+ * reference are one edge, and the spelling is in the record.
+ */
 export interface Edge {
-  /** What the source wrote. Recorded; resolution does not read it again. */
-  readonly written: string;
   readonly target:
     | { readonly state: 'resolved'; readonly to: DefinitionId }
     | { readonly state: 'undeclared' }
@@ -200,9 +204,21 @@ export interface Resource {
   readonly dynamicAnchors: ReadonlyMap<string, DefinitionId>;
 }
 
+/** How a source spelt one reference: in which definition, to which, and in what words. */
+interface Written {
+  readonly in: DefinitionId;
+  readonly to: DefinitionId;
+  readonly as: string;
+}
+
 export interface Model {
   readonly definitions: readonly Definition[];
   readonly resources: readonly Resource[];
   /** The definition a value is read against. */
   readonly entry: DefinitionId;
+  /**
+   * What was read beside the meaning. Two models whose definitions, resources and entry
+   * are equal are one value, whatever their records say.
+   */
+  readonly record: { readonly written: readonly Written[] };
 }

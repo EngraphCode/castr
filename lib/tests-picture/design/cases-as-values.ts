@@ -67,7 +67,7 @@ export const VALUES: Readonly<Record<string, Readonly<Record<number, Model>>>> =
           name: {
             kind: 'said',
             said: { description: 'short' },
-            of: all(ref('#/$defs/Name', NAME), {
+            of: all(ref(NAME), {
               kind: 'by-kind',
               kinds: { ...ANY, string: { length: { most: 10n } } },
             }),
@@ -77,19 +77,15 @@ export const VALUES: Readonly<Record<string, Readonly<Record<number, Model>>>> =
       [[NAME, STRING]],
     ),
     // In Draft-07 everything beside a `$ref` is ignored.
-    1: model(ofObjects({ fields: fields({ name: ref('#/definitions/Name', NAME) }) }), [
-      [NAME, STRING],
-    ]),
+    1: model(ofObjects({ fields: fields({ name: ref(NAME) }) }), [[NAME, STRING]]),
   },
   A5: {
-    0: model(ref('#/$defs/Node', NODE), [
-      [NODE, object({ fields: fields({ next: ref('#/$defs/Node', NODE) }) })],
-    ]),
+    0: model(ref(NODE), [[NODE, object({ fields: fields({ next: ref(NODE) }) })]]),
   },
   A6: {
     0: model(
       ofObjects({
-        fields: fields({ x: ref('#here', A), y: ref('https://example.com/other#here', OTHER_C) }),
+        fields: fields({ x: ref(A), y: ref(OTHER_C) }),
       }),
       [
         [A, STRING, 'here'],
@@ -100,22 +96,19 @@ export const VALUES: Readonly<Record<string, Readonly<Record<number, Model>>>> =
   },
   A11: {
     // `definitions` is not a keyword of 2020-12: its `x` is a schema inside other data.
-    0: model(
-      ofObjects({ fields: fields({ a: ref('#/$defs/x', X), b: ref('#/definitions/x', DATA_X) }) }),
-      [
-        [X, STRING],
-        [DATA_X, NUMBER],
-      ],
-    ),
+    0: model(ofObjects({ fields: fields({ a: ref(X), b: ref(DATA_X) }) }), [
+      [X, STRING],
+      [DATA_X, NUMBER],
+    ]),
   },
   A21: {
     // The target of a reference is made a definition, and its own place holds an edge to it.
     0: model(
       ofObjects({
         fields: fields({
-          a: ref('#/properties/a', FIELD_A),
-          b: ref('#/properties/a', FIELD_A),
-          self: ref('#', ROOT),
+          a: ref(FIELD_A),
+          b: ref(FIELD_A),
+          self: ref(ROOT),
         }),
       }),
       [[FIELD_A, { kind: 'by-kind', kinds: { string: { length: { most: 2n } } } }]],
@@ -124,22 +117,18 @@ export const VALUES: Readonly<Record<string, Readonly<Record<number, Model>>>> =
   // `additionalItems` and `dependencies` are not keywords of 2020-12.
   A22: { 0: model(ofArrays({ positions: [STRING] })) },
   A23: {
-    0: model(
-      ofObjects({ fields: fields({ x: ref('#here', A), y: ref('sub/other.json#here', SUB_C) }) }),
-      [
-        [A, STRING, '#here'],
-        [inResource('sub/other.json'), EVERY],
-        [SUB_C, NUMBER, '#here'],
-      ],
-    ),
+    0: model(ofObjects({ fields: fields({ x: ref(A), y: ref(SUB_C) }) }), [
+      [A, STRING, '#here'],
+      [inResource('sub/other.json'), EVERY],
+      [SUB_C, NUMBER, '#here'],
+    ]),
   },
   // A dialect with no vocabulary of validation: nothing in the document is read.
   A24: { 1: model(EVERY) },
   B1: {
-    0: model(
-      closed(all(ref('#/$defs/Base', BASE), ofObjects({ fields: fields({ extra: STRING }) }))),
-      [[BASE, object({ fields: fields({ id: STRING }) })]],
-    ),
+    0: model(closed(all(ref(BASE), ofObjects({ fields: fields({ extra: STRING }) }))), [
+      [BASE, object({ fields: fields({ id: STRING }) })],
+    ]),
   },
   B2: {
     0: model(
@@ -175,7 +164,7 @@ export const VALUES: Readonly<Record<string, Readonly<Record<number, Model>>>> =
   },
   B5: {
     0: model(
-      closed(ref('tree', TREE)),
+      closed(ref(TREE)),
       [
         [
           TREE,
@@ -185,7 +174,7 @@ export const VALUES: Readonly<Record<string, Readonly<Record<number, Model>>>> =
                 after: {
                   kind: 'reference-in-scope',
                   anchor: 'node',
-                  edge: { written: '#node', target: { state: 'resolved', to: TREE } },
+                  edge: { target: { state: 'resolved', to: TREE } },
                 },
               }),
             }),
@@ -214,7 +203,7 @@ export const VALUES: Readonly<Record<string, Readonly<Record<number, Model>>>> =
   B9: {
     // A closure sees only what its own schema object applies, never a sibling branch.
     0: model(all(ofObjects({ fields: fields({ a: EVERY }) }), ofObjects({ rest: NONE }))),
-    1: model(all(ref('#/$defs/C', C), ofObjects({ fields: fields({ b: EVERY }) })), [
+    1: model(all(ref(C), ofObjects({ fields: fields({ b: EVERY }) })), [
       [C, ofObjects({ fields: fields({ a: EVERY }), rest: NONE })],
     ]),
   },
@@ -279,7 +268,7 @@ export const VALUES: Readonly<Record<string, Readonly<Record<number, Model>>>> =
         number: {
           least: { value: exact(0n), exclusive: false },
           most: { value: exact(18446744073709551615n), exclusive: false },
-          multipleOf: exact(1n, -2),
+          multipleOf: exact(1n, -2n),
         },
       },
     }),

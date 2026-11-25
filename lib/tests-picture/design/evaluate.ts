@@ -112,7 +112,7 @@ function definitionAt(model: Model, id: DefinitionId): Shape {
 function follow(edge: Edge, id: DefinitionId | undefined, given: Given, context: Context): Outcome {
   const target = id ?? (edge.target.state === 'resolved' ? edge.target.to : undefined);
   if (target === undefined) {
-    throw new Error(`the reference ${edge.written} has no one target`);
+    throw new Error('a reference with no one target was followed');
   }
   const scope = [...context.scope, target.resource];
   return apply(definitionAt(context.model, target), given, { ...context, scope });

@@ -31,11 +31,6 @@ const LEAVES: Readonly<Record<string, Reason>> = {
     what: 'the names a source gave a definition: a key, an anchor, an identifier',
     grammar: 'an anchor (JSON Schema core 8.2.2) and a URI (RFC 3986) are among them',
   },
-  'Edge.written': {
-    why: 'grammar',
-    what: 'a reference as its source wrote it, recorded and not read again',
-    grammar: 'a URI reference (RFC 3986), whose fragment may be a JSON Pointer (RFC 6901)',
-  },
   'ObjectPart.fields': { why: 'data', what: 'the names of an object’s fields' },
   'ObjectPart.required': { why: 'data', what: 'the names of keys that must be present' },
   'Pattern.source': {
@@ -63,6 +58,11 @@ const LEAVES: Readonly<Record<string, Reason>> = {
   'Step[data].path': { why: 'data', what: 'the keys that lead to a schema inside other data' },
   'Step[field].name': { why: 'data', what: 'the name of a field' },
   'Step[named].name': { why: 'data', what: 'the key a definition is filed under' },
+  'Written.as': {
+    why: 'grammar',
+    what: 'a reference as its source wrote it, in the record and never read again',
+    grammar: 'a URI reference (RFC 3986), whose fragment may be a JSON Pointer (RFC 6901)',
+  },
 };
 
 describe('the strings of the prototype', () => {
@@ -77,11 +77,11 @@ describe('the strings of the prototype', () => {
 
     expect(kept).toEqual([
       'Definition.aliases',
-      'Edge.written',
       'Pattern.source',
       'Resource.dynamicAnchors',
       'ResourceId.resource',
       'Shape[reference-in-scope].anchor',
+      'Written.as',
     ]);
   });
 });

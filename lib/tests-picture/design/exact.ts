@@ -6,21 +6,21 @@ import type { JsonValue } from '../refusals/judge.js';
 
 import type { Constant, Exact } from './model.js';
 
-function canonical(coefficient: bigint, exponent: number): Exact {
+function canonical(coefficient: bigint, exponent: bigint): Exact {
   if (coefficient === 0n) {
-    return { coefficient: 0n, exponent: 0 };
+    return { coefficient: 0n, exponent: 0n };
   }
   let c = coefficient;
   let e = exponent;
   while (c % 10n === 0n) {
     c /= 10n;
-    e += 1;
+    e += 1n;
   }
   return { coefficient: c, exponent: e };
 }
 
 /** An exact number from its coefficient and its power of ten. */
-export function exact(coefficient: bigint, exponent = 0): Exact {
+export function exact(coefficient: bigint, exponent = 0n): Exact {
   return canonical(coefficient, exponent);
 }
 
@@ -32,15 +32,12 @@ export function exact(coefficient: bigint, exponent = 0): Exact {
 export function exactOfDouble(value: number): Exact {
   const [digits = '0', power = '0'] = value.toExponential().split('e');
   const [whole = '0', fraction = ''] = digits.split('.');
-  return canonical(BigInt(`${whole}${fraction}`), Number(power) - fraction.length);
+  return canonical(BigInt(`${whole}${fraction}`), BigInt(power) - BigInt(fraction.length));
 }
 
 function aligned(a: Exact, b: Exact): readonly [bigint, bigint] {
-  const low = Math.min(a.exponent, b.exponent);
-  return [
-    a.coefficient * 10n ** BigInt(a.exponent - low),
-    b.coefficient * 10n ** BigInt(b.exponent - low),
-  ];
+  const low = a.exponent < b.exponent ? a.exponent : b.exponent;
+  return [a.coefficient * 10n ** (a.exponent - low), b.coefficient * 10n ** (b.exponent - low)];
 }
 
 /** Negative, zero or positive as `a` is below, equal to or above `b`. */
@@ -53,7 +50,7 @@ export function compare(a: Exact, b: Exact): number {
 }
 
 export function isWhole(value: Exact): boolean {
-  return value.exponent >= 0;
+  return value.exponent >= 0n;
 }
 
 export function isMultipleOf(value: Exact, step: Exact): boolean {
@@ -63,9 +60,8 @@ export function isMultipleOf(value: Exact, step: Exact): boolean {
 
 function doubleOf(value: Exact): number {
   const coefficient = Number(value.coefficient);
-  return value.exponent < 0
-    ? coefficient / 10 ** -value.exponent
-    : coefficient * 10 ** value.exponent;
+  const power = 10 ** Number(value.exponent < 0n ? -value.exponent : value.exponent);
+  return value.exponent < 0n ? coefficient / power : coefficient * power;
 }
 
 /** The stated value a JSON value is. */

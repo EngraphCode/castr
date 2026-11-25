@@ -53,7 +53,7 @@ describe('one meaning written two ways', () => {
   });
 
   it('a reference beside nothing is the reference', () => {
-    const reference = ref('#', ROOT);
+    const reference = ref(ROOT);
 
     expect(canonical(all(reference, EVERY))).toEqual(reference);
   });

@@ -95,10 +95,9 @@ describe('two shapes that describe one place', () => {
 
   it('do so for a definition that is both the root and built on', () => {
     const EXTENDED = at(named('child'));
-    const tree = model(
-      object({ fields: fields({ name: STRING, child: ref('child', EXTENDED) }) }),
-      [[EXTENDED, all(ref('#', ROOT), ofObjects({ fields: fields({ extra: EVERY }) }))]],
-    );
+    const tree = model(object({ fields: fields({ name: STRING, child: ref(EXTENDED) }) }), [
+      [EXTENDED, all(ref(ROOT), ofObjects({ fields: fields({ extra: EVERY }) }))],
+    ]);
 
     expect(accepts(tree, { name: 'r', child: { name: 'c', extra: 1 } })).toBe(true);
     expect(accepts(tree, { name: 'r', zzz: 1 })).toBe(false);
