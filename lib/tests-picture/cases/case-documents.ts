@@ -8,7 +8,6 @@
  * the note states of a document rests on the note's own word.
  */
 
-import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 
 import { isJsonValue, type JsonValue } from '../refusals/judge.js';
@@ -90,26 +89,6 @@ export function readCasesNote(): readonly CaseDocuments[] {
       ),
       'utf8',
     ),
-  );
-}
-
-/**
- * A digest of the Zod documents of each case that holds one, by the case's key.
- *
- * The Zod documents are text, and a test that proves what one does builds the same schema
- * in code. The digest ties the two: where the note's text changes, the digest does, and
- * the test that holds the old one fails until the code is read against the new text.
- */
-export function zodDocumentDigests(
-  cases: readonly CaseDocuments[],
-): Readonly<Record<string, string>> {
-  return Object.fromEntries(
-    cases
-      .filter((entry) => entry.zod.length > 0)
-      .map((entry) => [
-        entry.id,
-        createHash('sha256').update(entry.zod.join('\n---\n')).digest('hex').slice(0, 16),
-      ]),
   );
 }
 

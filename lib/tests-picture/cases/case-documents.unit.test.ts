@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { caseOf, readCaseDocuments, zodDocumentDigests } from './case-documents.js';
+import { caseOf, readCaseDocuments } from './case-documents.js';
 
 const NOTE = [
   '## A. A section',
@@ -38,15 +38,6 @@ describe('reading the documents of the cases out of a note', () => {
 
   it('finds a case by its key', () => {
     expect(caseOf(readCaseDocuments(NOTE), 'A2').title).toBe('A second case');
-  });
-
-  it('gives a digest for each case that holds a Zod document, which changes with its text', () => {
-    const changed = NOTE.replace('z.string();', 'z.number();');
-    const before = zodDocumentDigests(readCaseDocuments(NOTE));
-    const after = zodDocumentDigests(readCaseDocuments(changed));
-
-    expect(Object.keys(before)).toEqual(['A2']);
-    expect(after['A2']).not.toBe(before['A2']);
   });
 
   it('refuses to find a case the note does not have', () => {

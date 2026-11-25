@@ -430,10 +430,12 @@ documents out of the note and runs them:
 - **OpenAPI.** Each of the 31 fragments, with `openapi` and `info` supplied, is judged
   against the pinned schema published for 3.2 and admitted by it. Four use what 3.2
   added and are refused by the schema for 3.1; the test names them.
-- **Zod.** Each case that holds a Zod document has a test that builds the same schema in
-  code against the installed Zod and proves what the note says it does. The note's text
-  is not executed. Each test is tied to the text it was written against by a digest: a
-  test fails when a case's Zod text changes, or a case gains or loses a Zod document.
+- **Zod.** A Zod document of the note is a few statements that build schemas and say
+  what they do, each statement of fact a call `check(actual, expected)`. Each document
+  is run as it stands, as a module of its own, against the installed Zod. A test fails
+  for a check that does not hold, a document that throws, and a document that makes no
+  check. A document that needs a registry makes one of its own; none touches Zod's
+  global registry.
 
 What this does not prove: that a document means what the note says beyond what a
 validator can show. A reference kept as a reference, a name, where a default came from:
