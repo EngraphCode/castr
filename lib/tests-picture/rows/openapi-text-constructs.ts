@@ -141,7 +141,7 @@ export function readTextConstructList(parsed: JsonObject): TextConstructList {
   return {
     versionsRead: readVersions(parsed['versionsRead']),
     readWithNothingToHold: strings(parsed['readWithNothingToHold'], 'readWithNothingToHold'),
-    constructs: constructs.map(readConstruct),
+    constructs: constructs.map((entry: unknown, index) => readConstruct(entry, index)),
   };
 }
 
