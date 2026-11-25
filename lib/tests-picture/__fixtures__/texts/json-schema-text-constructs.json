@@ -481,8 +481,8 @@
       "sections": ["13"],
       "document": "core",
       "drafts": "both",
-      "disposition": "validity",
-      "says": "A schema must not take the `$id` of another."
+      "disposition": "runtime",
+      "says": "A server that takes schemas from others must not let one of them take the `$id` of a schema that exists and so change what it does. Validating must never loop without end."
     },
     {
       "sections": ["8.1"],
@@ -784,13 +784,6 @@
       "drafts": "draft-07",
       "disposition": "undefined",
       "says": "Whether a `$id` or `definitions` beside a `$ref` still takes effect: the text does not say."
-    },
-    {
-      "sections": ["8.3.1"],
-      "document": "core",
-      "drafts": "draft-07",
-      "disposition": "validity",
-      "says": "References must not form a loop that never ends."
     },
     {
       "sections": ["9"],

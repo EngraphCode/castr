@@ -10,6 +10,7 @@
 import { describe, it, expect } from 'vitest';
 
 import {
+  citedTextOf,
   readJsonSchemaTextConstructList,
   readJsonSchemaTextConstructs,
   type JsonSchemaTextConstruct,
@@ -20,11 +21,6 @@ import { readTextPinFile, sectionsOfText } from './text-sections.js';
 const constructs = readJsonSchemaTextConstructs();
 
 const pins = readTextPinFile('json-schema-sections.json');
-
-/** The name of the pinned text a row cites: its draft and its document. */
-function citedText(construct: JsonSchemaTextConstruct): string {
-  return `${construct.drafts === 'draft-07' ? 'draft-07' : '2020-12'} ${construct.document}`;
-}
 
 describe('the pinned sections of the JSON Schema texts', () => {
   it('holds the numbered sections of the four texts', () => {
@@ -45,37 +41,59 @@ describe('reading a hand list of the JSON Schema texts', () => {
   };
 
   it('reads a list of the right shape', () => {
-    expect(readJsonSchemaTextConstructList({ constructs: [row] })).toHaveLength(1);
+    expect(readJsonSchemaTextConstructList({ note: 'A list.', constructs: [row] })).toHaveLength(1);
   });
 
   it('refuses a draft the list does not have', () => {
-    const wrong = { constructs: [{ ...row, drafts: 'draft-04' }] };
+    const wrong = { note: 'A list.', constructs: [{ ...row, drafts: 'draft-04' }] };
 
     expect(() => readJsonSchemaTextConstructList(wrong)).toThrow('row 1 of the hand list: drafts');
   });
 
   it('refuses a row that cites no section', () => {
-    const wrong = { constructs: [{ ...row, sections: [] }] };
+    const wrong = { note: 'A list.', constructs: [{ ...row, sections: [] }] };
 
     expect(() => readJsonSchemaTextConstructList(wrong)).toThrow('cites no section');
   });
 
   it('refuses a row with a key the list does not have', () => {
-    const wrong = { constructs: [{ ...row, quote: 'x' }] };
+    const wrong = { note: 'A list.', constructs: [{ ...row, quote: 'x' }] };
 
     expect(() => readJsonSchemaTextConstructList(wrong)).toThrow(
       'holds a key the list does not have: quote',
     );
+  });
+
+  it('refuses a list with a key the list does not have', () => {
+    const wrong = { note: 'A list.', constructs: [row], extra: 1 };
+
+    expect(() => readJsonSchemaTextConstructList(wrong)).toThrow(
+      'the hand list holds a key the list does not have: extra',
+    );
+  });
+
+  it('refuses a list with no note', () => {
+    expect(() => readJsonSchemaTextConstructList({ constructs: [row] })).toThrow('note');
+  });
+
+  it('cites the 2020-12 text for a row true of both drafts, and Draft-07 for one true of it alone', () => {
+    const [both, old] = readJsonSchemaTextConstructList({
+      note: 'A list.',
+      constructs: [row, { ...row, drafts: 'draft-07', document: 'validation' }],
+    });
+
+    expect(both === undefined ? '' : citedTextOf(both)).toBe('2020-12 core');
+    expect(old === undefined ? '' : citedTextOf(old)).toBe('draft-07 validation');
   });
 });
 
 describe('the hand list of what the JSON Schema texts define', () => {
   it('cites only sections the text has, in the draft and the text each row is read from', () => {
     const missing = constructs.flatMap((construct) => {
-      const sections = new Set(sectionsOfText(pins, citedText(construct)));
+      const sections = new Set(sectionsOfText(pins, citedTextOf(construct)));
       return construct.sections
         .filter((section) => !sections.has(section))
-        .map((section) => `${citedText(construct)} ${section}`);
+        .map((section) => `${citedTextOf(construct)} ${section}`);
     });
 
     expect(missing).toEqual([]);
@@ -87,15 +105,15 @@ describe('the hand list of what the JSON Schema texts define', () => {
     expect(new Set(said).size).toBe(said.length);
   });
 
-  it('counts its 136 rows by the drafts they are true of', () => {
+  it('counts its 135 rows by the drafts they are true of', () => {
     const count = (drafts: JsonSchemaTextConstruct['drafts']): number =>
       constructs.filter((construct) => construct.drafts === drafts).length;
 
-    expect(constructs).toHaveLength(136);
+    expect(constructs).toHaveLength(135);
     expect({ both: count('both'), new: count('2020-12'), old: count('draft-07') }).toEqual({
       both: 36,
       new: 66,
-      old: 34,
+      old: 33,
     });
   });
 
@@ -115,8 +133,8 @@ describe('the hand list of what the JSON Schema texts define', () => {
       holds: 88,
       default: 3,
       reading: 13,
-      runtime: 2,
-      validity: 3,
+      runtime: 3,
+      validity: 1,
       grammar: 18,
       undefined: 9,
     });

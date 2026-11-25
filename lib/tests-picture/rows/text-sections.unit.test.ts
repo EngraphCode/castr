@@ -31,7 +31,15 @@ const DRAFT = [
   'A.1.  First',
 ].join('\n');
 
-function pinOf(source: string, markup: 'respec-html' | 'internet-draft-text') {
+const PAGE_SECTIONS = ['1', '1.1', 'A', 'A.1'];
+const DRAFT_SECTIONS = ['1', '2', '2.1', 'A', 'A.1'];
+
+/** A pin of a sample, with its sections written out and not read from it. */
+function pinOf(
+  source: string,
+  markup: 'respec-html' | 'internet-draft-text',
+  sections: readonly string[],
+) {
   const bytes = new TextEncoder().encode(source);
   return {
     bytes,
@@ -42,18 +50,18 @@ function pinOf(source: string, markup: 'respec-html' | 'internet-draft-text') {
       fetchedAt: '2026-11-24T00:00:00Z',
       bytes: bytes.byteLength,
       sha256: createHash('sha256').update(bytes).digest('hex'),
-      sections: sectionNumbers(source, markup),
+      sections,
     },
   };
 }
 
 describe('reading section numbers out of a text', () => {
   it('reads each heading of a page once, and not its table of contents', () => {
-    expect(sectionNumbers(PAGE, 'respec-html')).toEqual(['1', '1.1', 'A', 'A.1']);
+    expect(sectionNumbers(PAGE, 'respec-html')).toEqual(PAGE_SECTIONS);
   });
 
   it('reads the headings of the body of an Internet-Draft, appendices by their letter', () => {
-    expect(sectionNumbers(DRAFT, 'internet-draft-text')).toEqual(['1', '2', '2.1', 'A', 'A.1']);
+    expect(sectionNumbers(DRAFT, 'internet-draft-text')).toEqual(DRAFT_SECTIONS);
   });
 
   it('reads none from a draft with no body', () => {
@@ -63,13 +71,13 @@ describe('reading section numbers out of a text', () => {
 
 describe('recomputing a pin from the bytes of its text', () => {
   it('finds no difference in the bytes the pin was made from', () => {
-    const { pin, bytes } = pinOf(PAGE, 'respec-html');
+    const { pin, bytes } = pinOf(PAGE, 'respec-html', PAGE_SECTIONS);
 
     expect(checkTextPin(pin, bytes).differences).toEqual([]);
   });
 
   it('reports bytes, digest and sections that differ', () => {
-    const { pin } = pinOf(DRAFT, 'internet-draft-text');
+    const { pin } = pinOf(DRAFT, 'internet-draft-text', DRAFT_SECTIONS);
     const changed = new TextEncoder().encode(`${DRAFT}\n\n3.  Added`);
 
     const { differences } = checkTextPin(pin, changed);
@@ -79,7 +87,7 @@ describe('recomputing a pin from the bytes of its text', () => {
   });
 
   it('reports the same sections pinned in another order', () => {
-    const { pin, bytes } = pinOf(PAGE, 'respec-html');
+    const { pin, bytes } = pinOf(PAGE, 'respec-html', PAGE_SECTIONS);
 
     const { differences } = checkTextPin({ ...pin, sections: [...pin.sections].reverse() }, bytes);
 
@@ -89,7 +97,7 @@ describe('recomputing a pin from the bytes of its text', () => {
   });
 
   it('reports a section pinned twice', () => {
-    const { pin, bytes } = pinOf(PAGE, 'respec-html');
+    const { pin, bytes } = pinOf(PAGE, 'respec-html', PAGE_SECTIONS);
 
     const { differences } = checkTextPin({ ...pin, sections: [...pin.sections, '1'] }, bytes);
 
@@ -99,7 +107,7 @@ describe('recomputing a pin from the bytes of its text', () => {
   });
 
   it('reports a pinned section the text no longer has', () => {
-    const { pin, bytes } = pinOf(PAGE, 'respec-html');
+    const { pin, bytes } = pinOf(PAGE, 'respec-html', PAGE_SECTIONS);
 
     const { differences } = checkTextPin({ ...pin, sections: [...pin.sections, '9'] }, bytes);
 
@@ -108,7 +116,7 @@ describe('recomputing a pin from the bytes of its text', () => {
 });
 
 describe('reading pins', () => {
-  const { pin } = pinOf(PAGE, 'respec-html');
+  const { pin } = pinOf(PAGE, 'respec-html', PAGE_SECTIONS);
 
   it('reads a pin of the right shape and finds its sections by name', () => {
     const pins = readTextPins({ texts: [{ ...pin }] });

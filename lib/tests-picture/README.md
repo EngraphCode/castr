@@ -354,10 +354,10 @@ registry was not read.
 What the JSON Schema texts define beyond their meta-schemas is a third list made by hand,
 [`__fixtures__/texts/json-schema-text-constructs.json`](__fixtures__/texts/json-schema-text-constructs.json),
 read and checked for shape by
-[`rows/json-schema-text-constructs.ts`](rows/json-schema-text-constructs.ts): 136 rows
+[`rows/json-schema-text-constructs.ts`](rows/json-schema-text-constructs.ts): 135 rows
 from the core and the validation text of Draft 2020-12 and of Draft-07. 36 are true of
-both drafts, 66 of 2020-12 alone and 34 of Draft-07 alone. The kinds are the same seven:
-88 hold a fact, 3 a default, 13 a rule for reading, 2 a rule for a tool at run time, 3 a
+both drafts, 66 of 2020-12 alone and 33 of Draft-07 alone. The kinds are the same seven:
+88 hold a fact, 3 a default, 13 a rule for reading, 3 a rule for a tool at run time, 1 a
 validity rule, 18 a grammar, and 9 something a text leaves undefined.
 
 A meta-schema says what keywords a schema may hold. The texts say what the model has to

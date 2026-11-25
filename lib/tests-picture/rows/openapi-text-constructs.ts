@@ -84,9 +84,23 @@ function readVersions(value: unknown): TextConstructList['versionsRead'] {
 }
 
 /**
+ * The version of the text whose sections a row cites: that read for 3.1 for a row true of
+ * 3.1 alone, and that read for 3.2 for every other row.
+ */
+export function citedVersionOf(list: TextConstructList, construct: TextConstruct): string {
+  return construct.versions === '3.1' ? list.versionsRead['3.1'] : list.versionsRead['3.2'];
+}
+
+/**
  * Reads a hand list from its parsed file, refusing anything that is not of its shape.
  */
 export function readTextConstructList(parsed: JsonObject): TextConstructList {
+  onlyKeys(
+    parsed,
+    ['note', 'versionsRead', 'readWithNothingToHold', 'constructs'],
+    'the hand list',
+  );
+  text(parsed['note'], 'the note of the hand list');
   const { constructs } = parsed;
   if (!Array.isArray(constructs)) {
     throw new TypeError('the hand list holds no list of constructs');

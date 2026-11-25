@@ -10,6 +10,7 @@
 import { describe, it, expect } from 'vitest';
 
 import {
+  citedVersionOf,
   readOpenApiTextConstructs,
   readTextConstructList,
   type TextConstruct,
@@ -29,9 +30,8 @@ function sectionsOf(version: string): readonly string[] {
   return sectionsOfText(pins, version);
 }
 
-/** The version whose section numbers a row cites. */
 function citedVersion(construct: TextConstruct): string {
-  return construct.versions === '3.1' ? OPENAPI_TEXT_VERSIONS['3.1'] : OPENAPI_TEXT_VERSIONS['3.2'];
+  return citedVersionOf(list, construct);
 }
 
 function isWithin(section: string, parent: string): boolean {
@@ -47,6 +47,7 @@ describe('the pinned sections of the OpenAPI text', () => {
 
 describe('reading a hand list', () => {
   const valid = {
+    note: 'A list.',
     versionsRead: { '3.1': '3.1.2', '3.2': '3.2.1' },
     readWithNothingToHold: ['4.2'],
     constructs: [{ sections: ['4.1.1'], versions: 'both', disposition: 'holds', says: 'A fact.' }],
@@ -72,6 +73,24 @@ describe('reading a hand list', () => {
     const wrong = { ...valid, constructs: [{ ...valid.constructs[0], sections: [] }] };
 
     expect(() => readTextConstructList(wrong)).toThrow('cites no section');
+  });
+
+  it('refuses a list with a key the list does not have', () => {
+    expect(() => readTextConstructList({ ...valid, extra: 1 })).toThrow(
+      'the hand list holds a key the list does not have: extra',
+    );
+  });
+
+  it('cites the version read for 3.1 for a row true of 3.1 alone, and that for 3.2 otherwise', () => {
+    const read = readTextConstructList({
+      ...valid,
+      constructs: [valid.constructs[0], { ...valid.constructs[0], versions: '3.1' }],
+    });
+
+    expect(read.constructs.map((construct) => citedVersionOf(read, construct))).toEqual([
+      '3.2.1',
+      '3.1.2',
+    ]);
   });
 
   it('refuses a row that says nothing', () => {

@@ -60,12 +60,23 @@ function readConstruct(entry: unknown, index: number): JsonSchemaTextConstruct {
 }
 
 /**
+ * The name of the pinned text whose sections a row cites: the 2020-12 text for a row true
+ * of both drafts or of 2020-12 alone, and the Draft-07 text for a row true of Draft-07
+ * alone; the core or the validation text, as the row says.
+ */
+export function citedTextOf(construct: JsonSchemaTextConstruct): string {
+  return `${construct.drafts === 'draft-07' ? 'draft-07' : '2020-12'} ${construct.document}`;
+}
+
+/**
  * Reads a hand list of what the JSON Schema texts define from its parsed file, refusing
  * anything that is not of its shape.
  */
 export function readJsonSchemaTextConstructList(
   parsed: JsonObject,
 ): readonly JsonSchemaTextConstruct[] {
+  onlyKeys(parsed, ['note', 'constructs'], 'the hand list');
+  text(parsed['note'], 'the note of the hand list');
   const { constructs } = parsed;
   if (!Array.isArray(constructs)) {
     throw new TypeError('the hand list holds no list of constructs');
