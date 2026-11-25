@@ -1285,8 +1285,9 @@ z.discriminatedUnion('kind', [Cat, Dog]); // the key picks one
 
 - **Tests:** SPEC-PR-2; SPEC-AR-5.
 - **Holds:** which of the three. Zod's definition calls all three a union and tells them
-  apart by other fields. JSON Schema's `anyOf` is the first on the accepted side, and
-  `oneOf` is the second.
+  apart by other fields. JSON Schema's `anyOf` accepts where at least one branch does and
+  has no order: it accepts what a `z.union` accepts and says nothing of which branch
+  produces. `oneOf` accepts where exactly one does, as `z.xor`.
 - **A naive structure loses:** two of them, if it reads the kind alone.
 
 ## D. The two sides
@@ -2316,7 +2317,8 @@ true
 
 ### I7. Sets with an OpenAPI member
 
-The first three are one value with the fact that the source was silent held beside it.
+Each is one value. For the first three, what differs between the members is that one
+of them left the thing unsaid, and that fact is held beside the value.
 
 - **Servers.** `servers` absent, `[]`, and `[{"url": "/"}]` (3.2.1, section 4.1.1).
 - **A query parameter's style.** No `style` or `explode`, and `"style": "form",
