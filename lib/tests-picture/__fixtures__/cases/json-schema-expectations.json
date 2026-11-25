@@ -1,0 +1,1044 @@
+{
+  "note": "What each JSON Schema document of the cases note accepts and refuses, as the note says. `document` counts the JSON documents of a case from 0. `with` names other documents of the same case that are registered first. A document that states no `$schema` is read under the draft named here.",
+  "expectations": [
+    {
+      "case": "A4",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "name": "xxxxxxxxxxxx"
+      },
+      "accepts": false
+    },
+    {
+      "case": "A4",
+      "document": 1,
+      "draft": "draft-07",
+      "instance": {
+        "name": "xxxxxxxxxxxx"
+      },
+      "accepts": true
+    },
+    {
+      "case": "A5",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "next": {
+          "next": {}
+        }
+      },
+      "accepts": true
+    },
+    {
+      "case": "A5",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "next": 5
+      },
+      "accepts": false
+    },
+    {
+      "case": "A6",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "x": "s",
+        "y": 1
+      },
+      "accepts": true
+    },
+    {
+      "case": "A6",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "x": 1
+      },
+      "accepts": false
+    },
+    {
+      "case": "A6",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "y": "s"
+      },
+      "accepts": false
+    },
+    {
+      "case": "A11",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "a": "s",
+        "b": 1
+      },
+      "accepts": true
+    },
+    {
+      "case": "A11",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "a": 1
+      },
+      "accepts": false
+    },
+    {
+      "case": "A11",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "b": "s"
+      },
+      "accepts": false
+    },
+    {
+      "case": "A21",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "b": "sss"
+      },
+      "accepts": false
+    },
+    {
+      "case": "A21",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "self": {
+          "a": "sss"
+        }
+      },
+      "accepts": false
+    },
+    {
+      "case": "A21",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "b": "ss"
+      },
+      "accepts": true
+    },
+    {
+      "case": "A22",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": ["s", 1, 2],
+      "accepts": true
+    },
+    {
+      "case": "A22",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "a": 1
+      },
+      "accepts": true
+    },
+    {
+      "case": "A23",
+      "document": 0,
+      "draft": "draft-07",
+      "instance": {
+        "x": "s",
+        "y": 1
+      },
+      "accepts": true
+    },
+    {
+      "case": "A23",
+      "document": 0,
+      "draft": "draft-07",
+      "instance": {
+        "x": 1
+      },
+      "accepts": false
+    },
+    {
+      "case": "A23",
+      "document": 0,
+      "draft": "draft-07",
+      "instance": {
+        "y": "s"
+      },
+      "accepts": false
+    },
+    {
+      "case": "A24",
+      "document": 1,
+      "draft": "2020-12",
+      "with": [0],
+      "instance": 5,
+      "accepts": true
+    },
+    {
+      "case": "A24",
+      "document": 1,
+      "draft": "2020-12",
+      "with": [0],
+      "instance": {
+        "a": "long"
+      },
+      "accepts": true
+    },
+    {
+      "case": "B1",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "id": "x",
+        "extra": "y"
+      },
+      "accepts": true
+    },
+    {
+      "case": "B1",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "id": "x",
+        "z": 1
+      },
+      "accepts": false
+    },
+    {
+      "case": "B2",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "a": "x"
+      },
+      "accepts": true
+    },
+    {
+      "case": "B2",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "b": "y"
+      },
+      "accepts": true
+    },
+    {
+      "case": "B2",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "a": "x",
+        "b": "y"
+      },
+      "accepts": true
+    },
+    {
+      "case": "B2",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "a": "x",
+        "c": 1
+      },
+      "accepts": false
+    },
+    {
+      "case": "B3",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "kind": "a",
+        "x": "s"
+      },
+      "accepts": true
+    },
+    {
+      "case": "B3",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "kind": "a",
+        "y": "s"
+      },
+      "accepts": false
+    },
+    {
+      "case": "B3",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "kind": "b",
+        "y": "s"
+      },
+      "accepts": true
+    },
+    {
+      "case": "B3",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "kind": "b",
+        "x": "s"
+      },
+      "accepts": false
+    },
+    {
+      "case": "B4",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": [],
+      "accepts": true
+    },
+    {
+      "case": "B4",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": ["s"],
+      "accepts": true
+    },
+    {
+      "case": "B4",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": ["s", 1],
+      "accepts": true
+    },
+    {
+      "case": "B4",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": ["s", "t"],
+      "accepts": false
+    },
+    {
+      "case": "B4",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": ["s", 1, 2],
+      "accepts": false
+    },
+    {
+      "case": "B4",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": "no",
+      "accepts": true
+    },
+    {
+      "case": "B5",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "children": [
+          {
+            "extra": 1
+          }
+        ]
+      },
+      "accepts": false
+    },
+    {
+      "case": "B5",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "children": [
+          {
+            "children": []
+          }
+        ]
+      },
+      "accepts": true
+    },
+    {
+      "case": "B6",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "card": "c",
+        "billing": "b"
+      },
+      "accepts": true
+    },
+    {
+      "case": "B6",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "billing": "b"
+      },
+      "accepts": false
+    },
+    {
+      "case": "B6",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "card": "c"
+      },
+      "accepts": false
+    },
+    {
+      "case": "B6",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {},
+      "accepts": true
+    },
+    {
+      "case": "B7",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "z": 1
+      },
+      "accepts": true
+    },
+    {
+      "case": "B8",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": 5,
+      "accepts": true
+    },
+    {
+      "case": "B8",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": "x",
+      "accepts": true
+    },
+    {
+      "case": "B8",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": [],
+      "accepts": true
+    },
+    {
+      "case": "B8",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": null,
+      "accepts": true
+    },
+    {
+      "case": "B8",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {},
+      "accepts": false
+    },
+    {
+      "case": "B9",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "a": 1
+      },
+      "accepts": false
+    },
+    {
+      "case": "B9",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": {
+        "a": 1,
+        "b": 1
+      },
+      "accepts": false
+    },
+    {
+      "case": "B9",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": {
+        "a": 1
+      },
+      "accepts": true
+    },
+    {
+      "case": "B10",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "x-y": "sss"
+      },
+      "accepts": false
+    },
+    {
+      "case": "B10",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "x-y": "ss"
+      },
+      "accepts": true
+    },
+    {
+      "case": "B10",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "xy": "s"
+      },
+      "accepts": true
+    },
+    {
+      "case": "B10",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "ax-": "s"
+      },
+      "accepts": false
+    },
+    {
+      "case": "B10",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "z": 1
+      },
+      "accepts": false
+    },
+    {
+      "case": "B11",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "a": 1
+      },
+      "accepts": false
+    },
+    {
+      "case": "B11",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "b": 1
+      },
+      "accepts": true
+    },
+    {
+      "case": "B11",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": {
+        "a": 1
+      },
+      "accepts": false
+    },
+    {
+      "case": "B11",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": {},
+      "accepts": true
+    },
+    {
+      "case": "B12",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": ["s", true],
+      "accepts": false
+    },
+    {
+      "case": "B12",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": ["s", 1],
+      "accepts": true
+    },
+    {
+      "case": "B12",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": [1, 2],
+      "accepts": false
+    },
+    {
+      "case": "B13",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "a": "s"
+      },
+      "accepts": true
+    },
+    {
+      "case": "B13",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "a": 1
+      },
+      "accepts": false
+    },
+    {
+      "case": "B14",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "a": "x"
+      },
+      "accepts": true
+    },
+    {
+      "case": "B14",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "b": "y"
+      },
+      "accepts": true
+    },
+    {
+      "case": "B14",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "a": "x",
+        "b": "y"
+      },
+      "accepts": false
+    },
+    {
+      "case": "C2",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "a": "s",
+        "b": 1
+      },
+      "accepts": true
+    },
+    {
+      "case": "D1",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": "x",
+      "accepts": false
+    },
+    {
+      "case": "D1",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": "xxxxx",
+      "accepts": true
+    },
+    {
+      "case": "E1",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": 0.07,
+      "accepts": true
+    },
+    {
+      "case": "E1",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": 0.075,
+      "accepts": false
+    },
+    {
+      "case": "E2",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": 1,
+      "accepts": true
+    },
+    {
+      "case": "E2",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": 2,
+      "accepts": false
+    },
+    {
+      "case": "E2",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": 1,
+      "accepts": true
+    },
+    {
+      "case": "E3",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "anything": 1
+      },
+      "accepts": true
+    },
+    {
+      "case": "E3",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "anything": 1,
+        "nothing": 1
+      },
+      "accepts": false
+    },
+    {
+      "case": "E4",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": "5",
+      "accepts": false
+    },
+    {
+      "case": "E4",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": 5,
+      "accepts": false
+    },
+    {
+      "case": "E5",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": 5,
+      "accepts": true
+    },
+    {
+      "case": "E5",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": 1.5,
+      "accepts": false
+    },
+    {
+      "case": "H1",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "a": "5"
+      },
+      "accepts": false
+    },
+    {
+      "case": "H1",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "a": 5
+      },
+      "accepts": false
+    },
+    {
+      "case": "H1",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {},
+      "accepts": true
+    },
+    {
+      "case": "I1",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "a": "s"
+      },
+      "accepts": true
+    },
+    {
+      "case": "I1",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {},
+      "accepts": true
+    },
+    {
+      "case": "I1",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "a": "s",
+        "b": 1
+      },
+      "accepts": false
+    },
+    {
+      "case": "I1",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "a": 1
+      },
+      "accepts": false
+    },
+    {
+      "case": "I1",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": {
+        "a": "s"
+      },
+      "accepts": true
+    },
+    {
+      "case": "I1",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": {},
+      "accepts": true
+    },
+    {
+      "case": "I1",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": {
+        "a": "s",
+        "b": 1
+      },
+      "accepts": false
+    },
+    {
+      "case": "I1",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": {
+        "a": 1
+      },
+      "accepts": false
+    },
+    {
+      "case": "I2",
+      "document": 0,
+      "draft": "draft-07",
+      "instance": [],
+      "accepts": false
+    },
+    {
+      "case": "I2",
+      "document": 0,
+      "draft": "draft-07",
+      "instance": ["s"],
+      "accepts": false
+    },
+    {
+      "case": "I2",
+      "document": 0,
+      "draft": "draft-07",
+      "instance": ["s", 1],
+      "accepts": true
+    },
+    {
+      "case": "I2",
+      "document": 0,
+      "draft": "draft-07",
+      "instance": ["s", 1, 2],
+      "accepts": false
+    },
+    {
+      "case": "I2",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": [],
+      "accepts": false
+    },
+    {
+      "case": "I2",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": ["s"],
+      "accepts": false
+    },
+    {
+      "case": "I2",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": ["s", 1],
+      "accepts": true
+    },
+    {
+      "case": "I2",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": ["s", 1, 2],
+      "accepts": false
+    },
+    {
+      "case": "I3",
+      "document": 0,
+      "draft": "draft-07",
+      "instance": {
+        "a": 1
+      },
+      "accepts": false
+    },
+    {
+      "case": "I3",
+      "document": 0,
+      "draft": "draft-07",
+      "instance": {
+        "a": 1,
+        "b": 1
+      },
+      "accepts": true
+    },
+    {
+      "case": "I3",
+      "document": 0,
+      "draft": "draft-07",
+      "instance": {
+        "c": 1
+      },
+      "accepts": false
+    },
+    {
+      "case": "I3",
+      "document": 0,
+      "draft": "draft-07",
+      "instance": {
+        "c": 1,
+        "d": 1
+      },
+      "accepts": true
+    },
+    {
+      "case": "I3",
+      "document": 0,
+      "draft": "draft-07",
+      "instance": {},
+      "accepts": true
+    },
+    {
+      "case": "I3",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": {
+        "a": 1
+      },
+      "accepts": false
+    },
+    {
+      "case": "I3",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": {
+        "a": 1,
+        "b": 1
+      },
+      "accepts": true
+    },
+    {
+      "case": "I3",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": {
+        "c": 1
+      },
+      "accepts": false
+    },
+    {
+      "case": "I3",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": {
+        "c": 1,
+        "d": 1
+      },
+      "accepts": true
+    },
+    {
+      "case": "I3",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": {},
+      "accepts": true
+    },
+    {
+      "case": "I4",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": "s",
+      "accepts": true
+    },
+    {
+      "case": "I4",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": null,
+      "accepts": true
+    },
+    {
+      "case": "I4",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": 1,
+      "accepts": false
+    },
+    {
+      "case": "I4",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": "s",
+      "accepts": true
+    },
+    {
+      "case": "I4",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": null,
+      "accepts": true
+    },
+    {
+      "case": "I4",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": 1,
+      "accepts": false
+    },
+    {
+      "case": "I5",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": "a",
+      "accepts": true
+    },
+    {
+      "case": "I5",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": "b",
+      "accepts": false
+    },
+    {
+      "case": "I5",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": "a",
+      "accepts": true
+    },
+    {
+      "case": "I5",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": "b",
+      "accepts": false
+    },
+    {
+      "case": "I6",
+      "document": 0,
+      "draft": "2020-12",
+      "instance": {
+        "any": 1
+      },
+      "accepts": true
+    },
+    {
+      "case": "I6",
+      "document": 1,
+      "draft": "2020-12",
+      "instance": {
+        "any": 1
+      },
+      "accepts": true
+    }
+  ]
+}

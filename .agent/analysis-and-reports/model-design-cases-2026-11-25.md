@@ -12,7 +12,9 @@ Two kinds of case. Sections A to H are single documents. Section I is the equiva
 sets: one meaning written two or three ways, which the model holds as **one value**; and
 the pairs that look alike and are **not** one value.
 
-Every JSON document below parses, and every Zod fragment was run against Zod 4.6.7. A reader who knows each format then attacked the note: one for OpenAPI, who read the texts
+Every JSON document below parses. Every Zod document is run as it stands by a test,
+with `z` and a function `check(actual, expected)` in scope; a `check` that does not hold
+fails the test. A reader who knows each format then attacked the note: one for OpenAPI, who read the texts
 of 3.2.1 and 3.1.2; one for JSON Schema, who ran two validators and read the four texts;
 one for Zod, who ran every claim. Their corrections and the cases they found missing are in the note. The seat
 checked the OpenAPI reader's quotations against the texts, re-ran the Zod reader's
@@ -718,8 +720,10 @@ The entry document, then `other.json`:
 ### A20. Where a Zod schema's name comes from
 
 ```ts
-const Name = z.string().meta({ id: 'Name' });
-z.object({ first: Name, last: Name });
+const names = z.registry();
+const Name = z.string().register(names, { id: 'Name' });
+const written = z.toJSONSchema(z.object({ first: Name, last: Name }), { metadata: names });
+check(written.properties, { first: { $ref: '#/$defs/Name' }, last: { $ref: '#/$defs/Name' } });
 ```
 
 - **Tests:** SPEC-PR-3; SPEC-AR-6, reading runtime data structures.
@@ -1202,10 +1206,16 @@ A meta-schema, then a schema that names it:
 ### C1. Each policy, stated
 
 ```ts
-z.strictObject({ a: z.string() }); // closed
-z.looseObject({ a: z.string() }); // open
-z.object({ a: z.string() }).catchall(z.number()); // constrained
-z.object({ a: z.string() }); // stripped
+const value = { a: 'x', b: 1 };
+const closed = z.strictObject({ a: z.string() });
+const open = z.looseObject({ a: z.string() });
+const constrained = z.object({ a: z.string() }).catchall(z.number());
+const stripped = z.object({ a: z.string() });
+check(closed.safeParse(value).success, false);
+check(open.parse(value), { a: 'x', b: 1 });
+check(constrained.safeParse(value).success, true);
+check(constrained.safeParse({ a: 'x', b: 'n' }).success, false);
+check(stripped.parse(value), { a: 'x' });
 ```
 
 - **Tests:** SPEC-P-1, the four policies are all meanings.
@@ -1236,7 +1246,7 @@ z.object({ a: z.string() }); // stripped
 ### C3. Stripped is a difference of sides
 
 ```ts
-z.object({ a: z.string() }).parse({ a: 'x', b: 1 }); // { a: 'x' }
+check(z.object({ a: z.string() }).parse({ a: 'x', b: 1 }), { a: 'x' });
 ```
 
 - **Tests:** section 3's produced set, which differs from the accepted set where a shape
@@ -1250,8 +1260,8 @@ z.object({ a: z.string() }).parse({ a: 'x', b: 1 }); // { a: 'x' }
 ```ts
 const A = z.strictObject({ a: z.string() });
 const B = z.strictObject({ b: z.string() });
-z.intersection(A, B).parse({ a: 'x', b: 'y' }); // passes
-z.intersection(A, B).safeParse({ a: 'x', b: 'y', c: 1 }).success; // false
+check(z.intersection(A, B).safeParse({ a: 'x', b: 'y' }).success, true);
+check(z.intersection(A, B).safeParse({ a: 'x', b: 'y', c: 1 }).success, false);
 ```
 
 - **Tests:** SPEC-P-1; SPEC-AR-1.
@@ -1265,9 +1275,15 @@ z.intersection(A, B).safeParse({ a: 'x', b: 'y', c: 1 }).success; // false
 ### C5. A record
 
 ```ts
-z.record(z.enum(['a', 'b']), z.number()); // both keys required, no others
-z.partialRecord(z.enum(['a', 'b']), z.number()); // neither required
-z.looseRecord(z.string().regex(/^x-/), z.number()); // other keys pass unchecked
+const whole = z.record(z.enum(['a', 'b']), z.number()); // both keys required, no others
+const partial = z.partialRecord(z.enum(['a', 'b']), z.number()); // neither required
+const loose = z.looseRecord(z.string().regex(/^x-/), z.number()); // other keys pass unchecked
+check(whole.safeParse({ a: 1 }).success, false);
+check(whole.safeParse({ a: 1, b: 2 }).success, true);
+check(whole.safeParse({ a: 1, b: 2, c: 3 }).success, false);
+check(partial.safeParse({}).success, true);
+check(loose.safeParse({ 'x-a': 1, b: 'q' }).success, true);
+check(loose.safeParse({ 'x-a': 'no' }).success, false);
 ```
 
 - **Tests:** SPEC-P-1. Appendix A has no row for a record: a row for the amendment.
@@ -1278,9 +1294,14 @@ z.looseRecord(z.string().regex(/^x-/), z.number()); // other keys pass unchecked
 ### C6. Three kinds of choice
 
 ```ts
-z.union([A, AB]); // the first that matches
-z.xor([A, AB]); // exactly one must match
-z.discriminatedUnion('kind', [Cat, Dog]); // the key picks one
+const A = z.object({ a: z.string() });
+const AB = z.object({ a: z.string(), b: z.string() });
+const Cat = z.object({ kind: z.literal('cat') });
+const Dog = z.object({ kind: z.literal('dog') });
+const value = { a: 'x', b: 'y' };
+check(z.union([A, AB]).parse(value), { a: 'x' }); // the first that matches
+check(z.xor([A, AB]).safeParse(value).success, false); // exactly one must match
+check(z.discriminatedUnion('kind', [Cat, Dog]).parse({ kind: 'dog' }), { kind: 'dog' }); // the key picks one
 ```
 
 - **Tests:** SPEC-PR-2; SPEC-AR-5.
@@ -1295,8 +1316,8 @@ z.discriminatedUnion('kind', [Cat, Dog]); // the key picks one
 ### D1. A default that inserts, a prefault that is validated, and an annotation
 
 ```ts
-z.string().min(5).default('x').parse(undefined); // 'x', not validated
-z.string().min(5).prefault('x'); // parse(undefined) throws: 'x' is validated
+check(z.string().min(5).default('x').parse(undefined), 'x'); // not validated
+check(z.string().min(5).prefault('x').safeParse(undefined).success, false); // validated
 ```
 
 ```json
@@ -1322,8 +1343,8 @@ z.string().min(5).prefault('x'); // parse(undefined) throws: 'x' is validated
 ```ts
 const A = z.object({ a: z.string() });
 const AB = z.object({ a: z.string(), b: z.string() });
-z.union([A, AB]).parse({ a: 'x', b: 'y' }); // { a: 'x' }
-z.union([AB, A]).parse({ a: 'x', b: 'y' }); // { a: 'x', b: 'y' }
+check(z.union([A, AB]).parse({ a: 'x', b: 'y' }), { a: 'x' });
+check(z.union([AB, A]).parse({ a: 'x', b: 'y' }), { a: 'x', b: 'y' });
 ```
 
 - **Tests:** section 3's produced set; SPEC-PR-2.
@@ -1368,11 +1389,11 @@ z.union([AB, A]).parse({ a: 'x', b: 'y' }); // { a: 'x', b: 'y' }
 ### D4. Values that are changed on the way through
 
 ```ts
-z.string().trim().min(2).safeParse(' a ').success; // false: trimmed first
-z.coerce.number().parse('12'); // 12
-z.string().min(5).catch('x').parse(1); // 'x'
-z.string().default('x').nonoptional().parse(undefined); // 'x'
-z.tuple([z.string(), z.number().default(5)]).parse(['a']); // ['a', 5]
+check(z.string().trim().min(2).safeParse(' a ').success, false); // trimmed first
+check(z.coerce.number().parse('12'), 12);
+check(z.string().min(5).catch('x').parse(1), 'x');
+check(z.string().default('x').nonoptional().parse(undefined), 'x');
+check(z.tuple([z.string(), z.number().default(5)]).parse(['a']), ['a', 5]);
 ```
 
 - **Tests:** section 3's two sides; SPEC-PR-2; SPEC-P-2, the declarative subset, decides which
@@ -1461,12 +1482,12 @@ z.tuple([z.string(), z.number().default(5)]).parse(['a']); // ['a', 5]
 ### E6. Formats with parameters, and one meaning in two places
 
 ```ts
-z.int(); // a safe integer: refuses 2 ** 53
-z.int64(); // a bigint: refuses the number 1
-z.url({ protocol: /^https$/ });
-z.string().regex(/a/i);
-z.email(); // the schema is the check
-z.string().email(); // the check is in the schema's list
+check(z.int().safeParse(2 ** 53).success, false); // a safe integer
+check(z.int64().safeParse(1).success, false); // a bigint, not a number
+check(z.url({ protocol: /^https$/ }).safeParse('http://example.com').success, false);
+check(z.string().regex(/a/i).safeParse('A').success, true);
+check(z.email().safeParse('a').success, false); // the schema is the check
+check(z.string().email().safeParse('a').success, false); // the check is in the schema's list
 ```
 
 - **Tests:** SPEC-P-3; SPEC-AR-1; SPEC-PR-2.
@@ -2135,17 +2156,33 @@ z.string().email(); // the check is in the schema's list
 ### H2. Constructs only Zod has
 
 ```ts
-z.templateLiteral(['id-', z.number()]);
-z.object({ a: z.string().exactOptional(), b: z.string().optional() });
-z.object({ a: z.string() }).readonly();
+const template = z.templateLiteral(['id-', z.number()]);
+check(template.safeParse('id-5').success, true);
+check(z.templateLiteral(['id-', z.number().positive()]).safeParse('id--1').success, true);
+
+const keys = z.object({ a: z.string().exactOptional(), b: z.string().optional() });
+check(keys.safeParse({}).success, true);
+check(keys.safeParse({ a: undefined }).success, false);
+check(keys.safeParse({ b: undefined }).success, true);
+
+check(Object.isFrozen(z.object({ a: z.string() }).readonly().parse({ a: 'x' })), true);
+check(z.string().readonly().parse('x'), 'x');
+
 const Node = z.object({
   name: z.string(),
   get next() {
     return Node.optional();
   },
 });
-z.string().brand('Id');
-z.string().meta({ title: 'A name' });
+check(Node.shape.next.unwrap() === Node, true);
+
+const plain = z.string();
+check(plain.brand('Id') === plain, true);
+
+const said = z.registry();
+const named = z.string().register(said, { title: 'A name' });
+check(said.get(named.min(3)), { title: 'A name' });
+check(said.get(named.optional()), undefined);
 ```
 
 - **Tests:** Appendix A's rows for each.
@@ -2176,7 +2213,9 @@ from, and what the source left unsaid, are held beside the value.
 ### I1. Closed
 
 ```ts
-z.strictObject({ a: z.string().optional() });
+const closed = z.strictObject({ a: z.string().optional() });
+check(closed.safeParse({}).success, true);
+check(closed.safeParse({ a: 's', b: 1 }).success, false);
 ```
 
 ```json
@@ -2235,7 +2274,10 @@ z.strictObject({ a: z.string().optional() });
 ```
 
 ```ts
-z.tuple([z.string(), z.number()]);
+const tuple = z.tuple([z.string(), z.number()]);
+check(tuple.safeParse(['s']).success, false);
+check(tuple.safeParse(['s', 1]).success, true);
+check(tuple.safeParse(['s', 1, 2]).success, false);
 ```
 
 - **Tests:** SPEC-AR-1.
@@ -2276,7 +2318,8 @@ z.tuple([z.string(), z.number()]);
 ```
 
 ```ts
-z.string().nullable();
+check(z.string().nullable().safeParse(null).success, true);
+check(z.string().nullable().safeParse(1).success, false);
 ```
 
 - **Tests:** SPEC-AR-1.
@@ -2294,7 +2337,8 @@ z.string().nullable();
 ```
 
 ```ts
-z.literal('a');
+check(z.literal('a').safeParse('a').success, true);
+check(z.literal('a').safeParse('b').success, false);
 ```
 
 - **Tests:** SPEC-AR-1. The 2020-12 validation text says `const` is the same as an `enum`

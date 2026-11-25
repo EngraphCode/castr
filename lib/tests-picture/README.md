@@ -411,6 +411,36 @@ dialect; the format-assertion vocabulary; and the two document schemas the speci
 names at version 0.8.0 (3.1 of 2022-10-07, 3.2 of 2025-09-17), which stay until the
 specification names others.
 
+## The cases the model's design must hold
+
+[The note of cases](../../.agent/analysis-and-reports/model-design-cases-2026-11-25.md)
+gives each hard case as a small document and says what the document means. So that
+nothing it says of a document rests on its own word, [`cases/`](cases/) reads the
+documents out of the note and runs them:
+
+- **JSON Schema.** What the note says each schema accepts and refuses is data,
+  [`__fixtures__/cases/json-schema-expectations.json`](__fixtures__/cases/json-schema-expectations.json),
+  123 statements. Each is run under `@hyperjump/json-schema`, in the draft it names.
+  Which JSON documents of the note are fragments of OpenAPI documents is stated in
+  [`__fixtures__/cases/openapi-fragments.json`](__fixtures__/cases/openapi-fragments.json),
+  never inferred from a document's keys, and a test fails for a JSON document that is
+  neither listed there nor run by a statement, or is both. The texts decide what a
+  schema accepts; this validator agreed with them wherever the cases were checked, and
+  Ajv does not.
+- **OpenAPI.** Each of the 31 fragments, with `openapi` and `info` supplied, is judged
+  against the pinned schema published for 3.2 and admitted by it. Four use what 3.2
+  added and are refused by the schema for 3.1; the test names them.
+- **Zod.** A Zod document of the note is a few statements that build schemas and say
+  what they do, each statement of fact a call `check(actual, expected)`. Each document
+  is run as it stands, as a module of its own, against the installed Zod. A test fails
+  for a check that does not hold, a document that throws, and a document that makes no
+  check. A document that needs a registry makes one of its own; none touches Zod's
+  global registry.
+
+What this does not prove: that a document means what the note says beyond what a
+validator can show. A reference kept as a reference, a name, where a default came from:
+those are read, and the design's own proofs are what test them.
+
 ## How a definition is read
 
 [`rows/inventory.ts`](rows/inventory.ts) reads one definition into objects and fields:
