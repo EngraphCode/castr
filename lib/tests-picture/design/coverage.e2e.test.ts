@@ -15,15 +15,20 @@ import {
   schemaKeywords,
   schemaTypeValues,
 } from '../rows/published-rows.js';
+import { readZodConstructs } from '../rows/zod-constructs.js';
 
 import {
   DIALECT_2020_12_OWN_NAMES,
   DRAFT_07,
   DRAFT_2020_12,
   TYPE_VALUES,
+  ZOD_CHECKS,
+  ZOD_SCHEMAS,
   type Coverage,
 } from './coverage.js';
 import { elements } from './elements.js';
+
+const ZOD = readZodConstructs();
 
 const LISTS: readonly (readonly [string, readonly string[], Readonly<Record<string, Coverage>>])[] =
   [
@@ -40,6 +45,8 @@ const LISTS: readonly (readonly [string, readonly string[], Readonly<Record<stri
       dialect2020OwnNames(loadDefinition).map((one) => one.name),
       DIALECT_2020_12_OWN_NAMES,
     ],
+    ['Zod schema', ZOD.schemas.map((one) => one.name), ZOD_SCHEMAS],
+    ['Zod check', ZOD.checks.map((one) => one.name), ZOD_CHECKS],
   ];
 
 describe('the elements of the prototype', () => {
@@ -83,6 +90,16 @@ describe('the coverage map', () => {
     expect([...new Set(unknown)]).toEqual([]);
   });
 
+  it('cites a clause of the specification for every kind it puts outside the model', () => {
+    const uncited = LISTS.flatMap(([list, , map]) =>
+      Object.entries(map)
+        .filter(([, entry]) => 'refused' in entry && !/^SPEC-[A-Z]+-\d+/.test(entry.refused))
+        .map(([kind]) => `${list} ${kind}`),
+    );
+
+    expect(uncited).toEqual([]);
+  });
+
   it('owes these kinds an element, and no other', () => {
     const owed = LISTS.flatMap(([list, , map]) =>
       Object.entries(map)
@@ -105,6 +122,21 @@ describe('the coverage map', () => {
       'Draft 2020-12 name outside its vocabularies dependencies',
       'Draft 2020-12 name outside its vocabularies $recursiveAnchor',
       'Draft 2020-12 name outside its vocabularies $recursiveRef',
+      'Zod schema $ZodDiscriminatedUnion',
+      'Zod schema $ZodEnum',
+      'Zod schema $ZodExactOptional',
+      'Zod schema $ZodNonOptional',
+      'Zod schema $ZodNumber',
+      'Zod schema $ZodNumberFormat',
+      'Zod schema $ZodReadonly',
+      'Zod schema $ZodRecord',
+      'Zod schema $ZodStringFormat',
+      'Zod schema $ZodTemplateLiteral',
+      'Zod check $ZodCheckMultipleOf',
+      'Zod check $ZodCheckNumberFormat',
+      'Zod check $ZodCheckProperties',
+      'Zod check $ZodCheckProperty',
+      'Zod check $ZodCheckStringFormat',
     ]);
   });
 });
