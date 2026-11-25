@@ -348,6 +348,38 @@ The list is a floor, and says so. Three things are proved by test and one is not
 Versions 3.1.0 and 3.1.1 were not read apart from 3.1.2. The specification's format
 registry was not read.
 
+What the JSON Schema texts define beyond their meta-schemas is a third list made by hand,
+[`__fixtures__/texts/json-schema-text-constructs.json`](__fixtures__/texts/json-schema-text-constructs.json),
+read and checked for shape by
+[`rows/json-schema-text-constructs.ts`](rows/json-schema-text-constructs.ts): 136 rows
+from the core and the validation text of Draft 2020-12 and of Draft-07. 36 are true of
+both drafts, 66 of 2020-12 alone and 34 of Draft-07 alone. The kinds are the same seven:
+88 hold a fact, 3 a default, 13 a rule for reading, 2 a rule for a tool at run time, 3 a
+validity rule, 18 a grammar, and 9 something a text leaves undefined.
+
+A meta-schema says what keywords a schema may hold. The texts say what the model has to
+be able to state about them:
+
+- what "adjacent" means, and which keywords depend on the ones beside them;
+- what an annotation is, where it attaches, when it is dropped, and which keywords read
+  another's annotation, which is how `unevaluatedProperties` and `unevaluatedItems`
+  reach past their own schema object;
+- that an absent keyword is not the same as the keyword given with a value that asserts
+  nothing;
+- the two scopes of a schema, lexical and dynamic, and what `$dynamicRef` binds to;
+- what a resource is, what `$id` is resolved against, and the two grammars of an anchor;
+- where the drafts differ in meaning and not only in keywords: an unknown keyword is an
+  annotation in 2020-12 and is ignored in Draft-07; a `$ref` in Draft-07 makes its whole
+  object the reference; two formats cite different standards.
+
+The same is proved and not proved as for the OpenAPI list. The section numbers of the
+four texts are pinned in
+[`__fixtures__/texts/json-schema-sections.json`](__fixtures__/texts/json-schema-sections.json),
+and a test proves every cited section exists in the text and the draft the row was read
+from. The standard each format cites was read in the texts for every row that names one.
+Coverage of every section is not proved for these texts, as it is for chapter 4 of
+OpenAPI: the reader's report names the sections it read, and that list is not computed.
+
 The rows are read from the latest revisions the publisher listed on 22 November 2026: for
 OpenAPI 3.1, the document schema of 2026-11-05 and the vocabulary of 2024-11-10; for 3.2,
 the document schema of 2026-11-12 and the vocabulary of 2026-02-26.

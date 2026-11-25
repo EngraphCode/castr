@@ -16,8 +16,8 @@ import {
   readOpenApiTextConstructs,
   readTextConstructList,
   type TextConstruct,
-  type TextDisposition,
 } from './openapi-text-constructs.js';
+import type { TextDisposition } from './text-constructs.js';
 
 const list = readOpenApiTextConstructs();
 const OPENAPI_TEXT_CONSTRUCTS = list.constructs;

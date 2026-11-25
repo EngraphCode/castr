@@ -1,0 +1,957 @@
+{
+  "note": "What the texts of JSON Schema Draft 2020-12 and Draft-07 define that neither meta-schema holds. A list made by hand, and a floor. Every statement is in this repository's own words; no text of a specification is reproduced. A row true of both drafts, or of 2020-12 alone, cites the sections of the 2020-12 text; a row true of Draft-07 alone cites those of the Draft-07 text.",
+  "constructs": [
+    {
+      "sections": ["3", "4.3.3", "8.1.2"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "A dialect is a set of vocabularies, each required or optional, named by a meta-schema. `$vocabulary` is read only in a meta-schema, so a document gets its vocabularies through the meta-schema its `$schema` names."
+    },
+    {
+      "sections": ["4.3.1", "6.5", "8.1.2"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "reading",
+      "says": "A keyword that is not known, or belongs to a vocabulary that is not understood, is collected as an annotation whose value is the keyword's value."
+    },
+    {
+      "sections": ["4.2.1"],
+      "document": "core",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "There are six kinds of value. A number is a decimal of any precision; a string is a sequence of Unicode code points; an object has no order."
+    },
+    {
+      "sections": ["4.2.1"],
+      "document": "core",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "Two numbers that differ in how they are written and are equal in value are one value: 1.0 is 1."
+    },
+    {
+      "sections": ["4.2.1"],
+      "document": "core",
+      "drafts": "both",
+      "disposition": "undefined",
+      "says": "What an object that gives one key twice means."
+    },
+    {
+      "sections": ["4.2.1"],
+      "document": "core",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "\"integer\" is not a kind of value: it is a name the validation vocabulary gives to a number with no fractional part."
+    },
+    {
+      "sections": ["4.2.2"],
+      "document": "core",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "Equality, which `enum`, `const` and `uniqueItems` use, is of kind and value: strings by code point, numbers by mathematical value, arrays item by item, objects as sets of keys with equal values and no order."
+    },
+    {
+      "sections": ["4.2.3"],
+      "document": "core",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "A value may come from a format that holds more than these six kinds; such a value is outside what a schema describes."
+    },
+    {
+      "sections": ["4.3"],
+      "document": "core",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "A schema is an object or a boolean. `true` accepts every value and `false` none; `true` is the same as the empty schema and `false` the same as a schema that negates it."
+    },
+    {
+      "sections": ["4.3.2"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "A boolean schema never produces an annotation."
+    },
+    {
+      "sections": ["4.3.1"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "Keywords \"adjacent\" to one another are those in the same schema object. Every dependence of one keyword on another is defined over adjacency."
+    },
+    {
+      "sections": ["4.3.1"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "A keyword is of one or more of five categories: identifier, assertion, annotation, applicator, reserved location."
+    },
+    {
+      "sections": ["4.3.4"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "reading",
+      "says": "A meta-schema may constrain a name that is in none of its vocabularies."
+    },
+    {
+      "sections": ["4.3.5"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "A schema resource is identified by an absolute URI with no fragment. The root of a document is always a resource, and a document may hold several; a resource embedded in a document and one linked from it behave the same."
+    },
+    {
+      "sections": ["5"],
+      "document": "core",
+      "drafts": "both",
+      "disposition": "grammar",
+      "says": "A fragment that has the syntax of a JSON Pointer, the empty fragment included, is a JSON Pointer; any other fragment is a plain name."
+    },
+    {
+      "sections": ["6.3"],
+      "document": "core",
+      "drafts": "both",
+      "disposition": "runtime",
+      "says": "A writer should write an integer without a fractional part."
+    },
+    {
+      "sections": ["6.4"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "grammar",
+      "says": "A regular expression is of the ECMA-262 dialect, 11th edition, and should be built with Unicode support. It is never anchored unless it says so."
+    },
+    {
+      "sections": ["7.1"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "A schema has a lexical scope, by which `$id`, `$ref` and `$dynamicRef` find their base URI, and a dynamic scope, the path of references by which evaluation reached it. One schema may be reached under several dynamic scopes."
+    },
+    {
+      "sections": ["7.1", "8.1.1"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "reading",
+      "says": "`$schema` applies to a whole resource and may appear only at the root of one."
+    },
+    {
+      "sections": ["7.2"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "A keyword may depend on the keywords adjacent to it and on the annotations they produce, and never in a circle."
+    },
+    {
+      "sections": ["7.3"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "default",
+      "says": "An absent keyword asserts nothing, produces no annotation and applies no schema. That is not the same as the keyword given with a value that asserts nothing: `additionalProperties: {}` produces an annotation and an absent `additionalProperties` produces none."
+    },
+    {
+      "sections": ["7.5"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "An applicator asserts nothing of its own: its result is made from the results of the schemas it applies."
+    },
+    {
+      "sections": ["7.6.1"],
+      "document": "core",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "An assertion that is about one kind of value passes every value of another kind."
+    },
+    {
+      "sections": ["7.7", "7.7.1.2"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "An annotation attaches to a location in the value only where the value is valid against the schema object that holds the keyword and against every parent of it. A schema object that fails drops every annotation, its own and those of the schemas it applies."
+    },
+    {
+      "sections": ["7.7", "10.2.1"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "One location may receive several values of one annotation keyword, from several schemas."
+    },
+    {
+      "sections": ["7.7.1"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "An annotation is five things: the keyword, the location in the value, the path through the schema including references, the absolute location of the schema, and the value."
+    },
+    {
+      "sections": ["7.7.1.1"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "An annotation reached across a reference can be told from one beside the reference."
+    },
+    {
+      "sections": ["7.7.1.3"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "An applicator, a reference included, gathers the annotations of what it applies."
+    },
+    {
+      "sections": ["7.8", "8.2.4"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "`$defs` is a place to keep schemas and has no effect on a result."
+    },
+    {
+      "sections": ["8.1.1"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "undefined",
+      "says": "What a document with no `$schema` at its root is read as is left to the implementation."
+    },
+    {
+      "sections": ["8.1.2"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "In `$vocabulary`, `true` says a schema must be refused by a tool that does not understand the vocabulary, and `false` says the tool may go on."
+    },
+    {
+      "sections": ["8.1.2.1"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "undefined",
+      "says": "What happens where the meta-schema is not recognised or cannot be found is left to the implementation."
+    },
+    {
+      "sections": ["8.1.2.2"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "reading",
+      "says": "What vocabularies a schema uses is not passed on through a `$ref`."
+    },
+    {
+      "sections": ["8.2.1"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "`$id` is an identifier and not an address to fetch. It gives the resource its base URI. A `$id` in a subschema makes an embedded resource, resolved against the resource that holds it."
+    },
+    {
+      "sections": ["8.2.1"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "grammar",
+      "says": "`$id` resolves to an absolute URI with no fragment, or with an empty one, which is ignored."
+    },
+    {
+      "sections": ["8.2.2"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "grammar",
+      "says": "The name in `$anchor` and `$dynamicAnchor` begins with a letter or an underscore and goes on in letters, digits, `-`, `_` and `.`."
+    },
+    {
+      "sections": ["8.2.2"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "An anchor is a plain-name fragment on the URI of the resource that holds it."
+    },
+    {
+      "sections": ["8.2.2"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "undefined",
+      "says": "What two anchors of one name in one resource mean."
+    },
+    {
+      "sections": ["8.2.3.1"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "`$ref` gives the result of its target, and the keywords beside it still apply. Its target is settled when the schema is loaded."
+    },
+    {
+      "sections": ["8.2.3.2"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "`$dynamicRef` whose first target is a dynamic anchor is bound, when a value is evaluated, to the outermost resource in the dynamic scope that has a dynamic anchor of that name; otherwise it behaves as `$ref`."
+    },
+    {
+      "sections": ["8.3"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "`$comment` is never an annotation and a tool may remove it."
+    },
+    {
+      "sections": ["9.1.1"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "reading",
+      "says": "Where a schema is held inside a document of another format, that format gives the first base URI."
+    },
+    {
+      "sections": ["9.1.2"],
+      "document": "core",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "A schema may have several URIs; one URI names one schema."
+    },
+    {
+      "sections": ["9.2"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "reading",
+      "says": "A reference is resolved against the current base URI, and a tool then uses whatever schema it knows by that URI."
+    },
+    {
+      "sections": ["9.2.1"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "reading",
+      "says": "A JSON Pointer from an outer resource into one embedded under its own `$id` should not be used."
+    },
+    {
+      "sections": ["9.3", "9.3.2", "9.3.3"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "Each embedded resource is read by its own dialect, which is that of the resource around it unless it gives its own, and is valid against its own meta-schema."
+    },
+    {
+      "sections": ["9.3.1"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "Bundling keeps the object that refers and puts the resource under `$defs`; the key it is given there carries no meaning."
+    },
+    {
+      "sections": ["9.4.1"],
+      "document": "core",
+      "drafts": "both",
+      "disposition": "undefined",
+      "says": "What a schema whose references never end means."
+    },
+    {
+      "sections": ["9.4.2"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "undefined",
+      "says": "What a reference into the content of an unknown keyword means."
+    },
+    {
+      "sections": ["10.1"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "Three keywords depend on those beside them: `additionalProperties` on `properties` and `patternProperties`, `items` on `prefixItems`, and `contains` on `minContains`."
+    },
+    {
+      "sections": ["10.2"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "Schemas applied in place are independent of one another, and their order carries no meaning."
+    },
+    {
+      "sections": ["10.2.1.1", "10.2.1.2", "10.2.1.3"],
+      "document": "core",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "`allOf`, `anyOf` and `oneOf` each hold at least one schema. `oneOf` passes where exactly one passes. In 2020-12 `anyOf` evaluates every branch so that annotations are collected."
+    },
+    {
+      "sections": ["10.2.1.4"],
+      "document": "core",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "`not` passes where its schema fails, and so contributes no annotation."
+    },
+    {
+      "sections": ["10.2.2", "10.2.2.1", "10.2.2.2", "10.2.2.3"],
+      "document": "core",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "`if`, `then` and `else` belong together only within one schema object. `if` never fails the schema that holds it. `then` and `else` are ignored without `if`, and the branch not taken is not evaluated."
+    },
+    {
+      "sections": ["10.2.2.4"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "`dependentSchemas` applies to an object: where the key is present, the whole value must satisfy the schema."
+    },
+    {
+      "sections": ["10.3.1.1"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "`prefixItems` applies by position and puts no limit on length. Its annotation is the largest index it applied to, or `true` for every item."
+    },
+    {
+      "sections": ["10.3.1.2"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "`items` applies to every item past those `prefixItems` beside it covers, or to every item; its annotation is `true`."
+    },
+    {
+      "sections": ["10.3.1.3"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "`contains` needs one matching item unless `minContains` beside it is 0. Its annotation is the indexes that match."
+    },
+    {
+      "sections": ["10.3.2.1"],
+      "document": "core",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "`properties` applies to the named properties that are present; in 2020-12 its annotation is the names it matched."
+    },
+    {
+      "sections": ["10.3.2.2"],
+      "document": "core",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "A key of `patternProperties` is an unanchored regular expression, and a property must satisfy the schema of every pattern its name matches."
+    },
+    {
+      "sections": ["10.3.2.3"],
+      "document": "core",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "`additionalProperties` applies to the properties not named by `properties` and matching no pattern of `patternProperties` in the same schema object. It does not see through `allOf` or a reference."
+    },
+    {
+      "sections": ["10.3.2.4"],
+      "document": "core",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "`propertyNames` applies to the name of every property; a name is always a string."
+    },
+    {
+      "sections": ["11"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "A property or an item is \"evaluated\" where a keyword adjacent to `unevaluatedProperties` or `unevaluatedItems`, or a schema applied in place beside it, has successfully applied to it, the targets of references included."
+    },
+    {
+      "sections": ["11.2"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "`unevaluatedItems` reads the annotations of `prefixItems`, `items`, `contains` and itself. With no annotation it applies to every item; an annotation of `true` leaves it none; otherwise it applies above the largest index of `prefixItems` to items `contains` did not match."
+    },
+    {
+      "sections": ["11.3"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "`unevaluatedProperties` reads the annotations of `properties`, `patternProperties`, `additionalProperties` and itself, and applies to the properties none of them names."
+    },
+    {
+      "sections": ["11.2", "11.3"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "The annotations of `unevaluatedItems` and `unevaluatedProperties` pass upward to the same keywords in a parent."
+    },
+    {
+      "sections": ["B.2"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "Replacing a `$ref` with the schema it targets does not always keep the same behaviour."
+    },
+    {
+      "sections": ["D"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "undefined",
+      "says": "What two vocabularies that define one keyword differently mean together."
+    },
+    {
+      "sections": ["13"],
+      "document": "core",
+      "drafts": "both",
+      "disposition": "validity",
+      "says": "A schema must not take the `$id` of another."
+    },
+    {
+      "sections": ["8.1"],
+      "document": "core",
+      "drafts": "2020-12",
+      "disposition": "validity",
+      "says": "A schema is valid against its meta-schema."
+    },
+    {
+      "sections": ["4.1", "4.2"],
+      "document": "validation",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "A string may hold the NUL character, and a number has no bound of size or precision."
+    },
+    {
+      "sections": ["5"],
+      "document": "validation",
+      "drafts": "2020-12",
+      "disposition": "reading",
+      "says": "The dialect's meta-schema keeps two keywords of earlier drafts, without naming them in the text."
+    },
+    {
+      "sections": ["6"],
+      "document": "validation",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "A validation keyword never produces an annotation, so it never marks a property or an item evaluated."
+    },
+    {
+      "sections": ["6.1.1"],
+      "document": "validation",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "`type` is one name or a list of distinct names, of which the value must match one. `integer` matches any number with no fractional part."
+    },
+    {
+      "sections": ["6.1.2"],
+      "document": "validation",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "`enum` passes a value equal to one of its members. The text says it should be non-empty with distinct members; the 2020-12 meta-schema enforces neither, so an empty `enum` accepts nothing."
+    },
+    {
+      "sections": ["6.1.3"],
+      "document": "validation",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "`const` is the same as an `enum` of one member."
+    },
+    {
+      "sections": ["6.2.1"],
+      "document": "validation",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "`multipleOf` is greater than 0, and a number passes where dividing by it gives an integer."
+    },
+    {
+      "sections": ["6.2.2", "6.2.3", "6.2.4", "6.2.5"],
+      "document": "validation",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "The four bounds are numbers; two include the bound and two exclude it."
+    },
+    {
+      "sections": ["6.3.1", "6.3.2"],
+      "document": "validation",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "The length of a string is counted in characters, not bytes or UTF-16 units."
+    },
+    {
+      "sections": ["6.3.2", "6.4.2", "6.5.2"],
+      "document": "validation",
+      "drafts": "both",
+      "disposition": "default",
+      "says": "An absent `minLength`, `minItems` or `minProperties` is 0."
+    },
+    {
+      "sections": ["6.4.3"],
+      "document": "validation",
+      "drafts": "both",
+      "disposition": "default",
+      "says": "An absent `uniqueItems` is false."
+    },
+    {
+      "sections": ["6.4.4", "6.4.5"],
+      "document": "validation",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "`maxContains` and `minContains` read the annotation of `contains` beside them and mean nothing without it. An absent `minContains` is 1, and 0 lets `contains` pass with no match."
+    },
+    {
+      "sections": ["6.5.3"],
+      "document": "validation",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "`required` asks only that each named property be present. Absent, it names none."
+    },
+    {
+      "sections": ["6.5.4"],
+      "document": "validation",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "`dependentRequired` names, for a property that is present, others that must be present too."
+    },
+    {
+      "sections": ["7.1"],
+      "document": "validation",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "A format applies to values of the kinds it names, and a value of another kind passes. A format cannot be made to apply to integers alone."
+    },
+    {
+      "sections": ["7.1", "7.2.1", "7.2.2"],
+      "document": "validation",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "`format` belongs to one of two vocabularies. Under the annotation vocabulary it is collected and need not be checked. Under the assertion vocabulary it must be checked in full or the schema refused. Declaring both is the same as the assertion vocabulary."
+    },
+    {
+      "sections": ["7.2.3"],
+      "document": "validation",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "A `format` a tool does not know is an annotation under the annotation vocabulary, and under the assertion vocabulary the value fails."
+    },
+    {
+      "sections": ["7.3.1"],
+      "document": "validation",
+      "drafts": "2020-12",
+      "disposition": "grammar",
+      "says": "`date-time`, `date`, `time` and `duration` follow RFC 3339; `duration` its appendix A. Other production names of RFC 3339 are reserved."
+    },
+    {
+      "sections": ["7.3.2"],
+      "document": "validation",
+      "drafts": "2020-12",
+      "disposition": "grammar",
+      "says": "`email` follows RFC 5321 section 4.1.2 and `idn-email` RFC 6531."
+    },
+    {
+      "sections": ["7.3.3"],
+      "document": "validation",
+      "drafts": "2020-12",
+      "disposition": "grammar",
+      "says": "`hostname` follows RFC 1123 section 2.1 and `idn-hostname` RFC 5890."
+    },
+    {
+      "sections": ["7.3.4"],
+      "document": "validation",
+      "drafts": "both",
+      "disposition": "grammar",
+      "says": "`ipv4` follows RFC 2673 section 3.2 and `ipv6` RFC 4291 section 2.2."
+    },
+    {
+      "sections": ["7.3.5"],
+      "document": "validation",
+      "drafts": "2020-12",
+      "disposition": "grammar",
+      "says": "`uri`, `uri-reference`, `iri` and `iri-reference` follow RFC 3986 and RFC 3987; `uuid` follows RFC 4122."
+    },
+    {
+      "sections": ["7.3.6", "7.3.7", "7.3.8"],
+      "document": "validation",
+      "drafts": "both",
+      "disposition": "grammar",
+      "says": "`uri-template` follows RFC 6570, `json-pointer` RFC 6901, `relative-json-pointer` its own draft, and `regex` ECMA-262."
+    },
+    {
+      "sections": ["8.1", "8.2"],
+      "document": "validation",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "`contentEncoding`, `contentMediaType` and `contentSchema` are annotations on strings: they never make a value invalid, and a tool does not decode by default."
+    },
+    {
+      "sections": ["8.3"],
+      "document": "validation",
+      "drafts": "2020-12",
+      "disposition": "grammar",
+      "says": "`contentEncoding` names an encoding of RFC 4648 or of RFC 2045 sections 6.7 and 6.8. Absent beside `contentMediaType`, the string is the content as it stands."
+    },
+    {
+      "sections": ["8.4", "8.5"],
+      "document": "validation",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "`contentMediaType` is a media type of RFC 2046 that describes the decoded content, and `contentSchema` describes it further and means nothing without `contentMediaType`."
+    },
+    {
+      "sections": ["9.1", "9.2"],
+      "document": "validation",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "`title`, `description` and `default` are annotations. `default` inserts nothing and is recommended to be valid against its schema."
+    },
+    {
+      "sections": ["9.3"],
+      "document": "validation",
+      "drafts": "2020-12",
+      "disposition": "holds",
+      "says": "`deprecated` is true for a location where any schema that applies to it says so; absent, it is false."
+    },
+    {
+      "sections": ["9.4"],
+      "document": "validation",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "`readOnly` and `writeOnly` are true for a location where any schema that applies to it says so; absent, they are false."
+    },
+    {
+      "sections": ["9.5"],
+      "document": "validation",
+      "drafts": "both",
+      "disposition": "holds",
+      "says": "`examples` from several schemas at one location are gathered into one list."
+    },
+    {
+      "sections": ["10"],
+      "document": "validation",
+      "drafts": "both",
+      "disposition": "runtime",
+      "says": "A regular expression from a schema must never be able to run code."
+    },
+    {
+      "sections": ["A"],
+      "document": "validation",
+      "drafts": "2020-12",
+      "disposition": "reading",
+      "says": "Under the dialect's meta-schema `definitions` should be taken to behave as `$defs`; `dependencies` was replaced by `dependentSchemas` and `dependentRequired`."
+    },
+    {
+      "sections": ["3.2"],
+      "document": "core",
+      "drafts": "draft-07",
+      "disposition": "holds",
+      "says": "An annotation applies only where the value is valid against the schema object and every parent of it."
+    },
+    {
+      "sections": ["4.3.1", "6.4"],
+      "document": "core",
+      "drafts": "draft-07",
+      "disposition": "reading",
+      "says": "A keyword that is not known is ignored. It is not an annotation, so a keyword that only 2020-12 defines means nothing in a Draft-07 document."
+    },
+    {
+      "sections": ["4.3.1"],
+      "document": "core",
+      "drafts": "draft-07",
+      "disposition": "holds",
+      "says": "A keyword is an assertion or an annotation, or both; there are no other categories, no vocabularies that a document declares, and no schema resources."
+    },
+    {
+      "sections": ["5"],
+      "document": "core",
+      "drafts": "draft-07",
+      "disposition": "grammar",
+      "says": "A plain-name fragment is made by an `$id` that is a fragment alone. It begins with a letter and goes on in letters, digits, `-`, `_`, `:` and `.`."
+    },
+    {
+      "sections": ["7"],
+      "document": "core",
+      "drafts": "draft-07",
+      "disposition": "holds",
+      "says": "`$schema` names the version of the draft. It is at the root only, so a document has one dialect."
+    },
+    {
+      "sections": ["7"],
+      "document": "core",
+      "drafts": "draft-07",
+      "disposition": "undefined",
+      "says": "What a document with no `$schema` is read as: the text does not say."
+    },
+    {
+      "sections": ["8.2", "8.2.1"],
+      "document": "core",
+      "drafts": "draft-07",
+      "disposition": "holds",
+      "says": "`$id` gives a schema its URI and its base. A `$id` in a subschema resolves against that of its parent. The root `$id` is absolute and may end in an empty fragment."
+    },
+    {
+      "sections": ["8.2.2"],
+      "document": "core",
+      "drafts": "draft-07",
+      "disposition": "reading",
+      "says": "A schema may be referred to by the URI of any ancestor that gives a `$id`, with a JSON Pointer from that ancestor, even through another `$id`."
+    },
+    {
+      "sections": ["8.3"],
+      "document": "core",
+      "drafts": "draft-07",
+      "disposition": "reading",
+      "says": "An object that holds `$ref` is the reference, and every other property in it is ignored."
+    },
+    {
+      "sections": ["8.3"],
+      "document": "core",
+      "drafts": "draft-07",
+      "disposition": "undefined",
+      "says": "Whether a `$id` or `definitions` beside a `$ref` still takes effect: the text does not say."
+    },
+    {
+      "sections": ["8.3.1"],
+      "document": "core",
+      "drafts": "draft-07",
+      "disposition": "validity",
+      "says": "References must not form a loop that never ends."
+    },
+    {
+      "sections": ["9"],
+      "document": "core",
+      "drafts": "draft-07",
+      "disposition": "reading",
+      "says": "`$comment` is treated as an unknown keyword."
+    },
+    {
+      "sections": ["3.1.1"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "holds",
+      "says": "Two keywords depend on those beside them: `additionalItems` on `items`, and `additionalProperties` on `properties` and `patternProperties`."
+    },
+    {
+      "sections": ["3.2"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "holds",
+      "says": "`format` and the content keywords are annotations that a tool may also check."
+    },
+    {
+      "sections": ["3.3", "3.3.2"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "holds",
+      "says": "Annotations gather every value. Those under a `not`, at any depth, and those in a branch of `oneOf`, `anyOf`, `then` or `else` that fails are dropped."
+    },
+    {
+      "sections": ["4.3"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "grammar",
+      "says": "A regular expression is of ECMA 262, with no edition named and no Unicode mode required."
+    },
+    {
+      "sections": ["5"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "grammar",
+      "says": "The URI of the dialect is `http://json-schema.org/draft-07/schema#`, with the `#`."
+    },
+    {
+      "sections": ["6.1.2"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "holds",
+      "says": "The text says `enum` should be non-empty with distinct members; the Draft-07 meta-schema requires it."
+    },
+    {
+      "sections": ["6.1.3"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "holds",
+      "says": "`const` passes a value equal to it."
+    },
+    {
+      "sections": ["6.2.3", "6.2.5"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "holds",
+      "says": "`exclusiveMaximum` and `exclusiveMinimum` are numbers, as in 2020-12."
+    },
+    {
+      "sections": ["6.4.1"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "holds",
+      "says": "`items` is a schema, applied to every item, or a list of schemas, applied by position without limiting length."
+    },
+    {
+      "sections": ["6.4.2"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "holds",
+      "says": "`additionalItems` applies to the items past the list form of `items` beside it, and is ignored where `items` is absent or is one schema."
+    },
+    {
+      "sections": ["6.4.6"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "holds",
+      "says": "`contains` needs at least one matching item, so an empty array fails; there are no keywords to count the matches."
+    },
+    {
+      "sections": ["6.5.6"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "holds",
+      "says": "`additionalProperties` applies to the properties not named by `properties` and matching no pattern of `patternProperties` in the same schema object."
+    },
+    {
+      "sections": ["6.5.7"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "holds",
+      "says": "`dependencies` gives, for a property that is present, a schema the whole value must satisfy or a list of properties that must be present too."
+    },
+    {
+      "sections": ["7.1", "7.2"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "holds",
+      "says": "`format` is an annotation and, where a tool chooses, an assertion. An author may use a format of their own; the text gives no rule for one a tool does not know."
+    },
+    {
+      "sections": ["7.3.1"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "grammar",
+      "says": "`date-time`, `date` and `time` follow RFC 3339. There is no `duration`."
+    },
+    {
+      "sections": ["7.3.2", "7.3.3"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "grammar",
+      "says": "`email` follows RFC 5322 section 3.4.1 and `hostname` RFC 1034 section 3.1: not the standards 2020-12 names."
+    },
+    {
+      "sections": ["7.3.5"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "grammar",
+      "says": "`uri`, `uri-reference`, `iri` and `iri-reference` follow RFC 3986 and RFC 3987. There is no `uuid`."
+    },
+    {
+      "sections": ["8.2"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "holds",
+      "says": "The content keywords are annotations that a tool may also check; 2020-12 makes them annotations only."
+    },
+    {
+      "sections": ["8.3"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "grammar",
+      "says": "`contentEncoding` names an encoding of RFC 2045 section 6.1."
+    },
+    {
+      "sections": ["8.4"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "holds",
+      "says": "`contentMediaType` is a media type of RFC 2046. There is no `contentSchema`."
+    },
+    {
+      "sections": ["9"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "holds",
+      "says": "`definitions` is a place to keep schemas and has no effect on a result."
+    },
+    {
+      "sections": ["10.3"],
+      "document": "validation",
+      "drafts": "draft-07",
+      "disposition": "holds",
+      "says": "`readOnly` and `writeOnly` are true for a location where any schema that applies to it says so. There is no `deprecated`."
+    }
+  ]
+}
