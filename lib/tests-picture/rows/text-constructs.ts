@@ -47,6 +47,25 @@ export function citedSections(value: unknown, what: string): readonly string[] {
   return sections;
 }
 
+/**
+ * A row's key: the list's prefix, a hyphen and three digits. A key never changes and is
+ * never reused, so a map from rows to anything else survives a row being reworded.
+ */
+export function rowKey(value: unknown, prefix: string, what: string): string {
+  if (typeof value !== 'string' || !new RegExp(`^${prefix}-\\d{3}$`).test(value)) {
+    throw new TypeError(`${what} has no key of the form ${prefix}-000`);
+  }
+  return value;
+}
+
+/** Refuses a list in which two rows share a key. */
+export function refuseRepeatedKeys(keys: readonly string[]): void {
+  const twice = keys.filter((key, index) => keys.indexOf(key) !== index);
+  if (twice.length > 0) {
+    throw new TypeError(`more than one row of the hand list has the key ${twice.join(', ')}`);
+  }
+}
+
 export function oneOf<const Allowed extends string>(
   value: unknown,
   allowed: readonly Allowed[],
