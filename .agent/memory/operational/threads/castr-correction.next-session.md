@@ -292,6 +292,56 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
   **Not yet tried against the cases by hand;** the two rules are dispositions, and the
   hand-written values of I1, B1, B2, C4, C2, D2, A4 and B8 are what test them.
 
+- 2026-11-25, M4, the cases made tests, and the first core attacked. **Done on main:**
+  pull request 208 (`f98fd0e0`) runs every document of the cases note: 123 statements
+  about JSON Schema documents under Hyperjump, the 31 OpenAPI fragments against the
+  schema published for 3.2, and the Zod documents as they stand, each a module of its
+  own whose statements of fact are calls `check(actual, expected)`. A first fix pinned
+  a digest of each Zod text; the testing strategy forbids that, and review said so.
+  **Owed from its threads:** whether the rule against global state in tests reaches
+  Hyperjump's one registry, which the judge of OpenAPI documents uses too; not decided.
+  **The hand trial.** A core was written by hand and compiled: a shape says, for each
+  of the six kinds of value, refused, accepted, or accepted under constraints; shapes
+  compose; a reference is an edge; a policy for the rest closes over what a shape
+  accounts for. Its centre is a table of what each kind of node accounts for. Three
+  readers attacked it (their reports and the proposal are under
+  `.agent/research/model-design-2026-11-24/`, `attack-on-core-*.md` and
+  `core-proposal-second-trial.md`): 23 statements false or cases not held, 32 gaps.
+  **What stood, each run:** every row of the accounting table; `additionalProperties`
+  and `unevaluatedProperties` as one construct; the rule that a composition of one
+  branch is the branch; the per-kind node. **What broke, and so the first of the two
+  whole reworkings the plan allows is spent:**
+  - A supplied closure cannot be put at a place in a schema: one place in a value is
+    reached from several. The seat's reading, to be tested in the next trial and
+    carried to the owner with the amendment: the profile's closure is by value. A key
+    of an object value that nothing applied there accounts for is refused, and a stated
+    "open" is what accounts for every key. It needs no node.
+  - Three canonical rules ignore what surrounds them (closing over items where the
+    array has `contains`; merging branches that carry their own annotations; a
+    first-match choice read as unordered under an enclosing closure).
+  - A definition's identity collided for nested names and used OpenAPI's tables as
+    structure. A definition gets one identity, by where it is, with every name, anchor
+    and pointer an alias of it; the target of every edge is made a definition before
+    any canonical rule runs.
+  - A boundary cannot exist only for an operation. A path item and an operation are
+    definitions; boundaries are derived from them.
+  - "Fill in the default and record that it was unsaid" is false where presence is
+    itself meaning (an OpenAPI encoding's `style`, `explode` and `allowReserved`) and
+    where a default is derived by inspecting a schema.
+  - What every node produces must be stated, in depth: a check on a wrapper applies to
+    what is produced; checks have an order wherever one changes the value.
+    **Two faults found in the specification as approved, for the owner:**
+  - SPEC-P-8 declares that `z.url()` and `format: uri` decide some strings
+    differently. It does not say that `z.url()` changes the value it returns: it trims,
+    and removes tabs and newlines (the seat ran it: two spaces round a URL come back
+    without them). The validator Castr writes for `format: uri` therefore produces a
+    value its source did not hold. SPEC-P-2 says the only ways a produced value may
+    differ are a default and a stripped key, and Appendix A's row for string formats
+    says the sides agree; both are false of `z.url()`.
+  - SPEC-P-1 does not say where a supplied closure lands (above).
+    **A false statement the seat put on main and has corrected:** case D3 of the cases
+    note gave OpenAPI 3.0's rule for read-only as the rule of 3.1 and 3.2.
+
 - 2026-11-24, M0, the reviews. The assumptions reviewer and the four seats of the
   conscience panel read the first draft. All four seats judged the work on track; three
   judged the framing narrowed, each on a different point; the assumptions reviewer found
