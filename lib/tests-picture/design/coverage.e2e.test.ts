@@ -31,6 +31,7 @@ import {
   OPENAPI_TEXT,
   TYPE_VALUES,
   ZOD_CHECKS,
+  ZOD_FORMAT,
   ZOD_SCHEMAS,
   type Coverage,
 } from './coverage.js';
@@ -229,5 +230,12 @@ describe('the coverage map', () => {
       'OpenAPI text OT-130',
       'OpenAPI text OT-132',
     ]);
+  });
+
+  it('owes every one of Zod’s 57 formats an element, under one entry', () => {
+    const formats = [...ZOD.stringFormats, ...ZOD.numberFormats, ...ZOD.bigintFormats];
+
+    expect(formats).toHaveLength(57);
+    expect('owed' in ZOD_FORMAT).toBe(true);
   });
 });

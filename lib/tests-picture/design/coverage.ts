@@ -12,7 +12,7 @@
  * four names the 2020-12 dialect constrains outside its vocabularies, Zod's schema
  * definitions and checks, and the rows of the JSON Schema hand list that say what a model
  * must hold. the objects and fields of an OpenAPI document, and the rows of the OpenAPI hand list
- * that say what a model must hold. Zod's formats are not in the map yet.
+ * that say what a model must hold, and Zod's formats, which are all owed.
  */
 
 /** What the prototype does with one kind. */
@@ -125,6 +125,14 @@ const AUTHOR_CODE = { refused: 'SPEC-P-2, by Appendix A: a function its author s
 const CHANGES_VALUE = {
   refused: 'SPEC-P-2: what it produces differs by more than a default or a dropped key',
 } as const;
+/** Outside the model by a clause, for a construct Appendix A's table has no row for yet. */
+const NO_ROW_VALUES = {
+  refused: 'SPEC-P-5: not in the value domain; Appendix A has no row for it, and is owed one',
+} as const;
+const NO_ROW_CODE = {
+  refused:
+    'SPEC-P-2: a function its author supplied; Appendix A has no row for it, and is owed one',
+} as const;
 const SIZE = { refused: 'SPEC-P-5, by Appendix A: a check on a set, a map or a file' } as const;
 
 /** Zod's schema definitions, by the name of the type that declares each. */
@@ -137,14 +145,14 @@ export const ZOD_SCHEMAS: Readonly<Record<string, Coverage>> = {
   $ZodCatch: CHANGES_VALUE,
   $ZodCodec: AUTHOR_CODE,
   $ZodCustom: AUTHOR_CODE,
-  $ZodCustomStringFormat: AUTHOR_CODE,
+  $ZodCustomStringFormat: NO_ROW_CODE,
   $ZodDate: OUTSIDE_VALUES,
   $ZodDefault: { held: ['Shape[absent-becomes]'] },
   $ZodDiscriminatedUnion: { owed: 'a choice decided by one key has no element yet' },
   $ZodEnum: { owed: 'held as `Shape[values]`, which loses the names of the entries' },
   $ZodExactOptional: { owed: 'a key that may be absent and may not be `undefined`' },
   $ZodFile: OUTSIDE_VALUES,
-  $ZodFunction: OUTSIDE_VALUES,
+  $ZodFunction: NO_ROW_VALUES,
   $ZodIntersection: { held: ['Shape[all].unknownKeys'] },
   $ZodLazy: { held: ['Shape[reference]', 'Definition'] },
   $ZodLiteral: { held: ['Shape[values]'] },
@@ -161,7 +169,7 @@ export const ZOD_SCHEMAS: Readonly<Record<string, Coverage>> = {
   $ZodPipe: AUTHOR_CODE,
   $ZodPrefault: { held: ['Shape[absent-becomes].checked'] },
   $ZodPreprocess: AUTHOR_CODE,
-  $ZodPromise: OUTSIDE_VALUES,
+  $ZodPromise: NO_ROW_VALUES,
   $ZodReadonly: { owed: 'freezes what it produces, which no JSON value shows: no element' },
   $ZodRecord: { owed: 'held as fields or patterns with a rest; a number key schema is not' },
   $ZodSet: OUTSIDE_VALUES,
@@ -607,4 +615,13 @@ export const OPENAPI_TEXT: Readonly<Record<string, Coverage>> = {
   'OT-132': { owed: 'how a value is written as XML: no element' },
   'OT-137': { held: ['Requirement'] },
   'OT-139': { held: ['Extensions'] },
+};
+
+/**
+ * Every one of Zod's string, number and bigint formats. The prototype's `Format` is a
+ * name from a small sample; a Zod format carries parameters, and for a string the
+ * pattern Zod tests, so none is held by its name alone.
+ */
+export const ZOD_FORMAT: Coverage = {
+  owed: 'a format carries parameters and a pattern, not a name alone',
 };
