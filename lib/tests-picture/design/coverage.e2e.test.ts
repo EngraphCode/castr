@@ -15,12 +15,14 @@ import {
   schemaKeywords,
   schemaTypeValues,
 } from '../rows/published-rows.js';
+import { readJsonSchemaTextConstructs } from '../rows/json-schema-text-constructs.js';
 import { readZodConstructs } from '../rows/zod-constructs.js';
 
 import {
   DIALECT_2020_12_OWN_NAMES,
   DRAFT_07,
   DRAFT_2020_12,
+  JSON_SCHEMA_TEXT,
   TYPE_VALUES,
   ZOD_CHECKS,
   ZOD_SCHEMAS,
@@ -47,6 +49,13 @@ const LISTS: readonly (readonly [string, readonly string[], Readonly<Record<stri
     ],
     ['Zod schema', ZOD.schemas.map((one) => one.name), ZOD_SCHEMAS],
     ['Zod check', ZOD.checks.map((one) => one.name), ZOD_CHECKS],
+    [
+      'JSON Schema text',
+      readJsonSchemaTextConstructs()
+        .filter((row) => row.disposition === 'holds' || row.disposition === 'default')
+        .map((row) => row.id),
+      JSON_SCHEMA_TEXT,
+    ],
   ];
 
 describe('the elements of the prototype', () => {
@@ -137,6 +146,23 @@ describe('the coverage map', () => {
       'Zod check $ZodCheckProperties',
       'Zod check $ZodCheckProperty',
       'Zod check $ZodCheckStringFormat',
+      'JSON Schema text JT-025',
+      'JSON Schema text JT-026',
+      'JSON Schema text JT-027',
+      'JSON Schema text JT-041',
+      'JSON Schema text JT-051',
+      'JSON Schema text JT-085',
+      'JSON Schema text JT-087',
+      'JSON Schema text JT-094',
+      'JSON Schema text JT-096',
+      'JSON Schema text JT-098',
+      'JSON Schema text JT-099',
+      'JSON Schema text JT-100',
+      'JSON Schema text JT-114',
+      'JSON Schema text JT-126',
+      'JSON Schema text JT-130',
+      'JSON Schema text JT-132',
+      'JSON Schema text JT-134',
     ]);
   });
 });

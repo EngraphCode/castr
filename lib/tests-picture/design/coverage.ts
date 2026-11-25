@@ -9,9 +9,10 @@
  * does not have.
  *
  * So far: the keywords and the type values of JSON Schema Draft 2020-12 and Draft-07, the
- * four names the 2020-12 dialect constrains outside its vocabularies, and Zod's schema
- * definitions and checks. The hand lists, Zod's formats and OpenAPI are not in the map
- * yet.
+ * four names the 2020-12 dialect constrains outside its vocabularies, Zod's schema
+ * definitions and checks, and the rows of the JSON Schema hand list that say what a model
+ * must hold. The OpenAPI hand list, Zod's formats and OpenAPI's objects are not in the
+ * map yet.
  */
 
 /** What the prototype does with one kind. */
@@ -198,4 +199,108 @@ export const ZOD_CHECKS: Readonly<Record<string, Coverage>> = {
   $ZodCheckProperty: { owed: 'a check on a property of the value: no element' },
   $ZodCheckSizeEquals: SIZE,
   $ZodCheckStringFormat: { owed: 'a format carries parameters and a pattern, not a name alone' },
+};
+
+/**
+ * The rows of the JSON Schema hand list whose disposition is that the model holds
+ * something, or that an absent keyword has a meaning. The other rows say how a document
+ * is read, written or judged, or that the text leaves a thing undefined, and have no
+ * entry here.
+ */
+export const JSON_SCHEMA_TEXT: Readonly<Record<string, Coverage>> = {
+  'JT-001': {
+    reading: 'the dialect decides how a resource is read; the model holds what was read',
+  },
+  'JT-003': { held: ['ByKind', 'Exact', 'Constant'] },
+  'JT-004': { held: ['Exact'] },
+  'JT-006': { held: ['NumberPart.whole'] },
+  'JT-007': { held: ['Constant'] },
+  'JT-008': { refused: 'SPEC-P-5: a value outside the six kinds is outside the value domain' },
+  'JT-009': { held: ['Shape[every]', 'Shape[none]'] },
+  'JT-010': { held: ['Shape[every]', 'Shape[none]'] },
+  'JT-011': { held: ['Shape[all]', 'Shape[rest-of]'] },
+  'JT-012': { reading: 'the category of a keyword decides what a reader makes of it' },
+  'JT-014': { held: ['Resource.id', 'Definition.aliases'] },
+  'JT-018': { held: ['Resource', 'Shape[reference-in-scope]'] },
+  'JT-020': { held: ['Shape[rest-of]'] },
+  'JT-021': { held: ['ObjectPart.rest', 'ArrayPart.after'] },
+  'JT-022': { held: ['Shape'] },
+  'JT-023': { held: ['ByKind'] },
+  'JT-024': { held: ['Shape[said]'] },
+  'JT-025': { owed: 'several values of one annotation at one place: no combining rule' },
+  'JT-026': { owed: 'where in a schema an annotation came from: no element' },
+  'JT-027': {
+    owed: 'an annotation reached across a reference told from one beside it: no element',
+  },
+  'JT-028': { held: ['Shape[reference]'] },
+  'JT-029': { held: ['Definition'] },
+  'JT-034': { held: ['Resource.id'] },
+  'JT-037': { held: ['Definition.aliases'] },
+  'JT-039': { held: ['Shape[reference]', 'Shape[all]'] },
+  'JT-040': { held: ['Shape[reference-in-scope]', 'Resource.dynamicAnchors'] },
+  'JT-041': { owed: 'a comment a tool may remove: no element' },
+  'JT-043': { held: ['Definition.aliases'] },
+  'JT-046': { reading: 'each embedded resource is read under its own dialect' },
+  'JT-047': { held: ['Definition', 'Resource'] },
+  'JT-050': { held: ['ObjectPart.rest', 'ArrayPart.after', 'ArrayPart.contains'] },
+  'JT-051': {
+    owed: 'the branches of a composition are a list in the prototype; the text gives them no order',
+  },
+  'JT-052': { held: ['Shape[all]', 'Shape[some]', 'Shape[one]'] },
+  'JT-053': { held: ['Shape[not]'] },
+  'JT-054': { held: ['Shape[when]'] },
+  'JT-055': { held: ['Shape[when]'] },
+  'JT-056': { held: ['ArrayPart.positions'] },
+  'JT-057': { held: ['ArrayPart.after'] },
+  'JT-058': { held: ['ArrayPart.contains'] },
+  'JT-059': { held: ['ObjectPart.fields'] },
+  'JT-060': { held: ['ObjectPart.patterns'] },
+  'JT-061': { held: ['ObjectPart.rest'] },
+  'JT-062': { held: ['ObjectPart.names'] },
+  'JT-063': { held: ['Shape[rest-of]'] },
+  'JT-064': { held: ['Shape[rest-of].items'] },
+  'JT-065': { held: ['Shape[rest-of].keys'] },
+  'JT-066': { held: ['Shape[rest-of]'] },
+  'JT-067': { held: ['Shape[reference]'] },
+  'JT-071': { held: ['Exact', 'Constant'] },
+  'JT-073': { held: ['ObjectPart.required'] },
+  'JT-074': { held: ['ByKind', 'NumberPart.whole'] },
+  'JT-075': { held: ['Shape[values]'] },
+  'JT-076': { held: ['Shape[values]'] },
+  'JT-077': { held: ['NumberPart.multipleOf'] },
+  'JT-078': { held: ['NumberPart.least', 'NumberPart.most', 'Bound.exclusive'] },
+  'JT-079': { held: ['StringPart.length'] },
+  'JT-080': { held: ['StringPart.length', 'ArrayPart.length', 'ObjectPart.count'] },
+  'JT-081': { held: ['ArrayPart.distinct'] },
+  'JT-082': { held: ['ArrayPart.contains'] },
+  'JT-083': { held: ['ObjectPart.required'] },
+  'JT-084': { held: ['Shape[when]'] },
+  'JT-085': { owed: 'the kinds a format applies to: a format is on number and string parts only' },
+  'JT-086': { held: ['Format.asserted'] },
+  'JT-087': { owed: 'a format no tool knows: the set of formats is closed' },
+  'JT-094': { owed: 'the content keywords: no element' },
+  'JT-096': { owed: 'the content keywords: no element' },
+  'JT-097': { held: ['Said.title', 'Said.description', 'Said.default'] },
+  'JT-098': { owed: 'several `deprecated` values at one place: no combining rule' },
+  'JT-099': { owed: 'several directions at one place: no combining rule' },
+  'JT-100': { owed: 'examples: no element' },
+  'JT-103': { held: ['Shape[said]'] },
+  'JT-105': { reading: 'the category of a keyword decides what a reader makes of it' },
+  'JT-109': { held: ['Resource.id'] },
+  'JT-113': { held: ['ObjectPart.rest', 'ArrayPart.after'] },
+  'JT-114': { owed: 'the content keywords: no element' },
+  'JT-115': { held: ['Shape[not]', 'Shape[said]'] },
+  'JT-118': { held: ['Shape[values]'] },
+  'JT-119': { held: ['Shape[values]'] },
+  'JT-120': { held: ['Bound.exclusive'] },
+  'JT-121': { held: ['ArrayPart.after', 'ArrayPart.positions'] },
+  'JT-122': { held: ['ArrayPart.after'] },
+  'JT-123': { held: ['ArrayPart.contains'] },
+  'JT-124': { held: ['ObjectPart.rest'] },
+  'JT-125': { held: ['Shape[when]'] },
+  'JT-126': { owed: 'a format no tool knows: the set of formats is closed' },
+  'JT-130': { owed: 'the content keywords: no element' },
+  'JT-132': { owed: 'the content keywords: no element' },
+  'JT-133': { held: ['Definition'] },
+  'JT-134': { owed: 'several directions at one place: no combining rule' },
 };
