@@ -5,8 +5,8 @@
  * Two readings, set against each other:
  *
  * - **By type.** Every function the `zod` module exports, every function of its `iso`
- *   and `coerce` namespaces, and every method of a schema, with the kind of schema or
- *   check its return type states. Read through the compiler from resolved types.
+ *   and `coerce` namespaces, and every method of a schema, that returns a schema or a
+ *   check, with the kind its return type states. Read through the compiler from resolved types.
  * - **By running.** Each construct Appendix A names is built at the installed version,
  *   and the definition it leaves is read: its class, its kind, its fields, the checks it
  *   holds and the kind of each field that is itself a schema. This shows what no type states, such as
@@ -26,7 +26,11 @@ import {
 } from './zod-types.js';
 
 /**
- * What one function or method builds, by its return type. `anySchema` and `anyCheck` say
+ * What one function or method returns, by its return type: a schema, a check, or both.
+ * A return type cannot say whether the schema was made or was already there, so a
+ * function that hands back a schema it was given, such as `.unwrap` or
+ * `z.getDiscriminatedOption`, is listed beside one that makes a new schema. Telling
+ * the two apart is for the list made by hand. `anySchema` and `anyCheck` say
  * the return type states a schema or a check without saying which kind.
  */
 export interface ZodBuilder {
@@ -39,17 +43,17 @@ export interface ZodBuilder {
 
 /** What Zod's public surface builds, by type. */
 export interface ZodBuilders {
-  /** Exported functions that build a schema or a check, named as `z.name`. */
+  /** Exported functions that return a schema or a check, named as `z.name`. */
   readonly factories: readonly ZodBuilder[];
-  /** Methods of every schema that build a schema, named as `.name`. */
+  /** Methods of every schema that return a schema, named as `.name`. */
   readonly methods: readonly ZodBuilder[];
-  /** For each kind of schema, the builders its classes have beyond those of every schema. */
+  /** For each kind of schema, such methods its classes have beyond those of every schema. */
   readonly kindMethods: readonly ZodKindMethods[];
 }
 
 /**
  * The methods the classes of one kind of schema have beyond those every schema has, that
- * build a schema or a check.
+ * return a schema or a check.
  */
 interface ZodKindMethods {
   readonly kind: string;
@@ -108,7 +112,7 @@ function merged(name: string, parts: readonly Omit<ZodBuilder, 'name'>[]): ZodBu
   };
 }
 
-function buildsSomething(builder: ZodBuilder): boolean {
+function returnsASchemaOrACheck(builder: ZodBuilder): boolean {
   return (
     builder.anySchema ||
     builder.anyCheck ||
@@ -134,15 +138,15 @@ function readCallables(
       );
       return [merged(`${prefix}${symbol.getName()}`, returns)];
     })
-    .filter(buildsSomething)
+    .filter(returnsASchemaOrACheck)
     .sort((left, right) => byName(left.name, right.name));
 }
 
 /**
  * Reads, for every exported schema class, the methods it has that not every schema has
- * and that build a schema or a check, and gathers them by the kind the class's
+ * and that return a schema or a check, and gathers them by the kind the class's
  * definition states. A method that returns anything else, such as a function schema's
- * `implement`, is not a builder and is left out.
+ * `implement`, is left out.
  */
 function readKindMethods(
   exported: readonly MorphSymbol[],

@@ -620,13 +620,13 @@ function covers(appendixName: string, builderName: string): boolean {
     : appendixName === builderName;
 }
 
-describe("what Zod's functions and methods build, by their types", () => {
-  it('lists the 146 exported functions that build a schema or a check', () => {
+describe("what Zod's functions and methods return, by their types", () => {
+  it('lists the 146 exported functions that return a schema or a check', () => {
     expect(builders.factories).toHaveLength(146);
     expect(builders.factories.map(asRow)).toEqual(FACTORIES);
   });
 
-  it('lists the 24 methods of a schema that build a schema', () => {
+  it('lists the 24 methods of a schema that return a schema', () => {
     expect(builders.methods).toHaveLength(24);
     expect(builders.methods.map(asRow)).toEqual(METHODS);
   });
@@ -638,7 +638,7 @@ describe('the methods each kind of schema has beyond those of every schema', () 
     expect(builders.kindMethods.map((entry) => [entry.kind, entry.methods])).toEqual(KIND_METHODS);
   });
 
-  it('leaves out a method that builds neither a schema nor a check', () => {
+  it('leaves out a method that returns neither a schema nor a check', () => {
     const ofAFunction = builders.kindMethods.find((entry) => entry.kind === 'function');
 
     expect(ofAFunction?.methods).toEqual(['input', 'output']);

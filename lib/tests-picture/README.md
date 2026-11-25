@@ -275,9 +275,9 @@ A definition is what a schema holds; a function or a method is how an author get
 [`rows/zod-builders.ts`](rows/zod-builders.ts) reads the second and sets it against the
 first and against Appendix A of the specification:
 
-- **By type:** the 146 functions Zod exports that build a schema or a check, the 24
-  methods every schema has that build one, and, for each of 23 kinds, the 118 methods
-  only that kind has that build one (an object's `strict`, `loose`, `strip`,
+- **By type:** the 146 functions Zod exports that return a schema or a check, the 24
+  methods every schema has that return one, and, for each of 23 kinds, the 118 methods
+  only that kind has that return one (an object's `strict`, `loose`, `strip`,
   `passthrough` and `catchall` among them). A method that returns anything else, such as
   a function schema's `implement`, is not listed.
 - **By running:** one example of each construct Appendix A names is built, and what it
@@ -299,8 +299,11 @@ first and against Appendix A of the specification:
   `z.function`, `z.promise`, `z.success` and `z.nonoptional`, and an object's `strict`,
   `loose`, `extend`, `pick`, `omit` and `partial`, among them.
 
-What neither reading shows is what a method does to the fields of the kind it returns,
-beyond the examples run here.
+Two things neither reading shows. A return type cannot say whether a schema was made or
+was already there, so `.unwrap` and `z.getDiscriminatedOption`, which hand back a schema
+they were given, are listed beside the functions that make one; telling them apart is
+for the list made by hand. And nothing here shows what a method does to the fields of
+the kind it returns, beyond the examples run.
 
 Constructs that only the specifications' text
 defines (the values of `format`, boolean schemas, a keyword no vocabulary defines) cannot
