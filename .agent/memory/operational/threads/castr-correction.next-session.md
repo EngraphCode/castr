@@ -173,8 +173,8 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
   2 to the power 53, so the `integer` note ("a safe integer") describes what Zod
   enforces, not what the keyword means; that difference is a row for the amendment,
   not changed here. **Still owed for M1:** the hand list for JSON Schema, both drafts.
-- 2026-11-25, M1, the hand list for JSON Schema. **Done:** 136 rows from the core and
-  validation texts of 2020-12 and Draft-07 (36 true of both, 66 of 2020-12 alone, 34 of
+- 2026-11-25, M1, the hand list for JSON Schema. **Done:** 135 rows from the core and
+  validation texts of 2020-12 and Draft-07 (36 true of both, 66 of 2020-12 alone, 33 of
   Draft-07 alone), in the same shape as the OpenAPI list, with the four texts' section
   numbers pinned and a test that every cited section exists. What the two lists share is
   one module, `rows/text-constructs.ts`. **Checked by the seat in the texts:** the
@@ -189,6 +189,14 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
   values that attach, drop and are read by other keywords; absence against an explicit
   value that asserts nothing; lexical and dynamic scope; resources and base URIs; and
   the differences of meaning between the drafts. **M1 is complete when this merges.**
+  **Corrected by three rounds of review:** the pins recorded a digest nothing recomputed
+  (now `rows/text-sections.ts` and `pnpm picture:check-texts`, which fetches each text
+  and recomputes size, digest and sections; all six as pinned on 25 November); a row
+  could cite no section; two rows were called validity rules that the texts state as
+  duties of a server and of a validator; a row said a value "fails" where the text says
+  only that the tool must fail. **What the seat keeps getting wrong, a third time:** a
+  statement one notch stronger than the text. Before a row says "must", "fails" or "is
+  not valid", find who the text says must do what.
 
 - 2026-11-24, M0, the reviews. The assumptions reviewer and the four seats of the
   conscience panel read the first draft. All four seats judged the work on track; three
