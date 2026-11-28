@@ -96,8 +96,10 @@ back is the document read, but for what the text supplies.
 
 1. **Write a small JSON Schema reader in the prototype, for both drafts.** Hold its
    output to the 46 hand-written values and to the note's 123 statements, then run it
-   over every schema of the Oak document pinned in the corpus. Its list of what it
-   cannot read is the computed form of the list of kinds owed. _Warrant:_ the table above. _Shown wrong
+   over every schema of the Oak document pinned in the corpus. What it cannot read, of
+   what the cases and the corpus use, shows which owed kinds real documents meet first;
+   the coverage map's check stays the authority for the whole list. _Warrant:_ the table
+   above. _Shown wrong
    if:_ the reader over the cases and the corpus surfaces no fault in the types that the
    map missed; then the map was enough and an OpenAPI reader is not worth building.
    _Bound:_ one file, one working stretch, ending when the list is printed.
@@ -168,3 +170,85 @@ satisfies no requirement for independent assurance.
   values equal the hand-written ones; what it cannot read is within the list owed.
   Reopen the structure if the prototype disagrees with the validator on any corpus
   schema, or if a corpus construct needs a new kind of node.
+
+## A second pass, the same afternoon
+
+The owner gave the compaction word a second time, with "STOP ONCE PREPARATION IS
+COMPLETE" added. The six skills were read again from the Ecosystem checkout and run on
+what had happened since the first pass. The same caveat holds: one context, and the
+seat's own reading.
+
+**Metacognition.** The first wrap ended with records on a pull request and no report to
+the owner. The seat read "post-compaction we continue" as "I continue", and went from
+opening the pull request into design work. A wrap's report is where the owner takes the
+session back, and it was skipped. What changes: the report is the last act of this
+pass, and nothing follows it. That the second word is a correction is the seat's
+inference. What was observed is the same words with a stop added.
+
+Two rules of the wrap skill were held wrongly through the compaction's summary and were
+corrected only by reading the text again: the freeze covers an edit to a pull request's
+description, and a record never restates what git can recompute.
+
+**Free play.** Associations only.
+
+- A reviewer said, for the third time in this session, that a research note shared a
+  commit with the continuity files. It reminded the seat of its own closure function:
+  each sums several things up as one and loses which was which.
+- The family of sets a Zod writer needs looked like the normal form that set-theoretic
+  types give a record. The survey note may already say how such systems bound its size.
+- An object's `rest: 'unstated'` is inside the value, and the boundary half's record of
+  what a source left unsaid is outside it. They look like two treatments of one thing,
+  told apart by whether a composition can see the difference.
+
+Discarded on a second look: that the count of members of the rewriting measures how
+much a source left unsaid (the plain fact is kept: it is the number of sets of branches
+that can accept together); and a likeness between a monitor's events and the owner's
+message. An eyebrow at the installed Zod's version was followed and found already in
+the step log.
+
+**Concept exploration: what a writer reads at a place.**
+
+- _The frame._ A writer must emit, for each place in a value where the profile closes
+  an object, something that accepts what the by-value reading accepts. One place in a
+  value is reached from several places in a schema, and under a choice the keys
+  accounted for depend on which branches accept the value.
+- _What changed._ The closure function summed a place up as a count. The owner chose a
+  reading by value, and a summary by place contradicts it: the sets of parts that
+  accept together are the fact, and the summary dropped them. The targets are not
+  alike, either. JSON Schema 2020-12 states the by-value closure itself wherever one
+  root describes the place; Zod must be handed the sets. And "cannot" was the wrong
+  word for a refusal that is Castr's own.
+- _Proposals._ (1) Make the function true and small: three answers, a check that two
+  parts are told apart, and "refused, not established" for the rest, with the scratch
+  run as a test against the prototype's own evaluator. _Shown wrong if_ that evaluator
+  and the script's function differ on any value. (2) Count over the corpus how each
+  supplied closure is reached. (3) Build the family as a writer's view only if those
+  counts ask for it. _The warrant for that order:_ how heavy an instrument the closure
+  needs depends on frequencies nobody has.
+- _Unresolved, and able to change this._ Whether a Zod intersection reckons keys
+  together below the top level or through a union (predicted not; not run); what a
+  first-match choice accounts for under the profile; whether Draft-07, which has no
+  `unevaluatedProperties`, is a target a writer must close for.
+
+**Reason.** Proposal 1 passes the direct-trial gate: run it. On proposal 3 the stop
+gate's verdict is stop: no decision turns on it until the counts exist. The choice not
+to edit the plan rests on one sentence of the plan, read by the seat, in the direction
+of less ceremony. That is a verdict of the kind the napkin says to show outside eyes,
+so the owner's report names it.
+
+**Parallax, core depth, emulated-reduced.** A self-review, as before.
+
+- _The rival frame._ The session, and not the design, is what needs changing: four
+  compactions, the last three pull requests records alone, and an afternoon spent
+  almost wholly on records. It changes how the work resumes: one bounded design act at
+  a time, records added to the pull request already open, and no new note for each
+  wrap. This part is kept short for that reason.
+- _Bridges with nothing under them._ From the script's by-value function to the
+  prototype's evaluator: not run. From plain branches with scalar fields to objects
+  nested in objects: not run.
+- _Status: provisional._ It permits resuming with proposal 1. It forbids writing "Zod
+  can state an `anyOf` closure" as a general statement, and forbids calling
+  `closures.ts` corrected.
+- _Return to the world._ Proposal 1's test: no difference on four universes of values
+  and four of 27 on the fifth. Any other number reopens the evaluator or the script's
+  reading.
