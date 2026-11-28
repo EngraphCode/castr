@@ -11,6 +11,28 @@ count read again from the check that owns it. The seat is not retiring: its clai
 this thread stays open and the same seat goes on. Verify each line against git and
 GitHub before acting.
 
+### State at a second compaction word, later on 28 November
+
+The owner asked for a second preparation the same afternoon, and to stop once it was
+complete. So the seat is stopped, by the owner's word, until the owner speaks. What
+changed after the rest of this section was written:
+
+- **Pull request 212 carries this record and is open, not merged.** The seat made no
+  reply on it after the second word. Its first review thread says the research note
+  shares a commit with the continuity files; `git log --stat` on the branch shows the
+  note alone in the first commit. On resuming: answer with that, resolve the thread,
+  read the hosted review state, and merge when clean and green.
+- **The watch on pull request 212 is stopped.** Re-arm it on resuming.
+- **Fault 1 below has been run, from a scratch script, and the prediction held.** The
+  step log's second entry of 28 November says what was run and what it showed. It is
+  not yet a test on the design branch, and `closures.ts` is unchanged.
+- **The design branch is where it was:** `20629a5b`, nothing ahead of its upstream,
+  nothing uncommitted.
+- **The next act** is the first item of the order below, with the finding of that
+  step-log entry: the function's summary of a place (how many parts, and whether alone,
+  together or chosen) is what loses the answer, and a family of sets of parts is what a
+  writer needs.
+
 ### On resuming, first
 
 1. **Read each branch against its upstream before any new act:**
@@ -51,8 +73,9 @@ the plan's six proofs is met.** One whole reworking of the structure remains.
 ### Faults the seat knows of in the prototype
 
 1. **`closures.ts` says Zod cannot write any closure a choice reaches. As a general
-   statement that is false, and its own test asserts it.** The seat's prediction, not
-   run: an `anyOf` by value is the union of its strict branches and of the intersection
+   statement that is false, and its own test asserts it.** The seat's prediction, run
+   since from a scratch script and held there (the step log's second entry of
+   28 November): an `anyOf` by value is the union of its strict branches and of the intersection
    of each set of them; a `oneOf` is an exclusive union of strict branches wherever no
    value that two branches accept, as their source states them, fits within the fields
    of one. Run both against Zod, then give a target three answers, not two: as it
@@ -624,6 +647,48 @@ The written-off pull requests keep their commits at `refs/pull/<n>/head`.
   before elements are written for the kinds owed and before any reader round. Every
   defect of this step was found by something run or by an outside reader. The map
   found none: its check proves that a named element exists and no more.
+
+- 2026-11-28, M4, fault 1 run against Zod, from a scratch script. **Not a test on the
+  branch yet; `closures.ts` is unchanged.** Run against the installed Zod (4.6.7). The
+  by-value reading was a function written in the script, not the prototype's
+  evaluator: a branch accepts as its source states it, open to other keys, and a value
+  is then refused for a key no accepting branch has a field for. Every object over a
+  few keys, each absent or holding one of a few sample values, was put to both.
+  - `anyOf` of two objects that state no policy, written as a union of the two strict
+    objects and their intersection: 64 values, none differs. Written as a plain union
+    of the two strict objects: one differs, the value holding a key of each.
+  - `anyOf` of three, written as a union over every set of branches intersected (seven
+    members): 256 values, none differs.
+  - `anyOf` with required fields and a shared key, written the same way: 256 values,
+    none differs.
+  - `oneOf` whose branches a required constant tells apart, written as an exclusive
+    union of strict objects: 256 values, none differs.
+  - `oneOf` whose branches can both accept one value, written the same way: 4 of 27
+    differ, each a value both branches accept as stated and one branch's fields hold.
+  - No accepted value came back changed.
+
+  **What follows for `closures.ts`. The seat's reading, with what is run marked:**
+  - A target has three answers: as it stands, by rewriting, refused. "Refused" is what
+    Castr's writer does, and is no claim that the target cannot state it.
+  - The function sums a place up as a count of parts, how they are combined (alone,
+    together, chosen) and their roots. That summary loses the answer. What a writer
+    needs at a place is the family of sets of parts that can accept together: the value
+    is accepted where every part of one set accepts as stated and the set's fields hold
+    every key. A conjunction multiplies families, and an `anyOf` adds every union of
+    its branches' sets. Zod writes a family as a union of intersections of strict
+    objects (run, for two and three plain branches).
+  - **Predicted, not run:** a Zod intersection with a union on one side does not reckon
+    keys together through the union, so a conjunction over a choice must be multiplied
+    out before it is written, and cannot be written as it is nested.
+  - A `oneOf` is not monotone, so it has no such family. It is an exclusive union of
+    strict objects where its branches cannot both accept (run, for a required
+    constant), which needs a check that two parts are told apart. Otherwise refused.
+  - A branch that accepts an object and says nothing of objects (`{}`, or constraints
+    on another kind alone) accounts for no key and triggers no closure, by the
+    prototype's profile. A choice holding one is not a family of parts. Not run against
+    Zod, and refused until it is.
+  - The count of members doubles with each branch of an `anyOf` whose branches can
+    accept together. Where they cannot, the plain union is the whole of it.
 
 - 2026-11-24, M0, the reviews. The assumptions reviewer and the four seats of the
   conscience panel read the first draft. All four seats judged the work on track; three
