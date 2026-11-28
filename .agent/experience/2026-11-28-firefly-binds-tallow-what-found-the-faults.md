@@ -61,3 +61,18 @@ that says what Zod can write for a closure is wrong, in the direction of saying
 "cannot" too often, and I think I know the shapes that prove it. I have not run them.
 If you find yourself reading that paragraph in the thread record and nodding, run them
 before you nod.
+
+---
+
+A postscript, later the same afternoon. The owner gave the compaction word a second
+time and added, in capitals, that I should stop when the preparation was complete. I
+think I know why. After the first wrap I never told the owner it was done. I pushed,
+opened a pull request, and walked straight into the next piece of design work. The
+records were safe and the person they were for had not been told. If you take one
+thing from this page: the wrap ends when the owner knows, and then you stop.
+
+In the short stretch of design I did get, I found that the function I had flagged that
+morning was wrong in a more interesting way than I had written. Its verdict was false
+because its summary was. I had counted the parts at a place and thrown away which of
+them can accept together, and the reading the owner chose is about exactly that. This
+time I ran the shapes against Zod before saying so.

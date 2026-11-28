@@ -17,21 +17,35 @@ The owner asked for a second preparation the same afternoon, and to stop once it
 complete. So the seat is stopped, by the owner's word, until the owner speaks. What
 changed after the rest of this section was written:
 
-- **Pull request 212 carries this record and is open, not merged.** The seat made no
-  reply on it after the second word. Its first review thread says the research note
-  shares a commit with the continuity files; `git log --stat` on the branch shows the
-  note alone in the first commit. On resuming: answer with that, resolve the thread,
-  read the hosted review state, and merge when clean and green.
-- **The watch on pull request 212 is stopped.** Re-arm it on resuming.
+- **Pull request 212, which carries this record, was left open at that word with three
+  review threads unanswered.** No reply, comment or change to its description was made
+  after the word. What it is owed, in order:
+  - One thread says the research note shares a commit with the continuity files.
+    `git log --stat` on the branch shows the note alone in the first commit. Answer
+    with that and resolve.
+  - Two threads say a reader over a corpus cannot compute the whole list of kinds
+    owed. They are right. The wording is corrected in the push that carries this
+    block, and the coverage map's check stays the authority for that list. Answer and
+    resolve.
+  - The description still says the records land in two commits and calls fault 1 "not
+    run". Correct it.
+  - Then read the hosted review state, and merge when clean and green.
+- **The watch on that pull request was stopped at the stop.** Check the task list for
+  a survivor first. To re-arm it, from the repository root:
+  `node agent-tools/dist/src/bin/agent-tools.js pr-watch 212 --repo EngraphCode/castr --watch --interval 45 --max-polls 38`
 - **Fault 1 below has been run, from a scratch script, and the prediction held.** The
   step log's second entry of 28 November says what was run and what it showed. It is
   not yet a test on the design branch, and `closures.ts` is unchanged.
-- **The design branch is where it was:** `20629a5b`, nothing ahead of its upstream,
-  nothing uncommitted.
-- **The next act** is the first item of the order below, with the finding of that
-  step-log entry: the function's summary of a place (how many parts, and whether alone,
-  together or chosen) is what loses the answer, and a family of sets of parts is what a
-  writer needs.
+- **Nothing on the design branch changed in this stretch.** The work on fault 1 was
+  reading and a scratch run.
+- **The first acts on the design, which refine items 1 and 2 of the order below:**
+  1. Make `closures.ts` true and small: three answers, a check that two parts are told
+     apart, and "refused, not established" for the rest; with the scratch run as a
+     test that puts the same values to the prototype's own evaluator and to Zod.
+  2. With the reader, count over the corpus how each supplied closure is reached.
+  3. Build the family of sets as a writer's view only if those counts ask for it. The
+     second part of the reflection has the reasoning.
+- **Not assessed in this wrap:** whether the napkin's consolidation is due.
 
 ### On resuming, first
 
@@ -103,8 +117,10 @@ of 28 November there and the plan's body is unchanged. Its warrant is in the ref
 2. **Write a small JSON Schema reader in the prototype, for both drafts.** Hold its
    output to the 46 hand-written values and the note's 123 statements, then run it and
    the closure function over every schema of the Oak document pinned in the corpus
-   (`lib/tests-transforms/__fixtures__/corpus/`). What it cannot read is the computed
-   form of the list of kinds owed. Bound: one file, ending when the list is printed. It
+   (`lib/tests-transforms/__fixtures__/corpus/`). What it cannot read, of what the cases
+   and the corpus use, shows which owed kinds real documents meet first. It is no list
+   of what is owed: the coverage map's check stays the authority for that. Bound: one
+   file, ending when the list is printed. It
    would be shown not worth its cost by surfacing no fault in the types that the map
    missed.
 3. Read section 7, section 11 and SPEC-FV-1 of the specification for refusals that

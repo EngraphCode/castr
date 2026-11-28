@@ -78,6 +78,33 @@ summary. The advisor found both. A third pass added none.
 strings by reasons look like one move at three levels; each target closes over a
 different scope; the closure search cuts a cycle where a fixed point belongs.
 
+**A second wrap the same afternoon,** at the owner's second word, which added "STOP
+ONCE PREPARATION IS COMPLETE".
+
+- **A wrap's report is where the owner takes the session back.** After the first wrap
+  I opened the pull request and went into design work with no report. I had read
+  "post-compaction we continue" as "I continue".
+- **Doctrine held through a summary drifts.** Two rules of the wrap skill were wrong in
+  my head after the compaction and right in the text: the freeze covers a description
+  edit, and a record never restates what git can recompute. Read the text at use.
+- **A hook's output goes to a log.** One commit's whole output came into the context,
+  most of it a list of files, an hour after I had noted that context was short.
+- **Capture first held this time:** the facts were committed before the skill texts
+  were read.
+- **A corpus says what real documents use, never what a format holds.** I wrote that
+  what a reader cannot read of Oak's document is "the computed form" of the list of
+  kinds owed. A hosted reviewer said, rightly, that it is the part of the list the
+  corpus meets. This entry says above to point outside eyes at any claim that favours
+  what is built. They were pointed there, and it worked.
+- _A play seed:_ a reviewer that reads a pull request as one diff cannot see which
+  commit holds what, and has said three times that a research note shares a commit
+  with the continuity files. Saying in the description which commit holds what might
+  spare the thread.
+- _The scan, run again on the afternoon:_ a second pass added what the first lacked
+  (a description gone stale that the freeze forbids editing; a line of git's own state
+  written into the record, since cut; the watch's command, missing from the record).
+  A third pass would only re-find these.
+
 ## 2026-11-25 (the hand lists, the cases, and a joined commit: Firefly binds Tallow / 5196d5)
 
 - **A hand list of what a text says is swept for overstatement before its first push.**
